@@ -1,0 +1,38 @@
+html {
+  font-size: 14px;
+}
+
+.control-label {
+    font-size: 12px;
+}
+
+.form-control {
+    font-size: 14px;
+    height:33px;
+}
+
+.btn-default.active {
+    background: #000;
+    color: #fff;
+}
+
+form.editable input {
+    color: #008080;
+}
+
+    @media (min-width: 768px) {
+        html {
+            font-size: 16px;
+        }
+    }
+
+    html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+

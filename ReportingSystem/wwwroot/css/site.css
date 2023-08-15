@@ -16,3 +16,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+img {
+    width: 400px;
+}
+
+.btn-default{
+
+}
+.btn-default.active{
+    background: #000;
+    color: #fff;
+}
+
+form input{
+    
+}
+form.editable input {
+    color: #008080;
+}

@@ -1,0 +1,204 @@
+﻿@using ReportingSystem.Properties;
+
+<head>
+    <title>123</title>
+</head>
+
+@{
+    ViewData["Title"] = $"{Resources.personalUserInfoNamePage} {Resources.personalUserInfoUserRolDev}";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<link rel="stylesheet" href="~/css/UserInfo.css" asp-append-version="true" />
+
+<div mt-3 class="text-center">
+    <h2 class="display-4">@Resources.personalUserInfoNamePage @Resources.personalUserInfoUserRolDev</h2>
+</div>
+
+<div class="container" id="UserInfo">
+    <div class="panel panel-default" v-if="personalInfo.id">
+        <div class="panel-heading"></div>
+        <div class="panel-body">
+            <form v-bind:class="{editable: mode == 'edit'}">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoFirstName</label>
+                            <input 
+                                   type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoFirstName.ToLower()" v-bind:disabled="true" v-model="personalInfo.firstName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoSecondName</label>
+                            <input  
+                                   type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoSecondName.ToLower()" v-bind:disabled="true" v-model="personalInfo.secondName" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoThirdName</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoThirdName.ToLower()" v-bind:disabled="true" v-model="personalInfo.thirdName" />
+                        </div>
+                    </div>
+                    <div class="col-sm-6 text-center" style="display: flex; justify-content: center; align-items: center;">
+                        <div class="clearfix">
+                            <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
+                            <label for="imageInput">
+                                <img :src="personalInfo.photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
+                               </label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoPhoneWork</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoPhoneWork.ToLower()" v-bind:disabled="true" v-model="personalInfo.phoneWork" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoPhoneSelf</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoPhoneSelf.ToLower()" v-bind:disabled="mode=='standart'" v-model="personalInfo.phoneSelf" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoEmailWork</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoEmailWork.ToLower()" v-bind:disabled="true" v-model="personalInfo.emailWork" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoEmailSelf</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoEmailSelf.ToLower()" v-bind:disabled="mode=='standart'" v-model="personalInfo.emailSelf" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoTaxNumber</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoTaxNumber" v-bind:disabled="true" v-model="personalInfo.taxNumber" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoAddressReg</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoAddressReg.ToLower()" v-bind:disabled="true" v-model="personalInfo.addressReg" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoAddressFact</label>
+                            <input type="text" class="form-control" placeholder="Введіть @Resources.personalUserInfoAddressFact.ToLower()" v-bind:disabled="mode=='standart'" v-model="personalInfo.addressFact" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoBirthDate</label>
+                            <input type="date" class="form-control" placeholder="Введіть @Resources.personalUserInfoBirthDate.ToLower()" v-bind:disabled="true" v-model="personalInfo.birthDate" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoWorkStartDate</label>
+                            <input type="date" class="form-control" placeholder="Введіть @Resources.personalUserInfoWorkStartDate.ToLower()" v-bind:disabled="true" v-model="personalInfo.workStartDate" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoSalary</label>
+                            <input type="text" class="form-control" v-bind:disabled="true" v-model="personalInfo.salary"  />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoAddSalary</label>
+                            <input type="text" class="form-control" v-model="personalInfo.addSalary" v-bind:disabled="true" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoHoliday</label>
+                            <input type="text" class="form-control" v-model="holidayDays" v-bind:disabled="true" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">@Resources.personalUserInfoHospital</label>
+                            <input type="text" class="form-control" v-model="hospitalDays" v-bind:disabled="true" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">Відрядження</label>
+                            <input type="text" class="form-control" v-model="assignmentDays" v-bind:disabled="true" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label">Відгули</label>
+                            <input type="text" class="form-control" v-model="taketimeoffDays"  v-bind:disabled="true" />
+                        </div>
+                    </div>
+                </div>
+
+                
+            </form>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <button class="btn btn-default mt-3"
+                                v-bind:class="{active: mode == 'standart'}"
+                                v-on:click="ToogleMode('edit')">
+                            @Resources.buttonEdit
+                        </button>
+
+                        <button class="btn btn-default mt-3"
+                                v-bind:class="{active: mode == 'edit'}"
+                                v-on:click="ToogleMode('standart')">
+                            @Resources.buttonConfirm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div class="text-center">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/UserInfo.js" asp-append-version="true"></script>
+

@@ -1,0 +1,864 @@
+﻿@using ReportingSystem.Properties;
+
+
+<head>
+    <title>123</title>
+</head>
+
+@{
+    ViewData["Title"] = "Проекти";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Проекти</h1>
+</div>
+
+<style>
+    .modal-dialog {
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        transform: translate(-50%, -50%);
+    }
+
+    .highlighted .accordion-button lv1 {
+        background-color: #c5ff24;
+        color: black;
+    }
+
+    .highlighted .accordion-button lv2 {
+        background-color: #b5c1ce;
+        color: black;
+    }
+
+    .highlighted .accordion-button lv3 {
+        background-color: #9aa9bc;
+        color: black;
+    }
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+<div class="container" id="app">
+    <div class="accordion">
+
+        @* Модальне вікно *@
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        @*Для редагування категорії*@
+                        <div v-if="modalType === 2">
+                            <div class="form-group">
+                                <label class="form-label">{{modalName}}</label>
+                                <input class="form-control" placeholder="Введіть нову назву категорії" type="text" v-model="editCategoryName" />
+                            </div>
+                        </div>
+
+                        @*Для додавання категорії*@
+                        <div v-if="modalType === 1">
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Введіть назву нової категорії" type="text" v-model="editCategoryName" />
+                            </div>
+                        </div>
+
+                        <p> {{modalOperation}}</p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateCategory()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditCategory()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteCategory()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 4" v-on:click="confirmCreateProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 5" v-on:click="confirmEditProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 6" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3" v-if="modeCategories">
+            <!-- Поле введення для пошуку -->
+            <input v-model="searchQueryCategory" type="text" class="form-control" placeholder="Пошук...">
+        </div>
+
+        <div class="mb-3" v-if="modeProjects">
+            <!-- Поле введення для пошуку -->
+            <input v-model="searchQueryProject" type="text" class="form-control" placeholder="Пошук...">
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col">            
+                <div class="btn-group d-flex justify-content-between">
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="modeProjects" v-model="modeProjects" v-on:change="showProjects()">
+                        <label class="form-check-label" for="modeProjects">Проекти</label>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="modeSteps" v-model="modeSteps" v-on:change="showSteps()">
+                        <label class="form-check-label" for="modeSteps">Етапи проектів</label>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="modeCategories" v-model="modeCategories" v-on:change="showCategories()">
+                        <label class="form-check-label" for="modeCategories">Категорії проектів</label>
+                    </div>
+                </div>
+
+                <div class="btn-group d-flex justify-content-between">
+                    <button type="button" v-if="modeCategories" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1,-1, -1, -1)">Додати Категорії</button>
+                    <button type="button" v-if="modeProjects" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Додати Проект</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div style="margin-top: 1em;"></div>
+
+        <div v-if="modeCategories" v-for="(categoryLevel1, indexLevel1) in filteredCategory" :key="indexLevel1" class="accordion-item">
+            <h2 class="accordion-header" :id="'heading' + indexLevel1">
+                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1" :aria-expanded="indexLevel1 === 0 ? 'true' : 'false'" :aria-controls="'collapse' + indexLevel1">
+                    {{ categoryLevel1.name }}
+                </button>
+            </h2>
+            <div :id="'collapse' + indexLevel1" class="accordion-collapse collapse" :aria-labelledby="'heading' + indexLevel1" data-bs-parent="#app">
+                <div class="accordion-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати категорію" v-on:click="toggleModal(2,indexLevel1, -1, -1)">ε</button>&nbsp;
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити категорію" v-on:click="toggleModal(3,indexLevel1, -1, -1)">-</button>
+                                    <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Додати підкатегорію"  v-on:click="toggleModal(1,indexLevel1, -1, -1)">+</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     <div v-if="categoryLevel1.categoriesLevel2">
+                        <div v-for="(categoryLevel2, indexLevel2) in categoryLevel1.categoriesLevel2" :key="indexLevel2" class="accordion-item">
+                            <h2 class="accordion-header" :id="'heading' + indexLevel1 + indexLevel2">
+                                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1 + indexLevel2" :aria-expanded="indexLevel2 === 0 ? 'true' : 'false'" :aria-controls="'collapse' + indexLevel1 + indexLevel2">
+                                    {{ categoryLevel2.name }}
+                                </button>
+                            </h2>
+                            <div :id="'collapse' + indexLevel1 + indexLevel2" class="accordion-collapse collapse" :aria-labelledby="'heading' + indexLevel1 + indexLevel2" :data-bs-parent="'#collapse' + indexLevel1">
+                                <div class="accordion-body">
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2" class="text-left">
+                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати категорію" v-on:click="toggleModal(2,indexLevel1, indexLevel2, -1)">ε</button>&nbsp;
+                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити категорію" v-on:click="toggleModal(3,indexLevel1, indexLevel2, -1)">-</button>
+                                                <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Додати підкатегорію"  v-on:click="toggleModal(1,indexLevel1, indexLevel2, -1)">+</button>
+                                            <tr>
+                                                <td>
+                                                    <div v-if="categoryLevel2.categoriesLevel3">
+                                                        <div v-for="(categoryLevel3, indexLevel3) in categoryLevel2.categoriesLevel3" :key="indexLevel3">
+                                                            {{ categoryLevel3.name }}
+
+                                                            <div>
+                                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати категорію" v-on:click="toggleModal(2,indexLevel1, indexLevel2, indexLevel3)">ε</button>&nbsp;
+                                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити категорію" v-on:click="toggleModal(3,indexLevel1, indexLevel2, indexLevel3)">-</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="container" v-if="modeCategories">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group mb-3 mt-3">
+                        <span class="input-group-text" id="basic-addon1">Показати</span>
+                        <input type="text" class="form-control" v-model="itemsPerPage" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="mb-3 mt-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні"><<</button>
+                        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
+                        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні">>></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+                                                        
+<script>
+
+    new Vue({
+        el: '#app',
+        data: {
+            searchQueryCategory:'',
+            searchQueryProject:'',
+            pageCount:1,
+            pageCur:1,
+            itemsPerPage: 10,
+            modalType: 0,
+            modalIndex: null,
+            modalName: '',
+            modalOperation: null,
+            modalTitle: null,
+            modalCategoryUsed:false,
+            modeProjects: true,
+            modeCategories: false,
+            modeSteps: false,
+            editCategoryName:'',
+            navigLevel1: -1,
+            navigLevel2: -1,
+            navigLevel3: -1,
+            levelCategory:0,
+            buferCategories:{
+            },
+            buferProject: {
+            },
+            projects:[
+                {
+                    name:'Проект 1'
+                },
+                {
+                    name: 'Проект 2'
+                },
+                {
+                    name: 'Проект 3'
+                },
+                {
+                    name: 'Проект 4'
+                },
+                {
+                    name: 'Проект 5'
+                },
+                {
+                    name: 'Проект 6'
+                },
+            ],
+            categoriesLevel1:[
+                {
+                    name: 'Категорія 1 Рівень 1',
+                    used: true,
+                    projects: ['1'],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: ['1'],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: ['1'],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: ['1'],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: ['1'],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: ['1'],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: ['1'],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 2 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 3 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 4 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 5 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 6 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 7 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 8 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 8 Рівень 1',
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 9 Рівень 1',
+                    
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 10 Рівень 1',
+                    
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    name: 'Категорія 11 Рівень 1',
+                    
+                    projects: [],
+                    categoriesLevel2: [
+                        {
+                            name: 'Категорія 1 Рівень 2',
+                            
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                        {
+                            name: 'Категорія 2 Рівень 2',
+                            
+                            projects: [],
+                            categoriesLevel3: [
+                                {
+                                    name: 'Категорія 1 Рівень 3',
+                                    projects: [],
+                                },
+                                {
+                                    name: 'Категорія 2 Рівень 3',
+                                    projects: [],
+                                },
+                            ],
+                        },
+                    ],
+                }
+            ],
+
+        },
+        created() {
+            // Виконайте сортування за іменем при створенні компоненту
+            this.sortCategoriesByName();
+        },
+        computed: {
+            countFilteredCategory(){
+                const nameFilter = this.searchQueryCategory ? this.searchQueryCategory.toLowerCase() : '';
+               
+                let filteredList = this.categoriesLevel1.filter((categoryLevel1) => {
+                    const nameMatches = !nameFilter || categoryLevel1.name.toLowerCase().includes(nameFilter);
+                        return nameMatches;
+                });
+                return filteredList.length;
+            },
+            filteredCategory(){
+                const nameFilter = this.searchQueryCategory ? this.searchQueryCategory.toLowerCase() : '';
+               
+                let filteredList = this.categoriesLevel1.filter((categoryLevel1) => {
+                    const nameMatches = !nameFilter || categoryLevel1.name.toLowerCase().includes(nameFilter);
+                        return nameMatches;
+                    
+                });
+
+                if (this.pageCur === 1) {
+                    return filteredList.slice(0, this.pageCur * this.itemsPerPage);
+                } else
+                {
+                    return filteredList.slice(this.pageCur * this.itemsPerPage - this.itemsPerPage, this.pageCur * this.itemsPerPage);
+                }
+
+            },
+        },
+        methods: {
+            nextBatch(){
+                this.pageCount = Math.ceil(this.countFilteredCategory / this.itemsPerPage);
+  
+                if (this.pageCur < this.pageCount) {
+                    this.pageCur++;
+                }
+            }, 
+            prevBatch() {
+                if (this.pageCur > 1) {
+                    this.pageCur--;
+                }
+            },
+            firstBatch() {
+                if (this.pageCur !== 1) {
+                    this.pageCur = 1;
+                }
+            },
+            sortCategoriesByName() {
+                this.categoriesLevel1.sort((a, b) => {
+                    return a.name.localeCompare(b.name);
+                });
+            },
+            confirmCreateCategory(){
+                const newSubcategoryLevel1 = 
+                {
+                      name: this.editCategoryName,
+                      categoriesLevel2: []
+                }
+                const newSubcategoryLevel2 = 
+                {
+                      name: this.editCategoryName,
+                      categoriesLevel3: []
+                }
+                const newSubcategoryLevel3 = 
+                {
+                    name: this.editCategoryName,
+                }
+                 
+                if (this.navigLevel1 == -1) {
+                    this.categoriesLevel1.push(newSubcategoryLevel1)
+                }
+
+                if (this.navigLevel1 !== -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
+                     this.filteredCategory[this.navigLevel1].categoriesLevel2.push(newSubcategoryLevel2);
+                }
+
+                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 == -1) {
+                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3.push(newSubcategoryLevel3);
+                }
+                this.editCategoryName = '';
+ 
+            },
+            confirmEditCategory() {
+                if (this.navigLevel1 !== -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
+                     this.filteredCategory[this.navigLevel1].name = this.editCategoryName;
+                }
+
+
+                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 == -1) {
+                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].name = this.editCategoryName;
+                }
+
+                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 !== -1) {
+                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].name = this.editCategoryName;
+                }
+
+            },
+            confirmDeleteCategory() {
+
+                if (this.navigLevel1 !== -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1 && !this.modalCategoryUsed) {
+                    this.categoriesLevel1.splice(this.navigLevel1 + this.pageCur * this.itemsPerPage - this.itemsPerPage, 1);
+                        this.navigLevel1 = -1;
+                }
+                
+                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 == -1 && !this.modalCategoryUsed) {
+                    this.filteredCategory[this.navigLevel1].categoriesLevel2.splice(this.navigLevel2, 1);
+                    this.navigLevel2 = -1;
+                } 
+                
+                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 !== -1 && !this.modalCategoryUsed) {
+                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3.splice(this.navigLevel3, 1);
+                    this.navigLevel3 = -1;
+                }
+            },
+            confirmCreateProject() {
+
+            },
+            confirmEditProject() {
+
+            },
+            confirmDeleteProject() {
+
+            },
+            showProjects(){
+                this.modeCategories = false;
+                this.modeSteps = false;
+                this.modeProjects = true;
+                this.pageCur = 1;
+            },
+            showCategories(){
+                this.modeProjects = false;
+                this.modeSteps = false;
+                this.modeCategories = true;
+                this.pageCur = 1;
+            },
+            showSteps(){
+                this.modeProjects = false;
+                this.modeCategories = false;
+                this.modeSteps = true;
+                this.pageCur = 1;
+            },
+
+            toggleModal(type, indexLevel1, indexLevel2, indexLevel3) {
+                
+                this.modalType = type;
+
+                this.navigLevel1 = indexLevel1;
+                this.navigLevel2 = indexLevel2;
+                this.navigLevel3 = indexLevel3;
+
+                //console.log(indexLevel1);
+                //console.log(this.navigLevel1);
+                //console.log(indexLevel2);
+                //console.log(this.navigLevel2);
+                //console.log(indexLevel3);
+                //console.log(this.navigLevel3);
+
+                
+                if (indexLevel1 == -1) {
+                    this.modalName = '';
+                }
+
+                if (indexLevel1 !== -1 && indexLevel2 == -1) {
+                     this.modalName = this.filteredCategory[indexLevel1].name;
+                     this.modalCategoryUsed = this.filteredCategory[indexLevel1].projects.length !== 0;
+                }
+
+                if (indexLevel1 !== -1 && indexLevel2 !== -1) {
+                    this.modalName = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].name;
+                    this.modalCategoryUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].projects.length !== 0;
+                }
+
+                if (indexLevel1 !== -1 && indexLevel2 !== -1 && indexLevel3 !== -1) {
+                    this.modalName = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].name;
+                    this.modalCategoryUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].projects.length !== 0;
+                }
+
+
+                if (type === 1) {
+                    this.modalOperation = 'Ви впевнені, що хочете додати категорію в структуру? ' + this.modalName;
+                    this.modalTitle = 'Додавання категорії';
+                }
+                if (type === 2) {
+                    this.modalOperation = 'Ви впевнені, що хочете редагувати категорію проекту? ' + this.modalName;
+                    this.modalTitle = 'Редагування категорії';
+                    this.editCategoryName = this.modalName;
+                }
+                if (type === 3) {
+                    if (!this.modalCategoryUsed) {
+                        this.modalOperation = 'Ви впевнені, що хочете видалити категорію проекту? ' + this.modalName;
+                    } else {
+                        this.modalOperation = 'Категорія з назвою ' + this.modalName + ' використовується в проекті. Видалення не буде виконане';
+                    }
+                    this.modalTitle = 'Видалення категорії';
+                }
+                if (type === 4) {
+                    this.modalOperation = 'Ви впевнені, що хочете створити проект? ' + this.modalName;
+                    this.modalTitle = 'Додавання проекту';
+                }
+                if (type === 5) {
+                    this.modalOperation = 'Ви впевнені, що хочете редагувати проект?' + this.modalName;
+                    this.modalTitle = 'Редагування проекту';
+                }
+                if (type === 6) {
+                    this.modalOperation = 'Ви впевнені, що хочете видалити проект? ' + this.modalName;
+                    this.modalTitle = 'Видалення проекту';
+                }
+
+            },
+            closeAllAccordions() {
+                const accordionItems = document.querySelectorAll(".accordion-collapse");
+                accordionItems.forEach(item => {
+                    item.classList.remove("show");
+                })
+            },
+
+        }
+    });
+</script>

@@ -1,0 +1,277 @@
+﻿@using ReportingSystem.Properties;
+
+
+<head>
+    <title>Управління замовниками</title>
+</head>
+
+@{
+    ViewData["Title"] = "Управління замовниками";
+}
+
+<div class="text-center">
+    <h2 class="display-4">Управління замовниками</h2>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+<link rel="stylesheet" href="~/css/Customers.css" asp-append-version="true" />
+
+@*---------------------------------------------------------------------------------------------------------------------*@
+
+<div id="Customers" class="container">
+   @* Модальне вікно *@
+    <div class="accordion" id="accordionExample" v-if="customers.length !== 1">
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{modalOperation}}
+                        <table class="table" id="historyTable" v-if="historyCount > 0 && modalType === 4">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Дата Зміни</th>
+                                    <th>Тип</th>
+                                    <th>Діапазон</th>
+                                    <th>Статус</th>
+                                    <th>Ціна</th>
+                                    <th>Період</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(history, ind) in historyArr" :key="ind">
+                                    <td>{{ind+1}}</td>
+                                    <td>{{showFormatDate(historyArr[ind].dateChange)}}</td>
+                                    <td>{{historyArr[ind].nameOperation}}</td>
+                                    <td>{{showFormatDate(historyArr[ind].oldEndTimeLicence)}} => {{showFormatDate(historyArr[ind].newEndTimeLicence)}}</td>
+                                    <td>{{historyArr[ind].oldStatus.licenceName}} => {{historyArr[ind].newStatus.licenceName}}</td>
+                                    <td>{{historyArr[ind].price}}</td>
+                                    <td>{{historyArr[ind].period}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmRenewal(modalIndex)">Підтвердити</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmCancellation(modalIndex)">Підтвердити</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmArchiving(modalIndex)">Підтвердити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*---------------------------------------------------------------------------------------------------------------------*@
+        <div class="mb-3">
+            @* Поле введення для пошуку *@
+            <input v-model="searchQuery" type="text" class="form-control" placeholder="Пошук...">
+        </div>
+
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" v-model="showАрхівна" id="showАрхівна" v-on:change="closeAllAccordions()">
+            <label class="form-check-label" for="showАрхівна">Архівні</label>
+        </div>
+
+        <div class="mb-3 form-check" v-if="!showАрхівна">
+            <input type="checkbox" class="form-check-input" v-model="showExpired" id="showExpired" v-on:change="closeAllAccordions()">
+            <label class="form-check-label" for="showExpired">Прострочені ліцензії</label>
+        </div>
+        @*---------------------------------------------------------------------------------------------------------------------*@
+        <div class="container" v-if="countFilteredCustomers > 10">
+            <div class="row">
+                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
+                        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
+                        <button type="button" v-if="countFilteredCustomers > 10" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
+                        <button type="button" v-if="countFilteredCustomers > 15" class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
+                    </div>
+                    <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні" :style="{ visibility: pageCur !== 1 ? 'visible' : 'hidden' }"><<</button>
+                        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
+                        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні" :style="{ visibility: pageCur < pageCount ? 'visible' : 'hidden' }">>></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*---------------------------------------------------------------------------------------------------------------------*@
+        @* Головний акордеон *@
+        <div v-for="(customer, index) in filteredCustomers" :key="index" class="accordion-item" v-bind:class="{ 'highlighted': isLicenseExpired(customer) }">
+            <h2 class="accordion-header" :id="'heading' + index">
+                <button class="accordion-button" v-on:click="setFilteredIndex(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                    {{customer.firstName}} {{customer.secondName}} {{customer.thirdName}} ({{customer.email}})
+                </button>
+            </h2>
+            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Customers">
+                <div class="accordion-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><strong>@Resources.companyDataDirectorName:</strong></td>
+                                <td>{{customer.firstName}}<br>{{customer.secondName}}<br>{{customer.thirdName}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Телефон:</strong></td>
+                                <td>{{customer.phone}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>E-mail:</strong></td>
+                                <td>{{customer.email}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Resources.directorInfoAmountCompanies:</strong></td>
+                                <td>{{amountCompany(index)}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Resources.directorInfoAmountEmployees:</strong></td>
+                                <td>{{ getTotalEmployeesForUser(index) }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Resources.directorInfoTypeLicense:</strong></td>
+                                <td>{{ customer.statusLicence.licenceName }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>@Resources.directorInfoStatusLicense:</strong></td>
+                                <td>{{ showFormatDate(customer.endTimeLicense) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    <button v-on:click="toggleRenewalAccordion(index)" class="btn btn-outline-secondary">Продовжити ліцензію</button>
+                                    <button v-if="customer.statusLicence.licenceName !== 'Архівна' && customer.statusLicence.licenceName !== 'Анульована' && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Анулювання ліцензії</button>
+                                    <button v-if="customer.statusLicence.licenceName !== 'Архівна'" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Архівування</button>
+                                    <button v-if="historyCount>0" v-on:click="toggleModal(4, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Історія</button>                   
+                                </td>
+                            </tr>
+                            <tr v-if="isRenewalAccordionOpen(index)">
+                                <td colspan="2">
+                                    <h4>Продовження ліцензії:</h4>
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="period" v-model="selectedOption">
+                                            <label class="form-check-label" for="flexRadioDefault1">
+                                                Період
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="endDate" v-model="selectedOption">
+                                            <label class="form-check-label" for="flexRadioDefault2">
+                                                Кінцева дата
+                                            </label>
+                                        </div>
+                                    
+                                    <p>Термін продовження:</p>
+                                    <div v-if="selectedOption === 'period'"> 
+                                        <p>
+                                            <div class="form-group">
+                                                <label for="renewalPeriod">Період продовження:</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" id="renewalPeriod" v-model="bufferCost.renewalPeriod" v-on:input="handleRenewalPeriodChange(index)">
+                                                    <select class="form-control" v-model="bufferCost.renewalUnit" v-on:change="handleRenewalUnitChange(index)">
+                                                        <option value="day">День</option>
+                                                        <option value="week">Тиждень</option>
+                                                        <option value="month">Місяць</option>
+                                                        <option value="quarter">Квартал</option>
+                                                        <option value="year">Рік</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </p>
+                                    </div>
+                                    <div v-else>
+                                        <p>Дата до якої буде продовжено:</p><input type="date" class="form-control" data-date="" data-date-format="DD MMMM YYYY"
+                                           v-model="bufferCost.nextDateCalendar" v-on:change="handleRenewalCalendar(index)"/>
+                                    </div>
+
+                                    <h4>Загальна вартість ліцензії:</h4>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Стаття</th>
+                                                <th scope="col">Вартість</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>Базова ціна(місяць)</td>
+                                                <td>5000</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>Період продовження</td>
+                                                <td>{{bufferCost.subPeriod}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td> Завершення нової ліцензії</td>
+                                                <td>{{showFormatDate(bufferCost.nextDate)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>Розмір знижки(місяць)</td>
+                                                <td>{{bufferCost.amountCostDown}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>Всього знижка</td>
+                                                <td>{{bufferCost.allCostDown}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">6</th>
+                                                <td>Загальна вартість</td>
+                                                <td>{{bufferCost.amountGeneralCost}}</td>
+                                            </tr>
+                                            <tr v-if="isShowCheckMode(index)">
+                                                <td colspan="3" align="center">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" v-model="bufferCost.inactiveUser" v-on:change="calculateCost(index)">
+                                                        <label class="form-check-label" for="flexCheckDefault">
+                                                            Користувач не був активним (розрахунок від поточної дати)
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="right">
+                                                    <button v-on:click="toggleModal(1, index)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Підтвердити</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*тест методів створення кастомера тільки при наявності пошти*@
+        <div class="mb-3">
+            @* Поле введення для пошуку *@
+            <input v-model="testEmail" type="text" class="form-control" placeholder="Пошук...">
+        </div>
+        <button type="button" class="btn btn-light" v-on:click="createCustomer()">
+            TEST CREATE new Customer
+        </button>
+    </div>
+    <div v-else>
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div class="text-center">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/js/Customers.js" asp-append-version="true"></script>
