@@ -8,7 +8,7 @@ namespace ReportingSystem.Enum
         [EnumDisplayName("Актуальний")]
         Actual = 1,
 
-        [EnumDisplayName("Архівник")]
+        [EnumDisplayName("Архівний")]
         Archive = 2,
     }
 }

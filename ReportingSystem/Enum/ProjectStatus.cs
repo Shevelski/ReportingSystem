@@ -18,7 +18,7 @@ namespace ReportingSystem.Enum
         Support = 4,
 
         [EnumDisplayName("Архівний")]
-        Archive = 4,
+        Archive = 5,
 
     }
 }

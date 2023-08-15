@@ -38,8 +38,8 @@ namespace ReportingSystem.Controllers
             model.companies = new List<CompanyModel>();
             CustomerLicenseOperationModel history = new CustomerLicenseOperationModel()
             {
-                oldEndTimeLicence = DateTime.Today,
-                newEndTimeLicence = DateTime.Today.AddDays(30),
+                oldEndDateLicence = DateTime.Today,
+                newEndDateLicence = DateTime.Today.AddDays(30),
                 oldStatus = new CustomerLicenceStatusModel(),
                 newStatus = model.statusLicence,
             };
@@ -79,9 +79,9 @@ namespace ReportingSystem.Controllers
 
                     if (ar.Length > 1 && DateTime.TryParse(ar[1], out DateTime desiredDate))
                     {
-                        history.oldEndTimeLicence = licence.endTimeLicense;
+                        history.oldEndDateLicence = licence.endTimeLicense;
                         licence.endTimeLicense = desiredDate;
-                        history.newEndTimeLicence = licence.endTimeLicense;
+                        history.newEndDateLicence = licence.endTimeLicense;
                     }
                     history.price = Double.Parse(ar[2].Trim());
                     history.period = ar[3].Trim();
@@ -118,8 +118,8 @@ namespace ReportingSystem.Controllers
                             licenceName = LicenceType.Main.GetDisplayName()
                         };
                         history.newStatus = licence.statusLicence;
-                        history.oldEndTimeLicence = licence.endTimeLicense;
-                        history.newEndTimeLicence = licence.endTimeLicense;
+                        history.oldEndDateLicence = licence.endTimeLicense;
+                        history.newEndDateLicence = licence.endTimeLicense;
                         history.price = 0;
                         history.period = "-";
                         history.nameOperation = "Архівування";
@@ -161,9 +161,9 @@ namespace ReportingSystem.Controllers
 
                     if (ar.Length > 1 && DateTime.TryParse(ar[1], out DateTime desiredDate))
                     {
-                        history.oldEndTimeLicence = licence.endTimeLicense;
+                        history.oldEndDateLicence = licence.endTimeLicense;
                         licence.endTimeLicense = desiredDate;
-                        history.newEndTimeLicence = licence.endTimeLicense;
+                        history.newEndDateLicence = licence.endTimeLicense;
                     }
                     history.price = 0;
                     history.period = "-";

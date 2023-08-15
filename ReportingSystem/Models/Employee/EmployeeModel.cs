@@ -23,7 +23,7 @@ namespace ReportingSystem.Models.User
         public EmployeeStatusModel? status { get; set; }
         public DateTime birthDate { get; set; }
         public DateTime workStartDate { get; set; }
-        public DateTime workEnd { get; set; }
+        public DateTime workEndDate { get; set; }
         public List<DateTime>? holidayDate { get; set; }
         public List<DateTime>? hospitalDate { get; set; }
         public List<DateTime>? assignmentDate { get; set; }
