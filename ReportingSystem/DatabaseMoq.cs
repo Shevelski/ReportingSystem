@@ -1,14 +1,11 @@
 ﻿using Bogus;
-using System.Text.RegularExpressions;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models;
-using ReportingSystem.Test;
 using ReportingSystem.Test.GenerateData;
 using ReportingSystem.Test.Generate;
-using ReportingSystem.Enum;
 using System.Diagnostics;
 
 namespace ReportingSystem
@@ -27,11 +24,8 @@ namespace ReportingSystem
         public static List<ProjectStatusModel> ProjectStatus { get; set; }
         public static List<EmployeePositionModel> UserPositions { get; set; }
         public static List<EmployeeRolModel> UserRolls { get; set; }
-        
         public static List<CompanyStatusModel> CompanyStatus { get; set; }
-
         public static Random random = new Random();
-        
 
         static DatabaseMoq()
         {
@@ -66,18 +60,15 @@ namespace ReportingSystem
                 {
                     companies.Add(GenerateCompany.RandomCompany(customer));
                     Debug.WriteLine($"Company {i} added");
-
                 };
                 return companies;
             }
 
-           
-
-            for (int customers = 0; customers < 2; customers++)
+            for (int i = 0; i < 2; i++)
             {
                 var customer = GenerateRandomCustomer();
                 Customers.Add(customer);
-                Debug.WriteLine($"Customer {customers} added");
+                Debug.WriteLine($"Customer {i} added");
             }
         }
     }

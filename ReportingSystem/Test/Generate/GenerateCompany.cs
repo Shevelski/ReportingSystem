@@ -134,6 +134,7 @@ namespace ReportingSystem.Test.Generate
             employee.firstName = faker.Name.FirstName();
             employee.secondName = faker.Name.LastName();
             employee.thirdName = faker.Name.JobType();
+            employee.taxNumber = GenerateInfo.Code();
             employee.phoneSelf = GenerateInfo.MobilePhoneNumber();
             employee.phoneWork = GenerateInfo.PhoneNumber();
             employee.emailWork = (employee.secondName + ".com.ua").Replace(" ", "");

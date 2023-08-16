@@ -1,4 +1,4 @@
-﻿namespace ReportingSystem.Models.Project
+﻿namespace ReportingSystem.Models.Project.Step
 {
     public class ProjectStepStatusModel
     {

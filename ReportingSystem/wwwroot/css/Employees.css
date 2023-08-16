@@ -8,7 +8,8 @@ html {
 
 .form-control {
     font-size: 14px;
-    height:33px;
+    height: 33px;
+    width: 50%;
 }
 
 .btn-default.active {
@@ -20,13 +21,13 @@ form.editable input {
     color: #008080;
 }
 
-    @media (min-width: 768px) {
-        html {
-            font-size: 16px;
-        }
-    }
-
+@media (min-width: 768px) {
     html {
+        font-size: 16px;
+    }
+}
+
+html {
   position: relative;
   min-height: 100%;
 }
@@ -42,10 +43,20 @@ body {
     transform: translate(-50%, -50%);
 }
 
-.accordion-button {
-    height: 45px;
+.form-select {
+    font-size: 14px;
+    height: 33px;
+    width: 50%;
 }
 
+
+.accordion-button {
+    height: 40px;
+}
+
+.accordion-item {
+    width: 30%;
+}
 
 .red-text {
     color: red;

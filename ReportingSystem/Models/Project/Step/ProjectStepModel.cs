@@ -1,7 +1,7 @@
 ﻿using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 
-namespace ReportingSystem.Models
+namespace ReportingSystem.Models.Project.Step
 {
     public class ProjectStepModel
     {

@@ -94,7 +94,6 @@ new Vue({
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
             
         },
-
         getSelectedCompany(event) {
             console.log('ooooooooooooooooooooo');
             this.selectedCompanyId = event.target.value;
@@ -110,7 +109,21 @@ new Vue({
                 return v.toString(16);
             });
         },
-        
+        //handleAccordionOpen(index) {
+
+        //    console.log(`Accordion at index ${index} is opened.`);
+
+        //    if (this.openAccordionIndex !== -1) {
+        //        this.openAccordionIndex = -1;
+        //    }
+
+        //    this.openAccordionIndex = index;
+
+        //},
+        setIndexEmployee(index) {
+            this.indexEmployee = index;
+            console.log(index);
+        },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
@@ -137,6 +150,19 @@ new Vue({
             const jsDate = new Date(dateString);
             return jsDate.toLocaleDateString('en-GB', options);
         },
+        formatDate(dateTimeStr) {
+            const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
+            if (!dateRegex.test(dateTimeStr)) {
+                return '';
+            }
+
+            const date = new Date(dateTimeStr);
+            const day = date.getDate();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+
+            return `${day}/${month}/${year}`;
+        },
         async confirmEditEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;
             //const v1 = this.editUserFirstName;
@@ -155,6 +181,7 @@ new Vue({
             this.Init();
             this.closeAllAccordions();
         },
+
         async confirmArchiveEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;
             var ar = [v0];
