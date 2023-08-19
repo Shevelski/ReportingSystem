@@ -23,21 +23,20 @@ namespace ReportingSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanies(string id)
+        public async Task<IActionResult> GetCompanies()
         {
+
             await Task.Delay(10);
-            var companies = _companiesService.GetCompanies(id);
+            var companies = _companiesService.GetCompanies();
             return Json(companies);
-            //зараз бере id статичний js - виправити на поточний id customer
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetActualCompanies(string id)
+        public async Task<IActionResult> GetActualCompanies()
         {
             await Task.Delay(10);
-            var companies = _companiesService.GetActualCompanies(id);
+            var companies = _companiesService.GetActualCompanies();
             return Json(companies);
-            //зараз бере id статичний js - виправити на поточний id customer
         }
 
 
@@ -49,7 +48,7 @@ namespace ReportingSystem.Controllers
             return Json(company);
         }
 
-       
+
         [HttpPost]
         public async Task<IActionResult> ArchiveCompany([FromBody] string[] ar)
         {
@@ -58,108 +57,40 @@ namespace ReportingSystem.Controllers
             return Json(company);
         }
 
-        //--------------------------------------------------------------------------------------------продовжити розділяти
 
         [HttpPost]
         public async Task<IActionResult> DeleteCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-
-            Guid id = new Guid();
-            if (Guid.TryParse(ar[0], out Guid result))
-            {
-                id = result;
-            }
-
-            // тут замінити на id авторизованого директора
-            // тут замінити на id авторизованого директора
-            // тут замінити на id авторизованого директора
-            CompanyModel company = DatabaseMoq.Customers[0].companies.FirstOrDefault(c => c.id.Equals(id));
-            DatabaseMoq.Customers[0].companies.Remove(company);
-            DatabaseMoq.UpdateJson();
-            return Json(DatabaseMoq.Customers[0].companies);
+            var company = _companiesService.DeleteCompany(ar);
+            return Json(company);
         }
 
-        
-        private static Dictionary<Guid, CompanyModel> companiesData = new Dictionary<Guid, CompanyModel>();
+        //--------------------------------------------------------------------------------------------продовжити розділяти
 
         [HttpPost]
         public async Task<IActionResult> PostCheckCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-
-            Guid id = new Guid();
-            if (Guid.TryParse(ar[0], out Guid result))
-            {
-                id = result;
-            }
-
-            companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
-            DatabaseMoq.UpdateJson();
-            return NoContent();
+            var company = _companiesService.PostCheckCompany(ar);
+            return Json(company);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCheckCompany(string id)
         {
             await Task.Delay(10);
-
-            Guid guid = new Guid();
-            if (Guid.TryParse(id, out Guid result))
-            {
-                guid = result;
-            }
-
-            if (companiesData.TryGetValue(guid, out var companyDetails))
-            {
-                companiesData.Remove(guid);
-                DatabaseMoq.UpdateJson();
-                return Json(companyDetails);
-            }
-            else
-            {
-                return NotFound();
-            }
-
+            var company = _companiesService.GetCheckCompany(id);
+            return Json(company);
         }
 
 
         [HttpPost]
         public async Task<IActionResult> CreateCompany([FromBody] string[] ar)
         {
-            CompanyModel company = new CompanyModel();
-            company.name = ar[0];
-            company.code = ar[1];
-            company.address = ar[2];
-            company.actions = ar[3];
-            company.phone = ar[4];
-            company.email = ar[5];
-            company.registrationDate = DateTime.Today;
-            company.rolls = DefaultEmployeeRolls.Get();
-            company.positions = new List<EmployeePositionModel>();
-            company.employees = new List<EmployeeModel>();
-            company.status = new CompanyStatusModel()
-            {
-                companyStatusType = CompanyStatus.Project,
-                companyStatusName = CompanyStatus.Project.GetDisplayName(),
-            };
-
-            EmployeeModel chief = new EmployeeModel()
-            {
-                firstName = DatabaseMoq.Customers[0].firstName,
-                secondName = DatabaseMoq.Customers[0].secondName,
-                thirdName = DatabaseMoq.Customers[0].thirdName,
-                emailWork = DatabaseMoq.Customers[0].email,
-
-            };
-            company.chief = chief;
-            //поточний кастомер - змінити на id кастомера
-            DatabaseMoq.Customers[0].companies.Add(company);
-            DatabaseMoq.UpdateJson();
-            return NoContent();
-            //return Json(DatabaseMoq.Customers[0].companies);
-           
+            await Task.Delay(10);
+            var company = _companiesService.CreateCompany(ar);
+            return Json(company);
         }
-
     }
 }

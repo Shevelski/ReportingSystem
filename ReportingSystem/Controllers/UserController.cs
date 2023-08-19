@@ -8,7 +8,7 @@ namespace ReportingSystem.Controllers
     public class UserController : Controller
     {
         [HttpGet]
-        public async Task<IActionResult> GetUserInfo()
+        public async Task<IActionResult?> GetUserInfo()
         {
             await Task.Delay(10);
             //сюди треба пхати гуід з авторизації

@@ -1,3 +1,4 @@
+using ReportingSystem.Models.Customer;
 using ReportingSystem.Services;
 
 namespace ReportingSystem
@@ -14,6 +15,11 @@ namespace ReportingSystem
 
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<CompaniesService>();
+
+            //var config = builder.Configuration.GetSection("TempCustomer");
+            //builder.Services.Configure<CustomerModel>(config);
+
+
 
             var app = builder.Build();
 

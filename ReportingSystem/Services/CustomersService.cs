@@ -8,7 +8,7 @@ namespace ReportingSystem.Services
 {
     public class CustomersService
     {
-        public List<CustomerModel> GetCustomers()
+        public List<CustomerModel>? GetCustomers()
         {
             var customers = DatabaseMoq.Customers;
             return customers;
@@ -48,7 +48,7 @@ namespace ReportingSystem.Services
             return model;
         }
 
-        public async Task<CustomerModel> RenewalLicense(string[] ar)
+        public async Task<CustomerModel?> RenewalLicense(string[] ar)
         {
             await Task.Delay(10);
 
@@ -135,7 +135,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
-        public async Task<CustomerModel> CancellationLicence(string[] ar)
+        public async Task<CustomerModel?> CancellationLicence(string[] ar)
         {
             await Task.Delay(10);
             var history = new CustomerLicenseOperationModel();

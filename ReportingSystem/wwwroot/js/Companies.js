@@ -68,14 +68,14 @@ new Vue({
     },
     methods: {
         async Init() {
-            //let response = await axios.get("/Companies/GetCompanies");
+            let response = await axios.get("/Companies/GetCompanies");
 
-            const guid = '0e5f870d-8795-4423-8d73-2acf51cbe907';// виправити на поточний id замовника
-            let response = await axios.get('/Companies/GetCompanies', {
-                params: {
-                    id: guid
-                }
-            });
+            //const guid = '0e5f870d-8795-4423-8d73-2acf51cbe907';
+            //let response = await axios.get('/Companies/GetCompanies', {
+            //    params: {
+            //        id: guid
+            //    }
+            //});
 
             this.companies = response.data;
             this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
@@ -148,8 +148,9 @@ new Vue({
             const v3 = this.editCompanyActions;
             const v4 = this.editCompanyPhone;
             const v5 = this.editCompanyEmail;
-            const v6 = '0e5f870d-8795-4423-8d73-2acf51cbe907';
-            var ar = [v0, v1, v2, v3, v4, v5, v6];
+            var ar = [v0, v1, v2, v3, v4, v5];
+            /*const v6 = '0e5f870d-8795-4423-8d73-2acf51cbe907';*/
+            /*var ar = [v0, v1, v2, v3, v4, v5, v6];*/
 
             
             try {
@@ -163,8 +164,9 @@ new Vue({
         },
         async confirmArchiveCompany() {
             const v0 = this.filteredCompanies[this.indexCompany].id;
-            const v1 = '0e5f870d-8795-4423-8d73-2acf51cbe907';
-            var ar = [v0, v1];
+            var ar = [v0];
+            //const v1 = '0e5f870d-8795-4423-8d73-2acf51cbe907';
+            //var ar = [v0, v1];
 
             try {
                 await axios.post('/Companies/ArchiveCompany', ar);
@@ -178,6 +180,8 @@ new Vue({
         async confirmDeleteCompany() {
             const v0 = this.filteredCompanies[this.indexCompany].id;
             var ar = [v0];
+            //const v1 = '0e5f870d-8795-4423-8d73-2acf51cbe907';
+            //var ar = [v0, v1];
 
             try {
                 await axios.post('/Companies/DeleteCompany', ar);
