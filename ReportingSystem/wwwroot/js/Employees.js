@@ -2,6 +2,8 @@
 new Vue({
     el: '#Employees',
     data: {
+        mode: 'standart',
+        showEmployeeInfo: false,
         isSelectCompany: false,
         selectedCompanyId: '',
         useOpenDataBot: true,
@@ -22,15 +24,17 @@ new Vue({
         editEmployeeThirdName: '',
         newEmployee: {},
         employees: [0],
-        companies: [0]
+        companies: [0],
+        holidayDays: 0,
+        hospitalDays: 0,
+        assignmentDays: 0,
+        taketimeoffDays: 0,
     },
     mounted() {
         this.Init();
     },
     computed: {
-        saveCompany() {
-
-        },
+        
         countFilteredEmployees() {
             const currentDate = new Date();
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
@@ -94,6 +98,17 @@ new Vue({
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
             
         },
+        ToogleMode(mode) {
+            if (this.mode == 'edit') {
+                this.editUserInfo();
+            }
+            if (this.mode != mode) {
+                this.mode = mode;
+            }
+        },
+        saveCompany() {
+
+        },
         getSelectedCompany(event) {
             console.log('ooooooooooooooooooooo');
             this.selectedCompanyId = event.target.value;
@@ -121,8 +136,33 @@ new Vue({
 
         //},
         setIndexEmployee(index) {
-            this.indexEmployee = index;
+            //this.indexEmployee = index;
+            //this.showEmployeeInfo = true;
+
+            if (index == this.indexEmployee && this.showEmployeeInfo) {
+                this.showEmployeeInfo = false;
+            } else {
+                this.showEmployeeInfo = true;
+                this.indexEmployee = index;
+            }
+
             console.log(index);
+            console.log(this.showEmployeeInfo);
+        },
+        shortNameEmployee(index) {
+
+            var formattedName = this.filteredEmployees[index].secondName + ' ';
+            console.log(formattedName);
+            if (this.filteredEmployees[index].secondName) {
+                formattedName += this.filteredEmployees[index].firstName.charAt(0) + '.';
+            }
+            console.log(formattedName);
+            if (this.filteredEmployees[index].thirdName) {
+                formattedName += this.filteredEmployees[index].thirdName.charAt(0) + '.';
+            }
+
+            console.log(formattedName);
+            return formattedName;
         },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
@@ -258,6 +298,26 @@ new Vue({
                     this.modalOperation = 'Ви впевнені, що хочете видалити співробітника? ' + this.modalName;
                 }
                 this.modalTitle = 'Видалення співробітника';
+            }
+        },
+        handleImageChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.$nextTick(() => {
+                        this.updateImage(e.target.result);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        updateImage(imageData) {
+            const imageElement = this.$refs.imageElement;
+            if (imageElement) {
+                const prefix = 'data:image/jpeg;base64,';
+                const imageDataWithoutPrefix = imageData.replace(prefix, '');
+                imageElement.src = imageDataWithoutPrefix;
             }
         },
         closeAllAccordions() {

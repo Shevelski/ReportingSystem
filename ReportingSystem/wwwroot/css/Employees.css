@@ -12,6 +12,15 @@ html {
     width: 50%;
 }
 
+
+    .form-control.employeedata{
+        width: 100%;
+    }
+
+    .form-control.employeedata.dates {
+        width: 100%;
+    }
+
 .btn-default.active {
     background: #6c757d;
     color: #fff;
@@ -49,16 +58,42 @@ body {
     width: 50%;
 }
 
-
 .accordion-button {
     height: 40px;
 }
 
-.accordion-item {
-    width: 30%;
-}
 
 .red-text {
     color: red;
 }
 
+.column1 {
+    width: 100%;
+    transition: width 0.3s ease-in-out;
+}
+.column2 {
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+}
+
+.column1.mod {
+    width: 30%;
+    transition: width 0.3s ease-in-out;
+}
+
+.column2.mod {
+    width: 70%;
+    transition: width 0.3s ease-in-out;
+}
+
+.panel {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+}
+
+    .panel.active {
+        opacity: 1;
+        max-height: 500px; /* Встановіть відповідну максимальну висоту */
+    }

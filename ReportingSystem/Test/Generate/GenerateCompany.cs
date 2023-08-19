@@ -148,7 +148,7 @@ namespace ReportingSystem.Test.Generate
             employee.password = GenerateInfo.Password();
             employee.addressFact = faker.Address.FullAddress();
             employee.addressReg = faker.Address.FullAddress();
-            employee.photo = "/img/EmptyPhoto.jpg";
+            employee.photo = "/img/UserPhoto/John1.jpg";
             employee.salary = random.Next(20000, 100000);
             employee.addSalary = employee.salary * random.Next(10, 60) / 100.0;
             employee.birthDate = GenerateDate.BetweenDates(DateTime.Today.AddYears(-60), DateTime.Today.AddYears(-20));

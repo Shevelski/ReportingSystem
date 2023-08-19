@@ -18,6 +18,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="~/css/Employees.css" asp-append-version="true" />
+
 @*---------------------------------------------------------------------------------------------------------------------*@
 
 <div class="container" id="Employees">
@@ -136,95 +137,293 @@
                 -------
             </div>
         </div>*@
+
+@*        <table class="table" style="border: 1px solid black">
+            <tbody>
+                <tr style="border: 1px solid black">
+                    <td :class="{ 'column1': showEmployeeInfo, 'column1 mod': !showEmployeeInfo }" style="border: 1px solid black">
+                        1
+                    </td>
+                    <td :class="{ 'column2': showEmployeeInfo, 'column2 mod': !showEmployeeInfo }" style="border: 1px solid black">
+                        <div v-if="!showEmployeeInfo">
+                            <div class="panel panel-default" v-if="!showEmployeeInfo">
+                                <div class="form-group">
+                                    <label class="control-label">Ім'я'</label>
+                                    <input type="text" class="form-control employeedata" placeholder="Введіть @Resources.personalUserInfoSecondName.ToLower()" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].secondName" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>*@
+
+
+
         <table class="table">
+            <tbody>
+                <tr>
+                    <td :class="{ 'column1': !showEmployeeInfo, 'column1 mod': showEmployeeInfo }">
+                        <div style="margin-top: 1em;"></div>
+                        <div v-for="(employee, index) in filteredEmployees" :key="index" class="accordion-item">
+                            <h2 class="accordion-header" :id="'heading' + index">
+                                <button class="accordion-button" v-on:click="setIndexEmployee(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                                    @*--------------------------------------------------------------------------*@
+                                    <div v-if="showEmployeeInfo">
+                                        {{shortNameEmployee(index)}}
+                                    </div>
+                                    <div v-else>
+                                        {{ employee.firstName }} {{employee.secondName}} {{employee.thirdName}}
+                                    </div>
+                                    @*--------------------------------------------------------------------------*@
+                                    
+                                </button>
+                            </h2>
+                            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Employees">                
+                                @*-------*@
+                                <div class="container">
+                                    <div class="row justify-content-center">
+                                        <div class="col-sm-12">
+                                            <div class="panel-footer mb-3">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="pull-right">
+                                                            <button class="btn btn-default mt-3"
+                                                                    v-bind:class="{active: mode == 'standart'}"
+                                                                    v-on:click="ToogleMode('edit')">
+                                                                @Resources.buttonEdit
+                                                            </button>
+
+                                                            <button class="btn btn-default mt-3"
+                                                                    v-bind:class="{active: mode == 'edit'}"
+                                                                    v-on:click="ToogleMode('standart')">
+                                                                @Resources.buttonConfirm
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*-------*@
+                            </div>
+                        </div>
+                    </td>
+                    <td :class="{ 'column2': !showEmployeeInfo, 'column2 mod': showEmployeeInfo }">
+                        @*<div v-if="showEmployeeInfo">*@
+                            <div class="panel" :class="{ 'active': showEmployeeInfo }">
+                                <div class="panel-heading"></div>
+                                <div class="panel-body">
+                                    <form v-bind:class="{editable: mode == 'edit'}">
+                                        <div class="row align-items-center">
+
+                                            <div class="row">
+
+                                                <div class="col-sm-4">
+                                                    <div class="clearfix" style="display: flex; justify-content: center;">
+                                                        <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
+                                                        <label for="imageInput">
+                                                            <img :src="filteredEmployees[indexEmployee].photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
+                                                        </label>
+                                                    </div>
+
+
+                                                    <div class="form-group">
+                                                        <label class="control-label">Прізвище</label>
+                                                        <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].firstName" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Ім'я</label>
+                                                        <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].secondName" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">По-батькові</label>
+                                                        <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].thirdName" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">Дата народження</label>
+                                                        <input type="date" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].birthDate" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label">@Resources.personalUserInfoWorkStartDate</label>
+                                                        <input type="date" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].workStartDate" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-sm-8">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Посада</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].position.namePosition" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Роль в системі</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].rol.rolName" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    @*----------------------------------------------------------------------------------*@
+                                                    <div class="row mt-3">
+                                                        <label class="control-label" style="text-align: center; font-weight: bold;">Робоча інформація</label>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Телефон</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].phoneWork" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label">@Resources.personalUserInfoTaxNumber</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].taxNumber" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">E-mail</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].emailWork" />
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label">Оклад</label>
+                                                                        <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].salary" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label">Премія</label>
+                                                                        <input type="text" class="form-control employeedata" v-model="filteredEmployees[indexEmployee].addSalary" v-bind:disabled="true" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">@Resources.personalUserInfoHoliday</label>
+                                                                    <input type="text" class="form-control employeedata" v-model="holidayDays" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">@Resources.personalUserInfoHospital</label>
+                                                                    <input type="text" class="form-control employeedata" v-model="hospitalDays" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відрядження</label>
+                                                                    <input type="text" class="form-control employeedata" v-model="assignmentDays" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відгули</label>
+                                                                    <input type="text" class="form-control employeedata" v-model="taketimeoffDays" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                       
+                                                        
+                                                    </div>
+                                                    @*----------------------------------------------------------------------------------*@
+                                                    <div class="row mt-3">
+                                                        <label class="control-label" style="text-align: center; font-weight: bold;">Особиста інформація</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">Телефон</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].phoneSelf" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label">@Resources.personalUserInfoAddressReg</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].addressReg" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label class="control-label">E-mail</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].emailSelf" />
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label class="control-label">@Resources.personalUserInfoAddressFact</label>
+                                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].addressFact" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      
+
+
+
+
+                                        
+
+
+                                    </form>
+                                </div>
+                                
+                            </div>
+                            <div v-else>
+                                <div style="margin-top: 50px; margin-bottom: 50px;">
+                                    <div class="text-center">
+                                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @*</div>*@
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+                    
+               
+
+
+
+        @*<table class="table">
             <tbody>
                 <tr>
                     <td>
                         <div style="margin-top: 1em;"></div>
-                        <div v-for="(employee, index) in filteredEmployees" :key="index" class="accordion-item">
+                        <div v-for="(employee, index) in filteredEmployees" :key="index" :class="{ 'accordion-item': !showEmployeeInfo, 'accordion-item active': showEmployeeInfo }">
                             <h2 class="accordion-header" :id="'heading' + index">
                                 <button class="accordion-button" v-on:click="setIndexEmployee(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
                                     {{ employee.firstName }} {{employee.secondName}} {{employee.thirdName}}
                                 </button>
                             </h2>
                             <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Employees">
-                                -------
                             </div>
                         </div>
                     </td>
-                    <td>
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Повне ім'я</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].firstName}} {{filteredEmployees[indexEmployee].secondName}} {{filteredEmployees[indexEmployee].thirdName}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Дата народження</strong></td>
-                                    <td>{{showFormatDate(filteredEmployees[indexEmployee].birthDate)}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Адреса проживання</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].addressFact}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Адреса реєстрації</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].addressReg}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Дата призначення</strong></td>
-                                    <td>{{showFormatDate(filteredEmployees[indexEmployee].assignmentDate)}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Дата прийому на роботу</strong></td>
-                                    <td>{{showFormatDate(filteredEmployees[indexEmployee].workStartDate)}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Дата закінчення роботи</strong></td>
-                                    <td>{{showFormatDate(filteredEmployees[indexEmployee].workEndDate)}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Посада</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].position.namePosition}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Зарплата</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].salary}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Податковий номер</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].taxNumber}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Електронна пошта (особиста)</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].emailSelf}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Електронна пошта (робоча)</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].emailWork}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Телефон (особистий)</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].phoneSelf}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Телефон (робочий)</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].phoneWork}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Статус</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].status.employeeStatusName}}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Роль</strong></td>
-                                    <td>{{filteredEmployees[indexEmployee].rol.rolName}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <td v-if="showEmployeeInfo">
+
+                        <div class="panel panel-default" v-if="filteredEmployees[indexEmployee].id">
+                            <div class="form-group">
+                                <label class="control-label">Ім'я'</label>
+                                <input type="text" class="form-control employeedata" placeholder="Введіть @Resources.personalUserInfoSecondName.ToLower()" v-bind:disabled="true" v-model="filteredEmployees[indexEmployee].secondName" />
+                            </div>
+                        </div>
+
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </table>*@
 
     </div>
     <div v-else>
