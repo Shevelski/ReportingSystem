@@ -18,18 +18,7 @@
         modalType: null,
         searchQuery: '',
         historyCount: 0,
-        historyArr: [{
-            id: 0,
-            idCustomer: '',
-            dateChange: '',
-            oldEndTimeLicence: '',
-            newEndTimeLicence: '',
-            oldStatus: '',
-            newStatus: '',
-            price: '',
-            period: '',
-            nameOperation: '',
-        }],
+        historyArr: [],
         bufferCost:
         {
             nextDate: new Date(),

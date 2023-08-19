@@ -92,6 +92,7 @@ namespace ReportingSystem.Controllers
             company.actions = ar[3];
             company.phone = ar[4];
             company.email = ar[5];
+            DatabaseMoq.UpdateJson();
             return Json(company);
         }
 
@@ -116,6 +117,7 @@ namespace ReportingSystem.Controllers
                 companyStatusType = Enum.CompanyStatus.Archive,
                 companyStatusName = Enum.CompanyStatus.Archive.GetDisplayName(),
             };
+            DatabaseMoq.UpdateJson();
             return Json(DatabaseMoq.Customers[0].companies);
         }
 
@@ -135,7 +137,7 @@ namespace ReportingSystem.Controllers
             // тут замінити на id авторизованого директора
             CompanyModel company = DatabaseMoq.Customers[0].companies.FirstOrDefault(c => c.id.Equals(id));
             DatabaseMoq.Customers[0].companies.Remove(company);
-
+            DatabaseMoq.UpdateJson();
             return Json(DatabaseMoq.Customers[0].companies);
         }
 
@@ -154,6 +156,7 @@ namespace ReportingSystem.Controllers
             }
 
             companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
+            DatabaseMoq.UpdateJson();
             return NoContent();
         }
 
@@ -212,7 +215,7 @@ namespace ReportingSystem.Controllers
             company.chief = chief;
             //поточний кастомер - змінити на id кастомера
             DatabaseMoq.Customers[0].companies.Add(company);
-
+            DatabaseMoq.UpdateJson();
             return NoContent();
             //return Json(DatabaseMoq.Customers[0].companies);
            

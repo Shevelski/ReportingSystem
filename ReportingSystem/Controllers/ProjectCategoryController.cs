@@ -39,6 +39,7 @@ namespace ReportingSystem.Controllers
                 else
                 {
                     categoryLevel1.name = newName;
+                    DatabaseMoq.UpdateJson();
                     return Json(categoryLevel1);
                 }
             }
@@ -56,6 +57,7 @@ namespace ReportingSystem.Controllers
                 projectCategoryModel.id = Guid.NewGuid();
                 projectCategoryModel.name = newName;
                 DatabaseMoq.ProjectsCategories.Add(projectCategoryModel);
+                DatabaseMoq.UpdateJson();
                 return Json(DatabaseMoq.ProjectsCategories);
             }
             else
@@ -67,6 +69,7 @@ namespace ReportingSystem.Controllers
                     projectCategoryModel2.id = Guid.NewGuid();
                     projectCategoryModel2.name = newName;
                     categoryLevel1.categoriesLevel2.Add(projectCategoryModel2);
+                    DatabaseMoq.UpdateJson();
                     return Json(categoryLevel1.categoriesLevel2);
                 }
                 if (levels[2] == -1)
@@ -75,6 +78,7 @@ namespace ReportingSystem.Controllers
                     projectCategoryModel3.id = Guid.NewGuid();
                     projectCategoryModel3.name = newName;
                     categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3.Add(projectCategoryModel3);
+                    DatabaseMoq.UpdateJson();
                     return Json(categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3);
                 }
 
@@ -134,7 +138,7 @@ namespace ReportingSystem.Controllers
                     }
                 }
             }
-
+            DatabaseMoq.UpdateJson();
 
             return NotFound();
         }

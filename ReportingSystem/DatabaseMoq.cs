@@ -9,12 +9,14 @@ using ReportingSystem.Test.Generate;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using Bogus.DataSets;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ReportingSystem
 {
     public static class DatabaseMoq
     {
         public static List<CustomerModel>? Customers { get; set; }
+        public static List<CustomerModel>? UpdateCustomers { get; set; }
         public static List<List<EmployeeModel>>? AllUsers { get; set; }
         public static List<EmployeeModel>? Users { get; set; }
         public static List<List<ProjectCategoryModel>>? AllProjectsCategories { get; set; }
@@ -44,9 +46,14 @@ namespace ReportingSystem
                 File.WriteAllText(DataFilePath, jsonData);
             }
 
+           
+        }
 
-            
-
+        public static void UpdateJson()
+        {
+            string jsonData = JsonConvert.SerializeObject(DatabaseMoq.Customers, Formatting.Indented);
+            File.WriteAllText(DataFilePath, jsonData);
+            UpdateCustomers = Customers;
         }
     }
 }

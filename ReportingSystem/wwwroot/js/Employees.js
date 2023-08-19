@@ -75,7 +75,14 @@ new Vue({
     },
     methods: {
         async Init() {
-            let responseCompanies = await axios.get("/Companies/GetActualCompanies");
+            //let responseCompanies = await axios.get("/Companies/GetActualCompanies");
+
+            const guid = '0e5f870d-8795-4423-8d73-2acf51cbe907';// виправити на поточний id замовника
+            let responseCompanies = await axios.get('/Companies/GetActualCompanies', {
+                params: {
+                    id: guid
+                }
+            });
             this.companies = responseCompanies.data;
             console.log(this.companies);
             var idComp = '';

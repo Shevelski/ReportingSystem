@@ -23,16 +23,19 @@ namespace ReportingSystem.Controllers
             if (levels[1] != -1 && levels[2] != -1)
             {
                 categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3[levels[2]].name = newName;
+                DatabaseMoq.UpdateJson();
                 return Json(categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3[levels[2]]);
             } 
             else if (levels[1] != -1 && levels[2] == -1)
             {
                 categoryLevel1.categoriesLevel2[levels[1]].name = newName;
+                DatabaseMoq.UpdateJson();
                 return Json(categoryLevel1.categoriesLevel2[levels[1]]);
             }
             else
             {
                 categoryLevel1.name = newName;
+                DatabaseMoq.UpdateJson();
                 return Json(categoryLevel1);
             }
             
@@ -49,6 +52,7 @@ namespace ReportingSystem.Controllers
                 projectCategoryModel.id = Guid.NewGuid();
                 projectCategoryModel.name = newName;
                 DatabaseMoq.ProjectsCategories.Add(projectCategoryModel);
+                DatabaseMoq.UpdateJson();
                 return Json(DatabaseMoq.ProjectsCategories);
             }
             else
@@ -60,6 +64,7 @@ namespace ReportingSystem.Controllers
                     projectCategoryModel2.id = Guid.NewGuid();
                     projectCategoryModel2.name = newName;
                     categoryLevel1.categoriesLevel2.Add(projectCategoryModel2);
+                    DatabaseMoq.UpdateJson();
                     return Json(categoryLevel1.categoriesLevel2);
                 }
                 if (levels[2] == -1)
@@ -68,6 +73,7 @@ namespace ReportingSystem.Controllers
                     projectCategoryModel3.id = Guid.NewGuid();
                     projectCategoryModel3.name = newName;
                     categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3.Add(projectCategoryModel3);
+                    DatabaseMoq.UpdateJson();
                     return Json(categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3);
                 }
 
@@ -119,6 +125,8 @@ namespace ReportingSystem.Controllers
             {
                 categoryLevel2.categoriesLevel3.Remove(categoryLevel3);
             }
+
+            DatabaseMoq.UpdateJson();
 
             return NotFound();
         }

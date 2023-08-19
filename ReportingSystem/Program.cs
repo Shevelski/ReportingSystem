@@ -1,3 +1,5 @@
+using ReportingSystem.Services;
+
 namespace ReportingSystem
 {
     public class Program
@@ -9,6 +11,9 @@ namespace ReportingSystem
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+
+            builder.Services.AddScoped<CustomersService>();
+            builder.Services.AddScoped<CompaniesService>();
 
             var app = builder.Build();
 

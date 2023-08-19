@@ -23,7 +23,7 @@ namespace ReportingSystem.Controllers
             return View();
         }
 
-        public IActionResult User()
+        public IActionResult Employee()
         {
             return View();
         }

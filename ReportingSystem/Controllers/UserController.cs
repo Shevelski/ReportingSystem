@@ -29,6 +29,7 @@ namespace ReportingSystem.Controllers
             if (userIndex >= 0)
             {
                 DatabaseMoq.Users[userIndex] = userInfoModel;
+                DatabaseMoq.UpdateJson();
                 return Json(DatabaseMoq.Users);
             }
             else
