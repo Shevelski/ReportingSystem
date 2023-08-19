@@ -7,6 +7,8 @@ using ReportingSystem.Models;
 using ReportingSystem.Test.GenerateData;
 using ReportingSystem.Test.Generate;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using Bogus.DataSets;
 
 namespace ReportingSystem
 {
@@ -25,51 +27,26 @@ namespace ReportingSystem
         public static List<EmployeePositionModel> UserPositions { get; set; }
         public static List<EmployeeRolModel> UserRolls { get; set; }
         public static List<CompanyStatusModel> CompanyStatus { get; set; }
-        public static Random random = new Random();
 
+        private const string DataFilePath = "data.json";
         static DatabaseMoq()
         {
-            Customers = new List<CustomerModel>();
-            Companies = new List<CompanyModel>();
-            Users = new List<EmployeeModel>();
 
-            var faker = new Faker();
-
-            static CustomerModel GenerateRandomCustomer()
+            if (File.Exists(DataFilePath) && new FileInfo(DataFilePath).Length > 0)
             {
-                var faker = new Faker();
-                CustomerModel customer = new CustomerModel();
-                customer.id = Guid.NewGuid();
-                customer.firstName = faker.Name.FirstName();
-                customer.secondName = faker.Name.LastName();
-                customer.thirdName = faker.Name.FirstName();
-                customer.statusLicence = GenerateCustomer.Status();
-                customer.phone = GenerateInfo.MobilePhoneNumber();
-                customer.email = (customer.secondName + ".com.ua").Replace(" ", "").ToLower();
-                customer.password = GenerateInfo.Password();
-                customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
-                customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
-                customer.companies = GenerateRandomCompanies(customer);
-                return customer;
+                string jsonData = File.ReadAllText(DataFilePath);
+                Customers = JsonConvert.DeserializeObject<List<CustomerModel>>(jsonData);
+            }
+            else
+            {
+
+                string jsonData = JsonConvert.SerializeObject(DatabaseMoqGenerate.Customers, Formatting.Indented);
+                File.WriteAllText(DataFilePath, jsonData);
             }
 
-            static List<CompanyModel> GenerateRandomCompanies(CustomerModel customer)
-            {
-                List<CompanyModel> companies = new List<CompanyModel>();
-                for (int i = 0; i < random.Next(15, 30); i++)
-                {
-                    companies.Add(GenerateCompany.RandomCompany(customer));
-                    Debug.WriteLine($"Company {i} added");
-                };
-                return companies;
-            }
 
-            for (int i = 0; i < 2; i++)
-            {
-                var customer = GenerateRandomCustomer();
-                Customers.Add(customer);
-                Debug.WriteLine($"Customer {i} added");
-            }
+            
+
         }
     }
 }

@@ -137,8 +137,8 @@ namespace ReportingSystem.Test.Generate
             employee.taxNumber = GenerateInfo.Code();
             employee.phoneSelf = GenerateInfo.MobilePhoneNumber();
             employee.phoneWork = GenerateInfo.PhoneNumber();
-            employee.emailWork = (employee.secondName + ".com.ua").Replace(" ", "");
-            employee.emailSelf = (employee.firstName + ".com.ua").Replace(" ", "");
+            employee.emailWork = (employee.secondName + "@gmail.ua").Replace(" ", "");
+            employee.emailSelf = (employee.firstName + "@gmail.ua").Replace(" ", "");
             employee.login = employee.secondName;
             employee.status = new EmployeeStatusModel()
             {

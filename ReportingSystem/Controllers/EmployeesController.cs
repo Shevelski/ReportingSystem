@@ -30,6 +30,23 @@ namespace ReportingSystem.Controllers
         //    return Json(x);
         //}
 
+
+        [HttpGet]
+        public async Task<IActionResult> CheckEmployeeEmail(string email)
+        {
+            await Task.Delay(10);
+
+            return NoContent();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckEmployeePassword(string password)
+        {
+            await Task.Delay(10);
+
+            return NoContent();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetEmployees(string id)
         {
