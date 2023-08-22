@@ -1,18 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReportingSystem.Models.Project;
+using ReportingSystem.Services;
 
 namespace ReportingSystem.Controllers
 {
 
-    public class ProjectCategoryController : Controller
+    public class ProjectsCategoriesController : Controller
     {
+
+        private readonly ProjectsCategoriesService _projectsCategoriesService;
+
+        public ProjectsCategoriesController(ProjectsCategoriesService projectsCategoriesService)
+        {
+            _projectsCategoriesService = projectsCategoriesService;
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
+
             await Task.Delay(10);
-            return Json(DatabaseMoq.ProjectsCategories);
+            var result = _projectsCategoriesService.GetCategories();
+            return Json(result);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> EditNameCategory([FromBody] int[] levels, string newName, Guid idLevel1)

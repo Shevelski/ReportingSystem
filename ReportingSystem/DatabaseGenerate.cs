@@ -15,7 +15,7 @@ namespace ReportingSystem
         public static List<CustomerModel>? Customers { get; set; }
         public static List<List<EmployeeModel>>? AllUsers { get; set; }
         public static List<EmployeeModel>? Users { get; set; }
-        public static List<List<ProjectCategoryModel>>? AllProjectsCategories { get; set; }
+        public static List<ProjectCategoryModel>? AllProjectsCategories { get; set; }
         public static List<ProjectCategoryModel>? ProjectsCategories { get; set; }
         public static List<List<ProjectModel>>? AllProjects { get; set; }
         public static List<ProjectModel>? Projects{ get; set; }

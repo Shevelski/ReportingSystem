@@ -76,13 +76,6 @@ new Vue({
     methods: {
         async Init() {
             let responseCompanies = await axios.get("/Companies/GetActualCompanies");
-
-           /* const guid = '0e5f870d-8795-4423-8d73-2acf51cbe907';*/// виправити на поточний id замовника
-            //let responseCompanies = await axios.get('/Companies/GetActualCompanies', {
-            //    params: {
-            //        id: guid
-            //    }
-            //});
             this.companies = responseCompanies.data;
             console.log(this.companies);
             var idComp = '';
@@ -90,9 +83,6 @@ new Vue({
             if (this.isSelectCompany) {
                 idComp = this.selectedCompanyId;
             };
-
-            console.log("Selected Company ID:", this.selectedCompanyId);
-            console.log("Selected Company ID:", idComp);
 
             let response = await axios.get("/Employees/GetEmployees", {
                 params: {
@@ -102,6 +92,13 @@ new Vue({
 
             this.employees = response.data;
             console.log(this.employees);
+            for (let j = 0; j < this.employees.length; j++) {
+                this.employees[j].birthDate = this.dateCSharpToJs(this.employees[j].birthDate);
+                this.employees[j].workStartDate = this.dateCSharpToJs(this.employees[j].workStartDate);
+                this.employees[j].workEndDate = this.dateCSharpToJs(this.employees[j].workEndDate);
+                //this.calculateDaysCurYear(j);
+            };            
+            
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
             
         },
@@ -113,11 +110,17 @@ new Vue({
                 this.mode = mode;
             }
         },
+        async editUserInfo() {
+            try {
+                const response = await axios.post('/UserInfo/EditUserInfo', this.personalInfo);
+            } catch (error) {
+                console.error('Помилка під час виклику методу EditUserInfo:', error);
+            }
+        },
         saveCompany() {
 
         },
         getSelectedCompany(event) {
-            console.log('ooooooooooooooooooooo');
             this.selectedCompanyId = event.target.value;
             this.isSelectCompany = true;
 
@@ -131,46 +134,93 @@ new Vue({
                 return v.toString(16);
             });
         },
-        //handleAccordionOpen(index) {
-
-        //    console.log(`Accordion at index ${index} is opened.`);
-
-        //    if (this.openAccordionIndex !== -1) {
-        //        this.openAccordionIndex = -1;
-        //    }
-
-        //    this.openAccordionIndex = index;
-
-        //},
         setIndexEmployee(index) {
-            //this.indexEmployee = index;
-            //this.showEmployeeInfo = true;
-
             if (index == this.indexEmployee && this.showEmployeeInfo) {
                 this.showEmployeeInfo = false;
             } else {
                 this.showEmployeeInfo = true;
                 this.indexEmployee = index;
             }
-
-            console.log(index);
-            console.log(this.showEmployeeInfo);
         },
         shortNameEmployee(index) {
 
             var formattedName = this.filteredEmployees[index].secondName + ' ';
-            console.log(formattedName);
             if (this.filteredEmployees[index].secondName) {
                 formattedName += this.filteredEmployees[index].firstName.charAt(0) + '.';
             }
-            console.log(formattedName);
             if (this.filteredEmployees[index].thirdName) {
                 formattedName += this.filteredEmployees[index].thirdName.charAt(0) + '.';
             }
-
-            console.log(formattedName);
             return formattedName;
         },
+        holidayDaysCount(indexEmployee) {
+            const currentYear = new Date().getFullYear();
+            if (this.employees[indexEmployee].holidayDate !== null) {
+                const datesThisYear = this.employees[indexEmployee].holidayDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                return datesThisYear.length;
+            } else {
+                return 0;
+            }   
+        },
+        hospitalDaysCount(indexEmployee) {
+            const currentYear = new Date().getFullYear();
+            if (this.employees[indexEmployee].hospitalDate !== null) {
+                const datesThisYear = this.employees[indexEmployee].hospitalDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                return datesThisYear.length;
+            } else {
+                return 0;
+            }
+        },
+        assignmentDaysCount(indexEmployee) {
+            const currentYear = new Date().getFullYear();
+            if (this.employees[indexEmployee].assignmentDate !== null) {
+                const datesThisYear = this.employees[indexEmployee].assignmentDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                return datesThisYear.length;
+            } else {
+                return 0;
+            }
+        },
+        taketimeoffDaysCount(indexEmployee) {
+            const currentYear = new Date().getFullYear();
+            if (this.employees[indexEmployee].taketimeoffDate !== null) {
+                const datesThisYear = this.employees[indexEmployee].taketimeoffDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                return datesThisYear.length;
+            } else {
+                return 0;
+            }
+        },
+        //calculateDaysCurYear(index) {
+        //    const currentYear = new Date().getFullYear();
+        //    console.log(this.employees[index].holidayDate);
+        //    const datesThisYear1 = this.employees[index].holidayDate.filter(date => {
+        //        return new Date(date).getFullYear() === currentYear;
+        //    });
+        //    console.log(datesThisYear1);
+        //    this.holidayDays[index] = datesThisYear1.length;
+
+        //    const datesThisYear2 = this.employees[index].hospitalDate.filter(date => {
+        //        return new Date(date).getFullYear() === currentYear;
+        //    });
+        //    this.hospitalDays[index] = datesThisYear2.length;
+
+        //    const datesThisYear3 = this.employees[index].assignmentDate.filter(date => {
+        //        return new Date(date).getFullYear() === currentYear;
+        //    });
+        //    this.assignmentDays[index] = datesThisYear3.length;
+
+        //    const datesThisYear4 = this.employees[index].taketimeoffDate.filter(date => {
+        //        return new Date(date).getFullYear() === currentYear;
+        //    });
+        //    this.taketimeoffDays[index] = datesThisYear4.length;
+        //},
         setItemsPerPage(count) {
             this.itemsPerPage = count;
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
@@ -209,6 +259,28 @@ new Vue({
             const year = date.getFullYear();
 
             return `${day}/${month}/${year}`;
+        },
+        dateCSharpToJs(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+
+            return `${year}-${month}-${day}`;
+        },
+        formatDateToISO(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+            const offset = -date.getTimezoneOffset();
+            const offsetHours = Math.floor(offset / 60);
+            const offsetMinutes = offset % 60;
+            const offsetSign = offset >= 0 ? '-' : '+';
+
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offsetSign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
         },
         async confirmEditEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;

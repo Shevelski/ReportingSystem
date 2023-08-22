@@ -3,70 +3,99 @@ using ReportingSystem.Enum;
 using ReportingSystem.Enum.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.User;
 
 namespace ReportingSystem.Services
 {
-    public class CustomersService
+    public class EmployeesService
     {
-
-        CustomerModel customer = new CustomerModel();
-        List<CustomerModel> customers = new List<CustomerModel>();
-        CompanyModel company = new CompanyModel();
-        List<CompanyModel> companies = new List<CompanyModel>();
-        Random random = new Random();
-
-        public List<CustomerModel>? GetCustomers()
+        public List<EmployeeModel>? GetEmployees(string companyId)
         {
-            var customers = DatabaseMoq.Customers;
-            return customers;
+
+            CompaniesService companiesService = new CompaniesService();
+            List<CustomerModel>? customers = DatabaseMoq.Customers;
+            CustomerModel? customer = new CustomerModel();
+            CompanyModel? company = new CompanyModel();
+            List<CompanyModel>? companies = new List<CompanyModel>();
+            string id = companiesService.GetCustomerId();
+
+            if (customers != null && Guid.TryParse(id, out Guid idCustomer))
+            {
+                customer = customers.First(cu => cu.id.Equals(idCustomer));
+                companies = customer.companies;
+                if (companies != null)
+                {
+                    if (Guid.TryParse(companyId, out Guid companyIdGuid))
+                    {
+                        company = companies.FirstOrDefault(company => company.id == companyIdGuid);
+                        if (company != null)
+                        {
+                            return company.employees;
+                        }
+                    }
+                    else
+                    {
+                        if (companies != null)
+                        {
+                            company = companies[0];
+                            return company.employees;
+                        }
+                    }
+                }
+            }
+            return null;
         }
 
-        public CustomerModel? CreateCustomer(string email)
+        public CustomerModel CreateCustomer(string email)
         {
-            
+            Random random = new Random();
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
 
-            customer.id = Guid.NewGuid();
-            customer.email = email;
-            customer.password = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-            customer.statusLicence = new CustomerLicenceStatusModel
+            CustomerModel model = new CustomerModel();
+            List<CustomerModel> customers = new List<CustomerModel>();
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+            }
+            
+            model.id = Guid.NewGuid();
+            model.email = email;
+            model.password = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+            model.statusLicence = new CustomerLicenceStatusModel
             {
                 licenceType = LicenceType.Test,
                 licenceName = LicenceType.Test.GetDisplayName()
             };
-            customer.companies = new List<CompanyModel>();
-            customer.endTimeLicense = DateTime.Today.AddDays(30);
+            model.companies = new List<CompanyModel>();
+            model.endTimeLicense = DateTime.Today.AddDays(30);
 
             CustomerLicenseOperationModel history = new CustomerLicenseOperationModel()
             {
                 oldEndDateLicence = DateTime.Today,
-                newEndDateLicence = customer.endTimeLicense,
+                newEndDateLicence = model.endTimeLicense,
                 oldStatus = new CustomerLicenceStatusModel(),
-                newStatus = customer.statusLicence,
+                newStatus = model.statusLicence,
             };
-            if (customer.historyOperations != null)
+
+            if (model.historyOperations != null)
             {
-                customer.historyOperations.Add(history);
-                if (DatabaseMoq.Customers != null)
-                {
-                    customers = DatabaseMoq.Customers;
-                    customers.Add(customer);
-                    DatabaseMoq.UpdateJson();
-                    return customer;
-                }
-                
+                model.historyOperations.Add(history);
             }
-            return null;
+            
+
+            customers.Add(model);
+            DatabaseMoq.UpdateJson();
+
+            return model;
         }
 
         public async Task<CustomerModel?> RenewalLicense(string[] ar)
         {
             await Task.Delay(10);
 
-            if (DatabaseMoq.Customers != null && Guid.TryParse(ar[0], out Guid id))
+            if (DatabaseMoq.Customers !=null && Guid.TryParse(ar[0], out Guid id))
             {
-                customers = DatabaseMoq.Customers;
-                var licence = customers.FirstOrDefault(c => c.id.Equals(id));
+                var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
 
                 if (licence != null && licence.statusLicence != null)
                 {
@@ -96,19 +125,21 @@ namespace ReportingSystem.Services
                     history.price = double.TryParse(ar[2].Trim(), out double parsedPrice) ? parsedPrice : 0.0;
                     history.period = ar[3].Trim();
                     history.nameOperation = "Продовження";
+
                     if (licence.historyOperations != null)
                     {
                         licence.historyOperations.Add(history);
-                        DatabaseMoq.UpdateJson();
-                        return licence;
                     }
                     
+                    DatabaseMoq.UpdateJson();
+
+                    return licence;
                 }
             }
             return null;
         }
 
-        public async Task<CustomerModel?> ArchivingLicence(string[] ar)
+        public async Task<CustomerModel> ArchivingLicence(string[] ar)
         {
             await Task.Delay(10);
 
@@ -138,14 +169,18 @@ namespace ReportingSystem.Services
                         history.price = 0;
                         history.period = "-";
                         history.nameOperation = "Архівування";
+
                         if (licence.historyOperations != null)
                         {
                             licence.historyOperations.Add(history);
-                            DatabaseMoq.UpdateJson();
-                            return licence;
                         }
+
+                        DatabaseMoq.UpdateJson();
+
+                        return licence;
                     }
-                }  
+                }
+                
             }
             return null;
         }
@@ -186,9 +221,10 @@ namespace ReportingSystem.Services
                     if (licence.historyOperations != null)
                     {
                         licence.historyOperations.Add(history);
-                        DatabaseMoq.UpdateJson();
-                        return licence;
                     }
+                    DatabaseMoq.UpdateJson();
+
+                    return licence;
                 }
             }
             return null;

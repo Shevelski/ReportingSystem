@@ -1,14 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using ReportingSystem.Enum;
-using ReportingSystem.Enum.Extensions;
-using ReportingSystem.Models;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Customer;
-using ReportingSystem.Models.Project;
-using ReportingSystem.Models.User;
 using ReportingSystem.Services;
-using ReportingSystem.Utils;
 
 namespace ReportingSystem.Controllers
 {
@@ -27,16 +18,16 @@ namespace ReportingSystem.Controllers
         {
 
             await Task.Delay(10);
-            var companies = _companiesService.GetCompanies();
-            return Json(companies);
+            var result = _companiesService.GetCompanies();
+            return Json(result);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetActualCompanies()
         {
             await Task.Delay(10);
-            var companies = _companiesService.GetActualCompanies();
-            return Json(companies);
+            var result = _companiesService.GetActualCompanies();
+            return Json(result);
         }
 
 
@@ -44,8 +35,8 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> EditCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var company = _companiesService.EditCompany(ar);
-            return Json(company);
+            var result = _companiesService.EditCompany(ar);
+            return Json(result);
         }
 
 
@@ -53,8 +44,8 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> ArchiveCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var company = _companiesService.ArchiveCompany(ar);
-            return Json(company);
+            var result = _companiesService.ArchiveCompany(ar);
+            return result != null ? Ok(result) : NotFound();
         }
 
 
@@ -62,26 +53,26 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> DeleteCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var company = _companiesService.DeleteCompany(ar);
-            return Json(company);
+            var result = _companiesService.DeleteCompany(ar);
+            return result != null ? Ok(result) : NotFound();
         }
 
-        //--------------------------------------------------------------------------------------------продовжити розділяти
 
         [HttpPost]
         public async Task<IActionResult> PostCheckCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var company = _companiesService.PostCheckCompany(ar);
-            return Json(company);
+            var result = _companiesService.PostCheckCompany(ar);
+            return result != null ? Ok(result) : NotFound();
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetCheckCompany(string id)
         {
             await Task.Delay(10);
-            var company = _companiesService.GetCheckCompany(id);
-            return Json(company);
+            var result = _companiesService.GetCheckCompany(id);
+            return result != null ? Ok(result) : NotFound();
         }
 
 
@@ -89,8 +80,8 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> CreateCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var company = _companiesService.CreateCompany(ar);
-            return Json(company);
+            var result = _companiesService.CreateCompany(ar);
+            return result != null ? Ok(result) : NotFound();
         }
     }
 }

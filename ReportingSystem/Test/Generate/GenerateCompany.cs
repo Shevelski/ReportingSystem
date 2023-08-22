@@ -4,10 +4,12 @@ using ReportingSystem.Enum.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Test.GenerateData;
 using ReportingSystem.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 
@@ -198,7 +200,6 @@ namespace ReportingSystem.Test.Generate
             }
             return rol;
         }
-
         static public CompanyModel RandomCompany(CustomerModel customer)
         {
             var faker = new Faker();
@@ -218,8 +219,29 @@ namespace ReportingSystem.Test.Generate
             company.rolls = DefaultEmployeeRolls.Get();
             company.employees = GenerateCompany.Employees(company);
             company.chief = company.employees.FirstOrDefault(u => u.position.namePosition.Equals("Директор"));
+            company.categories = GenerateCompany.Categories();
             //company.projects = GenerateProjects();
             return company;
+        }
+        static public ProjectCategoryModel Categories()
+        {
+            List<ProjectCategoryModel1> models1 = new List<ProjectCategoryModel1>();
+            List<ProjectCategoryModel2> models2 = new List<ProjectCategoryModel2>();
+            List<ProjectCategoryModel3> models3 = new List<ProjectCategoryModel3>();
+
+            string[] listCategories1 = {"Основні", "Допоміжні", "Адміністративні", "Соціальні"};
+            string[] listCategories12 = { "Розробка проекту", "Технічна підтримка", "Консультацій послуги"};
+            string[] listCategories22 = { "Офісна інфраструктура", "Хмарна інфраструктура" };
+            string[] listCategories221 = { "Проектування", "Розгортання", "Налаштування", "Тестування" };
+            string[] listCategories222 = { "Актуалізація ринку" ,"Проектування", "Розгортання", "Налаштування", "Тестування" };
+            string[] listCategories23 = { "Бюджетна оцінка", "Внутрішня розробка", "Корпоративний захід", "Маркетинг", "Навчання", "Офісне навчання", "Продажі", "Простій"};
+            string[] listCategories24 = { "Відпустка", "Лікарняний", "Відгул", "Прогул" };
+
+            return new ProjectCategoryModel();
+        }
+        static public ProjectCategoryModel1 ProjectCategoryModel1()
+        {
+            return new ProjectCategoryModel1();
         }
     }
 }

@@ -23,5 +23,6 @@ namespace ReportingSystem.Models.Company
         public List<EmployeePositionModel>? positions { get; set; }
         public List<ProjectModel>? projects { get; set; }
         public List<EmployeeModel>? employees { get; set; }
+        public ProjectCategoryModel? categories { get; set; }
     }
 }

@@ -62,29 +62,35 @@ body {
     height: 40px;
 }
 
-
 .red-text {
     color: red;
 }
 
+/*.table.acord{
+    width: 100%;
+    border: 3px solid red;
+}
+*/
 .column1 {
     width: 100%;
     transition: width 0.3s ease-in-out;
+   /* border: 3px dotted red;*/
 }
+
+    .column1.mod {
+        width: 30%;
+        transition: width 0.3s ease-in-out;
+    }
+
 .column2 {
     width: 0%;
     transition: width 0.3s ease-in-out;
+    /*border: 3px dotted red;*/
 }
-
-.column1.mod {
-    width: 30%;
-    transition: width 0.3s ease-in-out;
-}
-
-.column2.mod {
-    width: 70%;
-    transition: width 0.3s ease-in-out;
-}
+    .column2.mod {
+        width: 70%;
+        transition: width 0.3s ease-in-out;
+    }
 
 .panel {
     opacity: 0;
@@ -95,5 +101,5 @@ body {
 
     .panel.active {
         opacity: 1;
-        max-height: 500px; /* Встановіть відповідну максимальну висоту */
+        max-height: 500px;
     }

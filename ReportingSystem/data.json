@@ -12,7 +12,7 @@
     "email": "murazik@gmail.ua",
     "status": null,
     "password": "tU^g(70@",
-    "endTimeLicense": "2024-01-22T15:54:24.1633375+02:00",
+    "endTimeLicense": "2024-06-20T16:54:24",
     "dateRegistration": "2021-02-23T00:00:00",
     "companies": [
       {
@@ -25818,7 +25818,26 @@
         ]
       }
     ],
-    "historyOperations": []
+    "historyOperations": [
+      {
+        "id": "54179915-560f-45c3-9bb0-43c5ec89e84c",
+        "idCustomer": "0e5f870d-8795-4423-8d73-2acf51cbe907",
+        "dateChange": "2023-08-20T11:33:15.1249626+03:00",
+        "oldEndDateLicence": "2024-01-22T15:54:24.1633375+02:00",
+        "newEndDateLicence": "2024-06-20T16:54:24",
+        "oldStatus": {
+          "licenceType": 2,
+          "licenceName": "Основна"
+        },
+        "newStatus": {
+          "licenceType": 2,
+          "licenceName": "Основна"
+        },
+        "price": 23750.0,
+        "period": "5 місяць",
+        "nameOperation": "Продовження"
+      }
+    ]
   },
   {
     "id": "f3cd2702-94d8-4b47-8a98-8a19a6fe327c",
@@ -51047,6 +51066,43 @@
         "dateChange": "0001-01-01T00:00:00",
         "oldEndDateLicence": "2023-08-19T00:00:00+03:00",
         "newEndDateLicence": "2023-09-18T00:00:00+03:00",
+        "oldStatus": {
+          "licenceType": 0,
+          "licenceName": null
+        },
+        "newStatus": {
+          "licenceType": 1,
+          "licenceName": "Тестова"
+        },
+        "price": 0.0,
+        "period": null,
+        "nameOperation": null
+      }
+    ]
+  },
+  {
+    "id": "59b9e2c3-8434-4558-809c-941f85a72cbc",
+    "firstName": null,
+    "secondName": null,
+    "thirdName": null,
+    "statusLicence": {
+      "licenceType": 1,
+      "licenceName": "Тестова"
+    },
+    "phone": null,
+    "email": "123",
+    "status": null,
+    "password": "U*k2EZYc",
+    "endTimeLicense": "2023-09-20T00:00:00+03:00",
+    "dateRegistration": "0001-01-01T00:00:00",
+    "companies": [],
+    "historyOperations": [
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "idCustomer": "00000000-0000-0000-0000-000000000000",
+        "dateChange": "0001-01-01T00:00:00",
+        "oldEndDateLicence": "2023-08-21T00:00:00+03:00",
+        "newEndDateLicence": "2023-09-20T00:00:00+03:00",
         "oldStatus": {
           "licenceType": 0,
           "licenceName": null

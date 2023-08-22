@@ -11,6 +11,11 @@ namespace ReportingSystem.Services
     public class CompaniesService
     {
 
+        CustomerModel customer = new CustomerModel();
+        List<CustomerModel> customers = new List<CustomerModel>();
+        CompanyModel company = new CompanyModel();
+        List<CompanyModel> companies = new List<CompanyModel>();
+
         public string GetCustomerId()
         {
             var MyConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
@@ -21,12 +26,14 @@ namespace ReportingSystem.Services
 
         public List<CompanyModel>? GetCompanies()
         {
-
-            if (Guid.TryParse(GetCustomerId(), out Guid id))
+            if (DatabaseMoq.Customers != null)
             {
-
-                var companies = DatabaseMoq.Customers.First(co => co.id.Equals(id)).companies;
-                return companies;
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(GetCustomerId(), out Guid id))
+                {
+                    var companies = customers.First(co => co.id.Equals(id)).companies;
+                    return companies;
+                }
             }
             return null;
         }
@@ -37,15 +44,16 @@ namespace ReportingSystem.Services
         {
             List<CompanyModel> actual = new List<CompanyModel>();
 
-            if (Guid.TryParse(GetCustomerId(), out Guid id))
+            if (DatabaseMoq.Customers != null && Guid.TryParse(GetCustomerId(), out Guid id))
             {
+                customers = DatabaseMoq.Customers;
+                var customer = customers.First(co => co.id.Equals(id));
 
-                var customer = DatabaseMoq.Customers.First(co => co.id.Equals(id));
-
-                if (customer != null)
+                if (customer.companies != null)
                 {
-                    //where просто відмовився працювати
-                    foreach (var item in customer.companies)
+                    companies = customer.companies;
+                  
+                    foreach (var item in companies)
                     {
                         if (item.status.companyStatusType.Equals(CompanyStatus.Actual))
                         {
@@ -63,7 +71,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
-        public CompanyModel EditCompany(string[] ar)
+        public CompanyModel? EditCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
             if (Guid.TryParse(GetCustomerId(), out Guid result))
@@ -77,17 +85,28 @@ namespace ReportingSystem.Services
                 idCompany = result1;
             }
 
-            CompanyModel company = DatabaseMoq.Customers.First(c => c.id.Equals(idCustomer)).companies.First(c => c.id.Equals(idCompany));
-            company.name = ar[1];
-            company.address = ar[2];
-            company.actions = ar[3];
-            company.phone = ar[4];
-            company.email = ar[5];
-            DatabaseMoq.UpdateJson();
-            return company;
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                customer = customers.First(c => c.id.Equals(idCustomer));
+                if (customer.companies != null)
+                {
+                    companies = customer.companies;
+                    company = customer.companies.First(c => c.id.Equals(idCompany));
+                    company.name = ar[1];
+                    company.address = ar[2];
+                    company.actions = ar[3];
+                    company.phone = ar[4];
+                    company.email = ar[5];
+                    DatabaseMoq.UpdateJson();
+                    return company;
+                }
+                
+            }
+            return null;
         }
 
-        public CompanyModel ArchiveCompany(string[] ar)
+        public CompanyModel? ArchiveCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
             if (Guid.TryParse(GetCustomerId(), out Guid result))
@@ -101,16 +120,25 @@ namespace ReportingSystem.Services
                 idCompany = result1;
             }
 
-
-            CompanyModel company = DatabaseMoq.Customers.First(c => c.id.Equals(idCustomer)).companies.First(c => c.id.Equals(idCompany));
-            CompanyStatusModel status = new CompanyStatusModel();
-            company.status = new CompanyStatusModel()
+            if (DatabaseMoq.Customers != null)
             {
-                companyStatusType = CompanyStatus.Archive,
-                companyStatusName = CompanyStatus.Archive.GetDisplayName(),
-            };
-            DatabaseMoq.UpdateJson();
-            return company;
+                customers = DatabaseMoq.Customers;
+                customer = customers.First(c => c.id.Equals(idCustomer));
+                if (customer.companies != null)
+                {
+                    companies = customer.companies;
+                    company = companies.First(c => c.id.Equals(idCompany));
+                    CompanyStatusModel status = new CompanyStatusModel();
+                    company.status = new CompanyStatusModel()
+                    {
+                        companyStatusType = CompanyStatus.Archive,
+                        companyStatusName = CompanyStatus.Archive.GetDisplayName(),
+                    };
+                    DatabaseMoq.UpdateJson();
+                    return company;
+                }
+            }
+            return null;
         }
 
 
@@ -128,11 +156,18 @@ namespace ReportingSystem.Services
                 idCompany = result1;
             }
 
-            CustomerModel customer = DatabaseMoq.Customers.First(c => c.id.Equals(idCustomer));
-            CompanyModel company = DatabaseMoq.Customers.First(c => c.id.Equals(idCustomer)).companies.First(c => c.id.Equals(idCompany));
-
-            customer.companies.Remove(company);
-            DatabaseMoq.UpdateJson();
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                customer = customers.First(c => c.id.Equals(idCustomer));
+                if (customer.companies != null)
+                {
+                    companies = customer.companies;
+                    company = companies.First(c => c.id.Equals(idCompany));
+                    customer.companies.Remove(company);
+                    DatabaseMoq.UpdateJson();
+                }
+            }
             return null;
         }
 
@@ -145,7 +180,6 @@ namespace ReportingSystem.Services
             {
                 id = result;
             }
-
             companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
             DatabaseMoq.UpdateJson();
             return null;
@@ -197,20 +231,30 @@ namespace ReportingSystem.Services
                 idCustomer = result;
             }
 
-            var customer = DatabaseMoq.Customers.First(c => c.id.Equals(idCustomer));
-
-            EmployeeModel chief = new EmployeeModel()
+            if (DatabaseMoq.Customers != null)
             {
-                firstName = customer.firstName,
-                secondName = customer.secondName,
-                thirdName = customer.thirdName,
-                emailWork = customer.email,
+                customers = DatabaseMoq.Customers;
+                customer = customers.First(c => c.id.Equals(idCustomer));
 
-            };
-            company.chief = chief;
+                EmployeeModel chief = new EmployeeModel()
+                {
+                    firstName = customer.firstName,
+                    secondName = customer.secondName,
+                    thirdName = customer.thirdName,
+                    emailWork = customer.email,
 
-            customer.companies.Add(company);
-            DatabaseMoq.UpdateJson();
+                };
+                company.chief = chief;
+
+                if (customer.companies != null)
+                {
+                    companies = customer.companies;
+                    companies.Add(company);
+                    DatabaseMoq.UpdateJson();
+                }
+
+            }
+            
             return null;
         }
     }

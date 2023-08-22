@@ -18,13 +18,18 @@ namespace ReportingSystem.Controllers
             _customersService = customersService;
         }
 
+        CustomerModel customer = new CustomerModel();
+        List<CustomerModel> customers = new List<CustomerModel>();
+        CompanyModel company = new CompanyModel();
+        List<CompanyModel> companies = new List<CompanyModel>();
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllLicence()
         {
             await Task.Delay(10);
-            var customers = _customersService.GetCustomers();
-            return Json(customers);
+            var result = _customersService.GetCustomers();
+            return Json(result);
         }
 
 
@@ -32,7 +37,7 @@ namespace ReportingSystem.Controllers
         public IActionResult CreateCustomer([FromBody] string[] ar)
         {
             var result = _customersService.CreateCustomer(ar[0]);
-            return result != null ? (IActionResult)Ok(result) : NotFound();
+            return result != null ? Ok(result) : NotFound();
         }
 
 
@@ -40,7 +45,7 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> RenewalLicence([FromBody] string[] ar)
         {
             var result = await _customersService.RenewalLicense(ar);
-            return result != null ? (IActionResult)Ok(result) : NotFound();
+            return result != null ? Ok(result) : NotFound();
 
         }
 
@@ -49,7 +54,7 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> ArchivingLicence([FromBody] string[] ar)
         {
             var result = await _customersService.ArchivingLicence(ar);
-            return result != null ? (IActionResult)Ok(result) : NotFound();
+            return result != null ? Ok(result) : NotFound();
 
         }
 
@@ -58,7 +63,7 @@ namespace ReportingSystem.Controllers
         public async Task<IActionResult> CancellationLicence([FromBody] string[] ar)
         {
             var result = await _customersService.CancellationLicence(ar);
-            return result != null ? (IActionResult)Ok(result) : NotFound();
+            return result != null ? Ok(result) : NotFound();
         }
 
     }
