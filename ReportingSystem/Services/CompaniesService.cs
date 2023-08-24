@@ -19,9 +19,7 @@ namespace ReportingSystem.Services
         public string GetCustomerId()
         {
             var MyConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            string ar = MyConfig.GetValue<string>("TempCustomer:id");
-
-            return ar;
+            return MyConfig.GetValue<string>("TempCustomer:id");
         }
 
         public List<CompanyModel>? GetCompanies()
@@ -173,7 +171,7 @@ namespace ReportingSystem.Services
 
         private static Dictionary<Guid, CompanyModel> companiesData = new Dictionary<Guid, CompanyModel>();
 
-        public CompanyModel? PostCheckCompany(string[] ar)
+        public void PostCheckCompany(string[] ar)
         {
             Guid id = new Guid();
             if (Guid.TryParse(ar[0], out Guid result))
@@ -181,8 +179,6 @@ namespace ReportingSystem.Services
                 id = result;
             }
             companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
-            DatabaseMoq.UpdateJson();
-            return null;
         }
 
         public CompanyModel? GetCheckCompany(string id)

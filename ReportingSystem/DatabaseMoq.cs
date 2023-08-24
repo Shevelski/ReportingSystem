@@ -36,17 +36,22 @@ namespace ReportingSystem
 
             if (File.Exists(DataFilePath) && new FileInfo(DataFilePath).Length > 0)
             {
-                string jsonData = File.ReadAllText(DataFilePath);
+                string jsonData;
+                using (StreamReader reader = new StreamReader(DataFilePath))
+                {
+                    jsonData = reader.ReadToEnd();
+                }
                 Customers = JsonConvert.DeserializeObject<List<CustomerModel>>(jsonData);
             }
             else
             {
-
                 string jsonData = JsonConvert.SerializeObject(DatabaseMoqGenerate.Customers, Formatting.Indented);
-                File.WriteAllText(DataFilePath, jsonData);
+                using (StreamWriter writer = new StreamWriter(DataFilePath))
+                {
+                    writer.Write(jsonData);
+                }
+                Debug.WriteLine($"DataJson had wroten");
             }
-
-           
         }
 
         public static void UpdateJson()

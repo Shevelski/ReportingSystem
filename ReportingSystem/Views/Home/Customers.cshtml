@@ -25,7 +25,7 @@
 
 <div id="Customers" class="container">
    @* Модальне вікно *@
-    <div class="accordion" id="accordionExample" v-if="customers.length !== 1">
+    <div class="accordion" id="accordionExample" v-if="customers.length != 1">
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -76,11 +76,11 @@
         </div>
 
         <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" v-model="showАрхівна" id="showАрхівна" v-on:change="closeAllAccordions()">
-            <label class="form-check-label" for="showАрхівна">Архівні</label>
+            <input type="checkbox" class="form-check-input" v-model="showArchive" id="showArchive" v-on:change="closeAllAccordions()">
+            <label class="form-check-label" for="showArchive">Архівні</label>
         </div>
 
-        <div class="mb-3 form-check" v-if="!showАрхівна">
+        <div class="mb-3 form-check" v-if="!showArchive">
             <input type="checkbox" class="form-check-input" v-model="showExpired" id="showExpired" v-on:change="closeAllAccordions()">
             <label class="form-check-label" for="showExpired">Прострочені ліцензії</label>
         </div>
@@ -144,8 +144,8 @@
                             <tr>
                                 <td colspan="2" class="text-center">
                                     <button v-on:click="toggleRenewalAccordion(index)" class="btn btn-outline-secondary">Продовжити ліцензію</button>
-                                    <button v-if="customer.statusLicence.licenceName !== 'Архівна' && customer.statusLicence.licenceName !== 'Анульована' && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Анулювання ліцензії</button>
-                                    <button v-if="customer.statusLicence.licenceName !== 'Архівна'" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Архівування</button>
+                                    <button v-if="customer.statusLicence.licenceName !== 4 && customer.statusLicence.licenceType !== 5 && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Анулювання ліцензії</button>
+                                    <button v-if="customer.statusLicence.licenceType !== 4" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Архівування</button>
                                     <button v-if="historyCount>0" v-on:click="toggleModal(4, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Історія</button>                   
                                 </td>
                             </tr>
@@ -252,14 +252,12 @@
                 </div>
             </div>
         </div>
-        @*тест методів створення кастомера тільки при наявності пошти*@
-        <div class="mb-3">
-            @* Поле введення для пошуку *@
+        @*<div class="mb-3">
             <input v-model="testEmail" type="text" class="form-control" placeholder="Пошук...">
         </div>
         <button type="button" class="btn btn-light" v-on:click="createCustomer()">
-            TEST CREATE new Customer
-        </button>
+            TEST for CREATE new Customer
+        </button>*@
     </div>
     <div v-else>
         <div style="margin-top: 50px; margin-bottom: 50px;">

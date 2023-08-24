@@ -12,7 +12,6 @@ namespace ReportingSystem.Models.Customer
         public CustomerLicenceStatusModel? statusLicence { get; set; }
         public string? phone { get; set; }
         public string? email { get; set; }
-        public string? status { get; set; }
         public string? password { get; set; }
         public DateTime endTimeLicense { get; set; }
         public DateTime dateRegistration { get; set; }

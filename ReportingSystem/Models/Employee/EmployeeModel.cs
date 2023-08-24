@@ -5,6 +5,8 @@ namespace ReportingSystem.Models.User
     public class EmployeeModel
     {
         public Guid id { get; set; }
+        public Guid companyId { get; set; }
+        public Guid customerId { get; set; }
         public string? firstName { get; set; }
         public string? secondName { get; set; }
         public string? thirdName { get; set; }

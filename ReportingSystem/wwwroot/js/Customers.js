@@ -5,7 +5,7 @@
         testEmail: '',
         pageCur: 1,
         itemsPerPage: 10,
-        showАрхівна: false,
+        showArchive: false,
         selectedOption: "period",
         openAccordions: [],
         nameFilter: '',
@@ -19,6 +19,7 @@
         searchQuery: '',
         historyCount: 0,
         historyArr: [],
+        customers: [0],
         bufferCost:
         {
             nextDate: new Date(),
@@ -32,7 +33,6 @@
             renewalUnit: 'month',
             inactiveUser: false,
         },
-        customers: [0]
     },
     mounted() {
         this.Init();
@@ -45,31 +45,30 @@
             let filteredList = this.customers.filter((customer) => {
                 const isExpired = new Date(customer.endTimeLicense) < currentDate;
                 const nameMatches = !nameFilter || customer.firstName.toLowerCase().includes(nameFilter) || customer.secondName.toLowerCase().includes(nameFilter) || customer.thirdName.toLowerCase().includes(nameFilter) || customer.email.toLowerCase().includes(nameFilter);
-                const isInАрхівна = customer.statusLicence.licenceType === 4;
-
-                if (this.showАрхівна) {
-                    return isInАрхівна && nameMatches;
+                const isInArchive = customer.statusLicence.licenceType === 4;
+               
+                if (this.showArchive) {
+                    return isInArchive && nameMatches;
                 } else {
-                    return !isInАрхівна && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
+                    return !isInArchive && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
                 }
             });
-
             return filteredList.length;
         },
         filteredCustomers() {
             const currentDate = new Date();
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-
             let filteredList = this.customers.filter((customer) => {
                 const isExpired = new Date(customer.endTimeLicense) < currentDate;
                 const nameMatches = !nameFilter || customer.firstName.toLowerCase().includes(nameFilter) || customer.secondName.toLowerCase().includes(nameFilter) || customer.thirdName.toLowerCase().includes(nameFilter) || customer.email.toLowerCase().includes(nameFilter);
-                const isInАрхівна = customer.statusLicence.licenceType === 4;
+                 
+                const isInArchive = customer.statusLicence && customer.statusLicence.licenceType === 4;
 
-                if (this.showАрхівна) {
-                    return isInАрхівна && nameMatches;
+                if (this.showArchive) {
+                    return isInArchive && nameMatches;
                 } else {
-                    return !isInАрхівна && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
+                    return !isInArchive && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
                 }
             });
 
@@ -85,9 +84,10 @@
         async Init() {
             let response = await axios.get("/Customers/GetAllLicence");
             this.customers = response.data;
+            console.log(this.customers);
             this.pageCount = Math.ceil(this.countFilteredCustomers / this.itemsPerPage);
             this.defaultPeriod();
-            console.log(this.customers);
+            
 
         },
         setItemsPerPage(count) {
@@ -101,7 +101,7 @@
             }
         },
         amountCompany(index) {
-            if (this.filteredCustomers && Array.isArray(this.filteredCustomers) && this.filteredCustomers[index]) {
+            if (Array.isArray(this.filteredCustomers) && this.filteredCustomers[index].companies) {
                 return this.filteredCustomers[index].companies.length;
             }
             return 0;
@@ -133,7 +133,7 @@
         },
         isLicenseExpired(company) {
             const statusDate = new Date(company.endTimeLicense);
-            return statusDate < this.curDate && !this.showАрхівна;
+            return statusDate < this.curDate && !this.showArchive;
         },
         isShowCheckMode(index) {
             const date1 = new Date(this.filteredCustomers[index].endTimeLicense);

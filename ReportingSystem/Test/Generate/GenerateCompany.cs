@@ -34,7 +34,6 @@ namespace ReportingSystem.Test.Generate
 
             return result;
         }
-        
         public static List<EmployeePositionModel> Positions()
         {
             List<EmployeePositionModel> UserPositions = new List<EmployeePositionModel>();
@@ -53,86 +52,126 @@ namespace ReportingSystem.Test.Generate
                 "Графічний дизайнер"
             };
 
+            int countPositions = 0;
+            //директор
             EmployeePositionModel userPosition = new EmployeePositionModel();
-            userPosition.employees = new List<EmployeeModel>();
+            //userPosition.employees = new List<EmployeeModel>();
             userPosition.namePosition = positions[0];
             UserPositions.Add(userPosition);
+            countPositions++;
 
+            //адміністратор
             userPosition = new EmployeePositionModel();
+            //userPosition.employees = new List<EmployeeModel>();
             userPosition.namePosition = positions[1];
             UserPositions.Add(userPosition);
+            countPositions++;
 
+            // заст директора
             int rnd = random.Next(2, 3);
 
             for (int i = 0; i < rnd; i++)
             {
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[2];
                 UserPositions.Add(userPosition);
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[3];
                 UserPositions.Add(userPosition);
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[4];
                 UserPositions.Add(userPosition);
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[5];
                 UserPositions.Add(userPosition);
             }
+            countPositions += rnd;
 
-            for (int i = 0; i < rnd * 2; i++)
+            int countPos = rnd * 2;
+            for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[6];
                 UserPositions.Add(userPosition);
             }
+            countPositions += countPos;
 
+            
             int rnd1 = random.Next(1, 4);
-            for (int i = 0; i < rnd * rnd1; i++)
+            countPos = rnd * rnd1;
+            for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[7];
                 UserPositions.Add(userPosition);
             }
 
+            countPositions += countPos;
+
             rnd1 = random.Next(1, 4);
-            for (int i = 0; i < rnd * rnd1; i++)
+            countPos = rnd * rnd1;
+            for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[8];
                 UserPositions.Add(userPosition);
             }
+            countPositions += countPos;
+
+
             rnd1 = random.Next(1, 4);
-            for (int i = 0; i < rnd * rnd1; i++)
+            countPos = rnd * rnd1;
+            for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
+                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[9];
                 UserPositions.Add(userPosition);
             }
+            countPositions += countPos;
+
+            Debug.WriteLine($"All is position {countPositions}");
             return UserPositions;
         }
-        static public List<EmployeeModel> Employees(CompanyModel company)
+        static public List<EmployeeModel> Employees(CompanyModel company, Guid customerId)
         {
             List<EmployeeModel> results =  new List<EmployeeModel> ();
 
-            foreach (EmployeePositionModel userPosition in company.positions)
+            if (company.positions != null)
             {
-                EmployeeModel user = new EmployeeModel();
-                user = GenerateUser(company);
-                user.position = userPosition;
-                user.rol = GenerateRol(user.position);
-                results.Add(user);
-                Debug.WriteLine("User added");
+                int i = 0;
+                foreach (EmployeePositionModel userPosition in company.positions)
+                {
+                    
+                    EmployeeModel user = new EmployeeModel();
+                    user = GenerateEmployee(company, customerId);
+                    user.position = userPosition;
+                    
+                    user.rol = GenerateRol(user.position);
+                    //userPosition.employees.Add(user);
+                    results.Add(user);
+                    Debug.WriteLine($"User {i} added from {company.positions.Count}");
+                    i++;
+                }
             }
-
+            
             return results;
         }
-        static public  EmployeeModel GenerateUser(CompanyModel company)
+        static public  EmployeeModel GenerateEmployee(CompanyModel company, Guid customerId)
         {
             EmployeeModel employee = new EmployeeModel();
             var faker = new Faker();
 
             employee.id = Guid.NewGuid();
+            employee.companyId = company.id;
+            employee.customerId = customerId;
             employee.firstName = faker.Name.FirstName();
             employee.secondName = faker.Name.LastName();
             employee.thirdName = faker.Name.JobType();
@@ -217,7 +256,7 @@ namespace ReportingSystem.Test.Generate
             company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
             company.positions = GenerateCompany.Positions();
             company.rolls = DefaultEmployeeRolls.Get();
-            company.employees = GenerateCompany.Employees(company);
+            company.employees = GenerateCompany.Employees(company,customer.id);
             company.chief = company.employees.FirstOrDefault(u => u.position.namePosition.Equals("Директор"));
             company.categories = GenerateCompany.Categories();
             //company.projects = GenerateProjects();

@@ -13,6 +13,7 @@ namespace ReportingSystem
     public static class DatabaseMoqGenerate
     {
         public static List<CustomerModel>? Customers { get; set; }
+        public static CustomerModel? customer { get; set; }
         public static List<List<EmployeeModel>>? AllUsers { get; set; }
         public static List<EmployeeModel>? Users { get; set; }
         public static List<ProjectCategoryModel>? AllProjectsCategories { get; set; }
@@ -29,23 +30,25 @@ namespace ReportingSystem
 
         static DatabaseMoqGenerate()
         {
+
             Customers = new List<CustomerModel>();
             Companies = new List<CompanyModel>();
             Users = new List<EmployeeModel>();
-
             var faker = new Faker();
 
             static CustomerModel GenerateRandomCustomer()
             {
+               
+                
                 var faker = new Faker();
-                CustomerModel customer = new CustomerModel();
+                customer = new CustomerModel();
                 customer.id = Guid.NewGuid();
                 customer.firstName = faker.Name.FirstName();
                 customer.secondName = faker.Name.LastName();
                 customer.thirdName = faker.Name.FirstName();
                 customer.statusLicence = GenerateCustomer.Status();
                 customer.phone = GenerateInfo.MobilePhoneNumber();
-                customer.email = (customer.secondName + "@gmail.ua").Replace(" ", "").ToLower();
+                customer.email = (customer.secondName + "@gmail.com.ua").Replace(" ", "").ToLower();
                 customer.password = GenerateInfo.Password();
                 customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
                 customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
@@ -56,19 +59,21 @@ namespace ReportingSystem
             static List<CompanyModel> GenerateRandomCompanies(CustomerModel customer)
             {
                 List<CompanyModel> companies = new List<CompanyModel>();
-                for (int i = 0; i < random.Next(15, 30); i++)
+                var countCompany = random.Next(15, 22);
+                for (int i = 0; i < countCompany; i++)
                 {
                     companies.Add(GenerateCompany.RandomCompany(customer));
-                    Debug.WriteLine($"Company {i} added");
+                    Debug.WriteLine($"Company {i} added. All is {countCompany}");
                 };
                 return companies;
             }
 
-            for (int i = 0; i < 2; i++)
+            int countCustomer = random.Next(2, 15);
+            for (int i = 0; i < countCustomer; i++)
             {
                 var customer = GenerateRandomCustomer();
                 Customers.Add(customer);
-                Debug.WriteLine($"Customer {i} added");
+                Debug.WriteLine($"Customer {i} added. All is 10");
             }
         }
     }

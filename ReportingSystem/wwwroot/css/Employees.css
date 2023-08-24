@@ -66,40 +66,37 @@ body {
     color: red;
 }
 
-/*.table.acord{
-    width: 100%;
-    border: 3px solid red;
-}
-*/
 .column1 {
     width: 100%;
-    transition: width 0.3s ease-in-out;
-   /* border: 3px dotted red;*/
+    transition: width 1s ease-in-out;
 }
-
     .column1.mod {
         width: 30%;
-        transition: width 0.3s ease-in-out;
+        transition: width 1s ease-in-out;
     }
 
 .column2 {
     width: 0%;
-    transition: width 0.3s ease-in-out;
-    /*border: 3px dotted red;*/
+    display: none;
+    transition: width 1s ease-in-out;
 }
     .column2.mod {
-        width: 70%;
-        transition: width 0.3s ease-in-out;
+        display: block;
+        width: 100%;
+        transition: width 1s ease-in-out 1s;
     }
 
-.panel {
+.panel-body {
     opacity: 0;
-    max-height: 0;
+    width: 0;
     overflow: hidden;
-    transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    transition: opacity 1s ease-in-out, width 1s ease-in-out;
+    transition-delay: 1s;
 }
 
-    .panel.active {
+    .panel-body.active {
         opacity: 1;
-        max-height: 500px;
+        width: 100%;
+        transition: opacity 1s ease-in-out, width 1s ease-in-out;
+        transition-delay: 1s;
     }

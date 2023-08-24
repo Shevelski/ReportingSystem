@@ -47,5 +47,12 @@ namespace ReportingSystem.Controllers
             return Json(employees);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditEmployee([FromBody] Object employee)
+        {
+            await Task.Delay(10);
+            var employees = _employeesService.EditEmployee(employee);
+            return Json(employees);
+        }
     }
 }

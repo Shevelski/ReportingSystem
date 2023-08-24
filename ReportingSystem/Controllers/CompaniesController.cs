@@ -59,11 +59,10 @@ namespace ReportingSystem.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> PostCheckCompany([FromBody] string[] ar)
+        public async Task PostCheckCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var result = _companiesService.PostCheckCompany(ar);
-            return result != null ? Ok(result) : NotFound();
+            _companiesService.PostCheckCompany(ar);
         }
 
 

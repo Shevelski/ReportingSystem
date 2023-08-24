@@ -40,8 +40,8 @@ new Vue({
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
             let filteredList = this.employees.filter((employee) => {
-                const nameMatches = !nameFilter || employee.name.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status.employeeStatusType === 3;
+                const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
+                const isInArchive = employee.status.employeeStatusType == 3;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -56,8 +56,8 @@ new Vue({
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
             let filteredList = this.employees.filter((employee) => {
-                const nameMatches = !nameFilter || employee.name.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status.employeeStatusType === 3;
+                const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
+                const isInArchive = employee.status.employeeStatusType == 3;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -96,7 +96,6 @@ new Vue({
                 this.employees[j].birthDate = this.dateCSharpToJs(this.employees[j].birthDate);
                 this.employees[j].workStartDate = this.dateCSharpToJs(this.employees[j].workStartDate);
                 this.employees[j].workEndDate = this.dateCSharpToJs(this.employees[j].workEndDate);
-                //this.calculateDaysCurYear(j);
             };            
             
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
@@ -104,18 +103,19 @@ new Vue({
         },
         ToogleMode(mode) {
             if (this.mode == 'edit') {
-                this.editUserInfo();
+                this.editEmployee();
             }
             if (this.mode != mode) {
                 this.mode = mode;
             }
         },
-        async editUserInfo() {
+        async editEmployee() {
             try {
-                const response = await axios.post('/UserInfo/EditUserInfo', this.personalInfo);
+                const response = await axios.post('/Employees/EditEmployee', this.filteredEmployees[this.indexEmployee]);
             } catch (error) {
-                console.error('Помилка під час виклику методу EditUserInfo:', error);
+                console.error('Помилка під час виклику методу EditEmployee:', error);
             }
+            this.Init();
         },
         saveCompany() {
 
@@ -197,30 +197,6 @@ new Vue({
                 return 0;
             }
         },
-        //calculateDaysCurYear(index) {
-        //    const currentYear = new Date().getFullYear();
-        //    console.log(this.employees[index].holidayDate);
-        //    const datesThisYear1 = this.employees[index].holidayDate.filter(date => {
-        //        return new Date(date).getFullYear() === currentYear;
-        //    });
-        //    console.log(datesThisYear1);
-        //    this.holidayDays[index] = datesThisYear1.length;
-
-        //    const datesThisYear2 = this.employees[index].hospitalDate.filter(date => {
-        //        return new Date(date).getFullYear() === currentYear;
-        //    });
-        //    this.hospitalDays[index] = datesThisYear2.length;
-
-        //    const datesThisYear3 = this.employees[index].assignmentDate.filter(date => {
-        //        return new Date(date).getFullYear() === currentYear;
-        //    });
-        //    this.assignmentDays[index] = datesThisYear3.length;
-
-        //    const datesThisYear4 = this.employees[index].taketimeoffDate.filter(date => {
-        //        return new Date(date).getFullYear() === currentYear;
-        //    });
-        //    this.taketimeoffDays[index] = datesThisYear4.length;
-        //},
         setItemsPerPage(count) {
             this.itemsPerPage = count;
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);

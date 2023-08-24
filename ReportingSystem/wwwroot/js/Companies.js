@@ -29,7 +29,6 @@ new Vue({
     },
     computed: {
         countFilteredCompanies() {
-            const currentDate = new Date();
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
             let filteredList = this.companies.filter((company) => {
@@ -69,14 +68,6 @@ new Vue({
     methods: {
         async Init() {
             let response = await axios.get("/Companies/GetCompanies");
-
-            //const guid = '0e5f870d-8795-4423-8d73-2acf51cbe907';
-            //let response = await axios.get('/Companies/GetCompanies', {
-            //    params: {
-            //        id: guid
-            //    }
-            //});
-
             this.companies = response.data;
             this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
             console.log(this.companies);
@@ -100,6 +91,7 @@ new Vue({
                     id: guid
                 }
             });
+            console.log(response.data);
             this.newCompany = response.data;
             console.log("rd " + this.newCompany);
             console.log("rd " + this.newCompany.name);
@@ -149,10 +141,7 @@ new Vue({
             const v4 = this.editCompanyPhone;
             const v5 = this.editCompanyEmail;
             var ar = [v0, v1, v2, v3, v4, v5];
-            /*const v6 = '0e5f870d-8795-4423-8d73-2acf51cbe907';*/
-            /*var ar = [v0, v1, v2, v3, v4, v5, v6];*/
 
-            
             try {
                 await axios.post('/Companies/EditCompany', ar);
             } catch (error) {
@@ -165,8 +154,6 @@ new Vue({
         async confirmArchiveCompany() {
             const v0 = this.filteredCompanies[this.indexCompany].id;
             var ar = [v0];
-            //const v1 = '0e5f870d-8795-4423-8d73-2acf51cbe907';
-            //var ar = [v0, v1];
 
             try {
                 await axios.post('/Companies/ArchiveCompany', ar);
