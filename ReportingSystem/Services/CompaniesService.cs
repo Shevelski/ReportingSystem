@@ -22,6 +22,46 @@ namespace ReportingSystem.Services
             return MyConfig.GetValue<string>("TempCustomer:id");
         }
 
+        public CustomerModel? SavePermanentCompany(string id)
+        {
+            Guid idCompany = new Guid();
+            if (Guid.TryParse(id, out Guid result0))
+            {
+                idCompany = result0;
+            }
+
+            Guid idCustomer = new Guid();
+            if (Guid.TryParse(GetCustomerId(), out Guid result))
+            {
+                idCustomer = result;
+            }
+
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (customers != null)
+                {
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer != null && customer.configure != null)
+                    {
+                        if (idCompany == Guid.Empty)
+                        {
+                            customer.configure.IdSavedCompany = Guid.Empty;
+                            customer.configure.IsSaveCompany = false;
+                        } else
+                        {
+                            customer.configure.IdSavedCompany = idCompany;
+                            customer.configure.IsSaveCompany = true;
+                        }
+                        DatabaseMoq.UpdateJson();
+                    }
+                    
+                }
+            }
+            return customer;
+            
+        }
+
         public List<CompanyModel>? GetCompanies()
         {
             if (DatabaseMoq.Customers != null)
@@ -35,6 +75,27 @@ namespace ReportingSystem.Services
             }
             return null;
         }
+
+        
+        public string? CheckSave()
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(GetCustomerId(), out Guid id))
+                {
+                    CustomerConfigModel conf = customers.First(co => co.id.Equals(id)).configure;
+                    if (conf != null)
+                    {
+                        return conf.IdSavedCompany.ToString();
+                    }
+                    
+                }
+            }
+            return null;
+        }
+
+
 
 
 
@@ -58,7 +119,6 @@ namespace ReportingSystem.Services
                             actual.Add(item);
                         }
                     }
-                    Console.WriteLine(actual);
                     return actual;
                 }
                 else

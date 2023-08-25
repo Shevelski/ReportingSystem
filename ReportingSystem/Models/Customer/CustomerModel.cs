@@ -17,6 +17,7 @@ namespace ReportingSystem.Models.Customer
         public DateTime dateRegistration { get; set; }
         public List<CompanyModel>? companies { get; set; }
         public List<CustomerLicenseOperationModel>? historyOperations { get; set; } = new List<CustomerLicenseOperationModel>();
+        public CustomerConfigModel? configure{ get; set; }
     }
 }
 

@@ -16,11 +16,20 @@ namespace ReportingSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCompanies()
         {
-
             await Task.Delay(10);
             var result = _companiesService.GetCompanies();
             return Json(result);
         }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> CheckSave()
+        {
+            await Task.Delay(10);
+            var result = _companiesService.CheckSave();
+            return Json(result);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> GetActualCompanies()
@@ -30,6 +39,13 @@ namespace ReportingSystem.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SavePermanentCompany([FromBody] string id)
+        {
+            await Task.Delay(10);
+            var result = _companiesService.SavePermanentCompany(id);
+            return Json(result);
+        }
 
         [HttpPost]
         public async Task<IActionResult> EditCompany([FromBody] string[] ar)
@@ -57,14 +73,12 @@ namespace ReportingSystem.Controllers
             return result != null ? Ok(result) : NotFound();
         }
 
-
         [HttpPost]
         public async Task PostCheckCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
             _companiesService.PostCheckCompany(ar);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetCheckCompany(string id)

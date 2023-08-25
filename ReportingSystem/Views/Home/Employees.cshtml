@@ -82,17 +82,25 @@
         </div>
 
         <div style="display: flex; align-items: center;">
-            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCompany($event)">
-                <option selected>Виберіть компанію</option>
+            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
                 <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
             </select>
 
             <div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminate" v-on:click="Init()" v-model="saveCompany">
+                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminate" v-on:change="SavePermanentCompany()" v-model="saveCompany">
                 <label class="form-check-label" for="flexCheckIndeterminate">
                     Запам'ятати компанію
                 </label>
             </div>
+            @*<div class="form-check mb-3" style="margin-left: 20px;">
+                <input class="form-check-input" type="checkbox" id="showOnlyActualCompany" v-on:change="getSelectedCompany($event)" v-model="showOnlyActualCompany">
+                <label class="form-check-label" for="showOnlyActualCompany">
+                    Тільки активні
+                </label>
+            </div>*@
+
+
+            
         </div>
 
         <div style="display: flex; align-items: center;">
@@ -138,7 +146,7 @@
                                         {{shortNameEmployee(index)}}
                                     </div>
                                     <div v-else>
-                                        {{ employee.firstName }} {{employee.secondName}} {{employee.thirdName}}
+                                        {{employee.secondName}} {{ employee.firstName }} {{employee.thirdName}}
                                     </div>
                                     @*--------------------------------------------------------------------------*@
                                     
@@ -191,11 +199,11 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">Прізвище</label>
-                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].firstName" />
+                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].secondName" />
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">Ім'я</label>
-                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].secondName" />
+                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].firstName" />
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">По-батькові</label>
@@ -217,11 +225,36 @@
                                                             <label class="control-label">Посада</label>
                                                         <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].position.namePosition" />
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Логін</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].login" />
+                                                        </div>
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label class="control-label">Роль в системі</label>
                                                         <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].rol.rolName" />
+                                                        </div>
+                                                        <div v-if="mode == 'standart'" class="form-group">
+                                                            <label class="control-label">Пароль</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].password" />
+                                                        </div>
+                                                        <div v-else>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label">Пароль</label>
+                                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].password" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="form-group">
+                                                                        <label class="control-label"></label>
+                                                                        <button type="button" class="btn btn-secondary custom-button" v-on:click="GeneratePassword(indexEmployee)">Новий</button>
+                                                                    </div>
+                                                                </div>
+                                                            
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -302,6 +335,10 @@
                                                             <label class="control-label">@Resources.personalUserInfoAddressReg</label>
                                                         <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].addressReg" />
                                                         </div>
+                                                        @*<div class="form-group">
+                                                            <label class="control-label">Логін</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].login" />
+                                                        </div>*@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
@@ -312,6 +349,10 @@
                                                             <label class="control-label">@Resources.personalUserInfoAddressFact</label>
                                                             <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].addressFact" />
                                                         </div>
+                                                        @*<div class="form-group">
+                                                            <label class="control-label">Пароль</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].password" />
+                                                        </div>*@
                                                     </div>
                                                 </div>
                                             </div>

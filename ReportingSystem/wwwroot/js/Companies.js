@@ -67,7 +67,7 @@ new Vue({
     },
     methods: {
         async Init() {
-            let response = await axios.get("/Companies/GetCompanies");
+            let response = await axios.get("/Companies/GetActualCompanies");
             this.companies = response.data;
             this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
             console.log(this.companies);

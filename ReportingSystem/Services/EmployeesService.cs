@@ -5,6 +5,7 @@ using ReportingSystem.Enum.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
+using System.Linq;
 
 namespace ReportingSystem.Services
 {
@@ -51,23 +52,45 @@ namespace ReportingSystem.Services
 
         public EmployeeModel? EditEmployee(Object employeeInput)
         {
-            if (employeeInput != null)
+            EmployeeModel editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(employeeInput.ToString());
+
+            if (editedEmployee != null)
             {
-                EmployeeModel? employee = JsonConvert.DeserializeObject<EmployeeModel>(employeeInput.ToString());
-
-                string id = companiesService.GetCustomerId();
-
-                var customers = DatabaseMoq.Customers;
-                var customer = customers.First(c => c.id.Equals(id));
-
-                if ( customer != null)
+                customers = DatabaseMoq.Customers;
+                if (customers != null)
                 {
-                    
+                    var customer = customers.First(c => c.id.Equals(editedEmployee.customerId));
+                    if (customer != null)
+                    {
+                        companies = customer.companies;
+                        if (companies != null)
+                        {
+                            company = companies.First(c => c.id.Equals(editedEmployee.companyId));
+                            if (company != null && company.employees != null)
+                            {
+                                employee = company.employees.First(e => e.id.Equals(editedEmployee.id));
+                                //employee = editedEmployee;
+                                foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
+                                {
+                                    var editedValue = propertyInfo.GetValue(editedEmployee);
+                                    if (editedValue != null)
+                                    {
+                                        var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
+                                        employeeProperty.SetValue(employee, editedValue);
+                                    }
+                                }
+                                DatabaseMoq.UpdateJson();
+                                return (employee);
+                            }
+                            
+                        }
+                    }
+
+                    return employee;
                 }
-
-
-                return employee;
             }
+                
+                
             return null;
         }
 

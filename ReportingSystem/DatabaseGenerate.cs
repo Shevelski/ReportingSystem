@@ -22,10 +22,11 @@ namespace ReportingSystem
         public static List<ProjectModel>? Projects{ get; set; }
         public static List<List<CompanyModel>>? AllCompanies { get; set; }
         public static List<CompanyModel>? Companies { get; set; }
-        public static List<ProjectStatusModel> ProjectStatus { get; set; }
-        public static List<EmployeePositionModel> UserPositions { get; set; }
-        public static List<EmployeeRolModel> UserRolls { get; set; }
-        public static List<CompanyStatusModel> CompanyStatus { get; set; }
+        public static List<ProjectStatusModel>? ProjectStatus { get; set; }
+        public static List<EmployeePositionModel>? UserPositions { get; set; }
+        public static List<EmployeeRolModel>? UserRolls { get; set; }
+        public static List<CompanyStatusModel>? CompanyStatus { get; set; }
+        //public static CustomerConfigModel? CustomerConfig { get; set; }
         public static Random random = new Random();
 
         static DatabaseMoqGenerate()
@@ -38,8 +39,6 @@ namespace ReportingSystem
 
             static CustomerModel GenerateRandomCustomer()
             {
-               
-                
                 var faker = new Faker();
                 customer = new CustomerModel();
                 customer.id = Guid.NewGuid();
@@ -53,6 +52,11 @@ namespace ReportingSystem
                 customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
                 customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
                 customer.companies = GenerateRandomCompanies(customer);
+                customer.configure = new CustomerConfigModel()
+                {
+                    IsSaveCompany = false,
+                    IdSavedCompany = Guid.Empty,
+                };
                 return customer;
             }
 
