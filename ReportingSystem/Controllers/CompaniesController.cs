@@ -30,6 +30,21 @@ namespace ReportingSystem.Controllers
             return Json(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetPositions(string id)
+        {
+            await Task.Delay(10);
+            var result = _companiesService.GetPositions(id);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRolls(string id)
+        {
+            await Task.Delay(10);
+            var result = _companiesService.GetRolls(id);
+            return Json(result);
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetActualCompanies()

@@ -64,6 +64,12 @@ body {
     width: 50%;
 }
 
+.form-select.data {
+    font-size: 14px;
+    height: 33px;
+    width: 100%;
+}
+
 .accordion-button {
     height: 40px;
 }

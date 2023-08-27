@@ -17969,9 +17969,9 @@
               "employeeStatusType": 1,
               "employeeStatusName": "Актуальний"
             },
-            "birthDate": "1984-09-06T00:00:00+03:00",
+            "birthDate": "1984-09-06T00:00:00",
             "workStartDate": "2012-11-05T00:00:00",
-            "workEndDate": "0001-01-01T00:00:00",
+            "workEndDate": "2001-01-01T00:00:00",
             "holidayDate": [
               "2014-08-27T00:00:00",
               "2018-04-01T00:00:00",

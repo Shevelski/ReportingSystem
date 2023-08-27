@@ -52,6 +52,7 @@ namespace ReportingSystem.Services
 
         public EmployeeModel? EditEmployee(Object employeeInput)
         {
+
             EmployeeModel editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(employeeInput.ToString());
 
             if (editedEmployee != null)
@@ -69,8 +70,8 @@ namespace ReportingSystem.Services
                             if (company != null && company.employees != null)
                             {
                                 employee = company.employees.First(e => e.id.Equals(editedEmployee.id));
-                                //employee = editedEmployee;
-                                foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
+                                
+                                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
                                 {
                                     var editedValue = propertyInfo.GetValue(editedEmployee);
                                     if (editedValue != null)

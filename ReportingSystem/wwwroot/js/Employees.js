@@ -2,6 +2,11 @@
 new Vue({
     el: '#Employees',
     data: {
+        beforeEditEmployee: '',
+        positions: [0],
+        rolls:[0],
+        selectedRol:'',
+        selectedPosition: '',
         isNewSelected: false,
         saveCompany: false,
         idCompany: '',
@@ -87,7 +92,7 @@ new Vue({
                 responseCompanies = await axios.get("/Companies/GetCompanies");
             }
             this.companies = responseCompanies.data;
-            //console.log(this.companies);
+            console.log(this.companies);
 
             if (!this.IsNewSelected) {
                 var ar = await axios.get("/Companies/CheckSave");
@@ -103,6 +108,20 @@ new Vue({
                 this.IsNewSelected = true;
             }
 
+            let responsePositions = await axios.get("/Companies/GetPositions", {
+                params: {
+                    id: this.selectedCompanyId
+                }
+            });
+            this.positions = responsePositions.data;
+
+            let responseRolls = await axios.get("/Companies/GetRolls", {
+                params: {
+                    id: this.selectedCompanyId
+                }
+            });
+            this.rolls = responseRolls.data;
+
             let response = await axios.get("/Employees/GetEmployees", {
                 params: {
                     id: this.selectedCompanyId
@@ -110,7 +129,7 @@ new Vue({
             });
 
             this.employees = response.data;
-            //console.log(this.employees);
+            console.log(this.employees);
             for (let j = 0; j < this.employees.length; j++) {
                 this.employees[j].birthDate = this.dateCSharpToJs(this.employees[j].birthDate);
                 this.employees[j].workStartDate = this.dateCSharpToJs(this.employees[j].workStartDate);
@@ -125,12 +144,16 @@ new Vue({
             if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
                 this.IsNewSelected = true;
                 this.saveCompany = false;
-                console.log('different');
             } else {
                 this.saveCompany = true;
-                console.log('both');
             }
             this.Init();
+        },
+        getSelectedRol(event) {
+            this.selectedRol = event.target.value;
+        },
+        getSelectedPosition(event) {
+            this.selectedPosition = event.target.value;
         },
         async SavePermanentCompany() {
             var id = '';
@@ -155,14 +178,18 @@ new Vue({
             }
         },
         ToogleMode(mode) {
-            if (this.mode == 'edit') {
-                this.editEmployee();
+            if (this.mode === 'edit') {
+                this.toggleModal(2, this.indexEmployee);
+            } else {
+                this.beforeEditEmployee = this.filteredEmployees[this.indexEmployee];
             }
+
             if (this.mode != mode) {
                 this.mode = mode;
             }
         },
         async editEmployee() {
+            this.ToogleMode('standart');
             try {
                 const response = await axios.post('/Employees/EditEmployee', this.filteredEmployees[this.indexEmployee]);
             } catch (error) {
@@ -317,9 +344,6 @@ new Vue({
         },
         async confirmEditEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;
-            //const v1 = this.editUserFirstName;
-            //const v2 = this.editUserSecondName;
-            //const v3 = this.editUserThirdName;
 
             var ar = [v0, v1, v2, v3];
 
@@ -389,13 +413,19 @@ new Vue({
                 this.editEmployeeName = this.modalName;
             }
             if (type === 2) {
-                this.editEmployeeFirstName = this.filteredEmployees[index].firstName;
-                this.editEmployeeSecondName = this.filteredEmployees[index].secondName;
-                this.editEmployeeThirdName = this.filteredEmployees[index].thirdName;
                 this.modalEmployeeActive = false;
-                this.modalOperation = 'Ви впевнені, що хочете редагувати співробітника? ' + this.modalName;
+                this.modalOperation = 'Ви впевнені, що хочете редагувати співробітника ' + this.beforeEditEmployee.firstName + " " + this.beforeEditEmployee.secondName + " " + this.beforeEditEmployee.thirdName + " ?";
                 this.modalTitle = 'Редагування співробітника';
-                this.editEmployeeName = this.modalName;
+
+                //this.beforeEditEmployee = this.filteredEmployees[this.indexEmployee];
+
+                //for (const key in this.beforeEditEmployee) {
+                //    if (this.beforeEditEmployee.hasOwnProperty(key)) {
+                //        if (this.beforeEditEmployee[key] !== this.filteredEmployees[index][key]) {
+                //            console.log(`Key: ${key}, Before: ${this.beforeEditEmployee[key]}, After: ${this.filteredEmployees[index][key]}`);
+                //        }
+                //    }
+                //}
             }
             if (type === 3) {
                 this.modalName = this.filteredEmployees[index].name;

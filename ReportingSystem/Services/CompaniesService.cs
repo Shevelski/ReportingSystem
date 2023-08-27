@@ -5,6 +5,7 @@ using ReportingSystem.Models.Customer;
 using ReportingSystem.Enum.Extensions;
 using ReportingSystem.Utils;
 using ReportingSystem.Models.User;
+using ReportingSystem.Models;
 
 namespace ReportingSystem.Services
 {
@@ -16,12 +17,14 @@ namespace ReportingSystem.Services
         CompanyModel company = new CompanyModel();
         List<CompanyModel> companies = new List<CompanyModel>();
 
+        // заглушка - отримати ід замовника, повинно братися з форми авторизації, зараз з конфігураційного файла
         public string GetCustomerId()
         {
             var MyConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             return MyConfig.GetValue<string>("TempCustomer:id");
         }
 
+        //Зберегти компанію за використання за замовчуванням 
         public CustomerModel? SavePermanentCompany(string id)
         {
             Guid idCompany = new Guid();
@@ -62,6 +65,7 @@ namespace ReportingSystem.Services
             
         }
 
+        //Отримання списку компаній замовника 
         public List<CompanyModel>? GetCompanies()
         {
             if (DatabaseMoq.Customers != null)
@@ -76,7 +80,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
-        
+        //Перевірка чи є збережена компанія для входу за замовчуванням 
         public string? CheckSave()
         {
             if (DatabaseMoq.Customers != null)
@@ -89,16 +93,78 @@ namespace ReportingSystem.Services
                     {
                         return conf.IdSavedCompany.ToString();
                     }
-                    
                 }
             }
             return null;
         }
 
 
+        //Отримання всіх посад в компанії 
+        public List<EmployeePositionModel>? GetPositions(string id)
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(GetCustomerId(), out Guid idCustomer))
+                {
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer != null)
+                    {
+                        if (customer.companies != null && Guid.TryParse(id, out Guid idCompany)){
 
+                            company = customer.companies.First(co => co.id.Equals(idCompany));
+                            if (company.positions != null)
+                            {
+                                List<EmployeePositionModel> uniqPosition = new List<EmployeePositionModel>();
+                                List<string> listNamePositions = new List<string>();
+                                foreach (var position in company.positions)
+                                {
+                                    if (position.namePosition != null)
+                                    {
+                                        if (!listNamePositions.Contains(position.namePosition))
+                                        {
+                                            listNamePositions.Add(position.namePosition);
+                                            uniqPosition.Add(position);
+                                        }
+                                    }
+                                   
+                                }
+                                return uniqPosition;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
+        //Отримання всіх ролей системи в компанії 
+        public List<EmployeeRolModel>? GetRolls(string id)
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(GetCustomerId(), out Guid idCustomer))
+                {
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer != null)
+                    {
+                        if (customer.companies != null && Guid.TryParse(id, out Guid idCompany))
+                        {
 
+                            company = customer.companies.First(co => co.id.Equals(idCompany));
+                            if (company.rolls != null)
+                            {
+                                return company.rolls;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        //отримання списку компаній з статусом актуальні
         public List<CompanyModel>? GetActualCompanies()
         {
             List<CompanyModel> actual = new List<CompanyModel>();
@@ -129,6 +195,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
+        //редагування компанії
         public CompanyModel? EditCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
@@ -164,6 +231,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
+        //архівування компанії
         public CompanyModel? ArchiveCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
@@ -200,6 +268,7 @@ namespace ReportingSystem.Services
         }
 
 
+        //видалення компанії
         public CompanyModel? DeleteCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
@@ -230,7 +299,8 @@ namespace ReportingSystem.Services
         }
 
         private static Dictionary<Guid, CompanyModel> companiesData = new Dictionary<Guid, CompanyModel>();
-
+        
+        //перевірка єдрпу компанії при створенні - повернення даних про компанію
         public void PostCheckCompany(string[] ar)
         {
             Guid id = new Guid();
@@ -241,6 +311,7 @@ namespace ReportingSystem.Services
             companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
         }
 
+        //перевірка єдрпу компанії при створенні
         public CompanyModel? GetCheckCompany(string id)
         {
 
@@ -262,6 +333,7 @@ namespace ReportingSystem.Services
             }
         }
 
+        //створення компанії
         public CompanyModel? CreateCompany(string[] ar)
         {
             CompanyModel company = new CompanyModel();
@@ -301,16 +373,13 @@ namespace ReportingSystem.Services
 
                 };
                 company.chief = chief;
-
                 if (customer.companies != null)
                 {
                     companies = customer.companies;
                     companies.Add(company);
                     DatabaseMoq.UpdateJson();
                 }
-
             }
-            
             return null;
         }
     }
