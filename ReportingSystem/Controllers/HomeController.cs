@@ -43,17 +43,17 @@ namespace ReportingSystem.Controllers
             return View();
 
         }
-        //public IActionResult Projects()
-        //{
-        //    return View();
+        public IActionResult Projects()
+        {
+            return View();
 
-        //}
+        }
 
-        //public IActionResult ProjectsCategories()
-        //{
-        //    return View();
+        public IActionResult ProjectsCategories()
+        {
+            return View();
 
-        //}
+        }
 
         public IActionResult StepProjects()
         {
@@ -61,22 +61,31 @@ namespace ReportingSystem.Controllers
         }
 
 
+        //public IActionResult Index()
+        //{
+        //    if (User.IsInRole("EUAdministrator"))
+        //    {
+        //        return RedirectToAction("ActionName", "EUAdministrator");
+        //    }
+        //    else if (User.IsInRole("EUDeveloper"))
+        //    {
+        //        return RedirectToAction("ActionName", "EUDeveloper");
+        //    }
+        //    else if (User.IsInRole("EUUser"))
+        //    {
+        //        return RedirectToAction("ActionName", "EUUser");
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        //[ApiController]
-        //[Route("api/[controller]")]
-        //public class DataController : ControllerBase
-        //{
-        //    [HttpPost]
-        //    public IActionResult PostData([FromBody] ProjectModel project)
-        //    {
-        //        return Ok("Дані успішно збережено на сервері!");
-        //    }
-        //}
 
     }
 }
