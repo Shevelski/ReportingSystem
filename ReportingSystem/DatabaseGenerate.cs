@@ -26,7 +26,7 @@ namespace ReportingSystem
         public static List<EmployeePositionModel>? UserPositions { get; set; }
         public static List<EmployeeRolModel>? UserRolls { get; set; }
         public static List<CompanyStatusModel>? CompanyStatus { get; set; }
-        //public static CustomerConfigModel? CustomerConfig { get; set; }
+        
         public static Random random = new Random();
 
         static DatabaseMoqGenerate()

@@ -1,5 +1,5 @@
-﻿using ReportingSystem.Enum;
-using ReportingSystem.Enum.Extensions;
+﻿using ReportingSystem.Enums;
+using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Customer;
 using System;
 

@@ -1,5 +1,5 @@
 ﻿using ReportingSystem.Models.User;
-using ReportingSystem.Enum;
+using ReportingSystem.Enums;
 
 namespace ReportingSystem.Models
 {

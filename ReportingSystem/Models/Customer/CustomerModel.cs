@@ -1,4 +1,4 @@
-﻿using ReportingSystem.Enum;
+﻿using ReportingSystem.Enums;
 using ReportingSystem.Models.Company;
 
 namespace ReportingSystem.Models.Customer

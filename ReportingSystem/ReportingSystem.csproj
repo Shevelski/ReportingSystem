@@ -15,6 +15,11 @@
 
   <ItemGroup>
     <Folder Include="Views\User\" />
+    <Folder Include="Views\EUAdministrator\" />
+    <Folder Include="Views\EUDevAdministrator\" />
+    <Folder Include="Views\EUDeveloper\" />
+    <Folder Include="Views\EUDirector\" />
+    <Folder Include="Views\EUUser\" />
     <Folder Include="wwwroot\img\UserCertificate\" />
   </ItemGroup>
 

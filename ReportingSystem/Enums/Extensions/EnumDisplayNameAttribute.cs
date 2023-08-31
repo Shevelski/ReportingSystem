@@ -1,4 +1,4 @@
-﻿namespace ReportingSystem.Enum.Extensions
+﻿namespace ReportingSystem.Enums.Extensions
 {
     public class EnumDisplayNameAttribute : Attribute
     {

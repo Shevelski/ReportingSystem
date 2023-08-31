@@ -1,4 +1,4 @@
-﻿using ReportingSystem.Enum;
+﻿using ReportingSystem.Enums;
 
 namespace ReportingSystem.Models.User
 {

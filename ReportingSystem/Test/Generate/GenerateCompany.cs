@@ -1,6 +1,6 @@
 ﻿using Bogus;
-using ReportingSystem.Enum;
-using ReportingSystem.Enum.Extensions;
+using ReportingSystem.Enums;
+using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
@@ -229,8 +229,8 @@ namespace ReportingSystem.Test.Generate
             }
             if (position.namePosition == positions[3] || position.namePosition == positions[4] || position.namePosition == positions[5] || position.namePosition == positions[6])
             {
-                rol.rolType = EmployeeRolStatus.Project;
-                rol.rolName = EmployeeRolStatus.Project.GetDisplayName();
+                rol.rolType = EmployeeRolStatus.ProjectManager;
+                rol.rolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
             }
             if (position.namePosition == positions[7] || position.namePosition == positions[8] || position.namePosition == positions[9])
             {

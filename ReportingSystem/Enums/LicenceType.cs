@@ -1,6 +1,6 @@
-﻿using ReportingSystem.Enum.Extensions;
+﻿using ReportingSystem.Enums.Extensions;
 
-namespace ReportingSystem.Enum
+namespace ReportingSystem.Enums
 {
     public enum LicenceType
     {

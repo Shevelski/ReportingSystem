@@ -1,9 +1,9 @@
-﻿using ReportingSystem.Enum;
-using ReportingSystem.Enum.Extensions;
+﻿using ReportingSystem.Enums;
+using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ReportingSystem.Enum
+namespace ReportingSystem.Enums
 {
     public enum EmployeeRolStatus
     {
@@ -20,7 +20,7 @@ namespace ReportingSystem.Enum
         Administrator = 4,
 
         [EnumDisplayName("Менеджер")]
-        Project = 5,
+        ProjectManager = 5,
 
         [EnumDisplayName("Користувач")]
         User = 6,

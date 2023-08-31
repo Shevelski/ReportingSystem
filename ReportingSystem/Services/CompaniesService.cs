@@ -1,8 +1,8 @@
-﻿using ReportingSystem.Enum;
+﻿using ReportingSystem.Enums;
 using ReportingSystem;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
-using ReportingSystem.Enum.Extensions;
+using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Utils;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models;

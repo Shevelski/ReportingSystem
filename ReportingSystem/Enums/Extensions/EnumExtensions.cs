@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ReportingSystem.Enum.Extensions
+namespace ReportingSystem.Enums.Extensions
 {
     public static class EnumExtensions
     {

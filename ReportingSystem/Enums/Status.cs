@@ -1,4 +1,4 @@
-﻿namespace ReportingSystem.Enum
+﻿namespace ReportingSystem.Enums
 {
     public enum Status
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReportingSystem.Models.Customer;
-using ReportingSystem.Enum;
-using ReportingSystem.Enum.Extensions;
+using ReportingSystem.Enums;
+using ReportingSystem.Enums.Extensions;
 using System;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Services;

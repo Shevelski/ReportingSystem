@@ -1,5 +1,4 @@
-﻿
-new Vue({
+﻿new Vue({
     el: '#Companies',
     data: {
         useOpenDataBot: true,
@@ -21,8 +20,8 @@ new Vue({
         editCompanyActions: '',
         editCompanyPhone: '',
         editCompanyEmail: '',
-        newCompany:[0],
-        companies:[0],
+        newCompany: [0],
+        companies: [0],
     },
     mounted() {
         this.Init();
@@ -111,7 +110,7 @@ new Vue({
             this.itemsPerPage = count;
             this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
         },
-        nextBatch(){
+        nextBatch() {
             this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
 
             if (this.pageCur < this.pageCount) {

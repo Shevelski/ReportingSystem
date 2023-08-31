@@ -1,7 +1,7 @@
-﻿using ReportingSystem.Enum.Extensions;
+﻿using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Project;
 
-namespace ReportingSystem.Enum
+namespace ReportingSystem.Enums
 {
     public enum ProjectStatus
     {

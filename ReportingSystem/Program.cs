@@ -14,7 +14,8 @@ namespace ReportingSystem
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-
+            
+            builder.Services.AddScoped<AuthorizeService>();
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<CompaniesService>();
             builder.Services.AddScoped<EmployeesService>();
@@ -46,7 +47,7 @@ namespace ReportingSystem
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Authorize}/{id?}");
 
             app.Run();
         }

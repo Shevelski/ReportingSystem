@@ -1,5 +1,5 @@
-﻿using ReportingSystem.Enum;
-using ReportingSystem.Enum.Extensions;
+﻿using ReportingSystem.Enums;
+using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 
 namespace ReportingSystem.Utils
@@ -14,8 +14,8 @@ namespace ReportingSystem.Utils
             userRolModel.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel();
-            userRolModel.rolType = EmployeeRolStatus.Project;
-            userRolModel.rolName = EmployeeRolStatus.Project.GetDisplayName();
+            userRolModel.rolType = EmployeeRolStatus.ProjectManager;
+            userRolModel.rolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel();
             userRolModel.rolType = EmployeeRolStatus.Director;
