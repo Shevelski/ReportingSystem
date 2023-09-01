@@ -20,13 +20,20 @@ namespace ReportingSystem
             builder.Services.AddScoped<CompaniesService>();
             builder.Services.AddScoped<EmployeesService>();
             builder.Services.AddScoped<ProjectsCategoriesService>();
+
+            builder.Services.AddDistributedMemoryCache();
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(600);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             //builder.Services.AddScoped<ProjectsService>();
             //builder.Services.AddScoped<ReportModel>();
 
             //var config = builder.Configuration.GetSection("TempCustomer");
             //builder.Services.Configure<CustomerModel>(config);
-
-
 
             var app = builder.Build();
 
@@ -42,6 +49,8 @@ namespace ReportingSystem
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
 

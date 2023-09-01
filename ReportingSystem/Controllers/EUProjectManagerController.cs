@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ReportingSystem.Models.User;
 using ReportingSystem.Services;
+using System.Text;
 
 namespace ReportingSystem.Controllers
 {
@@ -14,24 +16,52 @@ namespace ReportingSystem.Controllers
             _logger = logger;
         }
 
+        private IActionResult GetIdsFromSession()
+        {
+            if (HttpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
+            {
+                var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
+                return View(ids);
+            }
+            else
+            {
+                return RedirectToAction("Home", "Authorize");
+            }
+        }
+
         public IActionResult Index()
         {
-            return View();
+            return GetIdsFromSession();
         }
 
-        public IActionResult Employee()
-        {
-            return View();
-        }
-
-        public IActionResult Customers()
-        {
-            return View();
-        }
         public IActionResult Companies()
         {
-            return View();
+            return GetIdsFromSession();
+        }
 
+        public IActionResult Categories()
+        {
+            return GetIdsFromSession();
+        }
+        public IActionResult Projects()
+        {
+            return GetIdsFromSession();
+        }
+        public IActionResult Employees()
+        {
+            return GetIdsFromSession();
+        }
+        public IActionResult Info()
+        {
+            return GetIdsFromSession();
+        }
+        public IActionResult Positions()
+        {
+            return GetIdsFromSession();
+        }
+        public IActionResult Report()
+        {
+            return GetIdsFromSession();
         }
     }
 }

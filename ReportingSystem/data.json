@@ -12367,8 +12367,8 @@
               "namePosition": "Графічний дизайнер"
             },
             "rol": {
-              "rolType": 4,
-              "rolName": "Адміністратор"
+              "rolType": 1,
+              "rolName": "Розробник"
             }
           },
           {

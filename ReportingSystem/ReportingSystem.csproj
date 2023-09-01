@@ -10,16 +10,11 @@
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.51" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.19" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\User\" />
-    <Folder Include="Views\EUAdministrator\" />
-    <Folder Include="Views\EUDevAdministrator\" />
-    <Folder Include="Views\EUDeveloper\" />
-    <Folder Include="Views\EUDirector\" />
-    <Folder Include="Views\EUUser\" />
     <Folder Include="wwwroot\img\UserCertificate\" />
   </ItemGroup>
 

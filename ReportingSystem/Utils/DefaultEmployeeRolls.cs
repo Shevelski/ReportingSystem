@@ -10,6 +10,15 @@ namespace ReportingSystem.Utils
         {
             List<EmployeeRolModel> rolls = new List<EmployeeRolModel>();
             EmployeeRolModel userRolModel = new EmployeeRolModel();
+            userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.Developer;
+            userRolModel.rolName = EmployeeRolStatus.Developer.GetDisplayName();
+            rolls.Add(userRolModel);
+            userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.DevAdministrator;
+            userRolModel.rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName();
+            rolls.Add(userRolModel);
+
             userRolModel.rolType = EmployeeRolStatus.Administrator;
             userRolModel.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
             rolls.Add(userRolModel);

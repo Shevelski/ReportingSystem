@@ -21,16 +21,16 @@
 
         <div class="el1 bm-3" v-if="mode == 0">
             <label class="label">Email</label>
-            <input class="input" name="email" v-model="email" />
+            <input class="input" v-model="email" />
         </div>
 
         <div class="el1 bm-3" v-if="mode == 2">
-            <button class="button yes-button" v-on:click="CheckEmail()">Так</button>
-            <button class="button no-button" v-on:click="mode = 0">Ні</button>
+            <button type="button" class="button yes-button" v-on:click="CheckEmail()">Так</button>
+            <button type="button" class="button no-button" v-on:click="mode = 0">Ні</button>
         </div>
 
         <div class="el1 bm-3" v-if="mode == 0">
-            <button class="button" v-on:click="CheckEmail()">Перевірити email</button>
+            <button type="button" class="button" v-on:click="CheckEmail()">Перевірити email</button>
         </div>
 
         <div class="el1 bm-3" v-if="mode == 1 || mode == 4">
@@ -38,9 +38,10 @@
             <input class="input" name="password" v-model="password" />
         </div>
         <div class="el1 bm-3" v-if="mode == 1 || mode == 4">
-            <button class="button" v-on:click="CheckPassword()">Перевірити пароль</button>
+            <button type="submit" class="button">Перевірити пароль</button>
         </div>
-        <button type="submit">send</button>
+        <input type="hidden" name="email" v-model="email" />
+        @*<button type="submit">send</button>*@
     </form>
 
 </div>

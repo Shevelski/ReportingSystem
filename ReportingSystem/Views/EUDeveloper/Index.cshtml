@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Розробник";
+    Layout = "_LayoutDeveloper";
+}
+@model string[];
+
+<p>Стартова сторінка - Розробник</p>
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Сторінка зі списком даних</title>
+</head>
+<body>
+    <h1>Список даних:</h1>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</body>
+</html>

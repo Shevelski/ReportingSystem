@@ -117,25 +117,18 @@ namespace ReportingSystem.Services
                     switch (item.rolType)
                     {
                         case EmployeeRolStatus.Administrator:
-                            //return "EUAdministratorController";
                             return "EUAdministrator";
                         case EmployeeRolStatus.Developer:
-                            //return "EUDeveloperController";
                             return "EUDeveloper";
                         case EmployeeRolStatus.DevAdministrator:
-                            //return "EUDevAdministratorController";
                             return "EUDevAdministrator";
                         case EmployeeRolStatus.ProjectManager:
-                            //return "EUProjectManagerController";
                             return "EUProjectManager";
                         case EmployeeRolStatus.User:
-                            //return "EUUserController";
                             return "EUUser";
                         case EmployeeRolStatus.Director:
-                            //return "EUDirectorController";
                             return "EUDirector";
                         default:
-                            //return "EUUserController";
                             return "EUUser";
                     }
                 }
