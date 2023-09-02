@@ -31,7 +31,6 @@ namespace ReportingSystem
 
         static DatabaseMoqGenerate()
         {
-
             Customers = new List<CustomerModel>();
             Companies = new List<CompanyModel>();
             Users = new List<EmployeeModel>();
@@ -47,7 +46,7 @@ namespace ReportingSystem
                 customer.thirdName = faker.Name.FirstName();
                 customer.statusLicence = GenerateCustomer.Status();
                 customer.phone = GenerateInfo.MobilePhoneNumber();
-                customer.email = (customer.secondName + "@gmail.com.ua").Replace(" ", "").ToLower();
+                customer.email = (customer.secondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
                 customer.password = GenerateInfo.Password();
                 customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
                 customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));

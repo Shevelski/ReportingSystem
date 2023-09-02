@@ -9,6 +9,7 @@ namespace ReportingSystem.Utils
         static public List<EmployeeRolModel> Get()
         {
             List<EmployeeRolModel> rolls = new List<EmployeeRolModel>();
+
             EmployeeRolModel userRolModel = new EmployeeRolModel();
             userRolModel = new EmployeeRolModel();
             userRolModel.rolType = EmployeeRolStatus.Developer;
@@ -19,6 +20,7 @@ namespace ReportingSystem.Utils
             userRolModel.rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName();
             rolls.Add(userRolModel);
 
+            userRolModel = new EmployeeRolModel();
             userRolModel.rolType = EmployeeRolStatus.Administrator;
             userRolModel.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
             rolls.Add(userRolModel);
@@ -27,8 +29,12 @@ namespace ReportingSystem.Utils
             userRolModel.rolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel();
-            userRolModel.rolType = EmployeeRolStatus.Director;
-            userRolModel.rolName = EmployeeRolStatus.Director.GetDisplayName();
+            userRolModel.rolType = EmployeeRolStatus.Customer;
+            userRolModel.rolName = EmployeeRolStatus.Customer.GetDisplayName();
+            rolls.Add(userRolModel);
+            userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.CEO;
+            userRolModel.rolName = EmployeeRolStatus.CEO.GetDisplayName();
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel();
             userRolModel.rolType = EmployeeRolStatus.User;

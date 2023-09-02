@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ReportingSystem</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+    <link rel="stylesheet" href="~/css/LayoutDeveloper.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -50,7 +50,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="EUDeveloper" asp-action="Info">Власні дані</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDeveloper" asp-action="Exit">Вихід</a>
                         </li>
                     </ul>
                 </div>
@@ -76,3 +76,4 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

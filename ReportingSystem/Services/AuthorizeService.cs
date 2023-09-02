@@ -126,8 +126,10 @@ namespace ReportingSystem.Services
                             return "EUProjectManager";
                         case EmployeeRolStatus.User:
                             return "EUUser";
-                        case EmployeeRolStatus.Director:
-                            return "EUDirector";
+                        case EmployeeRolStatus.Customer:
+                            return "EUCustomer";
+                        case EmployeeRolStatus.CEO:
+                            return "EUCEO";
                         default:
                             return "EUUser";
                     }
