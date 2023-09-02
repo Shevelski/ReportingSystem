@@ -13,10 +13,10 @@ namespace ReportingSystem.Models.Company
         public string? code { get; set; }
         public string? actions { get; set; }
         public string? statusWeb { get; set; }
-        public CompanyStatusModel status { get; set; }
+        public CompanyStatusModel? status { get; set; }
         public string? phone { get; set; }
         public string? email { get; set; }
-        public string statutCapital { get; set; }
+        public string? statutCapital { get; set; }
         public DateTime registrationDate { get; set; }
         public List<EmployeeRolModel>? rolls { get; set; }
         public EmployeeModel? chief { get; set; }

@@ -65,8 +65,16 @@ namespace ReportingSystem
                 var countCompany = random.Next(15, 22);
                 for (int i = 0; i < countCompany; i++)
                 {
-                    companies.Add(GenerateCompany.RandomCompany(customer));
-                    Debug.WriteLine($"Company {i} added. All is {countCompany}");
+                    
+                    if (customer != null)
+                    {
+                        var company = GenerateCompany.RandomCompany(customer);
+                        if (company != null)
+                        {
+                            companies.Add(company);
+                            Debug.WriteLine($"Company {i} added. All is {countCompany}");
+                        }  
+                    }
                 };
                 return companies;
             }

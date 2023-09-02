@@ -25,10 +25,10 @@ namespace ReportingSystem
         public static List<ProjectModel>? Projects{ get; set; }
         public static List<List<CompanyModel>>? AllCompanies { get; set; }
         public static List<CompanyModel>? Companies { get; set; }
-        public static List<ProjectStatusModel> ProjectStatus { get; set; }
-        public static List<EmployeePositionModel> UserPositions { get; set; }
-        public static List<EmployeeRolModel> UserRolls { get; set; }
-        public static List<CompanyStatusModel> CompanyStatus { get; set; }
+        public static List<ProjectStatusModel>? ProjectStatus { get; set; }
+        public static List<EmployeePositionModel>? UserPositions { get; set; }
+        public static List<EmployeeRolModel>? UserRolls { get; set; }
+        public static List<CompanyStatusModel>? CompanyStatus { get; set; }
 
         private const string DataFilePath = "data.json";
         static DatabaseMoq()

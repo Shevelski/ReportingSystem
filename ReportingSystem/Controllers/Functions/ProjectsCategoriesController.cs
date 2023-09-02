@@ -41,8 +41,27 @@ namespace ReportingSystem.Controllers.Functions
             {
                 if (levels[1] != -1 && levels[2] != -1)
                 {
-                    categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3[levels[2]].name = newName;
-                    return Json(categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3[levels[2]]);
+                    if (categoryLevel1 != null)
+                    {
+                        var categoriesLevel2 = categoryLevel1.categoriesLevel2;
+                        if (categoriesLevel2 != null)
+                        {
+                            var categoryLevel2 = categoriesLevel2[levels[1]];
+                            if (categoryLevel2 != null)
+                            {
+                                var categoriesLevel3 = categoryLevel2.categoriesLevel3;
+                                if (categoriesLevel3 != null)
+                                {
+                                    var categoryLevel3 = categoriesLevel3[levels[2]];
+                                    if (categoriesLevel3 != null)
+                                    {
+                                        categoryLevel3.name = newName;
+                                        return Json(categoryLevel3);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 else if (levels[1] != -1 && levels[2] == -1 && categoryLevel1.categoriesLevel2 != null)
                 {
@@ -69,32 +88,61 @@ namespace ReportingSystem.Controllers.Functions
                 ProjectCategoryModel projectCategoryModel = new ProjectCategoryModel();
                 projectCategoryModel.id = Guid.NewGuid();
                 projectCategoryModel.name = newName;
-                DatabaseMoq.ProjectsCategories.Add(projectCategoryModel);
-                DatabaseMoq.UpdateJson();
-                return Json(DatabaseMoq.ProjectsCategories);
+                if (DatabaseMoq.ProjectsCategories != null)
+                {
+                    DatabaseMoq.ProjectsCategories.Add(projectCategoryModel);
+                    DatabaseMoq.UpdateJson();
+                    return Json(DatabaseMoq.ProjectsCategories);
+                }
             }
             else
             {
-                ProjectCategoryModel? categoryLevel1 = DatabaseMoq.ProjectsCategories.FirstOrDefault(c => c.id.Equals(idLevel1));
-                if (levels[1] == -1)
+                if (DatabaseMoq.ProjectsCategories != null)
                 {
-                    ProjectCategoryModel2 projectCategoryModel2 = new ProjectCategoryModel2();
-                    projectCategoryModel2.id = Guid.NewGuid();
-                    projectCategoryModel2.name = newName;
-                    categoryLevel1.categoriesLevel2.Add(projectCategoryModel2);
-                    DatabaseMoq.UpdateJson();
-                    return Json(categoryLevel1.categoriesLevel2);
+                    ProjectCategoryModel? categoryLevel1 = DatabaseMoq.ProjectsCategories.FirstOrDefault(c => c.id.Equals(idLevel1));
+                    if (levels[1] == -1)
+                    {
+                        ProjectCategoryModel2 projectCategoryModel2 = new ProjectCategoryModel2();
+                        projectCategoryModel2.id = Guid.NewGuid();
+                        projectCategoryModel2.name = newName;
+                        if (categoryLevel1 != null)
+                        {
+                            var categoriesLevel2 = categoryLevel1.categoriesLevel2;
+                            if (categoriesLevel2 != null)
+                            {
+                                categoriesLevel2.Add(projectCategoryModel2);
+                                DatabaseMoq.UpdateJson();
+                                return Json(categoryLevel1.categoriesLevel2);
+                            }
+                        }
+                        
+                    }
+                    if (levels[2] == -1)
+                    {
+                        ProjectCategoryModel3 projectCategoryModel3 = new ProjectCategoryModel3();
+                        projectCategoryModel3.id = Guid.NewGuid();
+                        projectCategoryModel3.name = newName;
+                        if (categoryLevel1 != null)
+                        {
+                            var categoriesLevel2 = categoryLevel1.categoriesLevel2;
+                            if (categoriesLevel2 != null)
+                            {
+                                var categoryLevel2 = categoriesLevel2[levels[1]];
+                                if (categoryLevel2 != null)
+                                {
+                                    var categoriesLevel3 = categoryLevel2.categoriesLevel3;
+                                    if (categoriesLevel3 != null)
+                                    {
+                                        categoriesLevel3.Add(projectCategoryModel3);
+                                        DatabaseMoq.UpdateJson();
+                                        return Json(categoriesLevel3);
+                                    }
+                                    
+                                }
+                            } 
+                        }
+                    }
                 }
-                if (levels[2] == -1)
-                {
-                    ProjectCategoryModel3 projectCategoryModel3 = new ProjectCategoryModel3();
-                    projectCategoryModel3.id = Guid.NewGuid();
-                    projectCategoryModel3.name = newName;
-                    categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3.Add(projectCategoryModel3);
-                    DatabaseMoq.UpdateJson();
-                    return Json(categoryLevel1.categoriesLevel2[levels[1]].categoriesLevel3);
-                }
-
             }
             return NotFound();
         }

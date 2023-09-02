@@ -129,7 +129,7 @@
 
         <div v-if="modeCategories" v-for="(categoryLevel1, indexLevel1) in filteredCategory" :key="indexLevel1" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + indexLevel1">
-                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1" :aria-expanded="indexLevel1 === 0 ? 'true' : 'false'" :aria-controls="'collapse' + indexLevel1">
+                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1" :aria-controls="'collapse' + indexLevel1">
                     {{ categoryLevel1.name }}
                 </button>
             </h2>
@@ -149,7 +149,7 @@
                      <div v-if="categoryLevel1.categoriesLevel2">
                         <div v-for="(categoryLevel2, indexLevel2) in categoryLevel1.categoriesLevel2" :key="indexLevel2" class="accordion-item">
                             <h2 class="accordion-header" :id="'heading' + indexLevel1 + indexLevel2">
-                                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1 + indexLevel2" :aria-expanded="indexLevel2 === 0 ? 'true' : 'false'" :aria-controls="'collapse' + indexLevel1 + indexLevel2">
+                                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1 + indexLevel2" :aria-controls="'collapse' + indexLevel1 + indexLevel2">
                                     {{ categoryLevel2.name }}
                                 </button>
                             </h2>

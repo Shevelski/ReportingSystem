@@ -88,7 +88,7 @@ namespace ReportingSystem.Services
                 customers = DatabaseMoq.Customers;
                 if (Guid.TryParse(GetCustomerId(), out Guid id))
                 {
-                    CustomerConfigModel conf = customers.First(co => co.id.Equals(id)).configure;
+                    CustomerConfigModel? conf = customers.First(co => co.id.Equals(id)).configure;
                     if (conf != null)
                     {
                         return conf.IdSavedCompany.ToString();
@@ -180,7 +180,7 @@ namespace ReportingSystem.Services
                   
                     foreach (var item in companies)
                     {
-                        if (item.status.companyStatusType.Equals(CompanyStatus.Actual))
+                        if (item.status != null && item.status.companyStatusType.Equals(CompanyStatus.Actual))
                         {
                             actual.Add(item);
                         }

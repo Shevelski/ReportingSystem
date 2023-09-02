@@ -52,51 +52,49 @@ namespace ReportingSystem.Services
 
         public EmployeeModel? EditEmployee(Object employeeInput)
         {
-
-            EmployeeModel editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(employeeInput.ToString());
-
-            if (editedEmployee != null)
+            if (employeeInput != null)
             {
-                customers = DatabaseMoq.Customers;
-                if (customers != null)
-                {
-                    var customer = customers.First(c => c.id.Equals(editedEmployee.customerId));
-                    if (customer != null)
-                    {
-                        companies = customer.companies;
-                        if (companies != null)
-                        {
-                            company = companies.First(c => c.id.Equals(editedEmployee.companyId));
-                            if (company != null && company.employees != null)
-                            {
-                                employee = company.employees.First(e => e.id.Equals(editedEmployee.id));
-                                
-                                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
-                                {
-                                    var editedValue = propertyInfo.GetValue(editedEmployee);
-                                    if (editedValue != null)
-                                    {
-                                        var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
-                                        employeeProperty.SetValue(employee, editedValue);
-                                    }
-                                }
-                                DatabaseMoq.UpdateJson();
-                                return (employee);
-                            }
-                            
-                        }
-                    }
+                var obj = employeeInput.ToString();
+                EmployeeModel? editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
 
-                    return employee;
+                if (editedEmployee != null)
+                {
+                    customers = DatabaseMoq.Customers;
+                    if (customers != null)
+                    {
+                        var customer = customers.First(c => c.id.Equals(editedEmployee.customerId));
+                        if (customer != null)
+                        {
+                            companies = customer.companies;
+                            if (companies != null)
+                            {
+                                company = companies.First(c => c.id.Equals(editedEmployee.companyId));
+                                if (company != null && company.employees != null)
+                                {
+                                    employee = company.employees.First(e => e.id.Equals(editedEmployee.id));
+
+                                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
+                                    {
+                                        var editedValue = propertyInfo.GetValue(editedEmployee);
+                                        if (editedValue != null)
+                                        {
+                                            var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
+                                            if (employeeProperty != null)
+                                            {
+                                                employeeProperty.SetValue(employee, editedValue);
+                                            }
+                                        }
+                                    }
+                                    DatabaseMoq.UpdateJson();
+                                    return (employee);
+                                }
+                            }
+                        }
+                        return employee;
+                    }
                 }
             }
-                
-                
             return null;
         }
-
-      
     }
-
-
 }

@@ -239,28 +239,32 @@ namespace ReportingSystem.Test.Generate
             }
             return rol;
         }
-        static public CompanyModel RandomCompany(CustomerModel customer)
+        static public CompanyModel? RandomCompany(CustomerModel customer)
         {
             var faker = new Faker();
             CompanyModel company = new CompanyModel();
-            company.id = Guid.NewGuid();
-            company.name = faker.Company.CompanyName();
-            company.address = faker.Address.FullAddress();
-            company.code = GenerateInfo.Code();
-            company.actions = faker.Commerce.ProductAdjective();
-            company.statusWeb = StatusWeb();
-            company.status = Status();
-            company.phone = GenerateInfo.PhoneNumber();
-            company.email = (Regex.Replace(company.name, "[^0-9a-zA-Z]+", "") + ".com.ua").Replace(" ", "").ToLower();
-            company.statutCapital = random.Next(1000, 300000).ToString() + " UAH";
-            company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
-            company.positions = Positions();
-            company.rolls = DefaultEmployeeRolls.Get();
-            company.employees = Employees(company,customer.id);
-            company.chief = company.employees.FirstOrDefault(u => u.position.namePosition.Equals("Директор"));
-            company.categories = Categories();
-            //company.projects = GenerateProjects();
-            return company;
+            if (company != null)
+            {
+                company.id = Guid.NewGuid();
+                company.name = faker.Company.CompanyName();
+                company.address = faker.Address.FullAddress();
+                company.code = GenerateInfo.Code();
+                company.actions = faker.Commerce.ProductAdjective();
+                company.statusWeb = StatusWeb();
+                company.status = Status();
+                company.phone = GenerateInfo.PhoneNumber();
+                company.email = (Regex.Replace(company.name, "[^0-9a-zA-Z]+", "") + ".com.ua").Replace(" ", "").ToLower();
+                company.statutCapital = random.Next(1000, 300000).ToString() + " UAH";
+                company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
+                company.positions = Positions();
+                company.rolls = DefaultEmployeeRolls.Get();
+                company.employees = Employees(company, customer.id);
+                company.chief = company.employees.First(u => u.position.namePosition.Equals("Директор"));
+                company.categories = Categories();
+                //company.projects = GenerateProjects();
+                return company;
+            }
+            return null;
         }
         static public ProjectCategoryModel Categories()
         {

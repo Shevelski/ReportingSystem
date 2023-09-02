@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
 using Newtonsoft.Json;
 using ReportingSystem.Enums;
 using ReportingSystem.Models;
-using ReportingSystem.Models.User;
 using ReportingSystem.Services;
 using System.Diagnostics;
 using System.Text;
