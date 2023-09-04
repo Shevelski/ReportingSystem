@@ -150,6 +150,58 @@ namespace ReportingSystem.Services
             return null;
         }
 
+        //Зберегти замовника за використання за замовчуванням 
+        public CustomerModel? SavePermanentCustomer(string idCu)
+        {
+            Guid idCustomer = new Guid();
+            if (Guid.TryParse(idCu, out Guid result))
+            {
+                idCustomer = result;
+            }
+
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (customers != null)
+                {
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer != null && customer.configure != null)
+                    {
+                        if (idCustomer == Guid.Empty)
+                        {
+                            customer.configure.IdSavedCustomer = Guid.Empty;
+                            customer.configure.IsSaveCustomer = false;
+                        }
+                        else
+                        {
+                            customer.configure.IdSavedCustomer = idCustomer;
+                            customer.configure.IsSaveCustomer = true;
+                        }
+                        DatabaseMoq.UpdateJson();
+                    }
+                }
+            }
+            return customer;
+        }
+
+        //Перевірка чи є збережений замовник для входу за замовчуванням 
+        public string? CheckSave(string idCu)
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(idCu, out Guid id))
+                {
+                    CustomerConfigModel? conf = customers.First(co => co.id.Equals(id)).configure;
+                    if (conf != null)
+                    {
+                        return conf.IdSavedCustomer.ToString();
+                    }
+                }
+            }
+            return null;
+        }
+
         public async Task<CustomerModel?> CancellationLicence(string[] ar)
         {
             await Task.Delay(10);

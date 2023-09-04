@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ReportingSystem.Controllers.Functions;
 using ReportingSystem.Models.User;
+using System.Reflection;
 using System.Text;
 
 namespace ReportingSystem.Controllers.Users
@@ -22,6 +23,7 @@ namespace ReportingSystem.Controllers.Users
         //{
         //    if (HttpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
         //    {
+                
         //        var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
         //        return View(ids);
         //    }
@@ -32,65 +34,65 @@ namespace ReportingSystem.Controllers.Users
         //    }
         //}
 
+        //public string[]? GetIds()
+        //{
+        //    if (HttpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
+        //    {
+        //        var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
+        //        return ids;
+        //    }
+        //    return null;
+        //}
+
         public IActionResult Index()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Companies()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Steps()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Customers()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Categories()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Projects()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Employees()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Info()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Positions()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
 
         public IActionResult Report()
         {
-            string actionName = ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Exit()

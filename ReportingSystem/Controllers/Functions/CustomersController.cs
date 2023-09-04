@@ -66,5 +66,21 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> CheckSave(string idCu)
+        {
+            await Task.Delay(10);
+            var result = _customersService.CheckSave(idCu);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePermanentCustomer([FromBody] string idCu)
+        {
+            await Task.Delay(10);
+            var result = _customersService.SavePermanentCustomer(idCu);
+            return Json(result);
+        }
+
     }
 }

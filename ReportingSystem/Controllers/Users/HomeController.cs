@@ -52,11 +52,16 @@ namespace ReportingSystem.Controllers.Users
                             var custId = result.Employee.customerId;
                             var compId = result.Employee.companyId;
                             var emplId = result.Employee.id;
-                            Guid[] ids = { custId, compId, emplId };
+                            var rol = "";
+                            if (result.Employee.rol != null && result.Employee.rol.rolName != null)
+                            {
+                                rol = result.Employee.rol.rolType.ToString();
+                            }
+                            string[] ids = { custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()};
                             HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));
                             return RedirectToAction("Index", controller, new { ids });
+                            //return RedirectToAction("Index", controller);
                         }
-
                     }
                 }
                 else

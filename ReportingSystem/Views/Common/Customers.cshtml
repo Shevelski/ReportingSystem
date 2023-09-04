@@ -1,6 +1,4 @@
-﻿@using ReportingSystem.Properties;
-
-
+﻿
 <head>
     <title>Управління замовниками</title>
 </head>
@@ -114,7 +112,7 @@
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td><strong>@Resources.companyDataDirectorName:</strong></td>
+                                <td><strong>ПІБ замовника:</strong></td>
                                 <td>{{customer.firstName}}<br>{{customer.secondName}}<br>{{customer.thirdName}}</td>
                             </tr>
                             <tr>
@@ -126,19 +124,19 @@
                                 <td>{{customer.email}}</td>
                             </tr>
                             <tr>
-                                <td><strong>@Resources.directorInfoAmountCompanies:</strong></td>
+                                <td><strong>Кількість компаній:</strong></td>
                                 <td>{{amountCompany(index)}}</td>
                             </tr>
                             <tr>
-                                <td><strong>@Resources.directorInfoAmountEmployees:</strong></td>
+                                <td><strong>Кількість співробітників:</strong></td>
                                 <td>{{ getTotalEmployeesForUser(index) }}</td>
                             </tr>
                             <tr>
-                                <td><strong>@Resources.directorInfoTypeLicense:</strong></td>
+                                <td><strong>Тип ліцензії:</strong></td>
                                 <td>{{ customer.statusLicence.licenceName }}</td>
                             </tr>
                             <tr>
-                                <td><strong>@Resources.directorInfoStatusLicense:</strong></td>
+                                <td><strong>Дата завершення ліцензії:</strong></td>
                                 <td>{{ showFormatDate(customer.endTimeLicense) }}</td>
                             </tr>
                             <tr>

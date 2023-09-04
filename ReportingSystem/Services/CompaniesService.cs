@@ -17,24 +17,17 @@ namespace ReportingSystem.Services
         CompanyModel company = new CompanyModel();
         List<CompanyModel> companies = new List<CompanyModel>();
 
-        // заглушка - отримати ід замовника, повинно братися з форми авторизації, зараз з конфігураційного файла
-        public string GetCustomerId()
-        {
-            var MyConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            return MyConfig.GetValue<string>("TempCustomer:id");
-        }
-
         //Зберегти компанію за використання за замовчуванням 
-        public CustomerModel? SavePermanentCompany(string id)
+        public CustomerModel? SavePermanentCompany(string idCu, string idCo)
         {
             Guid idCompany = new Guid();
-            if (Guid.TryParse(id, out Guid result0))
+            if (Guid.TryParse(idCo, out Guid result0))
             {
                 idCompany = result0;
             }
 
             Guid idCustomer = new Guid();
-            if (Guid.TryParse(GetCustomerId(), out Guid result))
+            if (Guid.TryParse(idCu, out Guid result))
             {
                 idCustomer = result;
             }
@@ -58,20 +51,18 @@ namespace ReportingSystem.Services
                         }
                         DatabaseMoq.UpdateJson();
                     }
-                    
                 }
             }
             return customer;
-            
         }
 
         //Отримання списку компаній замовника 
-        public List<CompanyModel>? GetCompanies()
+        public List<CompanyModel>? GetCompanies(string idCu)
         {
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                if (Guid.TryParse(GetCustomerId(), out Guid id))
+                if (Guid.TryParse(idCu, out Guid id))
                 {
                     var companies = customers.First(co => co.id.Equals(id)).companies;
                     return companies;
@@ -81,12 +72,12 @@ namespace ReportingSystem.Services
         }
 
         //Перевірка чи є збережена компанія для входу за замовчуванням 
-        public string? CheckSave()
+        public string? CheckSave(string idCu)
         {
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                if (Guid.TryParse(GetCustomerId(), out Guid id))
+                if (Guid.TryParse(idCu, out Guid id))
                 {
                     CustomerConfigModel? conf = customers.First(co => co.id.Equals(id)).configure;
                     if (conf != null)
@@ -100,17 +91,17 @@ namespace ReportingSystem.Services
 
 
         //Отримання всіх посад в компанії 
-        public List<EmployeePositionModel>? GetPositions(string id)
+        public List<EmployeePositionModel>? GetPositions(string idCu, string idCo)
         {
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                if (Guid.TryParse(GetCustomerId(), out Guid idCustomer))
+                if (Guid.TryParse(idCu, out Guid idCustomer))
                 {
                     customer = customers.First(c => c.id.Equals(idCustomer));
                     if (customer != null)
                     {
-                        if (customer.companies != null && Guid.TryParse(id, out Guid idCompany)){
+                        if (customer.companies != null && Guid.TryParse(idCo, out Guid idCompany)){
 
                             company = customer.companies.First(co => co.id.Equals(idCompany));
                             if (company.positions != null)
@@ -139,17 +130,17 @@ namespace ReportingSystem.Services
         }
 
         //Отримання всіх ролей системи в компанії 
-        public List<EmployeeRolModel>? GetRolls(string id)
+        public List<EmployeeRolModel>? GetRolls(string idCu, string idCo)
         {
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                if (Guid.TryParse(GetCustomerId(), out Guid idCustomer))
+                if (Guid.TryParse(idCu, out Guid idCustomer))
                 {
                     customer = customers.First(c => c.id.Equals(idCustomer));
                     if (customer != null)
                     {
-                        if (customer.companies != null && Guid.TryParse(id, out Guid idCompany))
+                        if (customer.companies != null && Guid.TryParse(idCo, out Guid idCompany))
                         {
 
                             company = customer.companies.First(co => co.id.Equals(idCompany));
@@ -165,11 +156,11 @@ namespace ReportingSystem.Services
         }
 
         //отримання списку компаній з статусом актуальні
-        public List<CompanyModel>? GetActualCompanies()
+        public List<CompanyModel>? GetActualCompanies(string idCu)
         {
             List<CompanyModel> actual = new List<CompanyModel>();
 
-            if (DatabaseMoq.Customers != null && Guid.TryParse(GetCustomerId(), out Guid id))
+            if (DatabaseMoq.Customers != null && Guid.TryParse(idCu, out Guid id))
             {
                 customers = DatabaseMoq.Customers;
                 var customer = customers.First(co => co.id.Equals(id));
@@ -199,7 +190,7 @@ namespace ReportingSystem.Services
         public CompanyModel? EditCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
-            if (Guid.TryParse(GetCustomerId(), out Guid result))
+            if (Guid.TryParse(ar[6], out Guid result))
             {
                 idCustomer = result;
             }
@@ -235,7 +226,7 @@ namespace ReportingSystem.Services
         public CompanyModel? ArchiveCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
-            if (Guid.TryParse(GetCustomerId(), out Guid result))
+            if (Guid.TryParse(ar[1], out Guid result))
             {
                 idCustomer = result;
             }
@@ -272,7 +263,7 @@ namespace ReportingSystem.Services
         public CompanyModel? DeleteCompany(string[] ar)
         {
             Guid idCustomer = new Guid();
-            if (Guid.TryParse(GetCustomerId(), out Guid result))
+            if (Guid.TryParse(ar[1], out Guid result))
             {
                 idCustomer = result;
             }
@@ -354,7 +345,7 @@ namespace ReportingSystem.Services
             };
 
             Guid idCustomer = new Guid();
-            if (Guid.TryParse(GetCustomerId(), out Guid result))
+            if (Guid.TryParse(ar[6], out Guid result))
             {
                 idCustomer = result;
             }

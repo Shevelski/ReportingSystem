@@ -22,28 +22,11 @@ namespace ReportingSystem.Controllers.Functions
             _employeesService = employeesService;
         }
 
-
         [HttpGet]
-        public async Task<IActionResult> CheckEmployeeEmail(string email)
+        public async Task<IActionResult> GetEmployees(string idCu, string idCo)
         {
             await Task.Delay(10);
-
-            return NoContent();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CheckEmployeePassword(string password)
-        {
-            await Task.Delay(10);
-
-            return NoContent();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetEmployees(string id)
-        {
-            await Task.Delay(10);
-            var employees = _employeesService.GetEmployees(id);
+            var employees = _employeesService.GetEmployees(idCu, idCo);
             return Json(employees);
         }
 

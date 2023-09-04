@@ -14,51 +14,51 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompanies()
+        public async Task<IActionResult> GetCompanies(string idCu)
         {
             await Task.Delay(10);
-            var result = _companiesService.GetCompanies();
+            var result = _companiesService.GetCompanies(idCu);
+            return Json(result);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetActualCompanies(string idCu)
+        {
+            await Task.Delay(10);
+            var result = _companiesService.GetActualCompanies(idCu);
             return Json(result);
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> CheckSave()
+        public async Task<IActionResult> CheckSave(string idCu)
         {
             await Task.Delay(10);
-            var result = _companiesService.CheckSave();
+            var result = _companiesService.CheckSave(idCu);
             return Json(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetPositions(string id)
+        public async Task<IActionResult> GetPositions(string idCu, string idCo)
         {
             await Task.Delay(10);
-            var result = _companiesService.GetPositions(id);
+            var result = _companiesService.GetPositions(idCu, idCo);
             return Json(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRolls(string id)
+        public async Task<IActionResult> GetRolls(string idCu, string idCo)
         {
             await Task.Delay(10);
-            var result = _companiesService.GetRolls(id);
-            return Json(result);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetActualCompanies()
-        {
-            await Task.Delay(10);
-            var result = _companiesService.GetActualCompanies();
+            var result = _companiesService.GetRolls(idCu, idCo);
             return Json(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SavePermanentCompany([FromBody] string id)
+        public async Task<IActionResult> SavePermanentCompany([FromBody] string idCu, string idCo)
         {
             await Task.Delay(10);
-            var result = _companiesService.SavePermanentCompany(id);
+            var result = _companiesService.SavePermanentCompany(idCu, idCo);
             return Json(result);
         }
 

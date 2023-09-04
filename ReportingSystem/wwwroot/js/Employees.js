@@ -2,6 +2,11 @@
 new Vue({
     el: '#Employees',
     data: {
+        items: 0,
+        customerId: '',
+        companyId: '',
+        employeeId: '',
+        rol:'',
         beforeEditEmployee: '',
         positions: [0],
         rolls:[0],
@@ -15,6 +20,8 @@ new Vue({
         showEmployeeInfo: false,
         selectedCompanyId: 0,
         selectedCompanyIdCheck: 0,
+        selectedCustomerId: 0,
+        selectedCustomerIdCheck: 0,
         selectedCompanyName: "Виберіть компанію",
         useOpenDataBot: true,
         showArchive: false,
@@ -35,16 +42,20 @@ new Vue({
         newEmployee: {},
         employees: [0],
         companies: [0],
+        customers: [0],
         holidayDays: 0,
         hospitalDays: 0,
         assignmentDays: 0,
         taketimeoffDays: 0,
     },
     mounted() {
+        this.customerId = document.getElementById('idCu').textContent;
+        this.companyId = document.getElementById('idCo').textContent;
+        this.employeeId = document.getElementById('idEm').textContent;
+        this.rol = document.getElementById('rol').textContent;
         this.Init();
     },
     computed: {
-        
         countFilteredEmployees() {
             const currentDate = new Date();
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
@@ -85,17 +96,51 @@ new Vue({
     },
     methods: {
         async Init() {
+            let responseCustomers = await axios.get("/Customers/GetAllLicence");
+            this.customers = responseCustomers.data;
+
+            if (!this.IsNewSelectedCustomer) {
+                var ar = await axios.get("/Customers/CheckSave", {
+                    params: {
+                        idCu: this.customerId,
+                    }
+                });
+                this.selectedCustomerId = ar.data;
+                if (ar.data == '00000000-0000-0000-0000-000000000000') {
+                    this.saveCustomer = false;
+                    this.selectedCustomerId = this.customers[0].id;
+                } else {
+                    this.saveCustomer = true;
+                    this.selectedCustomerId = ar.data;
+                    this.selectedCustomerIdCheck = ar.data;
+                }
+                this.customerId = this.selectedCustomerId;
+                this.IsNewSelectedCustomer = true;
+            }
+            
+
             let responseCompanies = '';
             if (this.showOnlyActualCompany) {
-                responseCompanies = await axios.get("/Companies/GetActualCompanies");
+                responseCompanies = await axios.get("/Companies/GetActualCompanies", {
+                    params: {
+                        idCu: this.selectedCustomerId,
+                    }
+                });
             } else {
-                responseCompanies = await axios.get("/Companies/GetCompanies");
+                responseCompanies = await axios.get("/Companies/GetCompanies", {
+                    params: {
+                        idCu: this.selectedCustomerId,
+                    }
+                });
             }
             this.companies = responseCompanies.data;
-            console.log(this.companies);
 
             if (!this.IsNewSelected) {
-                var ar = await axios.get("/Companies/CheckSave");
+                var ar = await axios.get("/Companies/CheckSave", {
+                    params: {
+                        idCu: this.customerId,
+                    }
+                });
                 this.selectedCompanyId = ar.data;
                 if (ar.data == '00000000-0000-0000-0000-000000000000') {
                     this.saveCompany = false;
@@ -110,26 +155,28 @@ new Vue({
 
             let responsePositions = await axios.get("/Companies/GetPositions", {
                 params: {
-                    id: this.selectedCompanyId
+                    idCu: this.customerId,
+                    idCo: this.selectedCompanyId
                 }
             });
             this.positions = responsePositions.data;
 
             let responseRolls = await axios.get("/Companies/GetRolls", {
                 params: {
-                    id: this.selectedCompanyId
+                    idCu: this.customerId,
+                    idCo: this.selectedCompanyId
                 }
             });
             this.rolls = responseRolls.data;
 
             let response = await axios.get("/Employees/GetEmployees", {
                 params: {
-                    id: this.selectedCompanyId
+                    idCu: this.customerId,
+                    idCo: this.selectedCompanyId
                 }
             });
 
             this.employees = response.data;
-            console.log(this.employees);
             for (let j = 0; j < this.employees.length; j++) {
                 this.employees[j].birthDate = this.dateCSharpToJs(this.employees[j].birthDate);
                 this.employees[j].workStartDate = this.dateCSharpToJs(this.employees[j].workStartDate);
@@ -137,6 +184,30 @@ new Vue({
             };            
             
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
+        },
+        getSelectedCustomer(event) {
+            this.selectedCustomerId = event.target.value;
+
+            if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
+                this.IsNewSelectedCustomer = true;
+                this.saveCustomer = false;
+
+                console.log(this.selectedCompanyIdCheck);
+                console.log(this.selectedCompanyId);
+
+                if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
+                    this.IsNewSelected = true;
+                    this.saveCompany = false;
+                } else {
+                    this.saveCompany = true;
+                }
+            } else {
+                this.saveCustomer = true;
+            }
+
+            
+
+            this.Init();
         },
         getSelectedCompany(event) {
             this.selectedCompanyId = event.target.value;
@@ -155,20 +226,39 @@ new Vue({
         getSelectedPosition(event) {
             this.selectedPosition = event.target.value;
         },
-        async SavePermanentCompany() {
-            var id = '';
-            if (this.saveCompany) {
-                id = this.selectedCompanyId;
-                this.selectedCompanyIdCheck = this.selectedCompanyId;
+        async SavePermanentCustomer() {
+            var idCu = '';
+            if (this.saveCustomer) {
+                idCu = this.selectedCustomerId;
+                this.selectedCustomerIdCheck = this.selectedCustomerId;
             } else {
-                id = '';
-                this.selectedCompanyIdCheck = 0;
+                idCu = '';
+                this.selectedCustomerIdCheck = 0;
             };
 
-            console.log(this.saveCompany + ' ' + id);
+            try {
+                const response = await axios.post('/Customers/SavePermanentCustomer', idCu, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            } catch (error) {
+                console.error('Error calling SavePermanentCustomer method:', error);
+            }
+        },
+        async SavePermanentCompany() {
+            var idCo = '';
+            if (this.saveCompany) {
+                idCo = this.selectedCompanyId;
+                this.selectedCompanyIdCheck = this.selectedCompanyId;
+            } else {
+                idCo = '';
+                this.selectedCompanyIdCheck = 0;
+            };
+            var idCu = this.selectedCustomerId;
 
             try {
-                const response = await axios.post('/Companies/SavePermanentCompany', id, {
+                const response = await axios.post('/Companies/SavePermanentCompany',idCu, idCo, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -442,26 +532,26 @@ new Vue({
                 this.modalTitle = 'Видалення співробітника';
             }
         },
-        handleImageChange(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.$nextTick(() => {
-                        this.updateImage(e.target.result);
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        },
-        updateImage(imageData) {
-            const imageElement = this.$refs.imageElement;
-            if (imageElement) {
-                const prefix = 'data:image/jpeg;base64,';
-                const imageDataWithoutPrefix = imageData.replace(prefix, '');
-                imageElement.src = imageDataWithoutPrefix;
-            }
-        },
+        //handleImageChange(event) {
+        //    const file = event.target.files[0];
+        //    if (file) {
+        //        const reader = new FileReader();
+        //        reader.onload = (e) => {
+        //            this.$nextTick(() => {
+        //                this.updateImage(e.target.result);
+        //            });
+        //        };
+        //        reader.readAsDataURL(file);
+        //    }
+        //},
+        //updateImage(imageData) {
+        //    const imageElement = this.$refs.imageElement;
+        //    if (imageElement) {
+        //        const prefix = 'data:image/jpeg;base64,';
+        //        const imageDataWithoutPrefix = imageData.replace(prefix, '');
+        //        imageElement.src = imageDataWithoutPrefix;
+        //    }
+        //},
         closeAllAccordions() {
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
             const accordionItems = document.querySelectorAll(".accordion-collapse");

@@ -19,17 +19,16 @@ namespace ReportingSystem.Services
         List<CompanyModel>? companies = new List<CompanyModel>();
         EmployeeModel? employee = new EmployeeModel();
 
-        public List<EmployeeModel>? GetEmployees(string companyId)
+        public List<EmployeeModel>? GetEmployees(string idCu, string idCo)
         {
-            string id = companiesService.GetCustomerId();
 
-            if (customers != null && Guid.TryParse(id, out Guid idCustomer))
+            if (customers != null && Guid.TryParse(idCu, out Guid idCustomer))
             {
                 customer = customers.First(cu => cu.id.Equals(idCustomer));
                 companies = customer.companies;
                 if (companies != null)
                 {
-                    if (Guid.TryParse(companyId, out Guid companyIdGuid))
+                    if (Guid.TryParse(idCo, out Guid companyIdGuid))
                     {
                         company = companies.FirstOrDefault(company => company.id == companyIdGuid);
                         if (company != null)

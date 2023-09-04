@@ -10,33 +10,27 @@ namespace ReportingSystem.Controllers.Users
 
         public IActionResult Index()
         {
-            string actionName = this.ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return View();
         }
         public IActionResult Companies()
         {
-            string actionName = this.ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return View();
         }
         public IActionResult Employees()
         {
-            string actionName = this.ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return View();
         }
         public IActionResult Info()
         {
-            string actionName = this.ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return View();
         }
         public IActionResult Positions()
         {
-            string actionName = this.ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return View();
         }
         public IActionResult Report()
         {
-            string actionName = this.ControllerContext.ActionDescriptor.ActionName;
-            return SessionHelper.ViewWithIdsFromSession(HttpContext, actionName);
+            return View();
         }
     }
 }

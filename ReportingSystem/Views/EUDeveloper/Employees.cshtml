@@ -1,7 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Розробник";
+﻿<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="~/css/Employees.css" asp-append-version="true" />
+
+@{
+    ViewData["Title"] = "Співробітники";
     Layout = "_LayoutDeveloper";
 }
 
+@model string[];
 
-<p>Категорії - розробник</p>
+<head>
+    <title>Співробітники</title>
+</head>
+<div>
+    <p hidden id="idCu">@Model[0]</p>
+    <p hidden id="idCo">@Model[1]</p>
+    <p hidden id="idEm">@Model[2]</p>
+    <p hidden id="rol">@Model[3]</p>
+</div>
+
+<partial name="~/Views/Common/Employees.cshtml" />

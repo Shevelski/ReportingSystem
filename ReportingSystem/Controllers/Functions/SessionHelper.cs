@@ -1,15 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 using System.Text;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace ReportingSystem.Controllers.Functions
 {
+
     public static class SessionHelper
     {
-        public static IActionResult ViewWithIdsFromSession(HttpContext httpContext, string view = "Index")
+        public static IActionResult ViewDataSession(HttpContext httpContext)
         {
             if (httpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
             {
@@ -22,7 +24,6 @@ namespace ReportingSystem.Controllers.Functions
 
                 return new ViewResult
                 {
-                    ViewName = view,
                     ViewData = viewData
                 };
             }
@@ -32,22 +33,6 @@ namespace ReportingSystem.Controllers.Functions
                 return new RedirectToActionResult("Authorize", "Home", null);
             }
         }
-
-
     }
+
 }
-
-
-//private IActionResult GetIdsFromSession()
-//{
-//    if (HttpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
-//    {
-//        var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
-//        return View(ids);
-//    }
-//    else
-//    {
-//        HttpContext.SignOutAsync();
-//        return RedirectToAction("Authorize", "Home");
-//    }
-//}
