@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ReportingSystem.Controllers.Functions
 {
-
+    //функція для виклику сторінки з вкладанням сесійних даних
     public static class SessionHelper
     {
         public static IActionResult ViewDataSession(HttpContext httpContext)

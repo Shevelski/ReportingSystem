@@ -14,6 +14,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
+        //отримати компанії вказаного замовника
         public async Task<IActionResult> GetCompanies(string idCu)
         {
             await Task.Delay(10);
@@ -22,6 +23,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
+        //отримати компанії з статусом актуальні вказаного замовника
         public async Task<IActionResult> GetActualCompanies(string idCu)
         {
             await Task.Delay(10);
@@ -31,6 +33,8 @@ namespace ReportingSystem.Controllers.Functions
 
 
         [HttpGet]
+        //перевірка збереженої компанії в конфігурації 
+        //переробити на універсально для кожного користувача
         public async Task<IActionResult> CheckSave(string idCu)
         {
             await Task.Delay(10);
@@ -38,6 +42,7 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
+        //отримати посади вибраної компанії вибраного замовника
         [HttpGet]
         public async Task<IActionResult> GetPositions(string idCu, string idCo)
         {
@@ -47,6 +52,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
+        //отримати ролі вибраної компанії вибраного замовника 
         public async Task<IActionResult> GetRolls(string idCu, string idCo)
         {
             await Task.Delay(10);
@@ -55,6 +61,8 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
+        //зберегти компанію в конфігураторі для подальшого використання
+        //переробити на універсально для кожного користувача
         public async Task<IActionResult> SavePermanentCompany([FromBody] string idCu, string idCo)
         {
             await Task.Delay(10);
@@ -63,6 +71,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
+        //змінити компанію
         public async Task<IActionResult> EditCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
@@ -72,6 +81,7 @@ namespace ReportingSystem.Controllers.Functions
 
 
         [HttpPost]
+        //архівація компанії
         public async Task<IActionResult> ArchiveCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
@@ -81,6 +91,7 @@ namespace ReportingSystem.Controllers.Functions
 
 
         [HttpPost]
+        //видалення компанії
         public async Task<IActionResult> DeleteCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
@@ -89,13 +100,16 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
+        //перевірка єдрпу компанії при створенні - повернення даних про компанію
         public async Task PostCheckCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);
             _companiesService.PostCheckCompany(ar);
         }
 
+        
         [HttpGet]
+        //перевірка єдрпу компанії при створенні
         public async Task<IActionResult> GetCheckCompany(string id)
         {
             await Task.Delay(10);
@@ -103,8 +117,9 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
-
+        //
         [HttpPost]
+        //створення компанії
         public async Task<IActionResult> CreateCompany([FromBody] string[] ar)
         {
             await Task.Delay(10);

@@ -73,13 +73,13 @@
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
-            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
+            <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
                 <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
             </select>
 
             <div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminate" v-on:change="SavePermanentCompany()" v-model="saveCompany">
-                <label class="form-check-label" for="flexCheckIndeterminate">
+                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCo" v-on:change="SavePermanentCompany()" v-model="saveCompany">
+                <label class="form-check-label" for="flexCheckIndeterminateCo">
                     Запам'ятати компанію
                 </label>
             </div>

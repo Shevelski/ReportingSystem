@@ -12,9 +12,12 @@ new Vue({
         rolls:[0],
         selectedRol:'',
         selectedPosition: '',
-        isNewSelected: false,
+        isNewSelectedCompany: false,
         saveCompany: false,
         idCompany: '',
+        isNewSelectedCustomer: false,
+        saveCustomer: false,
+        idCustomer: '',
         mode: 'standart',
         showOnlyActualCompany: false,
         showEmployeeInfo: false,
@@ -22,7 +25,8 @@ new Vue({
         selectedCompanyIdCheck: 0,
         selectedCustomerId: 0,
         selectedCustomerIdCheck: 0,
-        selectedCompanyName: "Виберіть компанію",
+        //selectedCompanyName: "Виберіть компанію",
+        //selectedCustomeryName: "Виберіть замовника",
         useOpenDataBot: true,
         showArchive: false,
         searchQuery: '',
@@ -96,70 +100,27 @@ new Vue({
     },
     methods: {
         async Init() {
-            let responseCustomers = await axios.get("/Customers/GetAllLicence");
-            this.customers = responseCustomers.data;
-
-            if (!this.IsNewSelectedCustomer) {
-                var ar = await axios.get("/Customers/CheckSave", {
-                    params: {
-                        idCu: this.customerId,
-                    }
-                });
-                this.selectedCustomerId = ar.data;
-                if (ar.data == '00000000-0000-0000-0000-000000000000') {
-                    this.saveCustomer = false;
-                    this.selectedCustomerId = this.customers[0].id;
-                } else {
-                    this.saveCustomer = true;
-                    this.selectedCustomerId = ar.data;
-                    this.selectedCustomerIdCheck = ar.data;
-                }
-                this.customerId = this.selectedCustomerId;
-                this.IsNewSelectedCustomer = true;
+            console.log('=======================================');
+            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
+                await this.updateCustomers();
+                this.IsNewSelectedCompany = false;
+                console.log('cust = ' + this.selectedCustomerId);
+                await this.updateCompanies();
+                console.log('comp = ' + this.selectedCompanyId);
+            }
+            if (this.rol == 'Customer') {
+                await this.updateCompanies();
+                
+            }
+            if (this.rol == 'CEO') {
+                this.selectedCustomerId = this.customerId;
+                this.selectedCompanyId = this.companyId;
             }
             
+            //await this.updateCompanies();
+            
 
-            let responseCompanies = '';
-            if (this.showOnlyActualCompany) {
-                responseCompanies = await axios.get("/Companies/GetActualCompanies", {
-                    params: {
-                        idCu: this.selectedCustomerId,
-                    }
-                });
-            } else {
-                responseCompanies = await axios.get("/Companies/GetCompanies", {
-                    params: {
-                        idCu: this.selectedCustomerId,
-                    }
-                });
-            }
-            this.companies = responseCompanies.data;
-
-            if (!this.IsNewSelected) {
-                var ar = await axios.get("/Companies/CheckSave", {
-                    params: {
-                        idCu: this.customerId,
-                    }
-                });
-                this.selectedCompanyId = ar.data;
-                if (ar.data == '00000000-0000-0000-0000-000000000000') {
-                    this.saveCompany = false;
-                    this.selectedCompanyId = this.companies[0].id;
-                } else {
-                    this.saveCompany = true;
-                    this.selectedCompanyId = ar.data;
-                    this.selectedCompanyIdCheck = ar.data;
-                }
-                this.IsNewSelected = true;
-            }
-
-            let responsePositions = await axios.get("/Companies/GetPositions", {
-                params: {
-                    idCu: this.customerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
-            this.positions = responsePositions.data;
+            this.positions = await this.getPositions();
 
             let responseRolls = await axios.get("/Companies/GetRolls", {
                 params: {
@@ -185,35 +146,84 @@ new Vue({
             
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
         },
+        async getPositions() {
+            let responsePositions = await axios.get("/Companies/GetPositions", {
+                params: {
+                    idCu: this.customerId,
+                    idCo: this.selectedCompanyId
+                }
+            });
+           return responsePositions.data;
+        },
+        async updateCompanies() {
+            let responseCompanies = '';
+            responseCompanies = await axios.get("/Companies/GetCompanies", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                }
+            });
+            this.companies = responseCompanies.data;
+
+            if (!this.IsNewSelectedCompany) {
+                var ar = await axios.get("/Companies/CheckSave", {
+                    params: {
+                        idCu: this.customerId,
+                    }
+                });
+                this.selectedCompanyId = ar.data;
+                if (ar.data == '00000000-0000-0000-0000-000000000000') {
+                    this.saveCompany = false;
+                    this.selectedCompanyId = this.companies[0].id;
+                } else {
+                    this.saveCompany = true;
+                    this.selectedCompanyId = ar.data;
+                    this.selectedCompanyIdCheck = ar.data;
+                }
+                this.IsNewSelectedCompany = true;
+            }
+        },
+        async updateCustomers() {
+            let responseCustomers = await axios.get("/Customers/GetAllLicence");
+            this.customers = responseCustomers.data;
+
+            if (!this.IsNewSelectedCustomer) {
+                var ar = await axios.get("/Customers/CheckSave", {
+                    params: {
+                        idCu: this.customerId,
+                    }
+                });
+                this.selectedCustomerId = ar.data;
+                if (ar.data == '00000000-0000-0000-0000-000000000000') {
+                    this.saveCustomer = false;
+                    this.selectedCustomerId = this.customers[0].id;
+                    
+                } else {
+                    this.saveCustomer = true;
+                    this.selectedCustomerId = ar.data;
+                    this.selectedCustomerIdCheck = ar.data;
+                }
+                this.customerId = this.selectedCustomerId;
+                this.IsNewSelectedCustomer = true;
+                
+            }
+            
+        },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;
 
             if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
                 this.IsNewSelectedCustomer = true;
                 this.saveCustomer = false;
-
-                console.log(this.selectedCompanyIdCheck);
-                console.log(this.selectedCompanyId);
-
-                if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
-                    this.IsNewSelected = true;
-                    this.saveCompany = false;
-                } else {
-                    this.saveCompany = true;
-                }
             } else {
                 this.saveCustomer = true;
             }
-
-            
-
             this.Init();
         },
         getSelectedCompany(event) {
             this.selectedCompanyId = event.target.value;
             
             if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
-                this.IsNewSelected = true;
+                this.IsNewSelectedCompany = true;
                 this.saveCompany = false;
             } else {
                 this.saveCompany = true;
