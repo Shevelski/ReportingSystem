@@ -25,8 +25,6 @@ new Vue({
         selectedCompanyIdCheck: 0,
         selectedCustomerId: 0,
         selectedCustomerIdCheck: 0,
-        //selectedCompanyName: "Виберіть компанію",
-        //selectedCustomeryName: "Виберіть замовника",
         useOpenDataBot: true,
         showArchive: false,
         searchQuery: '',
@@ -100,13 +98,10 @@ new Vue({
     },
     methods: {
         async Init() {
-            console.log('=======================================');
             if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
                 await this.updateCustomers();
                 this.IsNewSelectedCompany = false;
-                console.log('cust = ' + this.selectedCustomerId);
                 await this.updateCompanies();
-                console.log('comp = ' + this.selectedCompanyId);
             }
             if (this.rol == 'Customer') {
                 await this.updateCompanies();
@@ -116,15 +111,12 @@ new Vue({
                 this.selectedCustomerId = this.customerId;
                 this.selectedCompanyId = this.companyId;
             }
-            
-            //await this.updateCompanies();
-            
-
             this.positions = await this.getPositions();
 
             let responseRolls = await axios.get("/Companies/GetRolls", {
                 params: {
-                    idCu: this.customerId,
+                    //idCu: this.customerId,
+                    idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
                 }
             });
@@ -132,12 +124,13 @@ new Vue({
 
             let response = await axios.get("/Employees/GetEmployees", {
                 params: {
-                    idCu: this.customerId,
+                    idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
                 }
             });
 
             this.employees = response.data;
+            console.log(this.employees);
             for (let j = 0; j < this.employees.length; j++) {
                 this.employees[j].birthDate = this.dateCSharpToJs(this.employees[j].birthDate);
                 this.employees[j].workStartDate = this.dateCSharpToJs(this.employees[j].workStartDate);
@@ -149,7 +142,8 @@ new Vue({
         async getPositions() {
             let responsePositions = await axios.get("/Companies/GetPositions", {
                 params: {
-                    idCu: this.customerId,
+                    //idCu: this.customerId,
+                    idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
                 }
             });
@@ -542,26 +536,26 @@ new Vue({
                 this.modalTitle = 'Видалення співробітника';
             }
         },
-        //handleImageChange(event) {
-        //    const file = event.target.files[0];
-        //    if (file) {
-        //        const reader = new FileReader();
-        //        reader.onload = (e) => {
-        //            this.$nextTick(() => {
-        //                this.updateImage(e.target.result);
-        //            });
-        //        };
-        //        reader.readAsDataURL(file);
-        //    }
-        //},
-        //updateImage(imageData) {
-        //    const imageElement = this.$refs.imageElement;
-        //    if (imageElement) {
-        //        const prefix = 'data:image/jpeg;base64,';
-        //        const imageDataWithoutPrefix = imageData.replace(prefix, '');
-        //        imageElement.src = imageDataWithoutPrefix;
-        //    }
-        //},
+        handleImageChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.$nextTick(() => {
+                        this.updateImage(e.target.result);
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+        updateImage(imageData) {
+            const imageElement = this.$refs.imageElement;
+            if (imageElement) {
+                const prefix = 'data:image/jpeg;base64,';
+                const imageDataWithoutPrefix = imageData.replace(prefix, '');
+                imageElement.src = imageDataWithoutPrefix;
+            }
+        },
         closeAllAccordions() {
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
             const accordionItems = document.querySelectorAll(".accordion-collapse");

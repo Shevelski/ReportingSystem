@@ -5,7 +5,7 @@
 @*---------------------------------------------------------------------------------------------------------------------*@
 
 <div class="container" id="Employees">
-    <div class="accordion" id="accordionExample" v-if="employees.length !== 1">
+    <div class="accordion" id="accordionExample" v-if="employees.length != 1">
         @*---------------------------------------------------------------------------------------------------------------------*@
         @* Модальне вікно*@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -118,52 +118,50 @@
 
         <table class="table acord">
             <tbody>
-                <tr>
+                <tr v-for="(employee, index) in filteredEmployees" :key="index" class="accordion-item">
                     <td :class="{ 'column1': !showEmployeeInfo, 'column1 mod': showEmployeeInfo }">
-                        <div v-for="(employee, index) in filteredEmployees" :key="index" class="accordion-item">
-                            <h2 class="accordion-header" :id="'heading' + index">
-                                <button class="accordion-button" v-on:click="setIndexEmployee(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
-                                    @*--------------------------------------------------------------------------*@
-                                    <div v-if="showEmployeeInfo">
-                                        {{shortNameEmployee(index)}}
-                                    </div>
-                                    <div v-else>
-                                        {{employee.secondName}} {{ employee.firstName }} {{employee.thirdName}}
-                                    </div>
-                                    @*--------------------------------------------------------------------------*@
+                        <h2 class="accordion-header" :id="'heading' + index">
+                            <button class="accordion-button" v-on:click="setIndexEmployee(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                                @*--------------------------------------------------------------------------*@
+                                <div v-if="showEmployeeInfo">
+                                    {{shortNameEmployee(index)}}
+                                </div>
+                                <div v-else>
+                                    {{employee.secondName}} {{ employee.firstName }} {{employee.thirdName}}
+                                </div>
+                                @*--------------------------------------------------------------------------*@
                                     
-                                </button>
-                            </h2>
-                            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Employees">                
-                                @*-------*@
-                                <div class="container">
-                                    <div class="row justify-content-center">
-                                        <div class="col-sm-12">
-                                            <div class="panel-footer mb-3">
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <div class="pull-right">
-                                                            <button class="btn btn-default mt-3"
-                                                                    v-bind:class="{active: mode == 'standart'}"
-                                                                    v-on:click="ToogleMode('edit')">
-                                                                Редагувати
-                                                            </button>
+                            </button>
+                        </h2>
+                        <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Employees">                
+                            @*-------*@
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-12">
+                                        <div class="panel-footer mb-3">
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="pull-right">
+                                                        <button class="btn btn-default mt-3"
+                                                                v-bind:class="{active: mode == 'standart'}"
+                                                                v-on:click="ToogleMode('edit')">
+                                                            Редагувати
+                                                        </button>
 
-                                                            <button class="btn btn-default mt-3"
-                                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                                    v-bind:class="{active: mode == 'edit'}"
-                                                                    v-on:click="ToogleMode('standart')">
-                                                                Підтвердити
-                                                            </button>
-                                                        </div>
+                                                        <button class="btn btn-default mt-3"
+                                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                                                v-bind:class="{active: mode == 'edit'}"
+                                                                v-on:click="ToogleMode('standart')">
+                                                            Підтвердити
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                @*-------*@
                             </div>
+                            @*-------*@
                         </div>
                     </td>
                     <td :class="{ 'column2': !showEmployeeInfo, 'column2 mod': showEmployeeInfo }">
@@ -175,7 +173,7 @@
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <div class="clearfix" style="display: flex; justify-content: center;">
-                                                    <input type="file" id="imageInput" style="display: none;" accept="image/*" @*v-on:change="handleImageChange"*@ v-bind:disabled="mode=='standart'">
+                                                    <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
                                                     <label for="imageInput">
                                                         <img :src="filteredEmployees[indexEmployee].photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
                                                     </label>
@@ -347,6 +345,7 @@
                             </div>
                         </div>
                     </td>
+
                 </tr>
             </tbody>
         </table>
