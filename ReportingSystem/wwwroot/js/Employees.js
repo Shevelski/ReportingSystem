@@ -104,7 +104,9 @@ new Vue({
                 await this.updateCompanies();
             }
             if (this.rol == 'Customer') {
+                this.selectedCustomerId = this.customerId;
                 await this.updateCompanies();
+                
                 
             }
             if (this.rol == 'CEO') {

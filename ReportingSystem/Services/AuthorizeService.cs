@@ -96,10 +96,16 @@ namespace ReportingSystem.Services
                         };
                         authorize.Employee = new EmployeeModel()
                         {
+                            customerId = customer.id,
                             firstName = customer.firstName,
                             secondName = customer.secondName,
-                            thirdName = customer.thirdName
-                        };
+                            thirdName = customer.thirdName,
+                            rol = new EmployeeRolModel()
+                            {
+                                rolType = EmployeeRolStatus.Customer,
+                                rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                            }
+                    };
                         return authorize;
                     }
 
