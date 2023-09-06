@@ -23,6 +23,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
+        // отримання співробітників
         public async Task<IActionResult> GetEmployees(string idCu, string idCo)
         {
             await Task.Delay(10);

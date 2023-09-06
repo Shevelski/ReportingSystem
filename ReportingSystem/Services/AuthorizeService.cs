@@ -7,6 +7,7 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.Security.AccessControl;
 
 namespace ReportingSystem.Services
 {
@@ -29,6 +30,20 @@ namespace ReportingSystem.Services
                 customers = DatabaseMoq.Customers;
                 foreach (var customer in customers)
                 {
+                    if (customer.email != null && customer.email.ToLower().Equals(email.ToLower()))
+                    {
+                        authorize.Email = customer.email;
+                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
+                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                        authorize.Role = new EmployeeRolModel()
+                        {
+                            rolType = EmployeeRolStatus.Customer,
+                            rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                        };
+                        return authorize;
+                    }
+
                     if (customer.companies != null)
                     {
                         foreach (var company in customer.companies)
@@ -68,6 +83,26 @@ namespace ReportingSystem.Services
                 customers = DatabaseMoq.Customers;
                 foreach (var customer in customers)
                 {
+                    if (customer.password != null && customer.password.ToLower().Equals(password.ToLower()))
+                    {
+                        authorize.Email = customer.email;
+                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                        authorize.Role = new EmployeeRolModel()
+                        {
+                            rolType = EmployeeRolStatus.Customer,
+                            rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                        };
+                        authorize.Employee = new EmployeeModel()
+                        {
+                            firstName = customer.firstName,
+                            secondName = customer.secondName,
+                            thirdName = customer.thirdName
+                        };
+                        return authorize;
+                    }
+
                     if (customer.companies != null)
                     {
                         foreach (var company in customer.companies)

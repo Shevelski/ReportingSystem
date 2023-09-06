@@ -23,8 +23,8 @@ namespace ReportingSystem.Controllers.Functions
         CompanyModel company = new CompanyModel();
         List<CompanyModel> companies = new List<CompanyModel>();
 
-
         [HttpGet]
+        //отримати замовників
         public async Task<IActionResult> GetAllLicence()
         {
             await Task.Delay(10);
@@ -32,16 +32,16 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
-
         [HttpPost]
+        //створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
         public IActionResult CreateCustomer([FromBody] string[] ar)
         {
             var result = _customersService.CreateCustomer(ar[0]);
             return result != null ? Ok(result) : NotFound();
         }
 
-
         [HttpPost]
+        //продовження ліцензії замовника
         public async Task<IActionResult> RenewalLicence([FromBody] string[] ar)
         {
             var result = await _customersService.RenewalLicense(ar);
@@ -49,8 +49,8 @@ namespace ReportingSystem.Controllers.Functions
 
         }
 
-
         [HttpPost]
+        //ліцензія замовника - статус архів
         public async Task<IActionResult> ArchivingLicence([FromBody] string[] ar)
         {
             var result = await _customersService.ArchivingLicence(ar);
@@ -58,8 +58,8 @@ namespace ReportingSystem.Controllers.Functions
 
         }
 
-
         [HttpPost]
+        //анулювання ліцензії замовника
         public async Task<IActionResult> CancellationLicence([FromBody] string[] ar)
         {
             var result = await _customersService.CancellationLicence(ar);
@@ -67,6 +67,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
+        //перевірка збережених компаній
         public async Task<IActionResult> CheckSave(string idCu)
         {
             await Task.Delay(10);
@@ -75,6 +76,7 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
+        //зберегти замовника
         public async Task<IActionResult> SavePermanentCustomer([FromBody] string idCu)
         {
             await Task.Delay(10);
