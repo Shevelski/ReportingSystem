@@ -1,26 +1,25 @@
 ﻿@using ReportingSystem.Properties;
 
-
 <head>
-    <title>Компанії</title>
+    <title>Посади</title>
 </head>
 
 @{
-    ViewData["Title"] = "Компанії";
+    ViewData["Title"] = "Посади";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Компанії</h1>
+    <h1 class="display-4">Посади</h1>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<link rel="stylesheet" href="~/css/Companies.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Positions.css" asp-append-version="true" />
 @*---------------------------------------------------------------------------------------------------------------------*@
 
-<div class="container" id="Companies">
+<div class="container" id="Positions">
     <div class="accordion" id="accordionExample" v-if="companies.length !== 1">
         @*---------------------------------------------------------------------------------------------------------------------*@
         @* Модальне вікно*@
@@ -215,4 +214,4 @@
     </div>
 </div>
 @*---------------------------------------------------------------------------------------------------------------------*@
-<script src="~/js/Companies.js" asp-append-version="true"></script>
+<script src="~/js/Positions.js" asp-append-version="true"></script>

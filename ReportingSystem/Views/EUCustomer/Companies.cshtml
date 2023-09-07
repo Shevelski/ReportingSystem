@@ -1,13 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Директор";
-    Layout = "_LayoutСEO";
+    ViewData["Title"] = "Замовник";
+    Layout = "_LayoutCustomer";
 }
-
 
 @model string[];
 
 <head>
-    <title>Співробітники</title>
+    <title>Компанії</title>
 </head>
 <div>
     <p hidden id="idCu">@Model[0]</p>
@@ -16,4 +15,4 @@
     <p hidden id="rol">@Model[3]</p>
 </div>
 
-<partial name="~/Views/Common/Employees.cshtml" />
+<partial name="~/Views/Common/Companies.cshtml" />

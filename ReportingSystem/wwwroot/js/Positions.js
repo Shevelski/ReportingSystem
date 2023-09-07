@@ -1,5 +1,5 @@
 ﻿new Vue({
-    el: '#Companies',
+    el: '#Positions',
     data: {
         customerId: '',
         companyId: '',

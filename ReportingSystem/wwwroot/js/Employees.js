@@ -106,8 +106,6 @@ new Vue({
             if (this.rol == 'Customer') {
                 this.selectedCustomerId = this.customerId;
                 await this.updateCompanies();
-                
-                
             }
             if (this.rol == 'CEO') {
                 this.selectedCustomerId = this.customerId;
@@ -199,10 +197,8 @@ new Vue({
                     this.selectedCustomerIdCheck = ar.data;
                 }
                 this.customerId = this.selectedCustomerId;
-                this.IsNewSelectedCustomer = true;
-                
+                this.IsNewSelectedCustomer = true;   
             }
-            
         },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;
