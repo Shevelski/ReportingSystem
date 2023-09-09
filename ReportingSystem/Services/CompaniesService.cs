@@ -6,6 +6,7 @@ using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Utils;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models;
+using Bogus.DataSets;
 
 namespace ReportingSystem.Services
 {
@@ -20,36 +21,28 @@ namespace ReportingSystem.Services
         //Зберегти компанію за використання за замовчуванням 
         public CustomerModel? SavePermanentCompany(string idCu, string idCo)
         {
-            Guid idCompany = new Guid();
-            if (Guid.TryParse(idCo, out Guid result0))
-            {
-                idCompany = result0;
-            }
-
-            Guid idCustomer = new Guid();
-            if (Guid.TryParse(idCu, out Guid result))
-            {
-                idCustomer = result;
-            }
-
             if (DatabaseMoq.Customers != null)
             {
-                customers = DatabaseMoq.Customers;
-                if (customers != null)
+                if (Guid.TryParse(idCu, out Guid idCustomer))
                 {
-                    customer = customers.First(c => c.id.Equals(idCustomer));
-                    if (customer != null && customer.configure != null)
+                    customers = DatabaseMoq.Customers;
+                    if (customers != null)
                     {
-                        if (idCompany == Guid.Empty)
+                        customer = customers.First(c => c.id.Equals(idCustomer));
+                        if (customer.configure != null && Guid.TryParse(idCo, out Guid idCompany))
                         {
-                            customer.configure.IdSavedCompany = Guid.Empty;
-                            customer.configure.IsSaveCompany = false;
-                        } else
-                        {
-                            customer.configure.IdSavedCompany = idCompany;
-                            customer.configure.IsSaveCompany = true;
+                            if (idCompany == Guid.Empty)
+                            {
+                                customer.configure.IdSavedCompany = Guid.Empty;
+                                customer.configure.IsSaveCompany = false;
+                            }
+                            else
+                            {
+                                customer.configure.IdSavedCompany = idCompany;
+                                customer.configure.IsSaveCompany = true;
+                            }
+                            DatabaseMoq.UpdateJson();
                         }
-                        DatabaseMoq.UpdateJson();
                     }
                 }
             }
@@ -90,44 +83,7 @@ namespace ReportingSystem.Services
         }
 
 
-        //Отримання всіх посад в компанії 
-        public List<EmployeePositionModel>? GetPositions(string idCu, string idCo)
-        {
-            if (DatabaseMoq.Customers != null)
-            {
-                customers = DatabaseMoq.Customers;
-                if (Guid.TryParse(idCu, out Guid idCustomer))
-                {
-                    customer = customers.First(c => c.id.Equals(idCustomer));
-                    if (customer != null)
-                    {
-                        if (customer.companies != null && Guid.TryParse(idCo, out Guid idCompany)){
-
-                            company = customer.companies.First(co => co.id.Equals(idCompany));
-                            if (company.positions != null)
-                            {
-                                List<EmployeePositionModel> uniqPosition = new List<EmployeePositionModel>();
-                                List<string> listNamePositions = new List<string>();
-                                foreach (var position in company.positions)
-                                {
-                                    if (position.namePosition != null)
-                                    {
-                                        if (!listNamePositions.Contains(position.namePosition))
-                                        {
-                                            listNamePositions.Add(position.namePosition);
-                                            uniqPosition.Add(position);
-                                        }
-                                    }
-                                   
-                                }
-                                return uniqPosition;
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
-        }
+       
 
         //Отримання всіх ролей системи в компанії 
         public List<EmployeeRolModel>? GetRolls(string idCu, string idCo)
@@ -189,35 +145,28 @@ namespace ReportingSystem.Services
         //редагування компанії
         public CompanyModel? EditCompany(string[] ar)
         {
-            Guid idCustomer = new Guid();
-            if (Guid.TryParse(ar[6], out Guid result))
-            {
-                idCustomer = result;
-            }
-
-            Guid idCompany = new Guid();
-            if (Guid.TryParse(ar[0], out Guid result1))
-            {
-                idCompany = result1;
-            }
-
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                customer = customers.First(c => c.id.Equals(idCustomer));
-                if (customer.companies != null)
+                if (Guid.TryParse(ar[6], out Guid idCustomer))
                 {
-                    companies = customer.companies;
-                    company = customer.companies.First(c => c.id.Equals(idCompany));
-                    company.name = ar[1];
-                    company.address = ar[2];
-                    company.actions = ar[3];
-                    company.phone = ar[4];
-                    company.email = ar[5];
-                    DatabaseMoq.UpdateJson();
-                    return company;
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer.companies != null)
+                    {
+                        companies = customer.companies;
+                        if (Guid.TryParse(ar[0], out Guid idCompany))
+                        {
+                            company = customer.companies.First(c => c.id.Equals(idCompany));
+                            company.name = ar[1];
+                            company.address = ar[2];
+                            company.actions = ar[3];
+                            company.phone = ar[4];
+                            company.email = ar[5];
+                            DatabaseMoq.UpdateJson();
+                            return company;
+                        }    
+                    }
                 }
-                
             }
             return null;
         }
@@ -225,34 +174,27 @@ namespace ReportingSystem.Services
         //архівування компанії
         public CompanyModel? ArchiveCompany(string[] ar)
         {
-            Guid idCustomer = new Guid();
-            if (Guid.TryParse(ar[1], out Guid result))
-            {
-                idCustomer = result;
-            }
-
-            Guid idCompany = new Guid();
-            if (Guid.TryParse(ar[0], out Guid result1))
-            {
-                idCompany = result1;
-            }
-
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                customer = customers.First(c => c.id.Equals(idCustomer));
-                if (customer.companies != null)
+                if (Guid.TryParse(ar[1], out Guid idCustomer))
                 {
-                    companies = customer.companies;
-                    company = companies.First(c => c.id.Equals(idCompany));
-                    CompanyStatusModel status = new CompanyStatusModel();
-                    company.status = new CompanyStatusModel()
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer.companies != null)
                     {
-                        companyStatusType = CompanyStatus.Archive,
-                        companyStatusName = CompanyStatus.Archive.GetDisplayName(),
-                    };
-                    DatabaseMoq.UpdateJson();
-                    return company;
+                        companies = customer.companies;
+                        if (Guid.TryParse(ar[0], out Guid idCompany))
+                        {
+                            company = companies.First(c => c.id.Equals(idCompany));
+                            company.status = new CompanyStatusModel()
+                            {
+                                companyStatusType = CompanyStatus.Archive,
+                                companyStatusName = CompanyStatus.Archive.GetDisplayName(),
+                            };
+                            DatabaseMoq.UpdateJson();
+                            return company;
+                        }
+                    }
                 }
             }
             return null;
@@ -262,28 +204,22 @@ namespace ReportingSystem.Services
         //видалення компанії
         public CompanyModel? DeleteCompany(string[] ar)
         {
-            Guid idCustomer = new Guid();
-            if (Guid.TryParse(ar[1], out Guid result))
-            {
-                idCustomer = result;
-            }
-
-            Guid idCompany = new Guid();
-            if (Guid.TryParse(ar[0], out Guid result1))
-            {
-                idCompany = result1;
-            }
-
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                customer = customers.First(c => c.id.Equals(idCustomer));
-                if (customer.companies != null)
+                if (Guid.TryParse(ar[1], out Guid idCustomer))
                 {
-                    companies = customer.companies;
-                    company = companies.First(c => c.id.Equals(idCompany));
-                    customer.companies.Remove(company);
-                    DatabaseMoq.UpdateJson();
+                    customer = customers.First(c => c.id.Equals(idCustomer));
+                    if (customer.companies != null)
+                    {
+                        companies = customer.companies;
+                        if (Guid.TryParse(ar[0], out Guid idCompany))
+                        {
+                            company = companies.First(c => c.id.Equals(idCompany));
+                            customer.companies.Remove(company);
+                            DatabaseMoq.UpdateJson();
+                        }
+                    }
                 }
             }
             return null;
@@ -294,34 +230,26 @@ namespace ReportingSystem.Services
         //перевірка єдрпу компанії при створенні - повернення даних про компанію
         public void PostCheckCompany(string[] ar)
         {
-            Guid id = new Guid();
-            if (Guid.TryParse(ar[0], out Guid result))
+            if (Guid.TryParse(ar[0], out Guid id))
             {
-                id = result;
+                companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
             }
-            companiesData.Add(id, CheckCompanyWeb.ByCode(ar[1]));
+            
         }
 
         //перевірка єдрпу компанії при створенні
         public CompanyModel? GetCheckCompany(string id)
         {
-
-            Guid guid = new Guid();
-            if (Guid.TryParse(id, out Guid result))
+            if (Guid.TryParse(id, out Guid guid))
             {
-                guid = result;
+                if (companiesData.TryGetValue(guid, out var companyDetails))
+                {
+                    companiesData.Remove(guid);
+                    DatabaseMoq.UpdateJson();
+                    return companyDetails;
+                }
             }
-
-            if (companiesData.TryGetValue(guid, out var companyDetails))
-            {
-                companiesData.Remove(guid);
-                DatabaseMoq.UpdateJson();
-                return companyDetails;
-            }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         //створення компанії
@@ -344,31 +272,34 @@ namespace ReportingSystem.Services
                 companyStatusName = CompanyStatus.Project.GetDisplayName(),
             };
 
-            Guid idCustomer = new Guid();
-            if (Guid.TryParse(ar[6], out Guid result))
-            {
-                idCustomer = result;
-            }
+            //Guid idCustomer = new Guid();
+            //if (Guid.TryParse(ar[6], out Guid result))
+            //{
+            //    idCustomer = result;
+            //}
 
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                customer = customers.First(c => c.id.Equals(idCustomer));
-
-                EmployeeModel chief = new EmployeeModel()
+                if (Guid.TryParse(ar[6], out Guid idCustomer))
                 {
-                    firstName = customer.firstName,
-                    secondName = customer.secondName,
-                    thirdName = customer.thirdName,
-                    emailWork = customer.email,
+                    customer = customers.First(c => c.id.Equals(idCustomer));
 
-                };
-                company.chief = chief;
-                if (customer.companies != null)
-                {
-                    companies = customer.companies;
-                    companies.Add(company);
-                    DatabaseMoq.UpdateJson();
+                    EmployeeModel chief = new EmployeeModel()
+                    {
+                        firstName = customer.firstName,
+                        secondName = customer.secondName,
+                        thirdName = customer.thirdName,
+                        emailWork = customer.email,
+
+                    };
+                    company.chief = chief;
+                    if (customer.companies != null)
+                    {
+                        companies = customer.companies;
+                        companies.Add(company);
+                        DatabaseMoq.UpdateJson();
+                    }
                 }
             }
             return null;

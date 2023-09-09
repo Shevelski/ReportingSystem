@@ -15,6 +15,71 @@ namespace ReportingSystem.Services
         List<CustomerModel> customers = new List<CustomerModel>();
         CompanyModel company = new CompanyModel();
         List<CompanyModel> companies = new List<CompanyModel>();
+        List<EmployeePositionModel> positions = new List<EmployeePositionModel>();
+
+
+        //Отримання списку посад компанії 
+        public List<EmployeePositionModel>? GetAllPositions(string idCu, string idCo)
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(idCu, out Guid idCustomer))
+                {
+                    var companies = customers.First(co => co.id.Equals(idCustomer)).companies;
+                    if (companies != null)
+                    {
+                        if (Guid.TryParse(idCo, out Guid idCompany))
+                        {
+                            var company = companies.First(co => co.id.Equals(idCompany));
+                            return company.positions;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        //Отримання списку унікальних посад компанії 
+        public List<EmployeePositionModel>? GetUniqPositions(string idCu, string idCo)
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(idCu, out Guid idCustomer))
+                {
+                    var companies = customers.First(co => co.id.Equals(idCustomer)).companies;
+                    if (companies != null)
+                    {
+
+                        if (Guid.TryParse(idCo, out Guid idCompany))
+                        {
+                            var company = companies.First(co => co.id.Equals(idCompany));
+                            if (company.positions != null)
+                            {
+                                List<EmployeePositionModel> uniqPosition = new List<EmployeePositionModel>();
+                                List<string> listNamePositions = new List<string>();
+                                foreach (var position in company.positions)
+                                {
+                                    if (position.namePosition != null)
+                                    {
+                                        if (!listNamePositions.Contains(position.namePosition))
+                                        {
+                                            listNamePositions.Add(position.namePosition);
+                                            uniqPosition.Add(position);
+                                        }
+                                    }
+
+                                }
+                                return uniqPosition;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
 
         ////Зберегти компанію за використання за замовчуванням 
         //public CustomerModel? SavePermanentCompany(string idCu, string idCo)
@@ -117,7 +182,7 @@ namespace ReportingSystem.Services
         //                                    uniqPosition.Add(position);
         //                                }
         //                            }
-                                   
+
         //                        }
         //                        return uniqPosition;
         //                    }
@@ -167,7 +232,7 @@ namespace ReportingSystem.Services
         //        if (customer.companies != null)
         //        {
         //            companies = customer.companies;
-                  
+
         //            foreach (var item in companies)
         //            {
         //                if (item.status != null && item.status.companyStatusType.Equals(CompanyStatus.Actual))
@@ -216,7 +281,7 @@ namespace ReportingSystem.Services
         //            DatabaseMoq.UpdateJson();
         //            return company;
         //        }
-                
+
         //    }
         //    return null;
         //}
@@ -289,7 +354,7 @@ namespace ReportingSystem.Services
         //}
 
         //private static Dictionary<Guid, CompanyModel> companiesData = new Dictionary<Guid, CompanyModel>();
-        
+
         ////перевірка єдрпу компанії при створенні - повернення даних про компанію
         //public void PostCheckCompany(string[] ar)
         //{

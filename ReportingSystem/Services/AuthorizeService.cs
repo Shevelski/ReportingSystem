@@ -25,6 +25,8 @@ namespace ReportingSystem.Services
         //перевірка пошти для входу
         public AuthorizeModel? CheckEmail(string email)
         {
+            AuthorizeModel? result = new AuthorizeModel();
+
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
@@ -123,7 +125,7 @@ namespace ReportingSystem.Services
                                         authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
                                         authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
                                         authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
-                                        authorize.Role = new Models.EmployeeRolModel();
+                                        authorize.Role = new EmployeeRolModel();
                                         authorize.Role = employee.rol;
 
                                         if (employee.password != null && employee.password.Equals(password))
@@ -147,8 +149,9 @@ namespace ReportingSystem.Services
             return authorize;
         }
 
-        public string? GetRolController(AuthorizeModel authorizeModel)
-        {
+
+            public string? GetRolController(AuthorizeModel authorizeModel)
+            {
             employeeRolModels = DefaultEmployeeRolls.Get();
             foreach (var item in employeeRolModels)
             {

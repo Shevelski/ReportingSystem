@@ -59,12 +59,11 @@ new Vue({
     },
     computed: {
         countFilteredEmployees() {
-            const currentDate = new Date();
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
             let filteredList = this.employees.filter((employee) => {
                 const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status.employeeStatusType == 3;
+                const isInArchive = employee.status.employeeStatusType == 2;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -80,7 +79,7 @@ new Vue({
 
             let filteredList = this.employees.filter((employee) => {
                 const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status.employeeStatusType == 3;
+                const isInArchive = employee.status.employeeStatusType == 2;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -140,9 +139,8 @@ new Vue({
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
         },
         async getPositions() {
-            let responsePositions = await axios.get("/Companies/GetPositions", {
+            let responsePositions = await axios.get("/Positions/GetUniqPositions", {
                 params: {
-                    //idCu: this.customerId,
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
                 }
@@ -441,7 +439,7 @@ new Vue({
 
             
             try {
-                await axios.post('/Users/EditUser', ar);
+                await axios.post('/Employees/DeleteEmployee', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу EditUser:', error);
             }
@@ -452,10 +450,12 @@ new Vue({
 
         async confirmArchiveEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;
-            var ar = [v0];
+            const v1 = this.selectedCustomerId;
+            const v2 = this.selectedCompanyId;
+            var ar = [v0, v1, v2];
 
             try {
-                await axios.post('/Users/ArchiveUser', ar);
+                await axios.post('/Employees/ArchiveEmployee', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу ArchiveUser:', error);
             }

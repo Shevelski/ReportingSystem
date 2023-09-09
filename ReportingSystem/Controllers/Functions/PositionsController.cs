@@ -6,23 +6,32 @@ namespace ReportingSystem.Controllers.Functions
 
     public class PositionsController : Controller
     {
-        private readonly CompaniesService _companiesService;
+        private readonly PositionsService _positionsService;
 
-        public PositionsController(CompaniesService companiesService)
+        public PositionsController(PositionsService positionsService)
         {
-            _companiesService = companiesService;
+            _positionsService = positionsService;
         }
 
 
 
-        //[HttpGet]
-        ////отримати компанії вказаного замовника
-        //public async Task<IActionResult> GetCompanies(string idCu)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _companiesService.GetCompanies(idCu);
-        //    return Json(result);
-        //}
+        [HttpGet]
+        //Отримання списку посад компанії 
+        public async Task<IActionResult> GetAllPositions(string idCu, string idCo)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.GetAllPositions(idCu, idCo);
+            return Json(result);
+        }
+
+        [HttpGet]
+        //Отримання списку посад компанії 
+        public async Task<IActionResult> GetUniqPositions(string idCu, string idCo)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.GetUniqPositions(idCu, idCo);
+            return Json(result);
+        }
 
         //[HttpGet]
         ////отримати компанії з статусом актуальні вказаного замовника
@@ -109,7 +118,7 @@ namespace ReportingSystem.Controllers.Functions
         //    _companiesService.PostCheckCompany(ar);
         //}
 
-        
+
         //[HttpGet]
         ////перевірка єдрпу компанії при створенні
         //public async Task<IActionResult> GetCheckCompany(string id)

@@ -1,18 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using ReportingSystem.Enums;
+﻿using Newtonsoft.Json;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
-using System.Linq;
 
 namespace ReportingSystem.Services
 {
     public class EmployeesService
     {
-
-        CompaniesService companiesService = new CompaniesService();
         List<CustomerModel>? customers = DatabaseMoq.Customers;
         CustomerModel? customer = new CustomerModel();
         CompanyModel? company = new CompanyModel();
@@ -26,23 +21,21 @@ namespace ReportingSystem.Services
             {
                 customer = customers.First(cu => cu.id.Equals(idCustomer));
                 companies = customer.companies;
-                if (companies != null)
+                
+                if (companies != null && Guid.TryParse(idCo, out Guid companyIdGuid))
                 {
-                    if (Guid.TryParse(idCo, out Guid companyIdGuid))
+                    company = companies.First(company => company.id == companyIdGuid);
+                    if (company != null)
                     {
-                        company = companies.FirstOrDefault(company => company.id == companyIdGuid);
-                        if (company != null)
-                        {
-                            return company.employees;
-                        }
+                        return company.employees;
                     }
-                    else
+                }
+                else
+                {
+                    if (companies != null)
                     {
-                        if (companies != null)
-                        {
-                            company = companies[0];
-                            return company.employees;
-                        }
+                        company = companies[0];
+                        return company.employees;
                     }
                 }
             }
@@ -61,14 +54,14 @@ namespace ReportingSystem.Services
                     customers = DatabaseMoq.Customers;
                     if (customers != null)
                     {
-                        var customer = customers.First(c => c.id.Equals(editedEmployee.customerId));
+                        customer = customers.First(c => c.id.Equals(editedEmployee.customerId));
                         if (customer != null)
                         {
                             companies = customer.companies;
                             if (companies != null)
                             {
                                 company = companies.First(c => c.id.Equals(editedEmployee.companyId));
-                                if (company != null && company.employees != null)
+                                if (company.employees != null)
                                 {
                                     employee = company.employees.First(e => e.id.Equals(editedEmployee.id));
 
@@ -90,6 +83,35 @@ namespace ReportingSystem.Services
                             }
                         }
                         return employee;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public EmployeeModel? ArchiveEmployee(string idCu, string idCo, string idEm)
+        {
+            customers = DatabaseMoq.Customers;
+            if (customers != null && Guid.TryParse(idCu, out Guid customerId))
+            {
+                customer = customers.First(cu => cu.id.Equals(customerId));
+                if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
+                {
+                    company = customer.companies.First(co => co.id.Equals(companyId));
+                    if (company.employees != null && Guid.TryParse(idEm, out Guid employeeId))
+                    {
+                        employee = company.employees.First(em => em.id.Equals(employeeId));
+                        if (employee != null)
+                        {
+                            employee.status = new EmployeeStatusModel
+                            {
+                                employeeStatusType = Enums.EmployeeStatus.Archive,
+                                employeeStatusName = Enums.EmployeeStatus.Archive.GetDisplayName()
+                            };
+                            DatabaseMoq.UpdateJson();
+                            return (employee);
+                        }
+                        
                     }
                 }
             }

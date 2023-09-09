@@ -23,10 +23,10 @@
                     <div class="modal-body">
 
 
-                        <div v-if="modalType === 2">
-                        </div>
+                       @* <div v-if="modalType == 3">
+                        </div>*@
 
-                        <div v-if="modalType === 1">
+                       @* <div v-if="modalType == 1">
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" v-model="useOpenDataBot" id="useOpenDataBot">
                                 <label class="form-check-label" for="useOpenDataBot">Створити з допомогою OpenDataBot</label>
@@ -39,7 +39,7 @@
                                 <label class="form-label">ЄДРПУ</label>
                                 <input class="form-control" placeholder="Введіть ЄДРПУ" type="text" v-model="editEDRPU" />
                             </div>
-                        </div>
+                        </div>*@
 
                         <p :class="{ 'red-text': modalEmployeeActive }">{{ modalOperation }}</p>
 
@@ -49,19 +49,19 @@
 
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1 && useOpenDataBot == false" v-on:click="confirmCreateUser()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="editEmployee()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmArchiveUser()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 4" v-on:click="confirmDeleteUser()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmArchiveEmployee()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 4" v-on:click="confirmDeleteEmployee()">Підтвердити</button>
                     </div>
                 </div>
             </div>
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
         <div class="row mb-3">
-            <div class="col">
+            @*<div class="col">*@
                 <div class="btn-group d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Додати співробітника</button>
                 </div>
-            </div>
+            @*</div>*@
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
@@ -69,12 +69,12 @@
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
             </select>
 
-            <div class="form-check mb-3" style="margin-left: 20px;">
+            @*<div class="form-check mb-3" style="margin-left: 20px;">
                 <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCu" v-on:change="SavePermanentCustomer()" v-model="saveCustomer">
                 <label class="form-check-label" for="flexCheckIndeterminateCu">
                     Запам'ятати замовника
                 </label>
-            </div>
+            </div>*@
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
@@ -82,12 +82,12 @@
                 <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
             </select>
 
-            <div class="form-check mb-3" style="margin-left: 20px;">
+            @*<div class="form-check mb-3" style="margin-left: 20px;">
                 <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCo" v-on:change="SavePermanentCompany()" v-model="saveCompany">
                 <label class="form-check-label" for="flexCheckIndeterminateCo">
                     Запам'ятати компанію
                 </label>
-            </div>
+            </div>*@
         </div>
 
         <div style="display: flex; align-items: center;">
@@ -159,6 +159,12 @@
                                                                     v-bind:class="{active: mode == 'edit'}"
                                                                     v-on:click="ToogleMode('standart')">
                                                                 Підтвердити
+                                                            </button>
+
+                                                            <button class="btn btn-default mt-3"
+                                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                                                    v-on:click="toggleModal(3, index)">
+                                                                Архівувати
                                                             </button>
                                                         </div>
                                                     </div>

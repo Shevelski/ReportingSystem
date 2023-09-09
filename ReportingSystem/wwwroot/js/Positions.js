@@ -7,8 +7,13 @@
         isNewSelectedCustomer: false,
         saveCustomer: false,
         idCustomer: '',
+        isNewSelectedCompany: false,
+        saveCompany: false,
+        idCompany: '',
         selectedCustomerId: 0,
         selectedCustomerIdCheck: 0,
+        selectedCompanyId: 0,
+        selectedCompanyIdCheck: 0,
         useOpenDataBot: true,
         showArchive: false,
         searchQuery: '',
@@ -30,6 +35,7 @@
         editCompanyEmail: '',
         newCompany: [0],
         companies: [0],
+        positions: [0]
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -40,34 +46,23 @@
         this.Init();
     },
     computed: {
-        countFilteredCompanies() {
+        countFilteredPositions() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.companies.filter((company) => {
-                const nameMatches = !nameFilter || company.name.toLowerCase().includes(nameFilter);
-                const isInArchive = company.status.companyStatusType === 3;
-
-                if (this.showArchive) {
-                    return isInArchive && nameMatches;
-                } else {
-                    return !isInArchive && nameMatches;
-                }
+            let filteredList = this.positions.filter((position) => {
+                const nameMatches = !nameFilter || position.namePosition.toLowerCase().includes(nameFilter);
+                
+                return nameMatches;
             });
 
             return filteredList.length;
         },
-        filteredCompanies() {
+        filteredPositions() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.companies.filter((company) => {
-                const nameMatches = !nameFilter || company.name.toLowerCase().includes(nameFilter);
-                const isInArchive = company.status.companyStatusType === 3;
-
-                if (this.showArchive) {
-                    return isInArchive && nameMatches;
-                } else {
-                    return !isInArchive && nameMatches;
-                }
+            let filteredList = this.positions.filter((position) => {
+                const nameMatches = !nameFilter || position.namePosition.toLowerCase().includes(nameFilter);
+                return nameMatches;
             });
 
             if (this.pageCur === 1) {
@@ -82,16 +77,23 @@
 
             if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
                 await this.updateCustomers();
+                this.IsNewSelectedCompany = false;
+                await this.updateCompanies();
             }
+            if (this.rol == 'Customer') {
+                this.selectedCustomerId = this.customerId;
+                await this.updateCompanies();
+            }
+            if (this.rol == 'CEO') {
+                this.selectedCustomerId = this.customerId;
+                this.selectedCompanyId = this.companyId;
+            }
+            this.positions = await this.getUniqPositions();
+            console.log(this.positions);
 
-            let response = await axios.get("/Companies/GetCompanies", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                }
-            });
-            this.companies = response.data;
-            this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
-            console.log(this.companies);
+            //this.companies = response.data;
+            //this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
+            //console.log(this.companies);
         },
         async updateCustomers() {
             let responseCustomers = await axios.get("/Customers/GetAllLicence");
@@ -117,6 +119,42 @@
                 this.IsNewSelectedCustomer = true;
             }
         },
+        async updateCompanies() {
+            let responseCompanies = '';
+            responseCompanies = await axios.get("/Companies/GetCompanies", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                }
+            });
+            this.companies = responseCompanies.data;
+
+            if (!this.IsNewSelectedCompany) {
+                var ar = await axios.get("/Companies/CheckSave", {
+                    params: {
+                        idCu: this.customerId,
+                    }
+                });
+                this.selectedCompanyId = ar.data;
+                if (ar.data == '00000000-0000-0000-0000-000000000000') {
+                    this.saveCompany = false;
+                    this.selectedCompanyId = this.companies[0].id;
+                } else {
+                    this.saveCompany = true;
+                    this.selectedCompanyId = ar.data;
+                    this.selectedCompanyIdCheck = ar.data;
+                }
+                this.IsNewSelectedCompany = true;
+            }
+        },
+        async getUniqPositions() {
+            let responsePositions = await axios.get("/Positions/GetUniqPositions", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId
+                }
+            });
+            return responsePositions.data;
+        },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;
 
@@ -125,6 +163,17 @@
                 this.saveCustomer = false;
             } else {
                 this.saveCustomer = true;
+            }
+            this.Init();
+        },
+        getSelectedCompany(event) {
+            this.selectedCompanyId = event.target.value;
+
+            if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
+                this.IsNewSelectedCompany = true;
+                this.saveCompany = false;
+            } else {
+                this.saveCompany = true;
             }
             this.Init();
         },

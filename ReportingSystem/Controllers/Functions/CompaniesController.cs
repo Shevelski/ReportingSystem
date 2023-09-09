@@ -43,13 +43,13 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         //отримати посади вибраної компанії вибраного замовника
-        [HttpGet]
-        public async Task<IActionResult> GetPositions(string idCu, string idCo)
-        {
-            await Task.Delay(10);
-            var result = _companiesService.GetPositions(idCu, idCo);
-            return Json(result);
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetPositions(string idCu, string idCo)
+        //{
+        //    await Task.Delay(10);
+        //    var result = _companiesService.GetPositions(idCu, idCo);
+        //    return Json(result);
+        //}
 
         [HttpGet]
         //отримати ролі вибраної компанії вибраного замовника 

@@ -9,10 +9,8 @@ namespace ReportingSystem.Services
     public class CustomersService
     {
 
-        CustomerModel customer = new CustomerModel();
-        List<CustomerModel> customers = new List<CustomerModel>();
-        CompanyModel company = new CompanyModel();
-        List<CompanyModel> companies = new List<CompanyModel>();
+        CustomerModel? customer = new CustomerModel();
+        List<CustomerModel>? customers = new List<CustomerModel>();
         Random random = new Random();
 
         public List<CustomerModel>? GetCustomers()
@@ -25,37 +23,38 @@ namespace ReportingSystem.Services
         {
             
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-
-            customer.id = Guid.NewGuid();
-            customer.email = email;
-            customer.password = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
-            customer.statusLicence = new CustomerLicenceStatusModel
-            {
-                licenceType = LicenceType.Test,
-                licenceName = LicenceType.Test.GetDisplayName()
-            };
-            customer.companies = new List<CompanyModel>();
-            customer.endTimeLicense = DateTime.Today.AddDays(30);
-
-            CustomerLicenseOperationModel history = new CustomerLicenseOperationModel()
-            {
-                oldEndDateLicence = DateTime.Today,
-                newEndDateLicence = customer.endTimeLicense,
-                oldStatus = new CustomerLicenceStatusModel(),
-                newStatus = customer.statusLicence,
-            };
-            if (customer.historyOperations != null)
-            {
-                customer.historyOperations.Add(history);
-                if (DatabaseMoq.Customers != null)
+            if (customer != null) {
+                customer.id = Guid.NewGuid();
+                customer.email = email;
+                customer.password = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray());
+                customer.statusLicence = new CustomerLicenceStatusModel
                 {
-                    customers = DatabaseMoq.Customers;
-                    customers.Add(customer);
-                    DatabaseMoq.UpdateJson();
-                    return customer;
+                    licenceType = LicenceType.Test,
+                    licenceName = LicenceType.Test.GetDisplayName()
+                };
+                customer.companies = new List<CompanyModel>();
+                customer.endTimeLicense = DateTime.Today.AddDays(30);
+
+                CustomerLicenseOperationModel history = new CustomerLicenseOperationModel()
+                {
+                    oldEndDateLicence = DateTime.Today,
+                    newEndDateLicence = customer.endTimeLicense,
+                    oldStatus = new CustomerLicenceStatusModel(),
+                    newStatus = customer.statusLicence,
+                };
+                if (customer.historyOperations != null)
+                {
+                    customer.historyOperations.Add(history);
+                    if (DatabaseMoq.Customers != null)
+                    {
+                        customers = DatabaseMoq.Customers;
+                        customers.Add(customer);
+                        DatabaseMoq.UpdateJson();
+                        return customer;
+                    }
                 }
-                
             }
+            
             return null;
         }
 
@@ -66,44 +65,48 @@ namespace ReportingSystem.Services
             if (DatabaseMoq.Customers != null && Guid.TryParse(ar[0], out Guid id))
             {
                 customers = DatabaseMoq.Customers;
-                var licence = customers.FirstOrDefault(c => c.id.Equals(id));
-
-                if (licence != null && licence.statusLicence != null)
+                if (customers != null)
                 {
-                    var history = new CustomerLicenseOperationModel
-                    {
-                        id = Guid.NewGuid(),
-                        idCustomer = id,
-                        dateChange = DateTime.Now,
-                        oldStatus = licence.statusLicence
-                    };
+                    customer = customers.FirstOrDefault(c => c.id.Equals(id));
 
-                    licence.statusLicence = new CustomerLicenceStatusModel
+                    if (customer != null && customer.statusLicence != null)
                     {
-                        licenceType = LicenceType.Main,
-                        licenceName = LicenceType.Main.GetDisplayName()
-                    };
+                        var history = new CustomerLicenseOperationModel
+                        {
+                            id = Guid.NewGuid(),
+                            idCustomer = id,
+                            dateChange = DateTime.Now,
+                            oldStatus = customer.statusLicence
+                        };
 
-                    history.newStatus = licence.statusLicence;
+                        customer.statusLicence = new CustomerLicenceStatusModel
+                        {
+                            licenceType = LicenceType.Main,
+                            licenceName = LicenceType.Main.GetDisplayName()
+                        };
 
-                    if (DateTime.TryParse(ar[1], out DateTime desiredDate))
-                    {
-                        history.oldEndDateLicence = licence.endTimeLicense;
-                        licence.endTimeLicense = desiredDate;
-                        history.newEndDateLicence = licence.endTimeLicense;
+                        history.newStatus = customer.statusLicence;
+
+                        if (DateTime.TryParse(ar[1], out DateTime desiredDate))
+                        {
+                            history.oldEndDateLicence = customer.endTimeLicense;
+                            customer.endTimeLicense = desiredDate;
+                            history.newEndDateLicence = customer.endTimeLicense;
+                        }
+
+                        history.price = double.TryParse(ar[2].Trim(), out double parsedPrice) ? parsedPrice : 0.0;
+                        history.period = ar[3].Trim();
+                        history.nameOperation = "Продовження";
+                        if (customer.historyOperations != null)
+                        {
+                            customer.historyOperations.Add(history);
+                            DatabaseMoq.UpdateJson();
+                            return customer;
+                        }
+
                     }
-
-                    history.price = double.TryParse(ar[2].Trim(), out double parsedPrice) ? parsedPrice : 0.0;
-                    history.period = ar[3].Trim();
-                    history.nameOperation = "Продовження";
-                    if (licence.historyOperations != null)
-                    {
-                        licence.historyOperations.Add(history);
-                        DatabaseMoq.UpdateJson();
-                        return licence;
-                    }
-                    
                 }
+               
             }
             return null;
         }
@@ -153,16 +156,10 @@ namespace ReportingSystem.Services
         //Зберегти замовника за використання за замовчуванням 
         public CustomerModel? SavePermanentCustomer(string idCu)
         {
-            Guid idCustomer = new Guid();
-            if (Guid.TryParse(idCu, out Guid result))
-            {
-                idCustomer = result;
-            }
-
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;
-                if (customers != null)
+                if (customers != null && Guid.TryParse(idCu, out Guid idCustomer))
                 {
                     customer = customers.First(c => c.id.Equals(idCustomer));
                     if (customer != null && customer.configure != null)

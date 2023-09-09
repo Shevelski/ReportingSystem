@@ -31,41 +31,40 @@ namespace ReportingSystem.Controllers.Functions
             return Json(employees);
         }
 
-        //редагування/додавання посад з попередженнями про наявних співробітників на цих посадах
-        //редагування
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllPositionsFromCompany(string id)
+        //[HttpPost]
+        //// Видалення співробітників
+        //public async Task<IActionResult> DeleteEmployee(string idCu, string idCo, string idEm)
         //{
         //    await Task.Delay(10);
-        //    var employees = _employeesService.GetPositions(id);
-        //    return Json(employees);
+        //    var result = _employeesService.DeleteEmployee(idCu, idCo, idEm);
+        //    return result != null ? Ok(result) : NotFound();
         //}
-        //[HttpGet]
-        //public async Task<IActionResult> GetAllRols(string id)
+
+        [HttpPost]
+        // Архівування співробітників
+        public async Task<IActionResult> ArchiveEmployee(string idCu, string idCo, string idEm)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.ArchiveEmployee(idCu, idCo, idEm);
+            return result != null ? Ok(result) : NotFound();
+        }
+
+        //[HttpPost]
+        //// Відновлення співробітників з архіву
+        //public async Task<IActionResult> FromArchiveEmployee(string idCu, string idCo, string idEm)
         //{
         //    await Task.Delay(10);
-        //    var employees = _employeesService.GetRol(id);
-        //    return Json(employees);
+        //    var result = _employeesService.FromArchiveEmployee(idCu, idCo, idEm);
+        //    return result != null ? Ok(result) : NotFound();
         //}
 
         //[HttpPost]
-        //public async Task<IActionResult> GeneratePassword(string id)
+        //// Додавання нового співробітника
+        //public async Task<IActionResult> CreateEmployee(string idCu, string idCo)
         //{
         //    await Task.Delay(10);
-        //    var employees = _employeesService.GeneratePassword(id);
-        //    return Json(employees);
-        //}
-
-        //групове надсилання листа на пошту
-        //групове надсилання паролів
-
-        //[HttpGet]
-        //public async Task<IActionResult> GetEmployeesByOwnId(string id)
-        //{
-        //    await Task.Delay(10);
-        //    var employees = _employeesService.GetEmployeesByOwnId(id);
-        //    return Json(employees);
+        //    var result = _employeesService.CreateEmployee(idCu, idCo);
+        //    return result != null ? Ok(result) : NotFound();
         //}
 
         [HttpPost]

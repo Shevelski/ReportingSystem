@@ -19,6 +19,7 @@ namespace ReportingSystem
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<CompaniesService>();
             builder.Services.AddScoped<EmployeesService>();
+            builder.Services.AddScoped<PositionsService>();
             builder.Services.AddScoped<ProjectsCategoriesService>();
 
             builder.Services.AddDistributedMemoryCache();

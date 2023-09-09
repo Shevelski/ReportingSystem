@@ -1,0 +1,53 @@
+html {
+  font-size: 14px;
+}
+
+.control-label {
+    font-size: 12px;
+}
+
+.form-control {
+    font-size: 14px;
+    height:33px;
+}
+
+.btn-default.active {
+    background: #6c757d;
+    color: #fff;
+}
+
+form.editable input {
+    color: #008080;
+}
+
+    @media (min-width: 768px) {
+        html {
+            font-size: 16px;
+        }
+    }
+
+    html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.modal-dialog {
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+
+.accordion-button {
+    height: 45px;
+}
+
+
+.red-text {
+    color: red;
+}
+
