@@ -21,7 +21,7 @@ obj/
 *.user
 *.userosscache
 *.sln.iml
-*.csproj
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
