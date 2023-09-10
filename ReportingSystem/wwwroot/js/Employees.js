@@ -2,7 +2,6 @@
 new Vue({
     el: '#Employees',
     data: {
-        items: 0,
         customerId: '',
         companyId: '',
         employeeId: '',
@@ -63,7 +62,7 @@ new Vue({
 
             let filteredList = this.employees.filter((employee) => {
                 const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status.employeeStatusType == 2;
+                const isInArchive = employee.status && employee.status.employeeStatusType == 2;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -79,7 +78,7 @@ new Vue({
 
             let filteredList = this.employees.filter((employee) => {
                 const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status.employeeStatusType == 2;
+                const isInArchive = employee.status && employee.status.employeeStatusType == 2;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -99,7 +98,6 @@ new Vue({
         async Init() {
             if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
                 await this.updateCustomers();
-                this.IsNewSelectedCompany = false;
                 await this.updateCompanies();
             }
             if (this.rol == 'Customer') {
@@ -111,41 +109,45 @@ new Vue({
                 this.selectedCompanyId = this.companyId;
             }
             this.positions = await this.getPositions();
+            this.rolls = await this.getRolls();
+            this.employees = await this.getEmployees();
+            
 
-            let responseRolls = await axios.get("/Companies/GetRolls", {
+            console.log(this.employees);
+            for (let i = 0; i < this.employees.length; i++) {
+                this.employees[i].birthDate = this.dateCSharpToJs(this.employees[i].birthDate);
+                this.employees[i].workStartDate = this.dateCSharpToJs(this.employees[i].workStartDate);
+                this.employees[i].workEndDate = this.dateCSharpToJs(this.employees[i].workEndDate);
+            };            
+            
+            this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
+        },
+        async getPositions() {
+            let response = await axios.get("/Positions/GetUniqPositions", {
                 params: {
-                    //idCu: this.customerId,
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
                 }
             });
-            this.rolls = responseRolls.data;
-
+           return response.data;
+        },
+        async getRolls() {
+            let response = await axios.get("/Companies/GetRolls", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId
+                }
+            });
+            return response.data;
+        },
+        async getEmployees() {
             let response = await axios.get("/Employees/GetEmployees", {
                 params: {
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
                 }
             });
-
-            this.employees = response.data;
-            console.log(this.employees);
-            for (let j = 0; j < this.employees.length; j++) {
-                this.employees[j].birthDate = this.dateCSharpToJs(this.employees[j].birthDate);
-                this.employees[j].workStartDate = this.dateCSharpToJs(this.employees[j].workStartDate);
-                this.employees[j].workEndDate = this.dateCSharpToJs(this.employees[j].workEndDate);
-            };            
-            
-            this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
-        },
-        async getPositions() {
-            let responsePositions = await axios.get("/Positions/GetUniqPositions", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
-           return responsePositions.data;
+            return response.data;
         },
         async updateCompanies() {
             let responseCompanies = '';
@@ -155,24 +157,10 @@ new Vue({
                 }
             });
             this.companies = responseCompanies.data;
-
-            if (!this.IsNewSelectedCompany) {
-                var ar = await axios.get("/Companies/CheckSave", {
-                    params: {
-                        idCu: this.customerId,
-                    }
-                });
-                this.selectedCompanyId = ar.data;
-                if (ar.data == '00000000-0000-0000-0000-000000000000') {
-                    this.saveCompany = false;
-                    this.selectedCompanyId = this.companies[0].id;
-                } else {
-                    this.saveCompany = true;
-                    this.selectedCompanyId = ar.data;
-                    this.selectedCompanyIdCheck = ar.data;
-                }
-                this.IsNewSelectedCompany = true;
+            if (this.selectedCompanyId == 0) {
+                this.selectedCompanyId = this.companies[0].id;
             }
+            this.IsNewSelectedCompany = false;
         },
         async updateCustomers() {
             let responseCustomers = await axios.get("/Customers/GetAllLicence");
@@ -188,20 +176,20 @@ new Vue({
                 if (ar.data == '00000000-0000-0000-0000-000000000000') {
                     this.saveCustomer = false;
                     this.selectedCustomerId = this.customers[0].id;
-                    
                 } else {
                     this.saveCustomer = true;
                     this.selectedCustomerId = ar.data;
                     this.selectedCustomerIdCheck = ar.data;
                 }
                 this.customerId = this.selectedCustomerId;
-                this.IsNewSelectedCustomer = true;   
+                this.IsNewSelectedCustomer = true;
             }
         },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;
 
             if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
+                this.selectedCompanyId = 0;
                 this.IsNewSelectedCustomer = true;
                 this.saveCustomer = false;
             } else {
@@ -215,9 +203,11 @@ new Vue({
             if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
                 this.IsNewSelectedCompany = true;
                 this.saveCompany = false;
+                
             } else {
                 this.saveCompany = true;
             }
+
             this.Init();
         },
         getSelectedRol(event) {
@@ -226,49 +216,9 @@ new Vue({
         getSelectedPosition(event) {
             this.selectedPosition = event.target.value;
         },
-        async SavePermanentCustomer() {
-            var idCu = '';
-            if (this.saveCustomer) {
-                idCu = this.selectedCustomerId;
-                this.selectedCustomerIdCheck = this.selectedCustomerId;
-            } else {
-                idCu = '';
-                this.selectedCustomerIdCheck = 0;
-            };
-
-            try {
-                const response = await axios.post('/Customers/SavePermanentCustomer', idCu, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-            } catch (error) {
-                console.error('Error calling SavePermanentCustomer method:', error);
-            }
-        },
-        async SavePermanentCompany() {
-            var idCo = '';
-            if (this.saveCompany) {
-                idCo = this.selectedCompanyId;
-                this.selectedCompanyIdCheck = this.selectedCompanyId;
-            } else {
-                idCo = '';
-                this.selectedCompanyIdCheck = 0;
-            };
-            var idCu = this.selectedCustomerId;
-
-            try {
-                const response = await axios.post('/Companies/SavePermanentCompany',idCu, idCo, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-            } catch(error) {
-                console.error('Error calling SavePermanentCompany method:', error);
-            }
-        },
+       
         ToogleMode(mode) {
-            if (this.mode === 'edit') {
+            if (this.mode == 'edit') {
                 this.toggleModal(2, this.indexEmployee);
             } else {
                 this.beforeEditEmployee = this.filteredEmployees[this.indexEmployee];
@@ -392,23 +342,13 @@ new Vue({
                 this.pageCur = 1;
             }
         },
-        showFormatDate(dateString) {
-            const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-            const jsDate = new Date(dateString);
-            return jsDate.toLocaleDateString('en-GB', options);
-        },
-        formatDate(dateTimeStr) {
-            const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
-            if (!dateRegex.test(dateTimeStr)) {
-                return '';
+        hasArchiveEmployee() {
+            for (let i = 0; i < this.employees.length; i++) {
+                if (this.employees[i].status.employeeStatusType === 2) {
+                    return true;
+                }
             }
-
-            const date = new Date(dateTimeStr);
-            const day = date.getDate();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear();
-
-            return `${day}/${month}/${year}`;
+            return false;
         },
         dateCSharpToJs(dateTimeStr) {
             const date = new Date(dateTimeStr);
@@ -417,20 +357,6 @@ new Vue({
             const year = date.getFullYear();
 
             return `${year}-${month}-${day}`;
-        },
-        formatDateToISO(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const seconds = String(date.getSeconds()).padStart(2, '0');
-            const offset = -date.getTimezoneOffset();
-            const offsetHours = Math.floor(offset / 60);
-            const offsetMinutes = offset % 60;
-            const offsetSign = offset >= 0 ? '-' : '+';
-
-            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offsetSign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
         },
         async confirmEditEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;
@@ -449,19 +375,40 @@ new Vue({
         },
 
         async confirmArchiveEmployee() {
-            const v0 = this.filteredEmployees[this.indexEmployee].id;
-            const v1 = this.selectedCustomerId;
-            const v2 = this.selectedCompanyId;
-            var ar = [v0, v1, v2];
+            console.log(this.filteredEmployees[this.indexEmployee]);
+            console.log(this.indexEmployee);
+            const idCu = this.selectedCustomerId;
+            const idCo = this.selectedCompanyId;
+            const idEm = this.filteredEmployees[this.indexEmployee].id;
+
+            const ar = [idCu, idCo, idEm];
 
             try {
                 await axios.post('/Employees/ArchiveEmployee', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу ArchiveUser:', error);
+                console.error('Помилка під час виклику методу ArchiveEmployee:', error);
             }
 
             this.Init();
             this.closeAllAccordions();
+            this.showEmployeeInfo = !this.showEmployeeInfo;
+        },
+        async fromArchiveEmployee() {
+            console.log(this.filteredEmployees[this.indexEmployee]);
+            console.log(this.indexEmployee);
+            const idCu = this.selectedCustomerId;
+            const idCo = this.selectedCompanyId;
+            const idEm = this.filteredEmployees[this.indexEmployee].id;
+            const ar = [idCu, idCo, idEm];
+
+            try {
+                await axios.post('/Employees/FromArchiveEmployee', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу FromArchiveEmployee:', error);
+            }
+            this.Init();
+            this.closeAllAccordions();
+            this.showEmployeeInfo = !this.showEmployeeInfo;
         },
         async confirmDeleteEmployee() {
             const v0 = this.filteredEmployees[this.indexEmployee].id;
@@ -474,7 +421,6 @@ new Vue({
             }
 
             this.Init();
-            this.closeAllAccordions();
         },
 
         async confirmCreateEmployee() {
@@ -489,8 +435,9 @@ new Vue({
             } catch (error) {
                 console.error('Помилка під час виклику методу CreateUser:', error);
             }
-            this.Init();
             this.closeAllAccordions();
+            this.Init();
+            
         },
 
         toggleModal(type, index) {
@@ -508,30 +455,24 @@ new Vue({
                 this.modalEmployeeActive = false;
                 this.modalOperation = 'Ви впевнені, що хочете редагувати співробітника ' + this.beforeEditEmployee.firstName + " " + this.beforeEditEmployee.secondName + " " + this.beforeEditEmployee.thirdName + " ?";
                 this.modalTitle = 'Редагування співробітника';
-
-                //this.beforeEditEmployee = this.filteredEmployees[this.indexEmployee];
-
-                //for (const key in this.beforeEditEmployee) {
-                //    if (this.beforeEditEmployee.hasOwnProperty(key)) {
-                //        if (this.beforeEditEmployee[key] !== this.filteredEmployees[index][key]) {
-                //            console.log(`Key: ${key}, Before: ${this.beforeEditEmployee[key]}, After: ${this.filteredEmployees[index][key]}`);
-                //        }
-                //    }
-                //}
             }
             if (type === 3) {
-                this.modalName = this.filteredEmployees[index].name;
                 if (!this.modalEmployeeActive) {
-                    this.modalOperation = 'Ви впевнені, що хочете архівувати співробітника? ' + this.modalName;
+                    this.modalOperation = 'Ви впевнені, що хочете архівувати співробітника ' + this.filteredEmployees[index].firstName + " " + this.filteredEmployees[index].secondName + " " + this.filteredEmployees[index].thirdName + " ?";
                 }
                 this.modalTitle = 'Архівування співробітника';
             }
             if (type === 4) {
-                this.modalName = this.filteredEmployees[index].name;
                 if (!this.modalEmployeeActive) {
-                    this.modalOperation = 'Ви впевнені, що хочете видалити співробітника? ' + this.modalName;
+                    this.modalOperation = 'Ви впевнені, що хочете видалити співробітника ' + this.filteredEmployees[index].firstName + " " + this.filteredEmployees[index].secondName + " " + this.filteredEmployees[index].thirdName + " ?";
                 }
                 this.modalTitle = 'Видалення співробітника';
+            }
+            if (type === 5) {
+                if (!this.modalEmployeeActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете відновити співробітника ' + this.filteredEmployees[index].firstName + " " + this.filteredEmployees[index].secondName + " " + this.filteredEmployees[index].thirdName + " ?";
+                }
+                this.modalTitle = 'Відновлення співробітника';
             }
         },
         handleImageChange(event) {

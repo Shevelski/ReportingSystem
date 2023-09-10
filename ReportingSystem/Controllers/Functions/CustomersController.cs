@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ReportingSystem.Models.Customer;
-using ReportingSystem.Enums;
-using ReportingSystem.Enums.Extensions;
-using System;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Services;
 
@@ -27,9 +24,12 @@ namespace ReportingSystem.Controllers.Functions
         //отримати замовників
         public async Task<IActionResult> GetAllLicence()
         {
-            await Task.Delay(10);
-            var result = _customersService.GetCustomers();
-            return Json(result);
+            using (_customersService as IDisposable)
+            {
+                await Task.Delay(10);
+                var result = _customersService.GetCustomers();
+                return Json(result);
+            }
         }
 
         [HttpPost]

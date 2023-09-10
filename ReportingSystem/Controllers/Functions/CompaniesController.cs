@@ -17,9 +17,12 @@ namespace ReportingSystem.Controllers.Functions
         //отримати компанії вказаного замовника
         public async Task<IActionResult> GetCompanies(string idCu)
         {
-            await Task.Delay(10);
-            var result = _companiesService.GetCompanies(idCu);
-            return Json(result);
+            using (_companiesService as IDisposable)
+            {
+                await Task.Delay(10);
+                var result = _companiesService.GetCompanies(idCu);
+                return Json(result);
+            }
         }
 
         [HttpGet]

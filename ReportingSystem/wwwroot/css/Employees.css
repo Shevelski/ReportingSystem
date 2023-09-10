@@ -61,7 +61,7 @@ body {
 .form-select {
     font-size: 14px;
     height: 33px;
-    width: 50%;
+    /*width: 50%;*/
 }
 
 .form-select.data {

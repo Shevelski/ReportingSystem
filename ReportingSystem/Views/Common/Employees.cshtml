@@ -26,20 +26,7 @@
                        @* <div v-if="modalType == 3">
                         </div>*@
 
-                       @* <div v-if="modalType == 1">
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" v-model="useOpenDataBot" id="useOpenDataBot">
-                                <label class="form-check-label" for="useOpenDataBot">Створити з допомогою OpenDataBot</label>
-                            </div>
-                            <div class="form-group" v-if="useOpenDataBot == false">
-                                <label class="form-label">Назва</label>
-                                <input class="form-control" placeholder="Введіть назву" type="text" v-model="editUserName" />
-                            </div>
-                            <div v-else>
-                                <label class="form-label">ЄДРПУ</label>
-                                <input class="form-control" placeholder="Введіть ЄДРПУ" type="text" v-model="editEDRPU" />
-                            </div>
-                        </div>*@
+                      
 
                         <p :class="{ 'red-text': modalEmployeeActive }">{{ modalOperation }}</p>
 
@@ -47,60 +34,45 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="Init()">Закрити</button>
 
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1 && useOpenDataBot == false" v-on:click="confirmCreateUser()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="editEmployee()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmArchiveEmployee()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 4" v-on:click="confirmDeleteEmployee()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 1 && useOpenDataBot == false" v-on:click="confirmCreateUser()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 2" v-on:click="editEmployee()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 3" v-on:click="confirmArchiveEmployee()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 4" v-on:click="confirmDeleteEmployee()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 5" v-on:click="fromArchiveEmployee()">Підтвердити</button>
                     </div>
                 </div>
             </div>
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
-        <div class="row mb-3">
-            @*<div class="col">*@
-                <div class="btn-group d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Додати співробітника</button>
-                </div>
-            @*</div>*@
+
+        <div class="btn-group mb-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Додати співробітника</button>
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
             <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
             </select>
-
-            @*<div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCu" v-on:change="SavePermanentCustomer()" v-model="saveCustomer">
-                <label class="form-check-label" for="flexCheckIndeterminateCu">
-                    Запам'ятати замовника
-                </label>
-            </div>*@
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
             <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
                 <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
             </select>
-
-            @*<div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCo" v-on:change="SavePermanentCompany()" v-model="saveCompany">
-                <label class="form-check-label" for="flexCheckIndeterminateCo">
-                    Запам'ятати компанію
-                </label>
-            </div>*@
         </div>
 
         <div style="display: flex; align-items: center;">
 
-            <input class="form-control" v-model="searchQuery" type="text" placeholder="Пошук...">
+            <input class="form-control" v-model="searchQuery" type="text" placeholder="Пошук..." style="margin-right: 20px;">
 
-            <div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" v-model="showArchive" v-on:change="closeAllAccordions()">
+            <div class="form-check mc-3">
+                <input class="form-check-input" id="showArchive" type="checkbox" v-model="showArchive" v-on:change="closeAllAccordions()">
                 <label class="form-check-label" for="showArchive">
                     Архівні
                 </label>
             </div>
         </div>
+
 
         @*---------------------------------------------------------------------------------------------------------------------*@
         <div class="container" v-if="countFilteredEmployees > 10">
@@ -120,245 +92,280 @@
             </div>
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
-
-        <table class="table acord">
-            <tbody>
-                <tr>
-                    <td :class="{ 'column1': !showEmployeeInfo, 'column1 mod': showEmployeeInfo }">
-                        <div v-for="(employee, index) in filteredEmployees" :key="index" class="accordion-item">
-                            <h2 class="accordion-header" :id="'heading' + index">
-                                <button class="accordion-button" v-on:click="setIndexEmployee(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
-                                    @*--------------------------------------------------------------------------*@
-                                    <div v-if="showEmployeeInfo">
-                                        {{shortNameEmployee(index)}}
-                                    </div>
-                                    <div v-else>
-                                        {{employee.secondName}} {{ employee.firstName }} {{employee.thirdName}}
-                                    </div>
-                                    @*--------------------------------------------------------------------------*@
-
-                                </button>
-                            </h2>
-                            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Employees">
-                                @*-------*@
-                                <div class="container">
-                                    <div class="row justify-content-center">
-                                        <div class="col-sm-12">
-                                            <div class="panel-footer mb-3">
+        <div style="margin-top: 1em;"></div>
+        <div v-for="(employee, index) in filteredEmployees" :key="index" class="accordion-item">
+            <h2 class="accordion-header" :id="'heading' + index">
+                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                    {{employee.secondName}} {{ employee.firstName }} {{employee.thirdName}}
+                </button>
+            </h2>
+            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Companies">
+                <div class="accordion-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="panel-heading"></div>
+                                    <div>
+                                        <form v-bind:class="{editable: mode == 'edit'}">
+                                            <div class="row align-items-center">
                                                 <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <div class="pull-right">
-                                                            <button class="btn btn-default mt-3"
-                                                                    v-bind:class="{active: mode == 'standart'}"
-                                                                    v-on:click="ToogleMode('edit')">
-                                                                Редагувати
-                                                            </button>
-
-                                                            <button class="btn btn-default mt-3"
-                                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                                    v-bind:class="{active: mode == 'edit'}"
-                                                                    v-on:click="ToogleMode('standart')">
-                                                                Підтвердити
-                                                            </button>
-
-                                                            <button class="btn btn-default mt-3"
-                                                                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                                                    v-on:click="toggleModal(3, index)">
-                                                                Архівувати
-                                                            </button>
+                                                    <div class="col-sm-4">
+                                                        <div class="clearfix" style="display: flex; justify-content: center;">
+                                                            <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
+                                                            <label for="imageInput">
+                                                                <img :src="employee.photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Прізвище</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.secondName" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Ім'я</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.firstName" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">По-батькові</label>
+                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.thirdName" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Дата народження</label>
+                                                            <input type="date" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.birthDate" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Дата початку роботи</label>
+                                                            <input type="date" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.workStartDate" />
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @*-------*@
-                            </div>
-                        </div>
-                    </td>
-                    <td :class="{ 'column2': !showEmployeeInfo, 'column2 mod': showEmployeeInfo }">
-                        <div class="panel-heading"></div>
-                        <div class="{'panel-body': !showEmployeeInfo,'panel-body active': showEmployeeInfo }">
-                            <form v-bind:class="{editable: mode == 'edit'}">
-                                <div class="row align-items-center">
-                                    <div class="row">
-                                        <div class="col-sm-4">
-                                            <div class="clearfix" style="display: flex; justify-content: center;">
-                                                <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
-                                                <label for="imageInput">
-                                                    <img :src="filteredEmployees[indexEmployee].photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
-                                                </label>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Прізвище</label>
-                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].secondName" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Ім'я</label>
-                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].firstName" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">По-батькові</label>
-                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].thirdName" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Дата народження</label>
-                                                <input type="date" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].birthDate" />
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="control-label">Дата початку роботи</label>
-                                                <input type="date" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].workStartDate" />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Посада</label>
-                                                        <select class="form-select data" aria-label="Default select example"
-                                                                v-bind:disabled="mode=='standart'"
-                                                                v-on:change="getSelectedPosition($event)"
-                                                                v-model="filteredEmployees[indexEmployee].position.namePosition">
-                                                            <option :value="filteredEmployees[indexEmployee].position.namePosition" selected>
-                                                                {{ filteredEmployees[indexEmployee].position.namePosition }}
-                                                            </option>
-                                                            <option v-for="position in positions" :value="position.namePosition">
-                                                                {{ position.namePosition }}
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Логін</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].login" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Роль в системі</label>
-                                                        <select class="form-select data"
-                                                                aria-label="Default select example"
-                                                                v-bind:disabled="mode=='standart'"
-                                                                v-on:change="getSelectedRol($event)"
-                                                                v-model="filteredEmployees[indexEmployee].rol">
-                                                            <option v-for="rol in rolls" :value="rol">
-                                                                {{ rol.rolName }}
-                                                            </option>
-                                                        </select>
-
-                                                    </div>
-                                                    <div v-if="mode == 'standart'" class="form-group">
-                                                        <label class="control-label">Пароль</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].password" />
-                                                    </div>
-                                                    <div v-else>
+                                                    <div class="col-sm-8">
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label class="control-label">Пароль</label>
-                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].password" />
+                                                                    <label class="control-label">Посада</label>
+                                                                    <select class="form-select data" aria-label="Default select example"
+                                                                            v-bind:disabled="mode=='standart'"
+                                                                            v-on:change="getSelectedPosition($event)"
+                                                                            v-model="employee.position.namePosition">
+                                                                        <option :value="employee.position.namePosition" selected>
+                                                                            {{ employee.position.namePosition }}
+                                                                        </option>
+                                                                        <option v-for="position in positions" :value="position.namePosition">
+                                                                            {{ position.namePosition }}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Логін</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.login" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="form-group">
-                                                                    <label class="control-label"></label>
-                                                                    <button type="button" class="btn btn-secondary custom-button" v-on:click="GeneratePassword(indexEmployee)">Новий</button>
+                                                                    <label class="control-label">Роль в системі</label>
+                                                                    <select class="form-select data"
+                                                                            aria-label="Default select example"
+                                                                            v-bind:disabled="mode=='standart'"
+                                                                            v-on:change="getSelectedRol($event)"
+                                                                            v-model="employee.rol">
+                                                                        <option v-for="rol in rolls" :value="rol">
+                                                                            {{ rol.rolName }}
+                                                                        </option>
+                                                                    </select>
+
+                                                                </div>
+                                                                <div v-if="mode == 'standart'" class="form-group">
+                                                                    <label class="control-label">Пароль</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.password" />
+                                                                </div>
+                                                                <div v-else>
+                                                                    <div class="row">
+                                                                        <div class="col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label class="control-label">Пароль</label>
+                                                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.password" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-6">
+                                                                            <div class="form-group">
+                                                                                <label class="control-label"></label>
+                                                                                <button type="button" class="btn btn-secondary custom-button" v-on:click="GeneratePassword(indexEmployee)">Новий</button>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @*----------------------------------------------------------------------------------*@
-                                            <div class="row mt-3">
-                                                <label class="control-label" style="text-align: center; font-weight: bold;">Робоча інформація</label>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Телефон</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].phoneWork" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Податковий номер</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].taxNumber" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">E-mail</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].emailWork" />
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Оклад</label>
-                                                                <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].salary" />
+                                                        @*----------------------------------------------------------------------------------*@
+                                                        <div class="row mt-3">
+                                                            <label class="control-label" style="text-align: center; font-weight: bold;">Робоча інформація</label>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Телефон</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.phoneWork" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Податковий номер</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.taxNumber" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">E-mail</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.emailWork" />
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Оклад</label>
+                                                                            <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.salary" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Премія</label>
+                                                                            <input type="text" class="form-control employeedata" v-model="employee.addSalary" v-bind:disabled="mode=='standart'" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відпустка</label>
+                                                                    <input type="text" class="form-control employeedata" :value="holidayDaysCount(indexEmployee)" v-bind:disabled="true" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Лікарняні</label>
+                                                                    <input type="text" class="form-control employeedata" :value="hospitalDaysCount(indexEmployee)" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відгули</label>
+                                                                    <input type="text" class="form-control employeedata" :value="taketimeoffDaysCount(indexEmployee)" v-bind:disabled="true" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відрядження</label>
+                                                                    <input type="text" class="form-control employeedata" :value="assignmentDaysCount(indexEmployee)" v-bind:disabled="true" />
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-6">
-                                                            <div class="form-group">
-                                                                <label class="control-label">Премія</label>
-                                                                <input type="text" class="form-control employeedata" v-model="filteredEmployees[indexEmployee].addSalary" v-bind:disabled="mode=='standart'" />
+                                                        @*----------------------------------------------------------------------------------*@
+                                                        <div class="row mt-3">
+                                                            <label class="control-label" style="text-align: center; font-weight: bold;">Особиста інформація</label>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Телефон</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.phoneSelf" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Адреса реєстрації</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.addressReg" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">E-mail</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.emailSelf" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Адреса проживання</label>
+                                                                    <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.addressFact" />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Відпустка</label>
-                                                        <input type="text" class="form-control employeedata" :value="holidayDaysCount(indexEmployee)" v-bind:disabled="true" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Лікарняні</label>
-                                                        <input type="text" class="form-control employeedata" :value="hospitalDaysCount(indexEmployee)" v-bind:disabled="true" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Відгули</label>
-                                                        <input type="text" class="form-control employeedata" :value="taketimeoffDaysCount(indexEmployee)" v-bind:disabled="true" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Відрядження</label>
-                                                        <input type="text" class="form-control employeedata" :value="assignmentDaysCount(indexEmployee)" v-bind:disabled="true" />
-                                                    </div>
-                                                </div>
                                             </div>
-                                            @*----------------------------------------------------------------------------------*@
-                                            <div class="row mt-3">
-                                                <label class="control-label" style="text-align: center; font-weight: bold;">Особиста інформація</label>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">Телефон</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].phoneSelf" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Адреса реєстрації</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].addressReg" />
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label">E-mail</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].emailSelf" />
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label class="control-label">Адреса проживання</label>
-                                                        <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="filteredEmployees[indexEmployee].addressFact" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                </div>
-                            </form>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    @*<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати компанію" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
+                                    <button type="button" v-if="company.status.companyStatusType !== 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(3,index)">Архівувати</button>
+                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(4,index)">Видалити</button>*@
+                                    <button class="btn btn-default mt-3"
+                                            v-if="mode=='standart'"
+                                            v-bind:class="{active: mode == 'standart'}"
+                                            v-on:click="ToogleMode('edit')">
+                                        Редагувати
+                                    </button>
+
+                                    <button class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-if="mode=='edit'"
+                                            v-bind:class="{active: mode == 'edit'}"
+                                            v-on:click="ToogleMode('standart')">
+                                        Підтвердити
+                                    </button>
+
+                                    <button class="btn btn-danger mt-3"
+                                            v-if="mode=='edit'"
+                                            v-bind:class="{active: mode == 'edit'}"
+                                            v-on:click="mode='standart'">
+                                        Відмінити
+                                    </button>
+
+                                    <button v-if="employee.status.employeeStatusType == 1" class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-on:click="toggleModal(3, index)">
+                                        Архівувати
+                                    </button>
+                                    <button v-if="employee.status.employeeStatusType == 2" class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-on:click="toggleModal(5, index)">
+                                        Відновити
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="pull-right">
+                                <button class="btn btn-default mt-3"
+                                        v-if="mode=='standart'"
+                                        v-bind:class="{active: mode == 'standart'}"
+                                        v-on:click="ToogleMode('edit')">
+                                    Редагувати
+                                </button>
+
+                                <button class="btn btn-default mt-3"
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                        v-if="mode=='edit'"
+                                        v-bind:class="{active: mode == 'edit'}"
+                                        v-on:click="ToogleMode('standart')">
+                                    Підтвердити
+                                </button>
+
+                                <button class="btn btn-danger mt-3"
+                                        v-if="mode=='edit'"
+                                        v-bind:class="{active: mode == 'edit'}"
+                                        v-on:click="mode='standart'">
+                                    Відмінити
+                                </button>
+
+                                <button v-if="filteredEmployees[indexEmployee].status.employeeStatusType == 1" class="btn btn-default mt-3"
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                        v-on:click="toggleModal(3, index)">
+                                    Архівувати
+                                </button>
+                                <button v-if="filteredEmployees[indexEmployee].status.employeeStatusType == 2" class="btn btn-default mt-3"
+                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                        v-on:click="toggleModal(5, index)">
+                                    Відновити
+                                </button>
+                            </div>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>*@
+                </div>
+            </div>
+        </div>
     </div>
     <div v-else>
         <div style="margin-top: 50px; margin-bottom: 50px;">

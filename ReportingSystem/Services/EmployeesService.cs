@@ -13,6 +13,7 @@ namespace ReportingSystem.Services
         CompanyModel? company = new CompanyModel();
         List<CompanyModel>? companies = new List<CompanyModel>();
         EmployeeModel? employee = new EmployeeModel();
+        List<EmployeeModel>? employees = new List<EmployeeModel>();
 
         public List<EmployeeModel>? GetEmployees(string idCu, string idCo)
         {
@@ -42,6 +43,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
+        //Редагування співробітника
         public EmployeeModel? EditEmployee(Object employeeInput)
         {
             if (employeeInput != null)
@@ -89,6 +91,7 @@ namespace ReportingSystem.Services
             return null;
         }
 
+        // Архівування співробітників
         public EmployeeModel? ArchiveEmployee(string idCu, string idCo, string idEm)
         {
             customers = DatabaseMoq.Customers;
@@ -112,6 +115,59 @@ namespace ReportingSystem.Services
                             return (employee);
                         }
                         
+                    }
+                }
+            }
+            return null;
+        }
+
+        // Відновлення співробітників з архіву
+        public EmployeeModel? FromArchiveEmployee(string idCu, string idCo, string idEm)
+        {
+            customers = DatabaseMoq.Customers;
+            if (customers != null && Guid.TryParse(idCu, out Guid customerId))
+            {
+                customer = customers.First(cu => cu.id.Equals(customerId));
+                if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
+                {
+                    company = customer.companies.First(co => co.id.Equals(companyId));
+                    if (company.employees != null && Guid.TryParse(idEm, out Guid employeeId))
+                    {
+                        employee = company.employees.First(em => em.id.Equals(employeeId));
+                        if (employee != null)
+                        {
+                            employee.status = new EmployeeStatusModel
+                            {
+                                employeeStatusType = Enums.EmployeeStatus.Actual,
+                                employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
+                            };
+                            DatabaseMoq.UpdateJson();
+                            return (employee);
+                        }
+                        
+                    }
+                }
+            }
+            return null;
+        }
+        
+        // Видалення співробітників з системи
+        public EmployeeModel? DeleteEmployee(string idCu, string idCo, string idEm)
+        {
+            customers = DatabaseMoq.Customers;
+            if (customers != null && Guid.TryParse(idCu, out Guid customerId))
+            {
+                customer = customers.First(cu => cu.id.Equals(customerId));
+                if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
+                {
+                    company = customer.companies.First(co => co.id.Equals(companyId));
+                    if (company.employees != null && Guid.TryParse(idEm, out Guid employeeId))
+                    {
+                        employees = company.employees;
+
+                        employee = company.employees.First(em => em.id.Equals(employeeId));
+                        employees.Remove(employee);
+                        DatabaseMoq.UpdateJson();
                     }
                 }
             }
