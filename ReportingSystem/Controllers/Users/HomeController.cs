@@ -72,6 +72,23 @@ namespace ReportingSystem.Controllers.Users
             return Json(result);
         }
 
+         public async Task<IActionResult> LogIn()
+        {   
+            return View();
+        }
+        public async Task<IActionResult> Index()
+        {
+            
+            return View();
+        }
+         public async Task<IActionResult>  AboutUs()
+        {
+            return View();
+        }
+        public async Task<IActionResult>  Contacts()
+        {
+            return View();
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
