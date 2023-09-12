@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="EUDirector" asp-action="Index">ReportingSystem</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -20,28 +20,28 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Index">Сповіщення</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Index">Сповіщення</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Companies">Компанії</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Companies">Компанії</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Projects">Проекти</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Projects">Проекти</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Employees">Співробітники</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Employees">Співробітники</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Positions">Посади</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Positions">Посади</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Report">Звіт</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Report">Звіт</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="EUDirector" asp-action="Info">Власні дані</a>
+                            <a class="nav-link" asp-area="" asp-controller="EUDirector" asp-action="Info">Власні дані</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
                         </li>
                     </ul>
                 </div>
@@ -67,3 +67,30 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+<style>
+    .nav-link.active {
+        text-decoration: underline;
+    }
+    .navbar-custom{
+        background-color: #387B55;
+    }
+    .navbar-nav li a {
+        color: #fff;
+        transition: all 0.3s ease-out;
+    }
+    .navbar-brand{
+        color: #fff;
+        transition: all 0.3s ease-out;
+    }
+
+    .navbar-brand:hover {
+        color: #fffed6c9;
+        transition: all 0.3s ease-in;
+    }
+    .navbar-nav .nav-link:hover {
+        color: #fffed6c9;
+        transition: all 0.3s ease-in;
+    }
+</style>
