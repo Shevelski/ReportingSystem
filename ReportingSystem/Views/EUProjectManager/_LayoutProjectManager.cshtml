@@ -25,7 +25,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-end custom-header">
                         <li class="nav-item">
-                            <a class="nav-link @(path == "/EUProjectManager/Index" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Index">Сповіщення</a>
+                            <a class="nav-link @(path == "/EUProjectManager" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Index">Сповіщення</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUProjectManager/Projects" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Projects">Проекти</a>
@@ -84,11 +84,11 @@
     }
 
     .navbar-brand:hover {
-        color: #fffed6c9;
+        color: #000;
         transition: all 0.3s ease-in;
     }
     .navbar-nav .nav-link:hover {
-        color: #fffed6c9;
+        color: #000;
         transition: all 0.3s ease-in;
     }
 </style>
