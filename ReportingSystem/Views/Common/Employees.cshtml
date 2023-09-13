@@ -22,12 +22,6 @@
                     </div>
                     <div class="modal-body">
 
-
-                       @* <div v-if="modalType == 3">
-                        </div>*@
-
-                      
-
                         <p :class="{ 'red-text': modalEmployeeActive }">{{ modalOperation }}</p>
 
                     </div>
@@ -45,8 +39,12 @@
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
 
-        <div class="btn-group mb-3 d-flex justify-content-between">
+        @*<div class="btn-group mb-3 d-flex justify-content-between">
             <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Додати співробітника</button>
+        </div>*@
+
+        <div class="btn-group mb-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" v-on:click="AddEmployee()">Додати співробітника</button>
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
@@ -66,7 +64,7 @@
             <input class="form-control" v-model="searchQuery" type="text" placeholder="Пошук..." style="margin-right: 20px;">
 
             <div class="form-check mc-3">
-                <input class="form-check-input" id="showArchive" type="checkbox" v-model="showArchive" v-on:change="closeAllAccordions()">
+                <input class="form-check-input" id="showArchive" type="checkbox" v-model="showArchive" v-on:change="firstBatch()">
                 <label class="form-check-label" for="showArchive">
                     Архівні
                 </label>
@@ -286,9 +284,6 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="text-left">
-                                    @*<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати компанію" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
-                                    <button type="button" v-if="company.status.companyStatusType !== 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(3,index)">Архівувати</button>
-                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(4,index)">Видалити</button>*@
                                     <button class="btn btn-default mt-3"
                                             v-if="mode=='standart'"
                                             v-bind:class="{active: mode == 'standart'}"
@@ -325,44 +320,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    @*<div class="row">
-                        <div class="col-sm-12">
-                            <div class="pull-right">
-                                <button class="btn btn-default mt-3"
-                                        v-if="mode=='standart'"
-                                        v-bind:class="{active: mode == 'standart'}"
-                                        v-on:click="ToogleMode('edit')">
-                                    Редагувати
-                                </button>
-
-                                <button class="btn btn-default mt-3"
-                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        v-if="mode=='edit'"
-                                        v-bind:class="{active: mode == 'edit'}"
-                                        v-on:click="ToogleMode('standart')">
-                                    Підтвердити
-                                </button>
-
-                                <button class="btn btn-danger mt-3"
-                                        v-if="mode=='edit'"
-                                        v-bind:class="{active: mode == 'edit'}"
-                                        v-on:click="mode='standart'">
-                                    Відмінити
-                                </button>
-
-                                <button v-if="filteredEmployees[indexEmployee].status.employeeStatusType == 1" class="btn btn-default mt-3"
-                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        v-on:click="toggleModal(3, index)">
-                                    Архівувати
-                                </button>
-                                <button v-if="filteredEmployees[indexEmployee].status.employeeStatusType == 2" class="btn btn-default mt-3"
-                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                                        v-on:click="toggleModal(5, index)">
-                                    Відновити
-                                </button>
-                            </div>
-                        </div>
-                    </div>*@
                 </div>
             </div>
         </div>

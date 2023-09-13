@@ -73,20 +73,23 @@ namespace ReportingSystem.Controllers.Users
         }
 
          public async Task<IActionResult> LogIn()
-        {   
+        {
+            await Task.Delay(10);
             return View();
         }
         public async Task<IActionResult> Index()
         {
-            
+            await Task.Delay(10);
             return View();
         }
          public async Task<IActionResult>  AboutUs()
         {
+            await Task.Delay(10);
             return View();
         }
         public async Task<IActionResult>  Contacts()
         {
+            await Task.Delay(10);
             return View();
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
