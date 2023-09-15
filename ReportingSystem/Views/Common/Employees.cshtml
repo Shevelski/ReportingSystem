@@ -17,10 +17,112 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
                     </div>
                     <div class="modal-body">
+
+                        <div v-if="modalType == 1">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Прізвище</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.secondName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Ім'я</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.firstName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">По-батькові</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.thirdName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Посада</label>
+                                        <select class="form-select data" aria-label="Default select example"
+                                                v-on:change="getSelectedPosition($event)"
+                                                v-model="newEmployee.namePosition">
+                                            <option v-for="position in positions" :value="position.namePosition">
+                                                {{ position.namePosition }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Пароль</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Телефон</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.phoneWork" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">E-mail</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.emailWork" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Адреса реєстрації</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.addressReg" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Оклад</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.salary" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Податковий номер</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.taxNumber" />
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Дата народження</label>
+                                        <input type="date" class="form-control employeedata" v-model="newEmployee.birthDate" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Дата початку роботи</label>
+                                        <input type="date" class="form-control employeedata" v-model="newEmployee.workStartDate" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Логін</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.login" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Роль в системі</label>
+                                        <select class="form-select data"
+                                                aria-label="Default select example"
+                                                v-on:change="getSelectedRol($event)"
+                                                v-model="newEmployee.rol">
+                                            <option v-for="rol in rolls" :value="rol">
+                                                {{ rol.rolName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <button type="button" class="btn btn-secondary custom-button" v-on:click="GeneratePassword(-1)">Новий</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Телефон ос.</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.phoneSelf" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">E-mail ос.</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.emailSelf" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Адреса проживання</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.addressFact" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Премія</label>
+                                        <input type="text" class="form-control employeedata" v-model="newEmployee.addSalary" />
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            
+                            
+                        </div>
 
                         <p :class="{ 'red-text': modalEmployeeActive }">{{ modalOperation }}</p>
 
@@ -28,7 +130,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="Init()">Закрити</button>
 
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 1 && useOpenDataBot == false" v-on:click="confirmCreateUser()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 1" v-on:click="addEmployee()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 2" v-on:click="editEmployee()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 3" v-on:click="confirmArchiveEmployee()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 4" v-on:click="confirmDeleteEmployee()">Підтвердити</button>
@@ -44,7 +146,12 @@
         </div>*@
 
         <div class="btn-group mb-3 d-flex justify-content-between">
-            <button type="button" class="btn btn-secondary" v-on:click="AddEmployee()">Додати співробітника</button>
+            <button type="button" class="btn btn-secondary" 
+                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    v-on:click="toggleModal(1, 0)">
+                Додати співробітника
+                    @*v-on:click="addEmployee()">Додати співробітника*@
+            </button>
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
@@ -97,7 +204,7 @@
                     {{employee.secondName}} {{ employee.firstName }} {{employee.thirdName}}
                 </button>
             </h2>
-            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Companies">
+            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Employees">
                 <div class="accordion-body">
                     <table class="table">
                         <tbody>

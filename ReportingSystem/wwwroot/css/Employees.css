@@ -51,12 +51,12 @@ body {
   margin-bottom: 60px;
 }
 
-.modal-dialog {
+/*.modal-dialog {
     position: fixed;
     top: 30%;
     left: 30%;
     transform: translate(-50%, -50%);
-}
+}*/
 
 .form-select {
     font-size: 14px;

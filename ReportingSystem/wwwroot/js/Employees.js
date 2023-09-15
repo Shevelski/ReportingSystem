@@ -2,6 +2,26 @@
 new Vue({
     el: '#Employees',
     data: {
+        newEmployee: {
+            firstName: '',
+            secondName: '',
+            thirdName: '',
+            birthDate: '',
+            workStartDate: '',
+            namePosition:'',
+            login: '',
+            rol: '',
+            password: '',
+            phoneWork: '',
+            phoneSelf: '',
+            emailWork: '',
+            emailSelf: '',
+            addressReg: '',
+            addressFact: '',
+            salary: '',
+            taxNumber: '',
+            addSalary:'',
+        },
         customerId: '',
         companyId: '',
         employeeId: '',
@@ -254,7 +274,7 @@ new Vue({
                 this.indexEmployee = index;
             }
         },
-        GeneratePassword() {
+        GeneratePassword(index) {
             const length = 8;
             const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; // Можна додати інші символи за потреби
             let password = "";
@@ -264,7 +284,14 @@ new Vue({
                 password += charset[randomIndex];
             }
 
-            this.filteredEmployees[this.indexEmployee].password = password;
+            if (index == -1) {
+                this.newEmployee.password = password;
+                this.$forceUpdate();
+            } else {
+                this.filteredEmployees[this.indexEmployee].password = password;
+                
+            }
+            
         },
         shortNameEmployee(index) {
 
@@ -424,24 +451,42 @@ new Vue({
             this.Init();
         },
         async addEmployee() {
-            this.filteredEmployees
-        },
-        async confirmCreateEmployee() {
-            const v0 = this.editEmployeeFirstName;
-            const v1 = this.editEmployeeSecondName;
-            const v2 = this.editEmployeeThirdName;
-           
-            var ar = [v0, v1, v2];
-            console.log('create');
-            try {
-                await axios.post('/Users/CreateUser', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу CreateUser:', error);
+            console.log('===========START=========================');
+
+            const keys = Object.keys(this.newEmployee);
+            const ar = [];
+
+            for (const key of keys) {
+                ar.push(this.newEmployee[key]);
             }
-            this.closeAllAccordions();
-            this.Init();
-            
+
+            console.log(ar);
+            //try {
+            //    await axios.post('/Users/CreateUser', ar);
+            //} catch (error) {
+            //    console.error('Помилка під час виклику методу CreateUser:', error);
+            //}
+            //this.closeAllAccordions();
+            //this.Init();
+
+            console.log('==============END======================');
         },
+        //async confirmCreateEmployee() {
+        //    const v0 = this.editEmployeeFirstName;
+        //    const v1 = this.editEmployeeSecondName;
+        //    const v2 = this.editEmployeeThirdName;
+           
+        //    var ar = [v0, v1, v2];
+        //    console.log('create');
+        //    try {
+        //        await axios.post('/Users/CreateUser', ar);
+        //    } catch (error) {
+        //        console.error('Помилка під час виклику методу CreateUser:', error);
+        //    }
+        //    this.closeAllAccordions();
+        //    this.Init();
+            
+        //},
 
         toggleModal(type, index) {
 
@@ -450,10 +495,18 @@ new Vue({
 
             if (type === 1) {
                 this.modalEmployeeActive = false;
-                this.modalOperation = 'Ви впевнені, що хочете додати співробітника? ' + this.modalName;
-                this.modalTitle = 'Створення нової компанії';
+                this.modalOperation = ''
+                this.modalTitle = 'Додавання співробітника';
                 this.editEmployeeName = this.modalName;
             }
+
+            if (type === 10) {
+                this.modalEmployeeActive = false;
+                this.modalOperation = 'Ви впевнені, що хочете додати співробітника? ' + this.modalName;
+                this.modalTitle = 'Додавання співробітника';
+                this.editEmployeeName = this.modalName;
+            }
+
             if (type === 2) {
                 this.modalEmployeeActive = false;
                 this.modalOperation = 'Ви впевнені, що хочете редагувати співробітника ' + this.beforeEditEmployee.firstName + " " + this.beforeEditEmployee.secondName + " " + this.beforeEditEmployee.thirdName + " ?";
