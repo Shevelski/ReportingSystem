@@ -98,7 +98,7 @@ namespace ReportingSystem.Controllers.Users
         public IActionResult Exit()
         {
             HttpContext.SignOutAsync();
-            return RedirectToAction("Authorize", "Home");
+            return RedirectToAction("Index", "Home");
         }
 
     }

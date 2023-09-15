@@ -8,46 +8,51 @@
     @*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
     <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />
 </head>
+
+@{
+    var path = Context.Request.Path;
+}
+
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="EUDevAdministrator" asp-action="Index">ReportingSystem</a>
+                <a class="navbar-brand @(path == "/" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Index">Звітна система</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end custom-header">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Index">Сповіщення</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Index">Сповіщення</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Companies">Компанії</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Companies" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Companies">Компанії</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Projects">Проекти</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Projects" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Projects">Проекти</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Steps">Етапи</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Steps" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Steps">Етапи</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Categories">Категорії</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Categories" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Categories">Категорії</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Employees">Співробітники</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Employees" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Employees">Співробітники</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Positions">Посади</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Positions" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Positions">Посади</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Report">Звіт</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Report" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Report">Звіт</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="EUDevAdministrator" asp-action="Info">Власні дані</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Info" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Info">Власні дані</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                        <a class="nav-link @(path == "/EUDevAdministrator/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="">Вихід</a>
                     </li>
                     </ul>
                 </div>
@@ -73,3 +78,29 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    .nav-link.active {
+        text-decoration: underline;
+    }
+    .navbar-custom{
+        background-color: #A856B8;
+    }
+    .navbar-nav li a {
+        color: #fff;
+        transition: all 0.3s ease-out;
+    }
+    .navbar-brand{
+        color: #fff;
+        transition: all 0.3s ease-out;
+    }
+
+    .navbar-brand:hover {
+        color: #fffed6c9;
+        transition: all 0.3s ease-in;
+    }
+    .navbar-nav .nav-link:hover {
+        color: #fffed6c9;
+        transition: all 0.3s ease-in;
+    }
+</style>

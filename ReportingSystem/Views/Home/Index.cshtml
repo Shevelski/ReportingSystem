@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_LayoutAuthorize";
+    @* bool authorize = User.Identity?.IsAuthenticated ?? false; *@
+}
+
+<div class="text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2 class="text-start">Welcome</h2>
+                @*<p class="text-start custom-input-font">@Localizer["Welcome")</p>*@
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                @*<p class="text-center custom-input-font">@Localizer["ComprehensiveAnalysisCompanySctivities")</p>*@
+                <h2 class="text-start">ComprehensiveAnalysisCompanySctivities</h2>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="text-start">OptimizationResourcesProjects</h2>
+            </div>
+        </div>
+        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @* <div class="carousel-item active custom-carousel" data-bs-interval="3000">
+                    <img src="/img/bis_intel.jpg" class="d-block w-100" alt="...">
+                </div> *@
+                @*<div class="carousel-item" data-bs-interval="2000">
+                    <img src="/img/Business-Intelligence.jpg" class="d-block w-100" alt="...">
+                </div>*@
+                @* <div class="carousel-item" data-bs-interval="3000">
+                    <img src="/img/blogart3.jpg" class="d-block w-100" alt="...">
+                </div> *@
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>

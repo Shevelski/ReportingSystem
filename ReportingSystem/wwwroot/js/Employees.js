@@ -341,6 +341,7 @@ new Vue({
             if (this.pageCur !== 1) {
                 this.pageCur = 1;
             }
+            this.closeAllAccordions();
         },
         hasArchiveEmployee() {
             for (let i = 0; i < this.employees.length; i++) {
@@ -422,7 +423,9 @@ new Vue({
 
             this.Init();
         },
-
+        async addEmployee() {
+            this.filteredEmployees
+        },
         async confirmCreateEmployee() {
             const v0 = this.editEmployeeFirstName;
             const v1 = this.editEmployeeSecondName;

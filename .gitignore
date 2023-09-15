@@ -3,12 +3,25 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+
+# Visual Studio temporary files
+.vscode/
+.vs/
+# Compiled binaries
+bin/
+obj/
+
+# Logs
+*.log (edited) 
+
 # User-specific files
 *.rsuser
+*.sln.docstates
 *.suo
 *.user
 *.userosscache
-*.sln.docstates
+*.sln.iml
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

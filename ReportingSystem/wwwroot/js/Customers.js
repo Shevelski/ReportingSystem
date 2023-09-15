@@ -99,6 +99,7 @@
             if (this.pageCur < this.pageCount) {
                 this.pageCur++;
             }
+            this.closeAllAccordions();
         },
         amountCompany(index) {
             if (Array.isArray(this.filteredCustomers) && this.filteredCustomers[index].companies) {
@@ -124,12 +125,14 @@
         prevBatch() {
             if (this.pageCur > 1) {
                 this.pageCur--;
+                this.closeAllAccordions();
             }
         },
         firstBatch() {
             if (this.pageCur !== 1) {
                 this.pageCur = 1;
             }
+            this.closeAllAccordions();
         },
         isLicenseExpired(company) {
             const statusDate = new Date(company.endTimeLicense);

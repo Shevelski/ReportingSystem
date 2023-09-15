@@ -19,37 +19,37 @@ namespace ReportingSystem.Controllers.Users
 
         public IActionResult Index()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Companies()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
 
         public IActionResult Categories()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
         public IActionResult Projects()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
         public IActionResult Employees()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
         public IActionResult Info()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
         public IActionResult Positions()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
         public IActionResult Report()
         {
-            return View();
+            return SessionHelper.ViewDataSession(HttpContext);
         }
     }
 }

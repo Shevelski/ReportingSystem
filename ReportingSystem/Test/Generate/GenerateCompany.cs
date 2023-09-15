@@ -18,6 +18,8 @@ namespace ReportingSystem.Test.Generate
     static public class GenerateCompany
     {
         static Random random = new Random();
+
+        static List<string> listEm = new List<string>();
         static public string StatusWeb()
         {
             List<string> statusCompanyFromWeb = new List<string> { "Зареєстровано", "На реєстрації", "Актуальна", "На перегляді" };
@@ -166,6 +168,7 @@ namespace ReportingSystem.Test.Generate
         }
         static public  EmployeeModel GenerateEmployee(CompanyModel company, Guid customerId)
         {
+
             EmployeeModel employee = new EmployeeModel();
             var faker = new Faker();
 
@@ -174,11 +177,20 @@ namespace ReportingSystem.Test.Generate
             employee.customerId = customerId;
             employee.firstName = faker.Name.FirstName();
             employee.secondName = faker.Name.LastName();
+
             employee.thirdName = faker.Name.JobType();
             employee.taxNumber = GenerateInfo.Code();
             employee.phoneSelf = GenerateInfo.MobilePhoneNumber();
             employee.phoneWork = GenerateInfo.PhoneNumber();
             employee.emailWork = (employee.secondName.ToLower() + "@gmail.ua").Replace(" ", "");
+
+            while (listEm.Exists(e => e.Equals(employee.emailWork)))
+            {
+                employee.emailWork = (employee.secondName.ToLower() + random.Next(0,300) + "@gmail.ua").Replace(" ", "");
+                Debug.WriteLine($"this data is exist");
+            }
+            listEm.Add(employee.emailWork);
+
             employee.emailSelf = (employee.firstName.ToLower() + "@gmail.ua").Replace(" ", "");
             employee.login = employee.secondName;
             employee.status = new EmployeeStatusModel()
@@ -197,6 +209,8 @@ namespace ReportingSystem.Test.Generate
             employee.holidayDate = GenerateDate.RangeDates(employee.workStartDate, 3, true);
             employee.taketimeoffDate = GenerateDate.RangeDates(employee.workStartDate, 1, false);
             employee.assignmentDate = GenerateDate.RangeDates(employee.workStartDate, 1, false);
+
+            
             return employee;
         }
         static public EmployeeRolModel GenerateRol(EmployeePositionModel position)
