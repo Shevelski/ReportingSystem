@@ -15,7 +15,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-custom">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand main-name @(path == "/" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Index">Звітна система</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,6 +23,7 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav flex-grow-1 justify-content-end custom-header">
+                            
                             <li class="nav-item">
                                 <a class="nav-link @(path == "/EUProjectManager" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Index">Сповіщення</a>
                             </li>
@@ -36,20 +37,22 @@
                                 <a class="nav-link @(path == "/EUProjectManager/Report" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Report">Звіт</a>
                             </li>
                             <li>
-                                <div class="dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="../img/UserPhoto/John1.jpg" class="img-thumbnail" alt="..." width="25" height="60">
-                                </a>
-                                <ul class="dropdown-menu navbar-custom dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li class="nav-item">
-                                <a class="nav-link @(path == "/EUProjectManager/Info" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Info">Власні дані</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link @(path == "/EUProjectManager/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
-                                    </li>
-                                </ul>
+                                <div class="circle border">
+                                    <div class="dropdown">
+                                        <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            OS
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-md-start" aria-labelledby="navbarDarkDropdownMenuLink">
+                                        <li class="nav-item">
+                                            <a class="nav-link @(path == "/EUProjectManager/Info" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Info">Власні дані</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link @(path == "/EUProjectManager/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                        </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </li>      
+                            </li>
                         </ul>
                     </div>
             </div>
@@ -71,33 +74,58 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 
 <style>
-    .nav-link.active {
-        text-decoration: underline;
-    }
-    .navbar-custom{
+   .circle {
+            width: 35px;
+            height: 35px;
+            background-color: #3498db; /* Change the background color as desired */
+            border-radius: 50%; /* Makes the div circular */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(224, 224, 224); /* Text color */
+            @* font-size: 24px; /* Font size for initials */ *@
+        }
+    .dropdown-menu{
         background-color: #5677B8;
     }
-    .navbar-nav li a {
+    .navbar-nav .dropdown .nav-link:hover{
+        color: #000;
+    }
+     .navbar{
+        background-color: #5677B8;
+
+    }
+    .nav-link.active {
+        text-decoration: underline;
+        color: #fff;
+    }
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #000000;
+        transition: all 0.3s ease-in;
+    }
+    .navbar-nav .nav-item .nav-link {
+        color: rgb(224, 224, 224);
+        transition: all 0.3s ease-out;
+    }
+    @* .navbar-nav li a {
         color: #fff;
         transition: all 0.3s ease-out;
     }
     .navbar-brand{
         color: #fff;
         transition: all 0.3s ease-out;
-    }
+    } *@
 
-    .navbar-brand:hover {
+    @* .navbar .navbar-brand:hover {
         color: #000;
         transition: all 0.3s ease-in;
-    }
-    .navbar-nav .nav-link:hover {
-        color: #000;
-        transition: all 0.3s ease-in;
-    }
+    } *@
+    
 </style>
 
