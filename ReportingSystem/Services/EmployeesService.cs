@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
@@ -97,6 +98,7 @@ namespace ReportingSystem.Services
             customers = DatabaseMoq.Customers;
             if (customers != null && Guid.TryParse(idCu, out Guid customerId))
             {
+                
                 customer = customers.First(cu => cu.id.Equals(customerId));
                 if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
                 {
@@ -108,18 +110,121 @@ namespace ReportingSystem.Services
                         {
                             employee.status = new EmployeeStatusModel
                             {
-                                employeeStatusType = Enums.EmployeeStatus.Archive,
-                                employeeStatusName = Enums.EmployeeStatus.Archive.GetDisplayName()
+                                employeeStatusType = EmployeeStatus.Archive,
+                                employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
                             };
                             DatabaseMoq.UpdateJson();
                             return (employee);
                         }
-                        
                     }
                 }
             }
             return null;
         }
+
+        // Перевірка на доступність email
+        public bool? IsBusyEmail(string email)
+        {
+            customers = DatabaseMoq.Customers;
+
+            if (customers != null)
+            {
+                foreach (CustomerModel customer in customers)
+                {
+                    if (customer.companies != null)
+                    {
+                        if (customer.email != null && customer.email.ToLower().Equals(email.ToLower()))
+                        {
+                            return true;
+                        }
+                        
+                        companies = customer.companies;
+                        foreach(CompanyModel company in companies)
+                        {
+                            if (company.employees != null)
+                            {
+                                employees = company.employees;
+                                foreach(EmployeeModel employee in employees)
+                                {
+                                   if (employee.emailWork != null && employee.emailWork.ToLower().Equals(email.ToLower()))
+                                    {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Додавання співробітників
+        public EmployeeModel? CreateEmployee(string[] ar)
+        {
+            customers = DatabaseMoq.Customers;
+            if (customers != null && Guid.TryParse(ar[0], out Guid customerId))
+            {
+                customer = customers.First(cu => cu.id.Equals(customerId));
+                if (customer.companies != null && Guid.TryParse(ar[1], out Guid companyId))
+                {
+                    company = customer.companies.First(co => co.id.Equals(companyId));
+                    
+                    if (company.employees != null)
+                    {
+                        EmployeeRolStatus rolTypeVar = EmployeeRolStatus.User;
+                        if (Enum.TryParse(ar[10], out EmployeeRolStatus rolType))
+                        {
+                            rolTypeVar = rolType;
+                        }
+
+
+                        employee = new EmployeeModel
+                        {
+                            id = Guid.NewGuid(),
+                            customerId = customerId,
+                            companyId = companyId,
+                            firstName = ar[2],
+                            secondName = ar[3],
+                            thirdName = ar[4],
+                            birthDate = DateTime.Parse(ar[5]),
+                            workStartDate = DateTime.Parse(ar[6]),
+                            position = new EmployeePositionModel
+                            {
+                                namePosition = ar[7]
+                            },
+                            login = ar[8],
+                            rol = new Models.EmployeeRolModel
+                            {
+                                rolName = ar[9],
+                                rolType = rolTypeVar,
+                            },
+                            password = ar[11],
+                            phoneWork = ar[12],
+                            phoneSelf = ar[13],
+                            emailWork = ar[14],
+                            emailSelf = ar[15],
+                            addressReg = ar[16],
+                            addressFact = ar[17],
+                            salary = double.Parse(ar[18]),
+                            taxNumber = ar[19],
+                            addSalary = double.Parse(ar[20]),
+                            status = new EmployeeStatusModel
+                            {
+                                employeeStatusType = EmployeeStatus.Actual,
+                                employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                            },
+                        };
+                        company.employees.Add(employee);
+                        DatabaseMoq.UpdateJson();
+                        return (employee); 
+                    }
+                }
+            }
+            return null;
+        }
+
+        
 
         // Відновлення співробітників з архіву
         public EmployeeModel? FromArchiveEmployee(string idCu, string idCo, string idEm)
@@ -152,7 +257,7 @@ namespace ReportingSystem.Services
         }
         
         // Видалення співробітників з системи
-        public EmployeeModel? DeleteEmployee(string idCu, string idCo, string idEm)
+        public void DeleteEmployee(string idCu, string idCo, string idEm)
         {
             customers = DatabaseMoq.Customers;
             if (customers != null && Guid.TryParse(idCu, out Guid customerId))
@@ -171,7 +276,6 @@ namespace ReportingSystem.Services
                     }
                 }
             }
-            return null;
         }
     }
 }

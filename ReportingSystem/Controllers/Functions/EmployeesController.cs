@@ -34,32 +34,6 @@ namespace ReportingSystem.Controllers.Functions
             }
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetEmployees(string idCu, string idCo)
-        //{
-        //    await Task.Delay(0);
-        //    try
-        //    {
-        //        using (_employeesService as IDisposable)
-        //        {
-        //            var employees = _employeesService.GetEmployees(idCu, idCo);
-        //            return Json(employees);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
-
-        //[HttpPost]
-        //// Видалення співробітників
-        //public async Task<IActionResult> DeleteEmployee(string idCu, string idCo, string idEm)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _employeesService.DeleteEmployee(idCu, idCo, idEm);
-        //    return result != null ? Ok(result) : NotFound();
-        //}
 
         [HttpPost]
         // Архівування співробітників
@@ -69,8 +43,6 @@ namespace ReportingSystem.Controllers.Functions
             var result = _employeesService.ArchiveEmployee(ar[0], ar[1], ar[2]);
             return result != null ? Ok(result) : NotFound();
         }
-
-
 
 
         [HttpPost]
@@ -87,18 +59,29 @@ namespace ReportingSystem.Controllers.Functions
         public async Task<IActionResult> DeleteEmployee([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var result = _employeesService.DeleteEmployee(ar[0], ar[1], ar[2]);
+            _employeesService.DeleteEmployee(ar[0], ar[1], ar[2]);
+            //return result != null ? Ok(result) : NotFound();
+            return Ok();
+        }
+
+        [HttpPost]
+        // Додавання нового співробітника
+        public async Task<IActionResult> CreateEmployee([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.CreateEmployee(ar);
             return result != null ? Ok(result) : NotFound();
         }
 
-        //[HttpPost]
-        //// Додавання нового співробітника
-        //public async Task<IActionResult> CreateEmployee(string idCu, string idCo)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _employeesService.CreateEmployee(idCu, idCo);
-        //    return result != null ? Ok(result) : NotFound();
-        //}
+        [HttpGet]
+        // Перевірка вільності email
+        public async Task<IActionResult> IsBusyEmail(string email)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.IsBusyEmail(email);
+            return Json(result);
+            //return result != null ? Ok(result) : NotFound();
+        }
 
         [HttpPost]
         //Редагування співробітника

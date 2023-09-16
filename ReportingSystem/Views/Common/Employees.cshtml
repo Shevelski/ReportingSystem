@@ -27,15 +27,15 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label class="control-label">Прізвище</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.secondName" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.secondName" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Ім'я</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.firstName" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.firstName" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">По-батькові</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.thirdName" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.thirdName" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Посада</label>
@@ -49,42 +49,42 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Пароль</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.password" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.password" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Телефон</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.phoneWork" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.phoneWork" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">E-mail</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.emailWork" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.emailWork" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Адреса реєстрації</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.addressReg" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.addressReg" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Оклад</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.salary" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.salary" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Податковий номер</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.taxNumber" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.taxNumber" />
                                     </div>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label class="control-label">Дата народження</label>
-                                        <input type="date" class="form-control employeedata" v-model="newEmployee.birthDate" />
+                                        <input type="date" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.birthDate" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Дата початку роботи</label>
-                                        <input type="date" class="form-control employeedata" v-model="newEmployee.workStartDate" />
+                                        <input type="date" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.workStartDate" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Логін</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.login" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.login" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Роль в системі</label>
@@ -103,19 +103,23 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Телефон ос.</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.phoneSelf" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.phoneSelf" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <button type="button" class="btn btn-secondary custom-button" v-on:click="checkEmail()">Перевірити доступність</button>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">E-mail ос.</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.emailSelf" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.emailSelf" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Адреса проживання</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.addressFact" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.addressFact" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">Премія</label>
-                                        <input type="text" class="form-control employeedata" v-model="newEmployee.addSalary" />
+                                        <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.addSalary" />
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +134,9 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="Init()">Закрити</button>
 
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 1" v-on:click="addEmployee()">Підтвердити</button>
+
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 1" v-on:click="addEmployee()" v-bind:disabled="isFormEmpty()">Підтвердити</button>
+
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 2" v-on:click="editEmployee()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 3" v-on:click="confirmArchiveEmployee()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 4" v-on:click="confirmDeleteEmployee()">Підтвердити</button>
@@ -422,6 +428,11 @@
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                                             v-on:click="toggleModal(5, index)">
                                         Відновити
+                                    </button>
+                                    <button v-if="employee.status.employeeStatusType == 2" class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-on:click="toggleModal(4, index)">
+                                        Видалити
                                     </button>
                                 </td>
                             </tr>

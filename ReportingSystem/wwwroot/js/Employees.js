@@ -77,6 +77,7 @@ new Vue({
         this.Init();
     },
     computed: {
+        
         countFilteredEmployees() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
@@ -93,6 +94,7 @@ new Vue({
 
             return filteredList.length;
         },
+        
         filteredEmployees() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
@@ -131,17 +133,18 @@ new Vue({
             this.positions = await this.getPositions();
             this.rolls = await this.getRolls();
             this.employees = await this.getEmployees();
-            
+
 
             console.log(this.employees);
             for (let i = 0; i < this.employees.length; i++) {
                 this.employees[i].birthDate = this.dateCSharpToJs(this.employees[i].birthDate);
                 this.employees[i].workStartDate = this.dateCSharpToJs(this.employees[i].workStartDate);
                 this.employees[i].workEndDate = this.dateCSharpToJs(this.employees[i].workEndDate);
-            };            
-            
+            };
+
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
         },
+
         async getPositions() {
             let response = await axios.get("/Positions/GetUniqPositions", {
                 params: {
@@ -149,7 +152,7 @@ new Vue({
                     idCo: this.selectedCompanyId
                 }
             });
-           return response.data;
+            return response.data;
         },
         async getRolls() {
             let response = await axios.get("/Companies/GetRolls", {
@@ -204,6 +207,29 @@ new Vue({
                 this.customerId = this.selectedCustomerId;
                 this.IsNewSelectedCustomer = true;
             }
+        },
+        isFormEmpty() {
+            const employee = this.newEmployee;
+            return (
+                employee.firstName == '' || employee.firstName == null || employee.firstName == undefined ||
+                employee.secondName == '' || employee.secondName == null || employee.secondName == undefined ||
+                employee.thirdName == '' || employee.thirdName == null || employee.thirdName == undefined ||
+                employee.birthDate == '' || employee.birthDate == null || employee.birthDate == undefined ||
+                employee.workStartDate == '' || employee.workStartDate == null || employee.workStartDate == undefined ||
+                employee.namePosition == '' || employee.namePosition == null || employee.namePosition == undefined ||
+                employee.login == '' || employee.login == null || employee.login == undefined ||
+                employee.rol == '' || employee.rol == null || employee.rol == undefined ||
+                employee.password == '' || employee.password == null || employee.password == undefined ||
+                employee.phoneWork == '' || employee.phoneWork == null || employee.phoneWork == undefined ||
+                employee.phoneSelf == '' || employee.phoneSelf == null || employee.phoneSelf == undefined ||
+                employee.emailWork == '' || employee.emailWork == null || employee.emailWork == undefined ||
+                employee.emailSelf == '' || employee.emailSelf == null || employee.emailSelf == undefined ||
+                employee.addressReg == '' || employee.addressReg == null || employee.addressReg == undefined ||
+                employee.addressFact == '' || employee.addressFact == null || employee.addressFact == undefined ||
+                employee.salary == '' || employee.salary == null || employee.salary == undefined ||
+                employee.taxNumber == '' || employee.taxNumber == null || employee.taxNumber == undefined ||
+                employee.addSalary == '' || employee.addSalary == null || employee.addSalary == undefined
+            )
         },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;
@@ -386,25 +412,22 @@ new Vue({
 
             return `${year}-${month}-${day}`;
         },
-        async confirmEditEmployee() {
-            const v0 = this.filteredEmployees[this.indexEmployee].id;
+        //async confirmEditEmployee() {
+        //    const v0 = this.filteredEmployees[this.indexEmployee].id;
 
-            var ar = [v0, v1, v2, v3];
+        //    var ar = [v0, v1, v2, v3];
 
-            
-            try {
-                await axios.post('/Employees/DeleteEmployee', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу EditUser:', error);
-            }
+        //    try {
+        //        await axios.post('/Employees/EditEmployee', ar);
+        //    } catch (error) {
+        //        console.error('Помилка під час виклику методу EditUser:', error);
+        //    }
 
-            this.Init();
-            this.closeAllAccordions();
-        },
+        //    this.Init();
+        //    this.closeAllAccordions();
+        //},
 
         async confirmArchiveEmployee() {
-            console.log(this.filteredEmployees[this.indexEmployee]);
-            console.log(this.indexEmployee);
             const idCu = this.selectedCustomerId;
             const idCo = this.selectedCompanyId;
             const idEm = this.filteredEmployees[this.indexEmployee].id;
@@ -422,8 +445,6 @@ new Vue({
             this.showEmployeeInfo = !this.showEmployeeInfo;
         },
         async fromArchiveEmployee() {
-            console.log(this.filteredEmployees[this.indexEmployee]);
-            console.log(this.indexEmployee);
             const idCu = this.selectedCustomerId;
             const idCo = this.selectedCompanyId;
             const idEm = this.filteredEmployees[this.indexEmployee].id;
@@ -439,54 +460,70 @@ new Vue({
             this.showEmployeeInfo = !this.showEmployeeInfo;
         },
         async confirmDeleteEmployee() {
-            const v0 = this.filteredEmployees[this.indexEmployee].id;
-            var ar = [v0];
+            const idCu = this.selectedCustomerId;
+            const idCo = this.selectedCompanyId;
+            const idEm = this.filteredEmployees[this.indexEmployee].id;
+            const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Users/DeleteUser', ar);
+                await axios.post('/Employees/DeleteEmployee', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу DeleteUser:', error);
             }
 
             this.Init();
         },
+        async checkEmail() {
+            var email = this.newEmployee.emailWork;
+            if (this.newEmployee.emailWork != null) {
+                console.log(email);
+                var response = await axios.get("/Employees/IsBusyEmail", {
+                    params: {
+                        email: email,
+                    }
+                });
+                console.log(response.data);
+            };
+
+
+            
+        },
         async addEmployee() {
-            console.log('===========START=========================');
+            const v0 = this.selectedCustomerId;
+            const v1 = this.selectedCompanyId;
+            const v2 = this.newEmployee.firstName;
+            const v3 = this.newEmployee.secondName;
+            const v4 = this.newEmployee.thirdName;
+            const v5 = this.newEmployee.birthDate;
+            const v6 = this.newEmployee.workStartDate;
+            const v7 = this.newEmployee.namePosition;
+            const v8 = this.newEmployee.login;
+            const v9 = this.newEmployee.rol.rolName;
+            const v10 = this.newEmployee.rol.rolType.toString();
+            const v11 = this.newEmployee.password;
+            const v12 = this.newEmployee.phoneWork;
+            const v13 = this.newEmployee.phoneSelf;
+            const v14 = this.newEmployee.emailWork;
+            const v15 = this.newEmployee.emailSelf;
+            const v16 = this.newEmployee.addressReg;
+            const v17 = this.newEmployee.addressFact;
+            const v18 = this.newEmployee.salary;
+            const v19 = this.newEmployee.taxNumber;
+            const v20 = this.newEmployee.addSalary;
 
-            const keys = Object.keys(this.newEmployee);
-            const ar = [];
-
-            for (const key of keys) {
-                ar.push(this.newEmployee[key]);
-            }
+            const ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20];
 
             console.log(ar);
-            //try {
-            //    await axios.post('/Users/CreateUser', ar);
-            //} catch (error) {
-            //    console.error('Помилка під час виклику методу CreateUser:', error);
-            //}
-            //this.closeAllAccordions();
-            //this.Init();
+            try {
+                await axios.post('/Employees/CreateEmployee', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу CreateEmployee:', error);
+            }
+            this.closeAllAccordions();
+            this.Init();
 
-            console.log('==============END======================');
         },
-        //async confirmCreateEmployee() {
-        //    const v0 = this.editEmployeeFirstName;
-        //    const v1 = this.editEmployeeSecondName;
-        //    const v2 = this.editEmployeeThirdName;
-           
-        //    var ar = [v0, v1, v2];
-        //    console.log('create');
-        //    try {
-        //        await axios.post('/Users/CreateUser', ar);
-        //    } catch (error) {
-        //        console.error('Помилка під час виклику методу CreateUser:', error);
-        //    }
-        //    this.closeAllAccordions();
-        //    this.Init();
-            
-        //},
+        
 
         toggleModal(type, index) {
 

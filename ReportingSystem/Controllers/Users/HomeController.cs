@@ -65,7 +65,8 @@ namespace ReportingSystem.Controllers.Users
                 }
                 else
                 {
-                    return Json(result);
+                    //return Json(result);
+                    return RedirectToAction("Authorize", "Home", new { result });
                 }
             }
             return Json(result);

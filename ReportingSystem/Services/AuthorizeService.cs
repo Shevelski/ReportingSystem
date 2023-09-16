@@ -72,8 +72,8 @@ namespace ReportingSystem.Services
             }
 
             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-            authorize.AuthorizeStatusModel.authorizeStatusType = Enums.AuthorizeStatus.EmailFailed;
-            authorize.AuthorizeStatusModel.authorizeStatusName = Enums.AuthorizeStatus.EmailFailed.GetDisplayName();
+            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailFailed;
+            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailFailed.GetDisplayName();
             return authorize;
         }
 
@@ -144,8 +144,8 @@ namespace ReportingSystem.Services
             }
 
             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-            authorize.AuthorizeStatusModel.authorizeStatusType = Enums.AuthorizeStatus.PasswordFailed;
-            authorize.AuthorizeStatusModel.authorizeStatusName = Enums.AuthorizeStatus.PasswordFailed.GetDisplayName();
+            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordFailed;
+            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordFailed.GetDisplayName();
             return authorize;
         }
 
