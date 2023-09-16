@@ -71,7 +71,8 @@
                             </div>
                         </div>
 
-                        <p :class="{ 'red-text': modalpositionActive }">{{ modalOperation }}</p>
+                       @* <p :class="{ 'red-text': modalpositionActive }">{{ modalOperation }}</p>*@
+                        <p>{{ modalOperation }}</p>
 
                     </div>
                     <div class="modal-footer">
@@ -135,13 +136,13 @@
             <label class="form-check-label" for="showArchive">Архівні</label>
         </div>*@
         @*---------------------------------------------------------------------------------------------------------------------*@
-        <div class="container" v-if="countfilteredPositions > 10">
+        <div class="container" v-if="countFilteredPositions > 10">
             <div class="row">
                 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
                         <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
-                        <button type="button" v-if="countfilteredPositions > 10" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
-                        <button type="button" v-if="countfilteredPositions > 15"  class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
+                        <button type="button" v-if="countFilteredPositions > 10" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
+                        <button type="button" v-if="countFilteredPositions > 15"  class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
                     </div>
                     <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
                         <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні" :style="{ visibility: pageCur !== 1 ? 'visible' : 'hidden' }"><<</button>
@@ -155,7 +156,7 @@
         <div style="margin-top: 1em;"></div>
         <div v-for="(position, index) in filteredPositions" :key="index" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + index">
-                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                <button class="accordion-button" type="button" v-on:click="getEmployeesByPosition(position.namePosition)" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
                     {{ position.namePosition }}
                 </button>
             </h2>
@@ -183,8 +184,8 @@
                                 <td style="text-align: center"><strong>ПІБ</strong></td>
                                 <td style ="text-align: center"><strong>Редагувати посаду</strong></td>
                             </tr>
-                            <tr v-for="(employee, index) in Employees" :key="index" class="accordion-item">
-                                <td style="text-align: center"><strong>getEmployeesWithPosition(position)</strong></td>
+                            <tr v-for="(employee, index) in employees" :key="index" class="accordion-item">
+                                <td style="text-align: center">{{employee.firstName}} {{employee.secondName}} {{employee.thirdName}} </td>
                                 <td class="form-group">
                                     <label class="control-label">Посада</label>
                                    @* <select class="form-select data" aria-label="Default select example"

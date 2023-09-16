@@ -1,14 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using ReportingSystem.Enums;
-using ReportingSystem.Enums.Extensions;
-using ReportingSystem.Models;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Customer;
-using ReportingSystem.Models.Project;
-using ReportingSystem.Models.User;
 using ReportingSystem.Services;
-using ReportingSystem.Utils;
 
 namespace ReportingSystem.Controllers.Functions
 {

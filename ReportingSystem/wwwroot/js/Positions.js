@@ -4,6 +4,7 @@
         customerId: '',
         companyId: '',
         employeeId: '',
+        employees:[0],
         isNewSelectedCustomer: false,
         saveCustomer: false,
         idCustomer: '',
@@ -154,6 +155,20 @@
                 }
             });
             return responsePositions.data;
+        },
+        async getEmployeesByPosition(position) {
+            
+            let response = await axios.get("/Positions/GetEmployeesByPosition", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    pos: position
+                }
+            });
+            console.log(position);
+            console.log(response.data);
+            this.employees = response.data; 
+            return response.data;
         },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;

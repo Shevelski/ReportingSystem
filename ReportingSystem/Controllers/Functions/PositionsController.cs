@@ -33,6 +33,17 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
+        
+
+        [HttpGet]
+        //Отримання списку посад компанії 
+        public async Task<IActionResult> GetEmployeesByPosition(string idCu, string idCo, string pos)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.GetEmployeesByPosition(idCu, idCo, pos);
+            return Json(result);
+        }
+
         //[HttpGet]
         ////отримати компанії з статусом актуальні вказаного замовника
         //public async Task<IActionResult> GetActualCompanies(string idCu)

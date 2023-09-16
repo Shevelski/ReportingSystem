@@ -16,6 +16,7 @@ namespace ReportingSystem.Services
         CompanyModel company = new CompanyModel();
         List<CompanyModel> companies = new List<CompanyModel>();
         List<EmployeePositionModel> positions = new List<EmployeePositionModel>();
+        List<EmployeeModel> employees = new List<EmployeeModel>();
 
 
         //Отримання списку посад компанії 
@@ -81,44 +82,78 @@ namespace ReportingSystem.Services
         }
 
 
-        ////Зберегти компанію за використання за замовчуванням 
-        //public CustomerModel? SavePermanentCompany(string idCu, string idCo)
-        //{
-        //    Guid idCompany = new Guid();
-        //    if (Guid.TryParse(idCo, out Guid result0))
-        //    {
-        //        idCompany = result0;
-        //    }
 
-        //    Guid idCustomer = new Guid();
-        //    if (Guid.TryParse(idCu, out Guid result))
-        //    {
-        //        idCustomer = result;
-        //    }
+        //отримати користувачів компанії за ролями
+        public List<EmployeeModel>? GetEmployeesByPosition(string idCu, string idCo, string pos)
+        {
+            List<EmployeeModel> employeesByPosition = new List<EmployeeModel>();
 
-        //    if (DatabaseMoq.Customers != null)
-        //    {
-        //        customers = DatabaseMoq.Customers;
-        //        if (customers != null)
-        //        {
-        //            customer = customers.First(c => c.id.Equals(idCustomer));
-        //            if (customer != null && customer.configure != null)
-        //            {
-        //                if (idCompany == Guid.Empty)
-        //                {
-        //                    customer.configure.IdSavedCompany = Guid.Empty;
-        //                    customer.configure.IsSaveCompany = false;
-        //                } else
-        //                {
-        //                    customer.configure.IdSavedCompany = idCompany;
-        //                    customer.configure.IsSaveCompany = true;
-        //                }
-        //                DatabaseMoq.UpdateJson();
-        //            }
-        //        }
-        //    }
-        //    return customer;
-        //}
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(idCu, out Guid idCustomer))
+                {
+                    var companies = customers.First(co => co.id.Equals(idCustomer)).companies;
+                    if (companies != null)
+                    {
+                        if (Guid.TryParse(idCo, out Guid idCompany))
+                        {
+                            var company = companies.First(co => co.id.Equals(idCompany));
+                            if (company != null && company.employees != null)
+                            {
+                                employees = company.employees;
+                                foreach (var employee in employees)
+                                {
+                                    if (employee.position != null && employee.position.namePosition != null && employee.position.namePosition.Equals(pos))
+                                    {
+                                        employeesByPosition.Add(employee);
+                                    }
+                                }
+                                return employeesByPosition;
+                            }
+
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
+                            //Guid idCompany = new Guid();
+                            //if (Guid.TryParse(idCo, out Guid result0))
+                            //{
+                            //    idCompany = result0;
+                            //}
+
+                            //Guid idCustomer = new Guid();
+                            //if (Guid.TryParse(idCu, out Guid result))
+                            //{
+                            //    idCustomer = result;
+                            //}
+
+                            //if (DatabaseMoq.Customers != null)
+                            //{
+                            //    customers = DatabaseMoq.Customers;
+                            //    if (customers != null)
+                            //    {
+                            //        customer = customers.First(c => c.id.Equals(idCustomer));
+                            //        if (customer != null && customer.configure != null)
+                            //        {
+                            //            if (idCompany == Guid.Empty)
+                            //            {
+                            //                customer.configure.IdSavedCompany = Guid.Empty;
+                            //                customer.configure.IsSaveCompany = false;
+                            //            } else
+                            //            {
+                            //                customer.configure.IdSavedCompany = idCompany;
+                            //                customer.configure.IsSaveCompany = true;
+                            //            }
+                            //            DatabaseMoq.UpdateJson();
+                            //        }
+                            //    }
+                            //}
+                            //return customer;
 
         ////Отримання списку компаній замовника 
         //public List<CompanyModel>? GetCompanies(string idCu)
