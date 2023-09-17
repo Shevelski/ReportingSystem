@@ -15,7 +15,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand @(path == "/" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Index">Звітна система</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -51,12 +51,34 @@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUDeveloper/Report" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Report">Звіт</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUDeveloper/Info" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Info">Власні дані</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                FL
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
+                                    <a class="nav-link @(path == "/EUDeveloper/Info" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Info">Власні дані</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(path == "/EUDeveloper/Exit" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Exit">Вихід</a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUDeveloper/Exit" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Exit">Вихід</a>
-                        </li>
+                        <div class="circle border">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    FL
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+                                    <li class="nav-item">
+                                        <a class="nav-link @(path == "/EUProjectManager/Info" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Info">Власні дані</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(path == "/EUProjectManager/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </div>
                     </ul>
                 </div>
             </div>
@@ -83,27 +105,55 @@
 </html>
 
 <style>
-    .nav-link.active {
-        text-decoration: underline;
-    }
-    .navbar-custom{
+    .circle {
+            width: 35px;
+            height: 35px;
+            background-color: #be1e1e; /* Change the background color as desired */
+            border-radius: 50%; /* Makes the div circular */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(224, 224, 224); /* Text color */
+            @* font-size: 24px; /* Font size for initials */ *@
+        }
+    .dropdown-menu{
         background-color: #7B3838;
     }
-    .navbar-nav li a {
+    .navbar-nav .dropdown .nav-link:hover{
+        color: #000;
+    }
+    .navbar{
+        background-color: #7B3838;
+    }
+    
+    .nav-link.active {
+        text-decoration: underline;
         color: #fff;
+    }
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #000000;
+        transition: all 0.3s ease-in;
+    }
+    .navbar-nav .nav-item .nav-link {
+        color: rgb(224, 224, 224);
         transition: all 0.3s ease-out;
     }
-    .navbar-brand{
+    .navbar .navbar-brand{
         color: #fff;
         transition: all 0.3s ease-out;
     }
 
-    .navbar-brand:hover {
-        color: #fffed6c9;
+    .navbar .navbar-brand:hover {
+        color: #000;
         transition: all 0.3s ease-in;
     }
+    @* .navbar-nav li a {
+        color: #fff;
+        transition: all 0.3s ease-out;
+    }
+    
     .navbar-nav .nav-link:hover {
         color: #fffed6c9;
         transition: all 0.3s ease-in;
-    }
+    } *@
 </style>

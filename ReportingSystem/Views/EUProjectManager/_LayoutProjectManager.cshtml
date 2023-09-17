@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ReportingSystem</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />
 </head>
 
@@ -37,21 +37,50 @@
                                 <a class="nav-link @(path == "/EUProjectManager/Report" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Report">Звіт</a>
                             </li>
                             <li>
-                                <div class="circle border">
-                                    <div class="dropdown">
-                                        <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            OS
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-md-start" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <div class="dropdown">
+                                    <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        FL
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-lg-end dropdown-menu-md-start" aria-labelledby="navbarDarkDropdownMenuLink">
+                                    <li class="nav-item">
+                                        <a class="nav-link @(path == "/EUProjectManager/Info" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Info">Власні дані</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(path == "/EUProjectManager/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                    </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <div class="circle border">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        OS
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
                                         <li class="nav-item">
                                             <a class="nav-link @(path == "/EUProjectManager/Info" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Info">Власні дані</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link @(path == "/EUProjectManager/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
                                         </li>
-                                        </ul>
-                                    </div>
+                                    </ul>
+                                </li>
+                            </div>
+                            <li>
+                              @* <div id="app">
+                                <button v-on:click="toggleDropdown">Toggle Dropdown</button>
+                                <div
+                                    class="dropdown"
+                                    :class="{ open: isDropdownOpen }"
+                                    :style="{ top: screenHeight > 600 ? '50px' : '50px', left: screenWidth > 600 ? '1200px' : '300px' }"
+                                >
+                                    <ul>
+                                    <li>Option 1</li>
+                                    <li>Option 2</li>
+                                    <li>Option 3</li>
+                                    </ul>
                                 </div>
+                                </div> *@
                             </li>
                         </ul>
                     </div>
@@ -74,7 +103,7 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
@@ -94,10 +123,11 @@
     .dropdown-menu{
         background-color: #5677B8;
     }
+    
     .navbar-nav .dropdown .nav-link:hover{
         color: #000;
     }
-     .navbar{
+    .navbar{
         background-color: #5677B8;
 
     }
@@ -113,19 +143,21 @@
         color: rgb(224, 224, 224);
         transition: all 0.3s ease-out;
     }
+    .navbar.navbar-brand{
+        color: #fff;
+        transition: all 0.3s ease-out;
+    } 
+    .navbar.navbar .navbar-brand:hover {
+        color: #000;
+        transition: all 0.3s ease-in;
+    }
     @* .navbar-nav li a {
         color: #fff;
         transition: all 0.3s ease-out;
     }
-    .navbar-brand{
-        color: #fff;
-        transition: all 0.3s ease-out;
-    } *@
+    *@
 
-    @* .navbar .navbar-brand:hover {
-        color: #000;
-        transition: all 0.3s ease-in;
-    } *@
+    @*  *@
     
 </style>
 
