@@ -13,6 +13,11 @@
                 }
             }
         }],
+        showSaveButton: false,
+        showSaveIndex: -1,
+        showArrayButtonSave:[],
+        tmpNamePosition: '', 
+        isEditMode: false,
         isNewSelectedCustomer: false,
         saveCustomer: false,
         idCustomer: '',
@@ -161,7 +166,8 @@
             return responsePositions.data;
         },
         async getEmployeesByPosition(position) {
-            
+            this.tmpNamePosition = position;
+            this.isEditMode = false;
             let response = await axios.get("/Positions/GetEmployeesByPosition", {
                 params: {
                     idCu: this.selectedCustomerId,
@@ -169,13 +175,20 @@
                     pos: position
                 }
             });
+            this.showArrayButtonSave.length = 0;
             //console.log(position);
             //console.log(response.data);
             this.employees = response.data; 
             return response.data;
         },
-        getSelectedPosition(event) {
+        getSelectedPosition(event,index) {
             this.selectedPosition = event.target.value;
+
+            if (this.tmpNamePosition != this.selectedPosition) {
+                this.showArrayButtonSave.push({ key: index, value: true });
+            } else {
+                this.showArrayButtonSave = this.showArrayButtonSave.filter(item => item.key !== index);
+            }
         },
         getSelectedCustomer(event) {
             this.selectedCustomerId = event.target.value;
@@ -221,54 +234,6 @@
             }
         },
 
-        //async confirmEditCompany() {
-        //    const v0 = this.filteredCompanies[this.indexCompany].id;
-        //    const v1 = this.editCompanyName;
-        //    const v2 = this.editCompanyAddress;
-        //    const v3 = this.editCompanyActions;
-        //    const v4 = this.editCompanyPhone;
-        //    const v5 = this.editCompanyEmail;
-        //    const v6 = this.customerId;
-        //    var ar = [v0, v1, v2, v3, v4, v5, v6];
-
-        //    try {
-        //        await axios.post('/Companies/EditCompany', ar);
-        //    } catch (error) {
-        //        console.error('Помилка під час виклику методу EditCompany:', error);
-        //    }
-
-        //    this.Init();
-        //    this.closeAllAccordions();
-        //},
-        //async confirmArchiveCompany() {
-        //    const v0 = this.filteredCompanies[this.indexCompany].id;
-        //    const v1 = this.customerId;
-        //    var ar = [v0, v1];
-
-        //    try {
-        //        await axios.post('/Companies/ArchiveCompany', ar);
-        //    } catch (error) {
-        //        console.error('Помилка під час виклику методу ArchiveCompany:', error);
-        //    }
-
-        //    this.Init();
-        //    this.closeAllAccordions();
-        //},
-        //async confirmDeleteCompany() {
-        //    const v0 = this.filteredCompanies[this.indexCompany].id;
-        //    const v1 = this.selectedCustomerId;
-        //    var ar = [v0, v1];
-
-        //    try {
-        //        await axios.post('/Companies/DeleteCompany', ar);
-        //    } catch (error) {
-        //        console.error('Помилка під час виклику методу DeleteCompany:', error);
-        //    }
-
-        //    this.Init();
-        //    this.closeAllAccordions();
-        //},
-
         async confirmCreatePosition() {
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
@@ -311,6 +276,27 @@
             }
             this.Init();
             this.closeAllAccordions();
+        },
+
+        async editPosition(index) {
+            const v0 = this.selectedCustomerId;
+            const v1 = this.selectedCompanyId;
+            const v2 = this.employees[index].id;
+            const v3 = this.employees[index].position.namePosition
+
+            const ar = [v0, v1, v2, v3];
+
+            try {
+                await axios.post('/Positions/EditEmployeePosition', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу EditEmployeePosition:', error);
+            }
+            this.showArrayButtonSave = this.showArrayButtonSave.filter(item => item.key !== index);
+
+            this.getEmployeesByPosition(this.tmpNamePosition);
+            this.isEditMode = true;
+            //this.Init();
+            //this.closeAllAccordions();
         },
 
         toggleModal(type, index) {

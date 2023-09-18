@@ -113,7 +113,7 @@
             "namePosition": "Адміністратор"
           },
           {
-            "namePosition": "Заступник директора 1"
+            "namePosition": "Заступник директора"
           },
           {
             "namePosition": "Економіст"
@@ -309,7 +309,7 @@
               "2017-04-28T00:00:00"
             ],
             "position": {
-              "namePosition": "Заступник директора 1"
+              "namePosition": "Заступник директора"
             },
             "rol": {
               "rolType": 4,
@@ -493,7 +493,7 @@
               "2017-02-13T00:00:00"
             ],
             "position": {
-              "namePosition": "Заступник директора 1"
+              "namePosition": "Заступник директора"
             },
             "rol": {
               "rolType": 4,
@@ -1280,6 +1280,44 @@
             "rol": {
               "rolType": 5,
               "rolName": "Адміністратор"
+            }
+          },
+          {
+            "id": "584d9a79-2a04-4139-b3fa-91aee3ff78f0",
+            "companyId": "8a722f8c-89b5-4cb6-b615-46705ae7a018",
+            "customerId": "ffbce61c-9976-44f0-a600-17308788400e",
+            "firstName": "test",
+            "secondName": "test",
+            "thirdName": "test",
+            "phoneWork": "test",
+            "phoneSelf": "1234",
+            "emailWork": "test",
+            "emailSelf": "1234",
+            "taxNumber": "1234",
+            "addressReg": "test",
+            "addressFact": "1234",
+            "photo": null,
+            "login": "test",
+            "password": "Ua02RXDm",
+            "salary": 1234.0,
+            "addSalary": 234.0,
+            "status": {
+              "employeeStatusType": 1,
+              "employeeStatusName": "Актуальний"
+            },
+            "birthDate": "2023-09-04T00:00:00",
+            "workStartDate": "2023-09-19T00:00:00",
+            "workEndDate": "0001-01-01T00:00:00",
+            "holidayDate": null,
+            "hospitalDate": null,
+            "assignmentDate": null,
+            "taketimeoffDate": null,
+            "position": {
+              "namePosition": "Заступник директора"
+            },
+            "rol": {
+              "rolType": 7,
+              "rolName": "Користувач"
             }
           }
         ],

@@ -98,13 +98,16 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
-        // видалення посади
-        public async Task<IActionResult> EditPosition([FromBody] string[] ar)
+        // редагування посади у користовуча
+        public async Task<IActionResult> EditEmployeePosition([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var result = _positionsService.EditPosition(ar);
+            var result = _positionsService.EditEmployeePosition(ar);
             return Json(result);
         }
+        
+
+
 
         //[HttpPost]
         ////змінити компанію

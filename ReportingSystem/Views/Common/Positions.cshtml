@@ -167,7 +167,7 @@
                                 <td>
                                     <div class="col">
                                         <div class="btn-group d-flex justify-content-between">
-                                            <button type="button" class="btn btn-primary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Зберегти</button>
+                                            <button type="button" class="btn btn-primary col-sm-6 ms-2" v-on:click="isEditMode = !isEditMode">Редагувати</button>
                                         </div>
                                     </div>
                                 </td>
@@ -180,7 +180,8 @@
                                 <td style="text-align: center">{{employee.firstName}} {{employee.secondName}} {{employee.thirdName}} </td>
                                 <td class="form-group">
                                     <select class="form-select data" aria-label="Default select example"
-                                            v-on:change="getSelectedPosition($event)"
+                                            v-bind:disabled="!isEditMode"
+                                            v-on:change="getSelectedPosition($event,index)"
                                             v-model="employee.position.namePosition">
                                         <option :value="employee.position.namePosition" selected>
                                             {{ employee.position.namePosition }}
@@ -189,6 +190,13 @@
                                             {{ position.namePosition }}
                                         </option>
                                     </select>
+                                </td>
+                                <td>
+                                    <div class="btn-group d-flex justify-content-between">
+                                        <button type="button" class="btn btn-primary col-sm-6 ms-2" 
+                                                v-if="showArrayButtonSave.some(item => item.key === index && item.value)"
+                                                v-on:click="editPosition(index)">Зберегти</button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

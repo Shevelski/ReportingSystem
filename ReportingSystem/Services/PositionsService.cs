@@ -17,7 +17,7 @@ namespace ReportingSystem.Services
         List<CompanyModel> companies = new List<CompanyModel>();
         List<EmployeePositionModel> positions = new List<EmployeePositionModel>();
         List<EmployeeModel> employees = new List<EmployeeModel>();
-
+        EmployeeModel employee = new EmployeeModel();
 
         //Отримання списку посад компанії 
         public List<EmployeePositionModel>? GetAllPositions(string idCu, string idCo)
@@ -209,6 +209,40 @@ namespace ReportingSystem.Services
                                 company.positions.Remove(position);
                                
                                 DatabaseMoq.UpdateJson();
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        //зміна посади
+        public EmployeeModel? EditEmployeePosition(string[] ar)
+        {
+            if (DatabaseMoq.Customers != null)
+            {
+                customers = DatabaseMoq.Customers;
+                if (Guid.TryParse(ar[0], out Guid idCustomer))
+                {
+                    var companies = customers.First(co => co.id.Equals(idCustomer)).companies;
+                    if (companies != null)
+                    {
+                        if (Guid.TryParse(ar[1], out Guid idCompany))
+                        {
+                            var company = companies.First(co => co.id.Equals(idCompany));
+                            if (company != null && company.employees != null)
+                            {
+                                employees = company.employees;
+                                if (Guid.TryParse(ar[2], out Guid idEmployee))
+                                {
+                                    employee = employees.First(em => em.id.Equals(idEmployee));
+                                    if (employee != null && employee.position != null)
+                                    {
+                                        employee.position.namePosition = ar[3];
+                                        DatabaseMoq.UpdateJson();
+                                    }
+                                } 
                             }
                         }
                     }
