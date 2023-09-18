@@ -13,8 +13,6 @@ namespace ReportingSystem.Controllers.Functions
             _positionsService = positionsService;
         }
 
-
-
         [HttpGet]
         //Отримання списку посад компанії 
         public async Task<IActionResult> GetAllPositions(string idCu, string idCo)
@@ -34,7 +32,6 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         
-
         [HttpGet]
         //Отримання списку посад компанії 
         public async Task<IActionResult> GetEmployeesByPosition(string idCu, string idCo, string pos)
@@ -82,15 +79,32 @@ namespace ReportingSystem.Controllers.Functions
         //    return Json(result);
         //}
 
-        //[HttpPost]
-        ////зберегти компанію в конфігураторі для подальшого використання
-        ////переробити на універсально для кожного користувача
-        //public async Task<IActionResult> SavePermanentCompany([FromBody] string idCu, string idCo)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _companiesService.SavePermanentCompany(idCu, idCo);
-        //    return Json(result);
-        //}
+        [HttpPost]
+        // створення нової посади
+        public async Task<IActionResult> CreatePosition([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.CreatePosition(ar);
+            return Json(result);
+        }
+
+        [HttpPost]
+        // видалення посади
+        public async Task<IActionResult> DeletePosition([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.DeletePosition(ar);
+            return Json(result);
+        }
+
+        [HttpPost]
+        // видалення посади
+        public async Task<IActionResult> EditPosition([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.EditPosition(ar);
+            return Json(result);
+        }
 
         //[HttpPost]
         ////змінити компанію
