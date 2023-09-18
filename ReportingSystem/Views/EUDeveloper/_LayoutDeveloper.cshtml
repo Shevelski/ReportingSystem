@@ -17,12 +17,11 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand @(path == "/" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Index">Звітна система</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <a class="navbar-brand main-name @(path == "/" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Index">Звітна система</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                <div class="navbar-collapse collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUDeveloper" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Index">Сповіщення</a>
@@ -51,34 +50,34 @@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUDeveloper/Report" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Report">Звіт</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                FL
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
-                                <li class="nav-item">
-                                    <a class="nav-link @(path == "/EUDeveloper/Info" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Info">Власні дані</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link @(path == "/EUDeveloper/Exit" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Exit">Вихід</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <div class="circle border">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    FL
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+                        
+                       <div id="header_dropdown" >
+                                <div v-if="windowWidth > 992">
+                                    <div class="circle border">
+                                        <li class="nav-item dropdown">
+                                            <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                II
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+                                                <li class="nav-item">
+                                                    <a class="nav-link @(path == "/EUDeveloper/Info" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Info">Власні дані</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link @(path == "/EUDeveloper/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </div>
+                                </div>
+                                <div v-else>
                                     <li class="nav-item">
-                                        <a class="nav-link @(path == "/EUProjectManager/Info" ? "active": "")" asp-area="" asp-controller="EUProjectManager" asp-action="Info">Власні дані</a>
+                                        <a class="nav-link @(path == "/EUDeveloper/Info" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Info">Власні дані</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link @(path == "/EUProjectManager/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                        <a class="nav-link @(path == "/EUDeveloper/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
                                     </li>
-                                </ul>
-                            </li>
-                        </div>
+                                </div>
+                            </div>
                     </ul>
                 </div>
             </div>
@@ -100,6 +99,7 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/Header.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
