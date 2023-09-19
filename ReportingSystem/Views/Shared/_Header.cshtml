@@ -13,7 +13,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav flex-grow-1 justify-content-end custom-header">
                     
-                    @if (User.Identity.IsAuthenticated)
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
                     <li class="nav-item">
                         <a class="nav-link  @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Admin">Admin</a>

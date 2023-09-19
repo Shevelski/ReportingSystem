@@ -54,54 +54,55 @@ namespace ReportingSystem.Services
             }
 
             var obj = employeeInput.ToString();
-            var editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
-
-            if (editedEmployee == null)
+            if (!string.IsNullOrEmpty(obj))
             {
-                return null;
-            }
-
-            var customers = DatabaseMoq.Customers;
-
-            if (customers == null || !Guid.TryParse(editedEmployee.customerId.ToString(), out Guid customerId))
-            {
-                return null;
-            }
-
-            var customer = customers.FirstOrDefault(c => c.id.Equals(customerId));
-
-            if (customer == null || customer.companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
-            {
-                return null;
-            }
-
-            var company = customer.companies.FirstOrDefault(c => c.id.Equals(companyId));
-
-            if (company == null || company.employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
-            {
-                return null;
-            }
-
-            var employee = company.employees.FirstOrDefault(e => e.id.Equals(employeeId));
-
-            if (employee != null)
-            {
-                foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
+                var editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
+                if (editedEmployee == null)
                 {
-                    var editedValue = propertyInfo.GetValue(editedEmployee);
-                    if (editedValue != null)
+                    return null;
+                }
+
+                var customers = DatabaseMoq.Customers;
+
+                if (customers == null || !Guid.TryParse(editedEmployee.customerId.ToString(), out Guid customerId))
+                {
+                    return null;
+                }
+
+                var customer = customers.FirstOrDefault(c => c.id.Equals(customerId));
+
+                if (customer == null || customer.companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
+                {
+                    return null;
+                }
+
+                var company = customer.companies.FirstOrDefault(c => c.id.Equals(companyId));
+
+                if (company == null || company.employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
+                {
+                    return null;
+                }
+
+                var employee = company.employees.FirstOrDefault(e => e.id.Equals(employeeId));
+
+                if (employee != null)
+                {
+                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
                     {
-                        var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
-                        if (employeeProperty != null)
+                        var editedValue = propertyInfo.GetValue(editedEmployee);
+                        if (editedValue != null)
                         {
-                            employeeProperty.SetValue(employee, editedValue);
+                            var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
+                            if (employeeProperty != null)
+                            {
+                                employeeProperty.SetValue(employee, editedValue);
+                            }
                         }
                     }
+                    DatabaseMoq.UpdateJson();
+                    return employee;
                 }
-                DatabaseMoq.UpdateJson();
-                return employee;
             }
-
             return null;
         }
 

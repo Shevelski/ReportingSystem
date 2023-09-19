@@ -184,7 +184,7 @@ namespace ReportingSystem.Services
                     string oldPositionName = ar[2];
                     string newPositionName = ar[3];
 
-                    EmployeePositionModel position = company.positions.FirstOrDefault(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
+                    EmployeePositionModel? position = company.positions.FirstOrDefault(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
 
                     if (position != null)
                     {
@@ -194,7 +194,11 @@ namespace ReportingSystem.Services
                         {
                             foreach (var emp in company.employees.Where(emp => emp.position != null && emp.position.namePosition != null && emp.position.namePosition.Equals(oldPositionName)))
                             {
-                                emp.position.namePosition = newPositionName;
+                                if (emp.position != null)
+                                {
+                                    emp.position.namePosition = newPositionName;
+                                }
+                                
                             }
                         }
 

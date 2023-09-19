@@ -273,7 +273,7 @@ namespace ReportingSystem.Test.Generate
                 company.positions = Positions();
                 company.rolls = DefaultEmployeeRolls.GetForEmployee();
                 company.employees = Employees(company, customer.id);
-                company.chief = company.employees.First(u => u.position.namePosition.Equals("Директор"));
+                company.chief = company.employees.First(u => u.position != null && u.position.namePosition != null && u.position.namePosition.Equals("Директор"));
 
                 company.categories = Categories();
                 //company.projects = GenerateProjects();
