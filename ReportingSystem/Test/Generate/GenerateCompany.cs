@@ -248,8 +248,8 @@ namespace ReportingSystem.Test.Generate
             }
             if (position.namePosition == positions[7] || position.namePosition == positions[8] || position.namePosition == positions[9])
             {
-                rol.rolType = EmployeeRolStatus.Administrator;
-                rol.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
+                rol.rolType = EmployeeRolStatus.User;
+                rol.rolName = EmployeeRolStatus.User.GetDisplayName();
             }
             return rol;
         }
@@ -271,9 +271,10 @@ namespace ReportingSystem.Test.Generate
                 company.statutCapital = random.Next(1000, 300000).ToString() + " UAH";
                 company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
                 company.positions = Positions();
-                company.rolls = DefaultEmployeeRolls.Get();
+                company.rolls = DefaultEmployeeRolls.GetForEmployee();
                 company.employees = Employees(company, customer.id);
                 company.chief = company.employees.First(u => u.position.namePosition.Equals("Директор"));
+
                 company.categories = Categories();
                 //company.projects = GenerateProjects();
                 return company;

@@ -19,7 +19,6 @@ namespace ReportingSystem.Utils
             userRolModel.rolType = EmployeeRolStatus.DevAdministrator;
             userRolModel.rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName();
             rolls.Add(userRolModel);
-
             userRolModel = new EmployeeRolModel();
             userRolModel.rolType = EmployeeRolStatus.Administrator;
             userRolModel.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
@@ -43,5 +42,30 @@ namespace ReportingSystem.Utils
 
             return rolls;
         }
+
+        static public List<EmployeeRolModel> GetForEmployee()
+        {
+            List<EmployeeRolModel> rolls = new List<EmployeeRolModel>();
+
+            EmployeeRolModel userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.Administrator;
+            userRolModel.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
+            rolls.Add(userRolModel);
+            userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.ProjectManager;
+            userRolModel.rolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
+            rolls.Add(userRolModel);
+            userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.CEO;
+            userRolModel.rolName = EmployeeRolStatus.CEO.GetDisplayName();
+            rolls.Add(userRolModel);
+            userRolModel = new EmployeeRolModel();
+            userRolModel.rolType = EmployeeRolStatus.User;
+            userRolModel.rolName = EmployeeRolStatus.User.GetDisplayName();
+            rolls.Add(userRolModel);
+
+            return rolls;
+        }
+
     }
 }

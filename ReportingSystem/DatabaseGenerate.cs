@@ -7,12 +7,15 @@ using ReportingSystem.Models;
 using ReportingSystem.Test.GenerateData;
 using ReportingSystem.Test.Generate;
 using System.Diagnostics;
+using ReportingSystem.Enums.Extensions;
 
 namespace ReportingSystem
 {
     public static class DatabaseMoqGenerate
     {
         public static List<CustomerModel>? Customers { get; set; }
+        public static CompanyModel? Configuration { get; set; }
+        public static List<EmployeeModel>? Administrators { get; set; }
         public static CustomerModel? customer { get; set; }
         public static List<List<EmployeeModel>>? AllUsers { get; set; }
         public static List<EmployeeModel>? Users { get; set; }
@@ -31,6 +34,47 @@ namespace ReportingSystem
 
         static DatabaseMoqGenerate()
         {
+            Administrators = new List<EmployeeModel>()
+            {
+                new EmployeeModel()
+                {
+                    id = Guid.NewGuid(),
+                    firstName = "Сергій",
+                    secondName = "Наку",
+                    thirdName = "------",
+                    phoneWork = "+380666666666",
+                    emailWork = "serhii@gmail.ua",
+                    photo = "",
+                    login = "serhii",
+                    password = "12345",
+                    rol = new EmployeeRolModel()
+                    {
+                        rolType = Enums.EmployeeRolStatus.Developer,
+                        rolName = Enums.EmployeeRolStatus.Developer.GetDisplayName()
+                    }
+                },
+                new EmployeeModel()
+                {
+                    id = Guid.NewGuid(),
+                    firstName = "Олександр",
+                    secondName = "Шевельський",
+                    thirdName = "------------",
+                    phoneWork = "+380666666666",
+                    emailWork = "alex@gmail.ua",
+                    photo = "",
+                    login = "alex",
+                    password = "12345",
+                    rol = new EmployeeRolModel()
+                    {
+                        rolType = Enums.EmployeeRolStatus.Developer,
+                        rolName = Enums.EmployeeRolStatus.Developer.GetDisplayName()
+                    }
+                }
+            };
+            Debug.WriteLine($"Admins added. All is 2");
+
+            CompanyModel configuration = new CompanyModel();
+
             Customers = new List<CustomerModel>();
             Companies = new List<CompanyModel>();
             Users = new List<EmployeeModel>();
@@ -79,7 +123,7 @@ namespace ReportingSystem
                 return companies;
             }
 
-            int countCustomer = random.Next(2, 15);
+            int countCustomer = random.Next(2, 3);
             for (int i = 0; i < countCustomer; i++)
             {
                 var customer = GenerateRandomCustomer();

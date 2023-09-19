@@ -81,26 +81,12 @@
             <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
             </select>
-
-            @*<div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCu" v-on:change="SavePermanentCustomer()" v-model="saveCustomer">
-                <label class="form-check-label" for="flexCheckIndeterminateCu">
-                    Запам'ятати замовника
-                </label>
-            </div>*@
         </div>
 
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
             <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
                 <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
             </select>
-
-            @*<div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCo" v-on:change="SavePermanentposition()" v-model="saveposition">
-                <label class="form-check-label" for="flexCheckIndeterminateCo">
-                    Запам'ятати компанію
-                </label>
-            </div>*@
         </div>
         
         <div class="row mb-3">

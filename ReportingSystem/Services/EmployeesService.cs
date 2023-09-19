@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bogus.DataSets;
+using Newtonsoft.Json;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
@@ -9,272 +10,341 @@ namespace ReportingSystem.Services
 {
     public class EmployeesService
     {
-        List<CustomerModel>? customers = DatabaseMoq.Customers;
-        CustomerModel? customer = new CustomerModel();
-        CompanyModel? company = new CompanyModel();
-        List<CompanyModel>? companies = new List<CompanyModel>();
-        EmployeeModel? employee = new EmployeeModel();
-        List<EmployeeModel>? employees = new List<EmployeeModel>();
 
         public List<EmployeeModel>? GetEmployees(string idCu, string idCo)
         {
+            var customers = DatabaseMoq.Customers;
 
-            if (customers != null && Guid.TryParse(idCu, out Guid idCustomer))
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
             {
-                customer = customers.First(cu => cu.id.Equals(idCustomer));
-                companies = customer.companies;
-                
-                if (companies != null && Guid.TryParse(idCo, out Guid companyIdGuid))
-                {
-                    company = companies.First(company => company.id == companyIdGuid);
-                    if (company != null)
-                    {
-                        return company.employees;
-                    }
-                }
-                else
-                {
-                    if (companies != null)
-                    {
-                        company = companies[0];
-                        return company.employees;
-                    }
-                }
+                return null;
             }
-            return null;
+
+            var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
+
+            if (customer == null || customer.companies == null)
+            {
+                return null;
+            }
+
+            var companies = customer.companies;
+
+            if (companies == null || !Guid.TryParse(idCo, out Guid idCompany))
+            {
+                return null;
+            }
+            
+            var company = companies.FirstOrDefault(comp => comp.id.Equals(idCompany));
+            
+            if (company == null)
+            {
+                return null;
+            }
+
+            return company.employees;
         }
+
 
         //Редагування співробітника
         public EmployeeModel? EditEmployee(Object employeeInput)
         {
-            if (employeeInput != null)
+            if (employeeInput == null)
             {
-                var obj = employeeInput.ToString();
-                EmployeeModel? editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
+                return null;
+            }
 
-                if (editedEmployee != null)
+            var obj = employeeInput.ToString();
+            var editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
+
+            if (editedEmployee == null)
+            {
+                return null;
+            }
+
+            var customers = DatabaseMoq.Customers;
+
+            if (customers == null || !Guid.TryParse(editedEmployee.customerId.ToString(), out Guid customerId))
+            {
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(c => c.id.Equals(customerId));
+
+            if (customer == null || customer.companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
+            {
+                return null;
+            }
+
+            var company = customer.companies.FirstOrDefault(c => c.id.Equals(companyId));
+
+            if (company == null || company.employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
+            {
+                return null;
+            }
+
+            var employee = company.employees.FirstOrDefault(e => e.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
                 {
-                    customers = DatabaseMoq.Customers;
-                    if (customers != null)
+                    var editedValue = propertyInfo.GetValue(editedEmployee);
+                    if (editedValue != null)
                     {
-                        customer = customers.First(c => c.id.Equals(editedEmployee.customerId));
-                        if (customer != null)
+                        var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
+                        if (employeeProperty != null)
                         {
-                            companies = customer.companies;
-                            if (companies != null)
-                            {
-                                company = companies.First(c => c.id.Equals(editedEmployee.companyId));
-                                if (company.employees != null)
-                                {
-                                    employee = company.employees.First(e => e.id.Equals(editedEmployee.id));
-
-                                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
-                                    {
-                                        var editedValue = propertyInfo.GetValue(editedEmployee);
-                                        if (editedValue != null)
-                                        {
-                                            var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
-                                            if (employeeProperty != null)
-                                            {
-                                                employeeProperty.SetValue(employee, editedValue);
-                                            }
-                                        }
-                                    }
-                                    DatabaseMoq.UpdateJson();
-                                    return (employee);
-                                }
-                            }
+                            employeeProperty.SetValue(employee, editedValue);
                         }
-                        return employee;
                     }
                 }
+                DatabaseMoq.UpdateJson();
+                return employee;
             }
+
             return null;
         }
+
 
         // Архівування співробітників
         public EmployeeModel? ArchiveEmployee(string idCu, string idCo, string idEm)
         {
-            customers = DatabaseMoq.Customers;
-            if (customers != null && Guid.TryParse(idCu, out Guid customerId))
+            var customers = DatabaseMoq.Customers;
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid customerId))
             {
-                
-                customer = customers.First(cu => cu.id.Equals(customerId));
-                if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
-                {
-                    company = customer.companies.First(co => co.id.Equals(companyId));
-                    if (company.employees != null && Guid.TryParse(idEm, out Guid employeeId))
-                    {
-                        employee = company.employees.First(em => em.id.Equals(employeeId));
-                        if (employee != null)
-                        {
-                            employee.status = new EmployeeStatusModel
-                            {
-                                employeeStatusType = EmployeeStatus.Archive,
-                                employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
-                            };
-                            DatabaseMoq.UpdateJson();
-                            return (employee);
-                        }
-                    }
-                }
+                return null;
             }
+
+            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+
+            if (customer == null || customer.companies == null || !Guid.TryParse(idCo, out Guid companyId))
+            {
+                return null;
+            }
+
+            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+
+            if (company == null || company.employees == null || !Guid.TryParse(idEm, out Guid employeeId))
+            {
+                return null;
+            }
+
+            var employee = company.employees.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Archive,
+                    employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
+                };
+                DatabaseMoq.UpdateJson();
+                return employee;
+            }
+
             return null;
         }
 
-        // Перевірка на доступність email
-        public bool? IsBusyEmail(string email)
-        {
-            customers = DatabaseMoq.Customers;
 
-            if (customers != null)
+        // Перевірка на доступність email
+        public bool IsBusyEmail(string email)
+        {
+
+            var administrators = DatabaseMoq.Administrators;
+
+            if (administrators == null)
             {
-                foreach (CustomerModel customer in customers)
+                return false;
+            }
+
+            foreach (var administrator in administrators)
+            {
+                if (administrator.emailWork != null && administrator.emailWork.ToLower() == email.ToLower())
                 {
-                    if (customer.companies != null)
+                    return true;
+                }
+            }
+
+            var customers = DatabaseMoq.Customers;
+
+            if (customers == null)
+            {
+                return false;
+            }
+
+            foreach (var customer in customers)
+            {
+                if (customer.email != null && customer.email.ToLower() == email.ToLower())
+                {
+                    return true;
+                }
+
+                if (customer.companies != null)
+                {
+                    foreach (var company in customer.companies)
                     {
-                        if (customer.email != null && customer.email.ToLower().Equals(email.ToLower()))
+                        if (company.employees != null)
                         {
-                            return true;
-                        }
-                        
-                        companies = customer.companies;
-                        foreach(CompanyModel company in companies)
-                        {
-                            if (company.employees != null)
+                            foreach (var employee in company.employees)
                             {
-                                employees = company.employees;
-                                foreach(EmployeeModel employee in employees)
+                                if (employee.emailWork != null && employee.emailWork.ToLower() == email.ToLower())
                                 {
-                                   if (employee.emailWork != null && employee.emailWork.ToLower().Equals(email.ToLower()))
-                                    {
-                                        return true;
-                                    }
+                                    return true;
                                 }
                             }
                         }
                     }
                 }
             }
+
             return false;
         }
+
 
         // Додавання співробітників
         public EmployeeModel? CreateEmployee(string[] ar)
         {
-            customers = DatabaseMoq.Customers;
-            if (customers != null && Guid.TryParse(ar[0], out Guid customerId))
+            var customers = DatabaseMoq.Customers;
+
+            if (customers == null || ar.Length != 21 || !Guid.TryParse(ar[0], out Guid customerId) || !Guid.TryParse(ar[1], out Guid companyId))
             {
-                customer = customers.First(cu => cu.id.Equals(customerId));
-                if (customer.companies != null && Guid.TryParse(ar[1], out Guid companyId))
-                {
-                    company = customer.companies.First(co => co.id.Equals(companyId));
-                    
-                    if (company.employees != null)
-                    {
-                        EmployeeRolStatus rolTypeVar = EmployeeRolStatus.User;
-                        if (Enum.TryParse(ar[10], out EmployeeRolStatus rolType))
-                        {
-                            rolTypeVar = rolType;
-                        }
-
-
-                        employee = new EmployeeModel
-                        {
-                            id = Guid.NewGuid(),
-                            customerId = customerId,
-                            companyId = companyId,
-                            firstName = ar[2],
-                            secondName = ar[3],
-                            thirdName = ar[4],
-                            birthDate = DateTime.Parse(ar[5]),
-                            workStartDate = DateTime.Parse(ar[6]),
-                            position = new EmployeePositionModel
-                            {
-                                namePosition = ar[7]
-                            },
-                            login = ar[8],
-                            rol = new Models.EmployeeRolModel
-                            {
-                                rolName = ar[9],
-                                rolType = rolTypeVar,
-                            },
-                            password = ar[11],
-                            phoneWork = ar[12],
-                            phoneSelf = ar[13],
-                            emailWork = ar[14],
-                            emailSelf = ar[15],
-                            addressReg = ar[16],
-                            addressFact = ar[17],
-                            salary = double.Parse(ar[18]),
-                            taxNumber = ar[19],
-                            addSalary = double.Parse(ar[20]),
-                            status = new EmployeeStatusModel
-                            {
-                                employeeStatusType = EmployeeStatus.Actual,
-                                employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
-                            },
-                        };
-                        company.employees.Add(employee);
-                        DatabaseMoq.UpdateJson();
-                        return (employee); 
-                    }
-                }
+                return null;
             }
-            return null;
+
+            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+
+            if (customer == null || customer.companies == null)
+            {
+                return null;
+            }
+
+            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+
+            if (company == null || company.employees == null)
+            {
+                return null;
+            }
+
+            if (!Enum.TryParse(ar[10], out EmployeeRolStatus rolType))
+            {
+                rolType = EmployeeRolStatus.User;
+            }
+
+            var employee = new EmployeeModel
+            {
+                id = Guid.NewGuid(),
+                customerId = customerId,
+                companyId = companyId,
+                firstName = ar[2],
+                secondName = ar[3],
+                thirdName = ar[4],
+                birthDate = DateTime.Parse(ar[5]),
+                workStartDate = DateTime.Parse(ar[6]),
+                position = new EmployeePositionModel
+                {
+                    namePosition = ar[7]
+                },
+                login = ar[8],
+                rol = new Models.EmployeeRolModel
+                {
+                    rolName = ar[9],
+                    rolType = rolType,
+                },
+                password = ar[11],
+                phoneWork = ar[12],
+                phoneSelf = ar[13],
+                emailWork = ar[14],
+                emailSelf = ar[15],
+                addressReg = ar[16],
+                addressFact = ar[17],
+                salary = double.TryParse(ar[18], out double parsedSalary) ? parsedSalary : 0.0,
+                taxNumber = ar[19],
+                addSalary = double.TryParse(ar[20], out double parsedAddSalary) ? parsedAddSalary : 0.0,
+                status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Actual,
+                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                },
+            };
+
+            company.employees.Add(employee);
+            DatabaseMoq.UpdateJson();
+            return employee;
         }
 
-        
 
         // Відновлення співробітників з архіву
         public EmployeeModel? FromArchiveEmployee(string idCu, string idCo, string idEm)
         {
-            customers = DatabaseMoq.Customers;
-            if (customers != null && Guid.TryParse(idCu, out Guid customerId))
+            var customers = DatabaseMoq.Customers;
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid customerId))
             {
-                customer = customers.First(cu => cu.id.Equals(customerId));
-                if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+
+            if (customer == null || customer.companies == null || !Guid.TryParse(idCo, out Guid companyId))
+            {
+                return null;
+            }
+
+            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+
+            if (company == null || company.employees == null || !Guid.TryParse(idEm, out Guid employeeId))
+            {
+                return null;
+            }
+
+            var employee = company.employees.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
                 {
-                    company = customer.companies.First(co => co.id.Equals(companyId));
-                    if (company.employees != null && Guid.TryParse(idEm, out Guid employeeId))
-                    {
-                        employee = company.employees.First(em => em.id.Equals(employeeId));
-                        if (employee != null)
-                        {
-                            employee.status = new EmployeeStatusModel
-                            {
-                                employeeStatusType = Enums.EmployeeStatus.Actual,
-                                employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
-                            };
-                            DatabaseMoq.UpdateJson();
-                            return (employee);
-                        }
-                        
-                    }
-                }
+                    employeeStatusType = Enums.EmployeeStatus.Actual,
+                    employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
+                };
+                DatabaseMoq.UpdateJson();
+                return employee;
             }
             return null;
         }
-        
+
+
         // Видалення співробітників з системи
         public void DeleteEmployee(string idCu, string idCo, string idEm)
         {
-            customers = DatabaseMoq.Customers;
-            if (customers != null && Guid.TryParse(idCu, out Guid customerId))
-            {
-                customer = customers.First(cu => cu.id.Equals(customerId));
-                if (customer.companies != null && Guid.TryParse(idCo, out Guid companyId))
-                {
-                    company = customer.companies.First(co => co.id.Equals(companyId));
-                    if (company.employees != null && Guid.TryParse(idEm, out Guid employeeId))
-                    {
-                        employees = company.employees;
+            var customers = DatabaseMoq.Customers;
 
-                        employee = company.employees.First(em => em.id.Equals(employeeId));
-                        employees.Remove(employee);
-                        DatabaseMoq.UpdateJson();
-                    }
-                }
+            if (customers == null || !Guid.TryParse(idCu, out Guid customerId))
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+
+            if (customer == null || customer.companies == null || !Guid.TryParse(idCo, out Guid companyId))
+            {
+                return;
+            }
+
+            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+
+            if (company == null || company.employees == null || !Guid.TryParse(idEm, out Guid employeeId))
+            {
+                return;
+            }
+
+            var employees = company.employees;
+            var employee = employees.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employees.Remove(employee);
+                DatabaseMoq.UpdateJson();
             }
         }
     }

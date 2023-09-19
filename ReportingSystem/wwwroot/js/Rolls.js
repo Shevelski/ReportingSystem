@@ -1,22 +1,15 @@
 ﻿new Vue({
     el: '#Rolls',
     data: {
-        modalPositionActive:'',
-        editPositionName:'',
+        modalRolActive:'',
         customerId: '',
         companyId: '',
         employeeId: '',
-        employees: [{
-            position: {
-                position: {
-                    namePosition: ''
-                }
-            }
-        }],
+        employees: [0],
         showSaveButton: false,
         showSaveIndex: -1,
         showArrayButtonSave:[],
-        tmpNamePosition: '', 
+        tmpNameRol: '', 
         isEditMode: false,
         isNewSelectedCustomer: false,
         saveCustomer: false,
@@ -24,7 +17,7 @@
         isNewSelectedCompany: false,
         saveCompany: false,
         idCompany: '',
-        selectedPosition:'',
+        selectedRol:'',
         selectedCustomerId: 0,
         selectedCustomerIdCheck: 0,
         selectedCompanyId: 0,
@@ -50,7 +43,10 @@
         editCompanyEmail: '',
         newCompany: [0],
         companies: [0],
-        positions: [0]
+        rolls: [{
+            rolName: '',
+            rolType: -1
+        }]
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -60,22 +56,22 @@
         this.Init();
     },
     computed: {
-        countFilteredPositions() {
+        countFilteredRolls() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.positions.filter((position) => {
-                const nameMatches = !nameFilter || position.namePosition.toLowerCase().includes(nameFilter);
+            let filteredList = this.rolls.filter((rol) => {
+                const nameMatches = !nameFilter || rol.rolName.toLowerCase().includes(nameFilter);
                 
                 return nameMatches;
             });
 
             return filteredList.length;
         },
-        filteredPositions() {
+        filteredRolls() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.positions.filter((position) => {
-                const nameMatches = !nameFilter || position.namePosition.toLowerCase().includes(nameFilter);
+            let filteredList = this.rolls.filter((rol) => {
+                const nameMatches = !nameFilter || rol.rolName.toLowerCase().includes(nameFilter);
                 return nameMatches;
             });
 
@@ -89,6 +85,8 @@
     methods: {
         async Init() {
 
+            console.log(this.rol);
+
             if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
                 await this.updateCustomers();
                 await this.updateCompanies();
@@ -101,25 +99,14 @@
                 this.selectedCustomerId = this.customerId;
                 this.selectedCompanyId = this.companyId;
             }
-            
-            this.positions = await this.getUniqPositions();
-            console.log(this.positions);
 
-            this.pageCount = Math.ceil(this.countFilteredPositions / this.itemsPerPage);
+            
+            this.rolls = await this.getAllRolls();
+            console.log(this.rolls);
+
+            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
         },
-        isPositionUniq() {
-            if (this.editPositionName !== null) {
-                this.modalPositionActive = false;
-                for (var position of this.positions) {
-                    if (this.editPositionName === position.namePosition) {
-                        this.modalPositionActive = true;
-                        this.modalOperation = 'Посада вже існує';
-                        break;
-                    }
-                    this.modalOperation = 'Ви впевнені, що введена посада - коректна? '
-                }
-            }
-        },
+        
         async updateCompanies() {
             let responseCompanies = '';
             responseCompanies = await axios.get("/Companies/GetCompanies", {
@@ -137,54 +124,49 @@
             let responseCustomers = await axios.get("/Customers/GetAllLicence");
             this.customers = responseCustomers.data;
 
-            if (!this.IsNewSelectedCustomer) {
-                var ar = await axios.get("/Customers/CheckSave", {
-                    params: {
-                        idCu: this.customerId,
-                    }
-                });
-                this.selectedCustomerId = ar.data;
-                if (ar.data == '00000000-0000-0000-0000-000000000000') {
-                    this.saveCustomer = false;
-                    this.selectedCustomerId = this.customers[0].id;
-                } else {
-                    this.saveCustomer = true;
-                    this.selectedCustomerId = ar.data;
-                    this.selectedCustomerIdCheck = ar.data;
-                }
-                this.customerId = this.selectedCustomerId;
-                this.IsNewSelectedCustomer = true;
+            if (this.selectedCustomerId == 0) {
+                this.selectedCustomerId = this.customers[0].id;
             }
         },
-        async getUniqPositions() {
-            let responsePositions = await axios.get("/Positions/GetUniqPositions", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
-            return responsePositions.data;
-        },
-        async getEmployeesByPosition(position) {
-            this.tmpNamePosition = position;
-            this.isEditMode = false;
-            let response = await axios.get("/Positions/GetEmployeesByPosition", {
+        async getAllRolls() {
+
+            if (this.selectedCustomerId == 0) {
+                this.selectedCustomerId = this.customers[0].id;
+            }
+
+            if (this.selectedCompanyId == 0) {
+                this.selectedCompanyId = this.companies[0].id;
+            }
+
+            let responseRolls = await axios.get("/Rolls/GetAllRolls", {
                 params: {
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId,
-                    pos: position
+                    idEm: this.employeeId,
+                }
+            });
+            return responseRolls.data;
+        },
+        async getEmployeesByRol(rol) {
+            this.tmpNameRol = rol;
+            this.isEditMode = false;
+            let response = await axios.get("/Rolls/GetEmployeesByRoll", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    rol: rol
                 }
             });
             this.showArrayButtonSave.length = 0;
-            //console.log(position);
-            //console.log(response.data);
-            this.employees = response.data; 
+           
+            this.employees = response.data;
+            console.log(this.employees);
             return response.data;
         },
-        getSelectedPosition(event,index) {
-            this.selectedPosition = event.target.value;
+        getSelectedRol(event,index) {
+            this.selectedRol = event.target.value;
 
-            if (this.tmpNamePosition != this.selectedPosition) {
+            if (this.tmpNameRol != this.selectedRol) {
                 this.showArrayButtonSave.push({ key: index, value: true });
             } else {
                 this.showArrayButtonSave = this.showArrayButtonSave.filter(item => item.key !== index);
@@ -214,10 +196,10 @@
         },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
-            this.pageCount = Math.ceil(this.countFilteredPositions / this.itemsPerPage);
+            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
         },
         nextBatch() {
-            this.pageCount = Math.ceil(this.countFilteredPositions / this.itemsPerPage);
+            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
 
             if (this.pageCur < this.pageCount) {
                 this.pageCur++;
@@ -233,106 +215,28 @@
                 this.pageCur = 1;
             }
         },
-
-        async confirmCreatePosition() {
-            const v0 = this.selectedCustomerId;
-            const v1 = this.selectedCompanyId;
-            const v2 = this.editPositionName;
-            const ar = [v0, v1, v2]; 
-            try {
-                await axios.post('/Positions/CreatePosition', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу CreatePosition:', error);
-            }
-            this.Init();
-            this.closeAllAccordions();
-        },
-
-        async confirmEditPosition() {
-            const v0 = this.selectedCustomerId;
-            const v1 = this.selectedCompanyId;
-            const v2 = this.filteredPositions[this.indexPosition].namePosition;
-            const v3 = this.editPositionName;
-            const ar = [v0, v1, v2, v3];
-
-            try {
-                await axios.post('/Positions/EditPosition', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу EditPosition:', error);
-            }
-            this.Init();
-            this.closeAllAccordions();
-        },
-
-        async confirmDeletePosition() {
-            const v0 = this.selectedCustomerId;
-            const v1 = this.selectedCompanyId;
-            const v2 = this.editPositionName;
-            const ar = [v0, v1, v2];
-            try {
-                await axios.post('/Positions/DeletePosition', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу DeletePosition:', error);
-            }
-            this.Init();
-            this.closeAllAccordions();
-        },
-
-        async editPosition(index) {
+        async editRol(index) {
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
             const v2 = this.employees[index].id;
-            const v3 = this.employees[index].position.namePosition
+            const v3 = this.employees[index].rol.rolName;
 
             const ar = [v0, v1, v2, v3];
 
             try {
-                await axios.post('/Positions/EditEmployeePosition', ar);
+                await axios.post('/Rolls/EditEmployeeRol', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу EditEmployeePosition:', error);
+                console.error('Помилка під час виклику методу EditEmployeeRol:', error);
             }
             this.showArrayButtonSave = this.showArrayButtonSave.filter(item => item.key !== index);
 
-            this.getEmployeesByPosition(this.tmpNamePosition);
+            this.getEmployeesByRol(this.tmpNameRol);
             this.isEditMode = true;
-            //this.Init();
-            //this.closeAllAccordions();
+            this.isEditMode = true;
         },
 
-        toggleModal(type, index) {
-
-            this.modalType = type;
-            this.indexPosition = index;
-
-            if (type === 1) {
-                this.modalCompanyActive = false;
-                this.modalOperation = 'Ви впевнені, що хочете додати нову посаду ' + this.modalName + ' ?';
-                this.modalTitle = 'Додавання нової посади';
-                this.editPositionName = this.modalName;
-            }
-            if (type === 2) {
-                this.editPositionName = this.filteredPositions[index].namePosition;
-                this.modalName = this.filteredPositions[index].namePosition;
-                this.modalCompanyActive = false;
-                this.modalOperation = 'Ви впевнені, що хочете перейменувати посаду ' + this.modalName + ' ?';
-                this.modalTitle = 'Перейменування посади';
-                this.editPositionName = this.modalName;
-            }
-            
-            if (type === 4) {
-                this.modalName = this.filteredPositions[index].namePosition;
-                this.editPositionName = this.filteredPositions[index].namePosition;
-                this.modalPositionActive = this.employees.length > 0;
-                if (!this.modalPositionActive) {
-                    this.modalOperation = 'Ви впевнені, що хочете видалити посаду ' + this.modalName + ' ?';
-                } else {
-                    this.modalOperation = 'Співробітники займають дану позицію - ' + this.modalName + '. Необхідно перевести співробітників на інші посади або звільнити співробітників.';
-                }
-                this.modalTitle = 'Видалення посади';
-            }
-        },
         closeAllAccordions() {
-            this.pageCount = Math.ceil(this.countFilteredPositions / this.itemsPerPage);
+            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
             const accordionItems = document.querySelectorAll(".accordion-collapse");
             accordionItems.forEach(item => {
                 item.classList.remove("show");

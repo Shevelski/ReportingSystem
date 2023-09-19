@@ -189,23 +189,8 @@ new Vue({
             let responseCustomers = await axios.get("/Customers/GetAllLicence");
             this.customers = responseCustomers.data;
 
-            if (!this.IsNewSelectedCustomer) {
-                var ar = await axios.get("/Customers/CheckSave", {
-                    params: {
-                        idCu: this.customerId,
-                    }
-                });
-                this.selectedCustomerId = ar.data;
-                if (ar.data == '00000000-0000-0000-0000-000000000000') {
-                    this.saveCustomer = false;
-                    this.selectedCustomerId = this.customers[0].id;
-                } else {
-                    this.saveCustomer = true;
-                    this.selectedCustomerId = ar.data;
-                    this.selectedCustomerIdCheck = ar.data;
-                }
-                this.customerId = this.selectedCustomerId;
-                this.IsNewSelectedCustomer = true;
+            if (this.selectedCustomerId == 0) {
+                this.selectedCustomerId = this.customers[0].id;
             }
         },
         isFormEmpty() {

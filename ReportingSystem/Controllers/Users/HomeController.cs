@@ -20,9 +20,9 @@ namespace ReportingSystem.Controllers.Users
         }
 
 
-        public IActionResult Authorize(bool authorizeOK)
+        public IActionResult Authorize()
         {
-            //var a = DatabaseMoq.Customers;
+            var a = DatabaseMoq.Customers;
             return View();
         }
 

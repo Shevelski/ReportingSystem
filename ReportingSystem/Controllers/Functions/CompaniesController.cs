@@ -35,15 +35,15 @@ namespace ReportingSystem.Controllers.Functions
         }
 
 
-        [HttpGet]
-        //перевірка збереженої компанії в конфігурації 
-        //переробити на універсально для кожного користувача
-        public async Task<IActionResult> CheckSave(string idCu)
-        {
-            await Task.Delay(10);
-            var result = _companiesService.CheckSave(idCu);
-            return Json(result);
-        }
+        //[HttpGet]
+        ////перевірка збереженої компанії в конфігурації 
+        ////переробити на універсально для кожного користувача
+        //public async Task<IActionResult> CheckSave(string idCu)
+        //{
+        //    await Task.Delay(10);
+        //    var result = _companiesService.CheckSave(idCu);
+        //    return Json(result);
+        //}
 
         //отримати посади вибраної компанії вибраного замовника
         //[HttpGet]
@@ -63,15 +63,15 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
-        [HttpPost]
-        //зберегти компанію в конфігураторі для подальшого використання
-        //переробити на універсально для кожного користувача
-        public async Task<IActionResult> SavePermanentCompany([FromBody] string idCu, string idCo)
-        {
-            await Task.Delay(10);
-            var result = _companiesService.SavePermanentCompany(idCu, idCo);
-            return Json(result);
-        }
+        //[HttpPost]
+        ////зберегти компанію в конфігураторі для подальшого використання
+        ////переробити на універсально для кожного користувача
+        //public async Task<IActionResult> SavePermanentCompany([FromBody] string idCu, string idCo)
+        //{
+        //    await Task.Delay(10);
+        //    var result = _companiesService.SavePermanentCompany(idCu, idCo);
+        //    return Json(result);
+        //}
 
         [HttpPost]
         //змінити компанію

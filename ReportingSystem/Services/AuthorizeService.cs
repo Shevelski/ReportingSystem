@@ -13,6 +13,7 @@ namespace ReportingSystem.Services
     {
         CustomerModel customer = new CustomerModel();
         List<CustomerModel> customers = new List<CustomerModel>();
+        List<EmployeeModel> administrators = new List<EmployeeModel>();
         CompanyModel company = new CompanyModel();
         List<CompanyModel> companies = new List<CompanyModel>();
         EmployeeModel employee = new EmployeeModel();
@@ -24,6 +25,23 @@ namespace ReportingSystem.Services
         public AuthorizeModel? CheckEmail(string email)
         {
             AuthorizeModel? result = new AuthorizeModel();
+
+            if (DatabaseMoq.Administrators != null)
+            {
+                administrators = DatabaseMoq.Administrators;
+                foreach (var administrator in administrators)
+                {
+                    if (administrator.emailWork != null && administrator.emailWork.ToLower().Equals(email.ToLower()))
+                    {
+                        authorize.Email = administrator.emailWork;
+                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
+                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                        authorize.Role = administrator.rol;
+                        return authorize;
+                    }
+                }
+            }
 
             if (DatabaseMoq.Customers != null)
             {
@@ -56,9 +74,9 @@ namespace ReportingSystem.Services
                                     {
                                         authorize.Email = employee.emailWork;
                                         authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                                        authorize.AuthorizeStatusModel.authorizeStatusType = Enums.AuthorizeStatus.EmailOk;
-                                        authorize.AuthorizeStatusModel.authorizeStatusName = Enums.AuthorizeStatus.EmailOk.GetDisplayName();
-                                        authorize.Role = new Models.EmployeeRolModel();
+                                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
+                                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                                        authorize.Role = new EmployeeRolModel();
                                         authorize.Role = employee.rol;
                                         return authorize;
                                     }
@@ -78,6 +96,24 @@ namespace ReportingSystem.Services
         //перевірка пароля для входу
         public AuthorizeModel? CheckPassword(string email, string password)
         {
+            if (DatabaseMoq.Administrators != null)
+            {
+                administrators = DatabaseMoq.Administrators;
+                foreach (var administrator in administrators)
+                {
+                    if (administrator.password != null && administrator.password.ToLower().Equals(password.ToLower()))
+                    {
+                        authorize.Email = administrator.emailWork;
+                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                        authorize.Role = administrator.rol;
+                        authorize.Employee = administrator;
+                        return authorize;
+                    }
+                }
+            }
+
             if (DatabaseMoq.Customers != null)
             {
                 customers = DatabaseMoq.Customers;

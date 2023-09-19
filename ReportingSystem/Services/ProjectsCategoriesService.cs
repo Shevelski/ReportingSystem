@@ -25,12 +25,6 @@ namespace ReportingSystem.Services
             return ar;
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetCategories()
-        //{
-        //    await Task.Delay(10);
-        //    return Json(DatabaseMoq.ProjectsCategories);
-        //}
-
+      
     }
 }
