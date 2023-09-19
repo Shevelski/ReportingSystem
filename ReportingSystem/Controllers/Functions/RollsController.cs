@@ -4,13 +4,13 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class PositionsController : Controller
+    public class RollsController : Controller
     {
-        private readonly PositionsService _positionsService;
+        private readonly RollsService _rollsService;
 
-        public PositionsController(PositionsService positionsService)
+        public RollsController(RollsService rollsService)
         {
-            _positionsService = positionsService;
+            _rollsService = rollsService;
         }
 
         [HttpGet]
@@ -18,7 +18,7 @@ namespace ReportingSystem.Controllers.Functions
         public async Task<IActionResult> GetAllPositions(string idCu, string idCo)
         {
             await Task.Delay(10);
-            var result = _positionsService.GetAllPositions(idCu, idCo);
+            var result = _rollsService.GetAllPositions(idCu, idCo);
             return Json(result);
         }
 
@@ -27,7 +27,7 @@ namespace ReportingSystem.Controllers.Functions
         public async Task<IActionResult> GetUniqPositions(string idCu, string idCo)
         {
             await Task.Delay(10);
-            var result = _positionsService.GetUniqPositions(idCu, idCo);
+            var result = _rollsService.GetUniqPositions(idCu, idCo);
             return Json(result);
         }
 
@@ -37,17 +37,17 @@ namespace ReportingSystem.Controllers.Functions
         public async Task<IActionResult> GetEmployeesByPosition(string idCu, string idCo, string pos)
         {
             await Task.Delay(10);
-            var result = _positionsService.GetEmployeesByPosition(idCu, idCo, pos);
+            var result = _rollsService.GetEmployeesByPosition(idCu, idCo, pos);
             return Json(result);
         }
-
+       
 
         [HttpPost]
         // створення нової посади
         public async Task<IActionResult> CreatePosition([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var result = _positionsService.CreatePosition(ar);
+            var result = _rollsService.CreatePosition(ar);
             return Json(result);
         }
 
@@ -56,7 +56,7 @@ namespace ReportingSystem.Controllers.Functions
         public async Task<IActionResult> DeletePosition([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var result = _positionsService.DeletePosition(ar);
+            var result = _rollsService.DeletePosition(ar);
             return Json(result);
         }
 
@@ -65,11 +65,9 @@ namespace ReportingSystem.Controllers.Functions
         public async Task<IActionResult> EditEmployeePosition([FromBody] string[] ar)
         {
             await Task.Delay(10);
-            var result = _positionsService.EditEmployeePosition(ar);
+            var result = _rollsService.EditEmployeePosition(ar);
             return Json(result);
         }
         
-
-
     }
 }

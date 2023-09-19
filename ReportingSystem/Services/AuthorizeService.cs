@@ -1,5 +1,4 @@
-﻿using ReportingSystem.Controllers;
-using ReportingSystem.Enums;
+﻿using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.Authorize;
@@ -7,7 +6,6 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
-using System.Security.AccessControl;
 
 namespace ReportingSystem.Services
 {
