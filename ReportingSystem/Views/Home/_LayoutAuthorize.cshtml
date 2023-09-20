@@ -15,14 +15,14 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-custom">
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand main-name @(path == "/" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Index">Звітна система</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
                 </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav flex-grow-1 justify-content-end custom-header">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
                         @* @if (User.Identity.IsAuthenticated)
                         {
                         <li class="nav-item">
@@ -94,15 +94,12 @@
         background-color: #f8f8f8; /* Задаємо колір фону сторінки */
     }
 
-    header {
+    @* header {
         background-color: #000; /* Колір фону заголовка */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Тінь для заголовка */
-    }
-
-    @* .navbar {
-        background-color: #007BFF; /* Оновлено колір фону навігаційного меню */
     } *@
 
+    
     .navbar-brand {
         font-weight: bold; /* Задаємо жирний стиль для тексту логотипу */
         color: #fff; /* Задаємо колір тексту логотипу */
@@ -120,22 +117,30 @@
         padding: 20px; /* Внутрішні відступи для контейнера */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Тінь для контейнера */
     }
-
     main {
         padding: 20px; /* Внутрішні відступи для основного вмісту */
-    }
-    .navbar-custom{
-        background-color: #000;
     }
     .nav-link.active {
         text-decoration: underline;
     }
-    .navbar-brand:hover {
-        color: #bebebe;
+    .navbar{
+        background-color: #000;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #eeff01;
         transition: all 0.3s ease-in;
     }
-    .navbar-nav .nav-link:hover {
-        color: #bebebe;
+    .navbar-nav .nav-item .nav-link {
+        color: rgb(161, 161, 161);
+        transition: all 0.3s ease-out;
+    }
+    @* .navbar .navbar-brand{
+        color: #rgb(161, 161, 161);
+        transition: all 0.3s ease-out;
+    } *@
+    .navbar .navbar-brand:hover {
+        color: #eeff01;
         transition: all 0.3s ease-in;
     }
 </style>
