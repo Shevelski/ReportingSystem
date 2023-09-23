@@ -25,6 +25,17 @@ namespace ReportingSystem.Controllers.Functions
             }
         }
 
+        [HttpGet]
+        // отримання співробітників
+        public async Task<IActionResult> GetEmployee(string idCu, string idCo, string idEm)
+        {
+            await Task.Delay(0);
+            using (_employeesService as IDisposable)
+            {
+                var employee = _employeesService.GetEmployee(idCu, idCo, idEm);
+                return Json(employee);
+            }
+        }
 
         [HttpPost]
         // Архівування співробітників
@@ -80,6 +91,15 @@ namespace ReportingSystem.Controllers.Functions
         {
             await Task.Delay(10);
             var result = _employeesService.EditEmployee(employee);
+            return result != null ? Ok(result) : NotFound();
+        }
+
+        [HttpPost]
+        //Редагування співробітника
+        public async Task<IActionResult> EditAdministrator([FromBody] object employee)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.EditAdministrator(employee);
             return result != null ? Ok(result) : NotFound();
         }
     }

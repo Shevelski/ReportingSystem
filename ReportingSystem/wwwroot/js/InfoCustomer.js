@@ -1,5 +1,5 @@
 ﻿new Vue({
-    el: '#UserInfo',
+    el: '#Info',
     data: {
         mode: 'standart',
         personalInfo: [0],
@@ -12,6 +12,10 @@
         taketimeoffDays: 0,
     },
     mounted() {
+        this.customerId = document.getElementById('idCu').textContent;
+        this.companyId = document.getElementById('idCo').textContent;
+        this.employeeId = document.getElementById('idEm').textContent;
+        this.rol = document.getElementById('rol').textContent;
         this.Init();
 
     },
@@ -25,11 +29,15 @@
             }
         },
         async Init() {
-            let response = await axios.get("/UserInfo/GetUserInfo");
-            this.personalInfo = response.data;
+            console.log(this.rol);
+            this.personalInfo = await this.getEmployee();
+            console.log(this.personalInfo);
             this.personalInfo.birthDate = this.formatDate(this.personalInfo.birthDate);
             this.personalInfo.workStartDate = this.formatDate(this.personalInfo.workStartDate);
-            this.calculateDaysCurYear();
+            if (this.rol != 'Developer') {
+                this.calculateDaysCurYear();
+            }
+            
         },
         async editUserInfo() {
             try {
@@ -38,6 +46,18 @@
                 console.error('Помилка під час виклику методу EditUserInfo:', error);
             }
         },
+
+        async getEmployee() {
+            let response = await axios.get("/Employees/GetEmployee", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    idEm: this.employeeId
+                }
+            });
+            return response.data;
+        },
+
         calculateDaysCurYear() {
             const currentYear = new Date().getFullYear();
             const datesThisYear1 = this.personalInfo.holidayDate.filter(date => {

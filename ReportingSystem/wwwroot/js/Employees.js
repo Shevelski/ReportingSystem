@@ -94,7 +94,7 @@ new Vue({
 
             return filteredList.length;
         },
-        
+
         filteredEmployees() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
@@ -461,7 +461,6 @@ new Vue({
         async checkEmail() {
             var email = this.newEmployee.emailWork;
             if (this.newEmployee.emailWork != null) {
-                console.log(email);
                 var response = await axios.get("/Employees/IsBusyEmail", {
                     params: {
                         email: email,

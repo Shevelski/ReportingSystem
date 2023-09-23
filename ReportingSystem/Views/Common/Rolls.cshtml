@@ -68,25 +68,23 @@
             </h2>
             <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Rolls">
                 <div class="accordion-body">
+                    <div>
+                        <div class="btn-group d-flex justify-content-between">
+                            <button type="button" class="btn btn-primary col-sm-6 ms-2" v-on:click="isEditMode = !isEditMode">Редагувати</button>
+                        </div>
+                    </div>
                     <table class="table">
                         <tbody>
-                           <tr>
-                                <td>
-                                    <div class="col">
-                                        <div class="btn-group d-flex justify-content-between">
-                                            <button type="button" class="btn btn-primary col-sm-6 ms-2" v-on:click="isEditMode = !isEditMode">Редагувати</button>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                           <tr>
+                            <tr>
                                 <td style="text-align: center"><strong>ПІБ</strong></td>
                                 <td style="text-align: center"><strong>Посада</strong></td>
-                                <td style ="text-align: center"><strong>Редагувати роль</strong></td>
+                                <td style="text-align: center"><strong>Редагувати роль</strong></td>
+                                <td style="text-align: center"><strong>Зберегти</strong></td>
                             </tr>
-                            <tr v-for="(employee, index) in employees" :key="index" class="accordion-item">
+                           <tr v-for="(employee, index) in employees" :key="index" class="accordion-item">
                                 <td style="text-align: center">{{employee.firstName}} {{employee.secondName}} {{employee.thirdName}} </td>
-                                @*<td class="form-group">
+                                <td style="text-align: center">{{employee.position.namePosition}} </td>
+                                <td class="form-group">
                                     <select class="form-select data" aria-label="Default select example"
                                             v-bind:disabled="!isEditMode"
                                             v-on:change="getSelectedRol($event,index)"
@@ -98,7 +96,7 @@
                                             {{ rol.rolName }}
                                         </option>
                                     </select>
-                                </td>*@
+                                </td>
                                 <td>
                                     <div class="btn-group d-flex justify-content-between">
                                         <button type="button" class="btn btn-primary col-sm-6 ms-2" 

@@ -68,19 +68,19 @@ namespace ReportingSystem.Controllers.Functions
 
         //[HttpGet]
         ////перевірка збережених компаній
-        //public async Task<IActionResult> CheckSave(string idCu)
+        //public async Task<IActionResult> GetCustomerInfo(string idCu)
         //{
         //    await Task.Delay(10);
-        //    var result = _customersService.CheckSave(idCu);
+        //    var result = _customersService.GetCustomerInfo(idCu);
         //    return Json(result);
         //}
 
         //[HttpPost]
-        ////зберегти замовника
-        //public async Task<IActionResult> SavePermanentCustomer([FromBody] string idCu)
+        ////перевірка збережених компаній
+        //public async Task<IActionResult> SetCustomerInfo(string idCu)
         //{
         //    await Task.Delay(10);
-        //    var result = _customersService.SavePermanentCustomer(idCu);
+        //    var result = _customersService.SetCustomerInfo(idCu);
         //    return Json(result);
         //}
 

@@ -5,7 +5,15 @@
         customerId: '',
         companyId: '',
         employeeId: '',
-        employees: [0],
+        employees: [{
+            rol: {
+                rolName: '',
+                rolType: -1
+            },
+            position: {
+                namePosition:""
+            }
+        }],
         showSaveButton: false,
         showSaveIndex: -1,
         showArrayButtonSave:[],
@@ -176,6 +184,7 @@
             this.selectedCustomerId = event.target.value;
 
             if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
+                this.selectedCompanyId = 0;
                 this.IsNewSelectedCustomer = true;
                 this.saveCustomer = false;
             } else {
@@ -189,9 +198,11 @@
             if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
                 this.IsNewSelectedCompany = true;
                 this.saveCompany = false;
+
             } else {
                 this.saveCompany = true;
             }
+
             this.Init();
         },
         setItemsPerPage(count) {

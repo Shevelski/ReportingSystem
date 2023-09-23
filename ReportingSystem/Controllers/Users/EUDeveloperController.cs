@@ -19,31 +19,6 @@ namespace ReportingSystem.Controllers.Users
             _logger = logger;
         }
 
-        //private IActionResult GetIdsFromSession()
-        //{
-        //    if (HttpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
-        //    {
-                
-        //        var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
-        //        return View(ids);
-        //    }
-        //    else
-        //    {
-        //        HttpContext.SignOutAsync();
-        //        return RedirectToAction("Authorize", "Home");
-        //    }
-        //}
-
-        //public string[]? GetIds()
-        //{
-        //    if (HttpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
-        //    {
-        //        var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
-        //        return ids;
-        //    }
-        //    return null;
-        //}
-
         public IActionResult Index()
         {
             return SessionHelper.ViewDataSession(HttpContext);

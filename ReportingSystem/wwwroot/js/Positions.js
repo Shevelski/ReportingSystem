@@ -50,7 +50,10 @@
         editCompanyEmail: '',
         newCompany: [0],
         companies: [0],
-        positions: [0]
+        positions: [
+            {
+                namePosition: '',
+            }]
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -142,6 +145,9 @@
             }
         },
         async getUniqPositions() {
+            console.log(this.selectedCustomerId);
+            console.log(this.selectedCompanyId);
+
             let responsePositions = await axios.get("/Positions/GetUniqPositions", {
                 params: {
                     idCu: this.selectedCustomerId,
@@ -179,6 +185,7 @@
             this.selectedCustomerId = event.target.value;
 
             if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
+                this.selectedCompanyId = 0;
                 this.IsNewSelectedCustomer = true;
                 this.saveCustomer = false;
             } else {
@@ -192,9 +199,11 @@
             if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
                 this.IsNewSelectedCompany = true;
                 this.saveCompany = false;
+
             } else {
                 this.saveCompany = true;
             }
+
             this.Init();
         },
         setItemsPerPage(count) {
