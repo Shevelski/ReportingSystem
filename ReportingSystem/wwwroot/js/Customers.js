@@ -82,7 +82,7 @@
 
     methods: {
         async Init() {
-            let response = await axios.get("/Customers/GetAllLicence");
+            let response = await axios.get("/Customers/GetCustomers");
             this.customers = response.data;
             console.log(this.customers);
             this.pageCount = Math.ceil(this.countFilteredCustomers / this.itemsPerPage);

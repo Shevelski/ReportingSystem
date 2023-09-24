@@ -94,7 +94,7 @@
             console.log(this.companies);
         },
         async updateCustomers() {
-            let responseCustomers = await axios.get("/Customers/GetAllLicence");
+            let responseCustomers = await axios.get("/Customers/GetCustomers");
             this.customers = responseCustomers.data;
 
             if (this.selectedCustomerId == '00000000-0000-0000-0000-000000000000') {

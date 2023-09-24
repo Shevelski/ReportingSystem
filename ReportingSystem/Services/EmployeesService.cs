@@ -1,11 +1,7 @@
-﻿using Bogus.DataSets;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
-using System.ComponentModel.Design;
 
 namespace ReportingSystem.Services
 {
@@ -48,7 +44,7 @@ namespace ReportingSystem.Services
         public EmployeeModel? GetEmployee(string idCu, string idCo, string idEm)
         {
 
-            if (idCu == null && idCo == null && idEm != "0")
+            if (idCu == Guid.Empty.ToString() && idCo == Guid.Empty.ToString() && idEm != Guid.Empty.ToString())
             {
                 var developers = DatabaseMoq.Administrators;
 
@@ -57,7 +53,7 @@ namespace ReportingSystem.Services
                     return null;
                 }
 
-                var developer = developers.FirstOrDefault(dev => dev.id.Equals(idDeveloper));
+                var developer = developers.First(dev => dev.id.Equals(idDeveloper));
                 return developer;
             }
 

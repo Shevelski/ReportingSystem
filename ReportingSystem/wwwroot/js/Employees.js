@@ -186,7 +186,7 @@ new Vue({
             this.IsNewSelectedCompany = false;
         },
         async updateCustomers() {
-            let responseCustomers = await axios.get("/Customers/GetAllLicence");
+            let responseCustomers = await axios.get("/Customers/GetCustomers");
             this.customers = responseCustomers.data;
 
             if (this.selectedCustomerId == 0) {
@@ -397,20 +397,6 @@ new Vue({
 
             return `${year}-${month}-${day}`;
         },
-        //async confirmEditEmployee() {
-        //    const v0 = this.filteredEmployees[this.indexEmployee].id;
-
-        //    var ar = [v0, v1, v2, v3];
-
-        //    try {
-        //        await axios.post('/Employees/EditEmployee', ar);
-        //    } catch (error) {
-        //        console.error('Помилка під час виклику методу EditUser:', error);
-        //    }
-
-        //    this.Init();
-        //    this.closeAllAccordions();
-        //},
 
         async confirmArchiveEmployee() {
             const idCu = this.selectedCustomerId;

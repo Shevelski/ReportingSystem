@@ -14,6 +14,22 @@ namespace ReportingSystem.Services
             var customers = DatabaseMoq.Customers;
             return customers;
         }
+        
+        public CustomerModel? GetCustomer(string idCu)
+        {
+            if (DatabaseMoq.Customers == null)
+            {
+                return null;
+            }
+            Guid id;
+            if (!Guid.TryParse(idCu, out id) || id.Equals(Guid.Empty))
+            {
+                id = DatabaseMoq.Customers[0].id;
+            }
+
+            var customer = DatabaseMoq.Customers.First(cu=>cu.id.Equals(id));
+            return customer;
+        }
 
         //створення замовника
         public CustomerModel? CreateCustomer(string email)

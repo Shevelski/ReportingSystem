@@ -33,31 +33,39 @@
         },
         async Init() {
             console.log(this.rol);
+
+            console.log(this.customerId);
+            console.log(this.companyId);
+            console.log(this.employeeId);
+
             this.personalInfo = await this.getEmployee();
-            if (this.personalInfo.photo == "") {
-                this.personalInfo.photo = "/img/UserPhoto/EmptyPhoto.jpg"
-            }
             console.log(this.personalInfo);
             this.personalInfo.birthDate = this.formatDate(this.personalInfo.birthDate);
             this.personalInfo.workStartDate = this.formatDate(this.personalInfo.workStartDate);
-            if (this.rol != 'Developer') {
-                this.calculateDaysCurYear();
-            }
             
         },
         async EditEmployeeInfo() {
-            try {
-                const response = await axios.post('/Employees/EditAdministrator', this.personalInfo);
-            } catch (error) {
-                console.error('Помилка під час виклику методу EditAdministrator:', error);
+            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
+                try {
+                    const response = await axios.post('/Employees/EditAdministrator', this.personalInfo);
+                } catch (error) {
+                    console.error('Помилка під час виклику методу EditAdministrator:', error);
+                }
+            } else {
+                try {
+                    const response = await axios.post('/Employees/EditEmployee', this.personalInfo);
+                } catch (error) {
+                    console.error('Помилка під час виклику методу EditEmployee:', error);
+                }
             }
+            
         },
 
         async getEmployee() {
             let response = await axios.get("/Employees/GetEmployee", {
                 params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId,
+                    idCu: this.customerId,
+                    idCo: this.companyId,
                     idEm: this.employeeId
                 }
             });
@@ -66,25 +74,43 @@
 
         calculateDaysCurYear() {
             const currentYear = new Date().getFullYear();
-            const datesThisYear1 = this.personalInfo.holidayDate.filter(date => {
-                return new Date(date).getFullYear() === currentYear;
-            });
-            this.holidayDays = datesThisYear1.length;
 
-            const datesThisYear2 = this.personalInfo.hospitalDate.filter(date => {
-                return new Date(date).getFullYear() === currentYear;
-            });
-            this.hospitalDays = datesThisYear2.length;
-
-            const datesThisYear3 = this.personalInfo.assignmentDate.filter(date => {
-                return new Date(date).getFullYear() === currentYear;
-            });
-            this.assignmentDays = datesThisYear3.length;
-
-            const datesThisYear4 = this.personalInfo.taketimeoffDate.filter(date => {
-                return new Date(date).getFullYear() === currentYear;
-            });
-            this.taketimeoffDays = datesThisYear4.length;
+            if (this.personalInfo.holidayDate != null) {
+                const datesThisYear1 = this.personalInfo.holidayDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                this.holidayDays = datesThisYear1.length;
+            } else {
+                this.holidayDays = 0;
+            }
+            
+            if (this.personalInfo.hospitalDate != null) {
+                const datesThisYear2 = this.personalInfo.hospitalDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                this.hospitalDays = datesThisYear2.length;
+            } else {
+                this.hospitalDays = 0;
+            }
+            
+            if (this.personalInfo.assignmentDate != null) {
+                const datesThisYear3 = this.personalInfo.assignmentDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                this.assignmentDays = datesThisYear3.length;
+            } else {
+                this.assignmentDays = 0;
+            }
+            
+            if (this.personalInfo.taketimeoffDate != null) {
+                const datesThisYear4 = this.personalInfo.taketimeoffDate.filter(date => {
+                    return new Date(date).getFullYear() === currentYear;
+                });
+                this.taketimeoffDays = datesThisYear4.length;
+            } else {
+                this.taketimeoffDays = 0;
+            }
+            
         },
         formatDate(dateTimeStr) {
             const date = new Date(dateTimeStr);
@@ -96,7 +122,7 @@
         formatNumber(value) {
             return value.toString().padStart(2, '0');
         },
-        toggleModal(type, index) {
+        toggleModal(type) {
 
             this.modalType = type;
             this.indexEmployee = index;

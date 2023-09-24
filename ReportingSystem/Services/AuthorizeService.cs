@@ -101,15 +101,18 @@ namespace ReportingSystem.Services
                 administrators = DatabaseMoq.Administrators;
                 foreach (var administrator in administrators)
                 {
-                    if (administrator.password != null && administrator.password.ToLower().Equals(password.ToLower()))
+                    if (administrator.emailWork == email)
                     {
-                        authorize.Email = administrator.emailWork;
-                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
-                        authorize.Role = administrator.rol;
-                        authorize.Employee = administrator;
-                        return authorize;
+                        if (administrator.password != null && administrator.password.ToLower().Equals(password.ToLower()))
+                        {
+                            authorize.Email = administrator.emailWork;
+                            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+                            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                            authorize.Role = administrator.rol;
+                            authorize.Employee = administrator;
+                            return authorize;
+                        }
                     }
                 }
             }
@@ -119,31 +122,35 @@ namespace ReportingSystem.Services
                 customers = DatabaseMoq.Customers;
                 foreach (var customer in customers)
                 {
-                    if (customer.password != null && customer.password.ToLower().Equals(password.ToLower()))
+                    if (customer.email == email)
                     {
-                        authorize.Email = customer.email;
-                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
-                        authorize.Role = new EmployeeRolModel()
+                        if (customer.password != null && customer.password.ToLower().Equals(password.ToLower()))
                         {
-                            rolType = EmployeeRolStatus.Customer,
-                            rolName = EmployeeRolStatus.Customer.GetDisplayName(),
-                        };
-                        authorize.Employee = new EmployeeModel()
-                        {
-                            customerId = customer.id,
-                            firstName = customer.firstName,
-                            secondName = customer.secondName,
-                            thirdName = customer.thirdName,
-                            rol = new EmployeeRolModel()
+                            authorize.Email = customer.email;
+                            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+                            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                            authorize.Role = new EmployeeRolModel()
                             {
                                 rolType = EmployeeRolStatus.Customer,
                                 rolName = EmployeeRolStatus.Customer.GetDisplayName(),
-                            }
-                    };
-                        return authorize;
+                            };
+                            authorize.Employee = new EmployeeModel()
+                            {
+                                customerId = customer.id,
+                                firstName = customer.firstName,
+                                secondName = customer.secondName,
+                                thirdName = customer.thirdName,
+                                rol = new EmployeeRolModel()
+                                {
+                                    rolType = EmployeeRolStatus.Customer,
+                                    rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                                }
+                            };
+                            return authorize;
+                        }
                     }
+                    
 
                     if (customer.companies != null)
                     {

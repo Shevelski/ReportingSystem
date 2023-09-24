@@ -41280,7 +41280,7 @@
               "secondName": "Hammes",
               "thirdName": "Officer",
               "phoneWork": "+38011123786876",
-              "phoneSelf": "+38099517146843",
+              "phoneSelf": "+380995171468431",
               "emailWork": "hammes82@gmail.ua",
               "emailSelf": "khalid@gmail.ua",
               "taxNumber": "877067",
@@ -41295,7 +41295,7 @@
                 "employeeStatusType": 1,
                 "employeeStatusName": "Актуальний"
               },
-              "birthDate": "1971-02-26T00:00:00+02:00",
+              "birthDate": "1971-02-26T00:00:00",
               "workStartDate": "2004-11-05T00:00:00",
               "workEndDate": "0001-01-01T00:00:00",
               "holidayDate": [

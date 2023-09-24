@@ -22,12 +22,24 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         //отримати замовників
-        public async Task<IActionResult> GetAllLicence()
+        public async Task<IActionResult> GetCustomers()
         {
             using (_customersService as IDisposable)
             {
                 await Task.Delay(10);
                 var result = _customersService.GetCustomers();
+                return Json(result);
+            }
+        }
+
+        [HttpGet]
+        //отримати замовників
+        public async Task<IActionResult> GetCustomer(string idCu)
+        {
+            using (_customersService as IDisposable)
+            {
+                await Task.Delay(10);
+                var result = _customersService.GetCustomer(idCu);
                 return Json(result);
             }
         }
