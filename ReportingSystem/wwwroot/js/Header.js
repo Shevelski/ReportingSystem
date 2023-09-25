@@ -36,18 +36,19 @@ new Vue({
     },
     methods: {  
         async Init() {
-        this.personalInfo = await this.getEmployee();
-        this.firstInitial = this.personalInfo.firstName[0];
-        this.secondInitial = this.personalInfo.secondName[0];
-        console.log(this.firstInitial);
-        console.log(this.secondInitial);
+            this.personalInfo = await this.getEmployee();
+            console.log(this.personalInfo);
+            this.firstInitial = this.personalInfo.firstName;
+            this.secondInitial = this.personalInfo.secondName;
+            console.log(this.firstInitial);
+            console.log(this.secondInitial);
     },
   
     async getEmployee() {
         let response = await axios.get("/Employees/GetEmployee", {
             params: {
-                idCu: this.selectedCustomerId,
-                idCo: this.selectedCompanyId,
+                idCu: this.customerId,
+                idCo: this.companyId,
                 idEm: this.employeeId
             }
         });

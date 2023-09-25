@@ -102,7 +102,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" v-if="rol != 'Developer'">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">Телефон</label>
@@ -117,8 +117,23 @@
                         </div>
                     </div>
                 </div>
+                <div v-else>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Телефон</label>
+                            <input type="text" class="form-control" v-bind:disabled="mode != 'edit'" v-model="personalInfo.phoneWork" />
+                        </div>
+                    </div>
 
-                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Телефон особистий</label>
+                            <input type="text" class="form-control" v-bind:disabled="mode=='standart'" v-model="personalInfo.phoneSelf" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" v-if="rol != 'Developer'">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="control-label">Email</label>
@@ -133,6 +148,22 @@
                         </div>
                     </div>
                 </div>
+                <div v-else>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Email</label>
+                            <input type="text" class="form-control" v-bind:disabled="mode=='standart'" v-model="personalInfo.emailWork" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">Email ос.</label>
+                            <input type="text" class="form-control" v-bind:disabled="mode=='standart'" v-model="personalInfo.emailSelf" />
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="col-sm-6">
