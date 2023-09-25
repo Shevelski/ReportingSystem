@@ -24,7 +24,6 @@
     <p hidden id="rol">@Model[3]</p>
 </div>
 
-
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
@@ -65,7 +64,7 @@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUDeveloper/Report" ? "active": "")" asp-area="" asp-controller="EUDeveloper" asp-action="Report">Звіт</a>
                         </li>
-                       <div id="header_dropdown" >
+                        <div id="header_dropdown" >
                             <div v-if="windowWidth > 992">
                                 <div class="circle border">
                                     <li class="nav-item dropdown">
@@ -114,7 +113,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/Header.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
@@ -161,13 +159,4 @@
         color: #000;
         transition: all 0.3s ease-in;
     }
-    @* .navbar-nav li a {
-        color: #fff;
-        transition: all 0.3s ease-out;
-    }
-    
-    .navbar-nav .nav-link:hover {
-        color: #fffed6c9;
-        transition: all 0.3s ease-in;
-    } *@
 </style>

@@ -13,6 +13,14 @@
     var path = Context.Request.Path;
 }
 
+@model string[];
+<div>
+    <p hidden id="idCu">@Model[0]</p>
+    <p hidden id="idCo">@Model[1]</p>
+    <p hidden id="idEm">@Model[2]</p>
+    <p hidden id="rol">@Model[3]</p>
+</div>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
@@ -41,7 +49,7 @@
                                     <div class="circle border">
                                         <li class="nav-item dropdown">
                                             <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                II
+                                                {{firstInitial}}{{secondInitial}}
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
                                                 <li class="nav-item">

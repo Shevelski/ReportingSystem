@@ -1,5 +1,5 @@
 new Vue({
-    el: '#header_dropdown',
+    el: '#customer_header',
     
     data() {
       return {
@@ -18,7 +18,8 @@ new Vue({
         modalOperation: null,
         modalType: 0,
         firstInitial: "",
-        secondInitial: ""
+        secondInitial: "",
+        personalInfo: [0],
       }
     },
     mounted() {
@@ -36,17 +37,16 @@ new Vue({
     },
     methods: {  
         async Init() {
-        this.personalInfo = await this.getEmployee();
+        this.personalInfo = await this.getCustomer();
         this.firstInitial = this.personalInfo.firstName[0];
         this.secondInitial = this.personalInfo.secondName[0];
+        console.log(this.personalInfo)
     },
   
-    async getEmployee() {
-        let response = await axios.get("/Employees/GetEmployee", {
+    async getCustomer() {
+        let response = await axios.get("/Customers/GetCustomer", {
             params: {
-                idCu: this.customerId,
-                idCo: this.companyId,
-                idEm: this.employeeId
+                idCu: this.selectedCustomerId,
             }
         });
         return response.data;
