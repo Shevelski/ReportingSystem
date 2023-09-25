@@ -54,6 +54,11 @@ namespace ReportingSystem.Controllers.Users
             return SessionHelper.ViewDataSession(HttpContext);
         }
 
+        public IActionResult Administrators()
+        {
+            return SessionHelper.ViewDataSession(HttpContext);
+        }
+
         public IActionResult Info()
         {
             return SessionHelper.ViewDataSession(HttpContext);

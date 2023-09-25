@@ -50937,7 +50937,10 @@
       "password": "12345",
       "salary": 0.0,
       "addSalary": 0.0,
-      "status": null,
+      "status": {
+        "employeeStatusType": 1,
+        "employeeStatusName": "Актуальний"
+      },
       "birthDate": "2001-01-01T00:00:00",
       "workStartDate": "2001-01-01T00:00:00",
       "workEndDate": "0001-01-01T00:00:00",
@@ -50970,7 +50973,10 @@
       "password": "12345",
       "salary": 0.0,
       "addSalary": 0.0,
-      "status": null,
+      "status": {
+        "employeeStatusType": 1,
+        "employeeStatusName": "Актуальний"
+      },
       "birthDate": "0001-01-01T00:00:00",
       "workStartDate": "0001-01-01T00:00:00",
       "workEndDate": "0001-01-01T00:00:00",

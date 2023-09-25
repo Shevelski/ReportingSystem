@@ -41,6 +41,18 @@ namespace ReportingSystem.Services
             return company.employees;
         }
 
+        public List<EmployeeModel>? GetAdministrators()
+        {
+            var administrators = DatabaseMoq.Administrators;
+
+            if (administrators == null)
+            {
+                return null;
+            }
+            
+            return administrators.ToList();
+        }
+
         public EmployeeModel? GetEmployee(string idCu, string idCo, string idEm)
         {
 

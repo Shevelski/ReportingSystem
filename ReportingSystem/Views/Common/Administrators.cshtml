@@ -9,7 +9,7 @@
 </div>
 @*---------------------------------------------------------------------------------------------------------------------*@
 
-<div class="container" id="Employees">
+<div class="container" id="Administrators">
     <div class="accordion" id="accordionExample" v-if="employees.length != 1">
         @*---------------------------------------------------------------------------------------------------------------------*@
         @* Модальне вікно*@
@@ -37,16 +37,7 @@
                                         <label class="control-label">По-батькові</label>
                                         <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.thirdName" />
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label">Посада</label>
-                                        <select class="form-select data" aria-label="Default select example"
-                                                v-on:change="getSelectedPosition($event)"
-                                                v-model="newEmployee.namePosition">
-                                            <option v-for="position in positions" :value="position.namePosition">
-                                                {{ position.namePosition }}
-                                            </option>
-                                        </select>
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <label class="control-label">Пароль</label>
                                         <input type="text" class="form-control employeedata" v-on:change="isFormEmpty()" v-model="newEmployee.password" />
@@ -156,20 +147,7 @@
                     data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                     v-on:click="toggleModal(1, 0)">
                 Додати співробітника
-                    @*v-on:click="addEmployee()">Додати співробітника*@
             </button>
-        </div>
-
-        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
-            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
-                <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
-            </select>
-        </div>
-
-        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
-            <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
-                <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
-            </select>
         </div>
 
         <div style="display: flex; align-items: center;">
@@ -252,20 +230,6 @@
                                                     <div class="col-sm-8">
                                                         <div class="row">
                                                             <div class="col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label class="control-label">Посада</label>
-                                                                    <select class="form-select data" aria-label="Default select example"
-                                                                            v-bind:disabled="mode=='standart'"
-                                                                            v-on:change="getSelectedPosition($event)"
-                                                                            v-model="employee.position.namePosition">
-                                                                        <option :value="employee.position.namePosition" selected>
-                                                                            {{ employee.position.namePosition }}
-                                                                        </option>
-                                                                        <option v-for="position in positions" :value="position.namePosition">
-                                                                            {{ position.namePosition }}
-                                                                        </option>
-                                                                    </select>
-                                                                </div>
                                                                 <div class="form-group">
                                                                     <label class="control-label">Логін</label>
                                                                     <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.login" />
@@ -453,4 +417,4 @@
     </div>
 </div>
 @*---------------------------------------------------------------------------------------------------------------------*@
-<script src="~/js/Employees.js" asp-append-version="true"></script>
+<script src="~/js/Administrators.js" asp-append-version="true"></script>

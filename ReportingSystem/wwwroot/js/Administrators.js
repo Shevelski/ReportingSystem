@@ -1,6 +1,6 @@
 ﻿
 new Vue({
-    el: '#Employees',
+    el: '#Administrators',
     data: {
         newEmployee: {
             firstName: '',
@@ -118,20 +118,9 @@ new Vue({
     },
     methods: {
         async Init() {
-            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
-                await this.updateCustomers();
-                await this.updateCompanies();
-            }
-            if (this.rol == 'Customer') {
-                this.selectedCustomerId = this.customerId;
-                await this.updateCompanies();
-            }
-            if (this.rol == 'CEO') {
-                this.selectedCustomerId = this.customerId;
-                this.selectedCompanyId = this.companyId;
-            }
-            this.positions = await this.getPositions();
-            this.rolls = await this.getRolls();
+           
+            /*this.positions = await this.getPositions();*/
+            /*this.rolls = await this.getRolls();*/
             this.employees = await this.getEmployees();
 
 
@@ -164,35 +153,10 @@ new Vue({
             return response.data;
         },
         async getEmployees() {
-            let response = await axios.get("/Employees/GetEmployees", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
+            let response = await axios.get("/Employees/GetAdministrators");
             return response.data;
         },
-        async updateCompanies() {
-            let responseCompanies = '';
-            responseCompanies = await axios.get("/Companies/GetCompanies", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                }
-            });
-            this.companies = responseCompanies.data;
-            if (this.selectedCompanyId == 0) {
-                this.selectedCompanyId = this.companies[0].id;
-            }
-            this.IsNewSelectedCompany = false;
-        },
-        async updateCustomers() {
-            let responseCustomers = await axios.get("/Customers/GetCustomers");
-            this.customers = responseCustomers.data;
-
-            if (this.selectedCustomerId == 0) {
-                this.selectedCustomerId = this.customers[0].id;
-            }
-        },
+        
         isFormEmpty() {
             const employee = this.newEmployee;
             return (
@@ -216,31 +180,8 @@ new Vue({
                 employee.addSalary == '' || employee.addSalary == null || employee.addSalary == undefined
             )
         },
-        getSelectedCustomer(event) {
-            this.selectedCustomerId = event.target.value;
-
-            if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
-                this.selectedCompanyId = 0;
-                this.IsNewSelectedCustomer = true;
-                this.saveCustomer = false;
-            } else {
-                this.saveCustomer = true;
-            }
-            this.Init();
-        },
-        getSelectedCompany(event) {
-            this.selectedCompanyId = event.target.value;
-            
-            if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
-                this.IsNewSelectedCompany = true;
-                this.saveCompany = false;
-                
-            } else {
-                this.saveCompany = true;
-            }
-
-            this.Init();
-        },
+        
+       
         getSelectedRol(event) {
             this.selectedRol = event.target.value;
         },

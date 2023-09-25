@@ -27,6 +27,18 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         // отримання співробітників
+        public async Task<IActionResult> GetAdministrators()
+        {
+            await Task.Delay(0);
+            using (_employeesService as IDisposable)
+            {
+                var employees = _employeesService.GetAdministrators();
+                return Json(employees);
+            }
+        }
+
+        [HttpGet]
+        // отримання співробітників
         public async Task<IActionResult> GetEmployee(string idCu, string idCo, string idEm)
         {
             await Task.Delay(0);

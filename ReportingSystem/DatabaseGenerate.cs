@@ -51,6 +51,11 @@ namespace ReportingSystem
                     {
                         rolType = Enums.EmployeeRolStatus.Developer,
                         rolName = Enums.EmployeeRolStatus.Developer.GetDisplayName()
+                    },
+                    status = new EmployeeStatusModel()
+                    {
+                        employeeStatusType = Enums.EmployeeStatus.Actual,
+                        employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
                     }
                 },
                 new EmployeeModel()
@@ -68,6 +73,11 @@ namespace ReportingSystem
                     {
                         rolType = Enums.EmployeeRolStatus.Developer,
                         rolName = Enums.EmployeeRolStatus.Developer.GetDisplayName()
+                    },
+                    status = new EmployeeStatusModel()
+                    {
+                        employeeStatusType = Enums.EmployeeStatus.Actual,
+                        employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
                     }
                 }
             };
