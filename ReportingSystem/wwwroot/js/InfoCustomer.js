@@ -45,7 +45,7 @@
         async Init() {
             console.log(this.rol);
             this.personalInfo = await this.getCustomer();
-            console.log(this.personalInfo);
+            console.log(personalInfo);
             this.personalInfo.endTimeLicense = this.formatDate(this.personalInfo.endTimeLicense);
             this.personalInfo.dateRegistration = this.formatDate(this.personalInfo.dateRegistration);
         },
