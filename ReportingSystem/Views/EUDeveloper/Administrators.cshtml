@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Співробітники";
+    Layout = "_LayoutDeveloper";
+}
+
+@model string[];
+
+<head>
+    <title>Співробітники</title>
+</head>
+<div>
+    <p hidden id="idCu">@Model[0]</p>
+    <p hidden id="idCo">@Model[1]</p>
+    <p hidden id="idEm">@Model[2]</p>
+    <p hidden id="rol">@Model[3]</p>
+</div>
+
+<partial name="~/Views/Common/Employees.cshtml" />
