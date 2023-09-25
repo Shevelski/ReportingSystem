@@ -46,8 +46,8 @@ new Vue({
     async getEmployee() {
         let response = await axios.get("/Employees/GetEmployee", {
             params: {
-                idCu: this.selectedCustomerId,
-                idCo: this.selectedCompanyId,
+                idCu: this.customerId,
+                idCo: this.companyId,
                 idEm: this.employeeId
             }
         });
