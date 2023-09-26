@@ -41,14 +41,21 @@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUCEO/Projects" ? "active" : "")" asp-area="" asp-controller="EUCEO" asp-action="Projects">Проекти</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Співробітники
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
                             <a class="nav-link @(path == "/EUCEO/Employees" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Employees">Співробітники</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUCEO/Positions" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Positions">Посади</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUCEO/Rolls" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Rolls">Ролі</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUCEO/Positions" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Positions">Посади</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUCEO/Rolls" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Rolls">Ролі</a>
+                            </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUCEO/Report" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Report">Звіт</a>

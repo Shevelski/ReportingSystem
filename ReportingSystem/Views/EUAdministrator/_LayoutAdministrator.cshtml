@@ -40,23 +40,37 @@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUAdministrator/Companies" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Companies">Компанії</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Проекти
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
                             <a class="nav-link @(path == "/EUAdministrator/Projects" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Projects">Проекти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUAdministrator/Steps" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Steps">Етапи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUAdministrator/Categories" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Categories">Категорії</a>
+                            </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUAdministrator/Steps" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Steps">Етапи</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUAdministrator/Categories" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Categories">Категорії</a>
-                        </li>
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Співробітники
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
+                                <li class="nav-item">
                             <a class="nav-link @(path == "/EUAdministrator/Employees" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Employees">Співробітники</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUAdministrator/Positions" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Positions">Посади</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/EUAdministrator/Rolls" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Rolls">Ролі</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUAdministrator/Positions" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Positions">Посади</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUAdministrator/Rolls" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Rolls">Ролі</a>
+                            </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUAdministrator/Report" ? "active": "")" asp-area="" asp-controller="EUAdministrator" asp-action="Report">Звіт</a>
@@ -119,7 +133,7 @@
      .circle {
             width: 35px;
             height: 35px;
-            background-color: #751496; /* Change the background color as desired */
+            background-color: #6b098c; /* Change the background color as desired */
             border-radius: 50%; /* Makes the div circular */
             display: flex;
             justify-content: center;
@@ -128,13 +142,13 @@
             @* font-size: 24px; /* Font size for initials */ *@
         }
     .dropdown-menu{
-        background-color: #85389c;
+        background-color: #9043a7;
     }
     .navbar-nav .dropdown .nav-link:hover{
         color: #000;
     }
     .navbar{
-        background-color: #85389c;
+        background-color: #9043a7;
     }
     .nav-link.active {
         text-decoration: underline;
