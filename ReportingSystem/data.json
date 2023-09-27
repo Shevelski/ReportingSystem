@@ -50915,6 +50915,170 @@
         "IsSaveCompany": false,
         "IdSavedCompany": "00000000-0000-0000-0000-000000000000"
       }
+    },
+    {
+      "id": "ecb7cddb-b0e7-40cf-ba32-060b437901ad",
+      "firstName": null,
+      "secondName": null,
+      "thirdName": null,
+      "statusLicence": {
+        "licenceType": 4,
+        "licenceName": "Архівна"
+      },
+      "phone": null,
+      "email": "12345",
+      "password": "r(wxTyX8",
+      "endTimeLicense": "2023-10-26T00:00:00+03:00",
+      "dateRegistration": "0001-01-01T00:00:00",
+      "companies": [],
+      "historyOperations": [
+        {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "idCustomer": "00000000-0000-0000-0000-000000000000",
+          "dateChange": "0001-01-01T00:00:00",
+          "oldEndDateLicence": "2023-09-26T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-26T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 0,
+            "licenceName": null
+          },
+          "newStatus": {
+            "licenceType": 1,
+            "licenceName": "Тестова"
+          },
+          "price": 0.0,
+          "period": null,
+          "nameOperation": null
+        },
+        {
+          "id": "76428819-52e4-4227-8aa7-78622c3e6820",
+          "idCustomer": "ecb7cddb-b0e7-40cf-ba32-060b437901ad",
+          "dateChange": "2023-09-27T18:07:26.8445665+03:00",
+          "oldEndDateLicence": "2023-10-26T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-26T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 1,
+            "licenceName": "Тестова"
+          },
+          "newStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "price": 0.0,
+          "period": "-",
+          "nameOperation": "Архівування"
+        },
+        {
+          "id": "c9852788-d497-4ee2-8152-3048d2588c0b",
+          "idCustomer": "ecb7cddb-b0e7-40cf-ba32-060b437901ad",
+          "dateChange": "2023-09-27T18:14:26.1402728+03:00",
+          "oldEndDateLicence": "2023-10-26T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-26T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "newStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "price": 0.0,
+          "period": "-",
+          "nameOperation": "Архівування"
+        }
+      ],
+      "configure": null
+    },
+    {
+      "id": "08705f18-2be3-4fe5-8484-04da6d9f436a",
+      "firstName": null,
+      "secondName": null,
+      "thirdName": null,
+      "statusLicence": {
+        "licenceType": 4,
+        "licenceName": "Архівна"
+      },
+      "phone": null,
+      "email": "email",
+      "password": "ULkISF7D",
+      "endTimeLicense": "2023-10-27T00:00:00+03:00",
+      "dateRegistration": "0001-01-01T00:00:00",
+      "companies": [],
+      "historyOperations": [
+        {
+          "id": "00000000-0000-0000-0000-000000000000",
+          "idCustomer": "00000000-0000-0000-0000-000000000000",
+          "dateChange": "0001-01-01T00:00:00",
+          "oldEndDateLicence": "2023-09-27T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 0,
+            "licenceName": null
+          },
+          "newStatus": {
+            "licenceType": 1,
+            "licenceName": "Тестова"
+          },
+          "price": 0.0,
+          "period": null,
+          "nameOperation": null
+        },
+        {
+          "id": "d591fb1a-9d20-4731-8e44-a0d9a1185e2f",
+          "idCustomer": "08705f18-2be3-4fe5-8484-04da6d9f436a",
+          "dateChange": "2023-09-27T18:07:11.5982218+03:00",
+          "oldEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 1,
+            "licenceName": "Тестова"
+          },
+          "newStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "price": 0.0,
+          "period": "-",
+          "nameOperation": "Архівування"
+        },
+        {
+          "id": "f59b15cc-13d8-4394-9eaf-f1d3c8dcef51",
+          "idCustomer": "08705f18-2be3-4fe5-8484-04da6d9f436a",
+          "dateChange": "2023-09-27T18:11:18.2042986+03:00",
+          "oldEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 1,
+            "licenceName": "Тестова"
+          },
+          "newStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "price": 0.0,
+          "period": "-",
+          "nameOperation": "Архівування"
+        },
+        {
+          "id": "48f1a177-c43a-470c-a697-dfbdeeef7873",
+          "idCustomer": "08705f18-2be3-4fe5-8484-04da6d9f436a",
+          "dateChange": "2023-09-27T18:14:07.3750439+03:00",
+          "oldEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "newEndDateLicence": "2023-10-27T00:00:00+03:00",
+          "oldStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "newStatus": {
+            "licenceType": 4,
+            "licenceName": "Архівна"
+          },
+          "price": 0.0,
+          "period": "-",
+          "nameOperation": "Архівування"
+        }
+      ],
+      "configure": null
     }
   ],
   "Administrators": [

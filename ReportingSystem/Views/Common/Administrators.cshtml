@@ -200,12 +200,7 @@
                                             <div class="row align-items-center">
                                                 <div class="row">
                                                     <div class="col-sm-4">
-                                                        <div class="clearfix" style="display: flex; justify-content: center;">
-                                                            <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
-                                                            <label for="imageInput">
-                                                                <img :src="employee.photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
-                                                            </label>
-                                                        </div>
+                                                        
                                                         <div class="form-group">
                                                             <label class="control-label">Прізвище</label>
                                                             <input type="text" class="form-control employeedata" v-bind:disabled="mode=='standart'" v-model="employee.secondName" />

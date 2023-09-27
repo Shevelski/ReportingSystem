@@ -31,8 +31,8 @@ namespace ReportingSystem.Services
             return customer;
         }
 
-        //створення замовника
-        public CustomerModel? CreateCustomer(string email)
+        //реєстрація замовника
+        public CustomerModel? RegistrationCustomer(string[] ar)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
 
@@ -40,8 +40,14 @@ namespace ReportingSystem.Services
             var customer = new CustomerModel
             {
                 id = Guid.NewGuid(),
-                email = email,
-                password = new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),
+                email = ar[0],
+                firstName = ar[1],
+                secondName = ar[2],
+                thirdName = ar[3],
+                phone = ar[4],
+                dateRegistration = DateTime.Today,
+                //дилема з паролем, ввід при реєстрації чи відправка на пошту
+                password = ar[5],/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
                 statusLicence = new CustomerLicenceStatusModel
                 {
                     licenceType = LicenceType.Test,
@@ -153,6 +159,12 @@ namespace ReportingSystem.Services
             {
                 return null;
             }
+
+            licence.statusLicence = new CustomerLicenceStatusModel
+            {
+                licenceType = LicenceType.Archive,
+                licenceName = LicenceType.Archive.GetDisplayName()
+            };
 
             var history = new CustomerLicenseOperationModel
             {
