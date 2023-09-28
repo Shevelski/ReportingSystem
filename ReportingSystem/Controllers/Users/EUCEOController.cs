@@ -38,6 +38,10 @@ namespace ReportingSystem.Controllers.Users
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
+        public IActionResult Structure()
+        {
+            return SessionHelper.ViewDataSession(HttpContext);
+        }
         public IActionResult Rolls()
         {
             return SessionHelper.ViewDataSession(HttpContext);

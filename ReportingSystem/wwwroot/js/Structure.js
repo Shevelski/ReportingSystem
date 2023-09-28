@@ -1,6 +1,6 @@
 ﻿
 new Vue({
-    el: '#Employees',
+    el: '#Structure',
     data: {
         newEmployee: {
             firstName: '',
@@ -74,8 +74,6 @@ new Vue({
         this.companyId = document.getElementById('idCo').textContent;
         this.employeeId = document.getElementById('idEm').textContent;
         this.rol = document.getElementById('rol').textContent;
-
-
         this.Init();
     },
     computed: {
@@ -129,10 +127,6 @@ new Vue({
                 await this.updateCompanies();
             }
             if (this.rol == 'CEO') {
-                this.selectedCustomerId = this.customerId;
-                this.selectedCompanyId = this.companyId;
-            }
-            if (this.rol == 'User') {
                 this.selectedCustomerId = this.customerId;
                 this.selectedCompanyId = this.companyId;
             }
