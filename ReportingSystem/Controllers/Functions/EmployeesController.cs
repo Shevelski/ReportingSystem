@@ -58,6 +58,15 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
+        [HttpPost]
+        // Архівування співробітників
+        public async Task<IActionResult> ArchiveAdministrator([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.ArchiveAdministrator(ar[0]);
+            return result != null ? Ok(result) : NotFound();
+        }
+
 
         [HttpPost]
         // Відновлення співробітників з архіву
@@ -68,12 +77,32 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
+
+        [HttpPost]
+        // Відновлення співробітників з архіву
+        public async Task<IActionResult> FromArchiveAdministrator([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.FromArchiveAdministrator(ar[0]);
+            return result != null ? Ok(result) : NotFound();
+        }
+
         [HttpPost]
         // Видалення співробітників з системи
         public async Task<IActionResult> DeleteEmployee([FromBody] string[] ar)
         {
             await Task.Delay(10);
             _employeesService.DeleteEmployee(ar[0], ar[1], ar[2]);
+            //return result != null ? Ok(result) : NotFound();
+            return Ok();
+        }
+
+        [HttpPost]
+        // Видалення співробітників з системи
+        public async Task<IActionResult> DeleteAdministrator([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            _employeesService.DeleteAdministrator(ar[0]);
             //return result != null ? Ok(result) : NotFound();
             return Ok();
         }

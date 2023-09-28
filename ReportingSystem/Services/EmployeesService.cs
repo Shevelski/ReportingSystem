@@ -259,6 +259,33 @@ namespace ReportingSystem.Services
         }
 
 
+        // Архівування співробітників
+        public EmployeeModel? ArchiveAdministrator(string idEm)
+        {
+            var administrators = DatabaseMoq.Administrators;
+
+            if (administrators == null || !Guid.TryParse(idEm, out Guid employeeId))
+            {
+                return null;
+            }
+
+            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Archive,
+                    employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
+                };
+                DatabaseMoq.UpdateJson();
+                return employee;
+            }
+
+            return null;
+        }
+
+
         // Перевірка на доступність email
         public bool IsBusyEmail(string email)
         {
@@ -401,7 +428,6 @@ namespace ReportingSystem.Services
                 rolType = EmployeeRolStatus.DevAdministrator;
             }
 
-
             var employee = new EmployeeModel
             {
                 id = Guid.NewGuid(),
@@ -473,6 +499,32 @@ namespace ReportingSystem.Services
         }
 
 
+        // Відновлення співробітників з архіву
+        public EmployeeModel? FromArchiveAdministrator(string idEm)
+        {
+            var administrators = DatabaseMoq.Administrators;
+
+            if (administrators == null || !Guid.TryParse(idEm, out Guid employeeId))
+            {
+                return null;
+            }
+
+            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Actual,
+                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                };
+                DatabaseMoq.UpdateJson();
+                return employee;
+            }
+            return null;
+        }
+
+
         // Видалення співробітників з системи
         public void DeleteEmployee(string idCu, string idCo, string idEm)
         {
@@ -503,6 +555,26 @@ namespace ReportingSystem.Services
             if (employee != null)
             {
                 employees.Remove(employee);
+                DatabaseMoq.UpdateJson();
+            }
+        }
+
+
+        // Видалення співробітників з системи
+        public void DeleteAdministrator(string idEm)
+        {
+            var administrators = DatabaseMoq.Administrators;
+
+            if (administrators == null || !Guid.TryParse(idEm, out Guid employeeId))
+            {
+                return;
+            }
+
+            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                administrators.Remove(employee);
                 DatabaseMoq.UpdateJson();
             }
         }

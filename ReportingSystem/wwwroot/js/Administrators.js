@@ -272,11 +272,9 @@ new Vue({
         },
 
         async confirmArchiveEmployee() {
-            const idCu = this.selectedCustomerId;
-            const idCo = this.selectedCompanyId;
             const idEm = this.filteredEmployees[this.indexEmployee].id;
 
-            const ar = [idCu, idCo, idEm];
+            const ar = [idEm];
 
             try {
                 await axios.post('/Employees/ArchiveAdministrator', ar);
@@ -289,10 +287,8 @@ new Vue({
             this.showEmployeeInfo = !this.showEmployeeInfo;
         },
         async fromArchiveEmployee() {
-            const idCu = this.selectedCustomerId;
-            const idCo = this.selectedCompanyId;
             const idEm = this.filteredEmployees[this.indexEmployee].id;
-            const ar = [idCu, idCo, idEm];
+            const ar = [idEm];
 
             try {
                 await axios.post('/Employees/FromArchiveAdministrator', ar);
@@ -304,10 +300,8 @@ new Vue({
             this.showEmployeeInfo = !this.showEmployeeInfo;
         },
         async confirmDeleteEmployee() {
-            const idCu = this.selectedCustomerId;
-            const idCo = this.selectedCompanyId;
             const idEm = this.filteredEmployees[this.indexEmployee].id;
-            const ar = [idCu, idCo, idEm];
+            const ar = [idEm];
 
             try {
                 await axios.post('/Employees/DeleteAdministrator', ar);
