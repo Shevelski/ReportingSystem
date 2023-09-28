@@ -195,6 +195,28 @@ namespace ReportingSystem.Services
         }
 
 
+        public async Task<CustomerModel?> DeleteLicence(string[] ar)
+        {
+            await Task.Delay(10);
+
+            if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || DatabaseMoq.Customers == null)
+            {
+                return null;
+            }
+
+            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+
+            if (licence == null || licence.statusLicence == null)
+            {
+                return null;
+            }
+
+            DatabaseMoq.Customers.Remove(licence);
+            DatabaseMoq.UpdateJson();
+            return null;
+        }
+
+
         public async Task<CustomerModel?> CancellationLicence(string[] ar)
         {
             await Task.Delay(10);

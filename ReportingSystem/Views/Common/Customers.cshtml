@@ -63,6 +63,7 @@
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmRenewal(modalIndex)">Підтвердити</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmCancellation(modalIndex)">Підтвердити</button>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmArchiving(modalIndex)">Підтвердити</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" v-if="modalType === 5" v-on:click="confirmDelete(modalIndex)">Підтвердити</button>
                     </div>
                 </div>
             </div>
@@ -141,10 +142,16 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="text-center">
-                                    <button v-on:click="toggleRenewalAccordion(index)" class="btn btn-outline-secondary">Продовжити ліцензію</button>
-                                    <button v-if="customer.statusLicence.licenceName !== 4 && customer.statusLicence.licenceType !== 5 && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Анулювання ліцензії</button>
-                                    <button v-if="customer.statusLicence.licenceType !== 4" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Архівування</button>
-                                    <button v-if="historyCount>0" v-on:click="toggleModal(4, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Історія</button>                   
+                                    <button v-on:click="toggleRenewalAccordion(index)" class="btn btn-outline-secondary">
+                                        Продовжити ліцензію</button>
+                                    <button v-if="customer.statusLicence.licenceType !== 4" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Архівування</button>
+                                    <button v-if="historyCount>0" v-on:click="toggleModal(4, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Історія</button>
+                                    <button v-if="customer.statusLicence.licenceType !== 4 && customer.statusLicence.licenceType !== 5 && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Анулювання ліцензії</button>
+                                    <button v-if="customer.statusLicence.licenceType == 4" v-on:click="toggleModal(5, index)" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Видалити</button>
                                 </td>
                             </tr>
                             <tr v-if="isRenewalAccordionOpen(index)">

@@ -79,6 +79,15 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
+        //видалення замовника
+        public async Task<IActionResult> DeleteLicence([FromBody] string[] ar)
+        {
+            var result = await _customersService.DeleteLicence(ar);
+            return Ok(result);
+
+        }
+
+        [HttpPost]
         //анулювання ліцензії замовника
         public async Task<IActionResult> CancellationLicence([FromBody] string[] ar)
         {

@@ -380,6 +380,15 @@
             }
             this.Init();
         },
+        async confirmDelete(index) {
+            var ar = [this.filteredCustomers[index].id];
+            try {
+                await axios.post('/Customers/DeleteLicence', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу DeleteLicence:', error);
+            }
+            this.Init();
+        },
         setFilteredIndex(index) {
             this.historyCount = this.filteredCustomers[index].historyOperations.length;
             this.historyArr = this.filteredCustomers[index].historyOperations;
@@ -390,7 +399,7 @@
             try {
                 await axios.post('/Customers/CreateCustomer', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу ArchivingLicence:', error);
+                console.error('Помилка під час виклику методу CreateCustomer:', error);
             }
             this.Init();
         },
@@ -425,6 +434,10 @@
             if (type === 3) {
                 this.modalOperation = 'Ви впевнені, що хочете архівувати ' + this.modalName;
                 this.modalTitle = 'Архівування';
+            }
+            if (type === 5) {
+                this.modalOperation = 'Ви впевнені, що хочете видалити ' + this.modalName;
+                this.modalTitle = 'Видалення';
             }
             if (type === 4) {
                 this.historyCount = this.filteredCustomers[index].historyOperations.length;
