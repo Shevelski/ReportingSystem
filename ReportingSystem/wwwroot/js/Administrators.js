@@ -120,7 +120,7 @@ new Vue({
         async Init() {
            
             /*this.positions = await this.getPositions();*/
-            /*this.rolls = await this.getRolls();*/
+            this.rolls = await this.getRolls();
             this.employees = await this.getEmployees();
 
 
@@ -133,23 +133,8 @@ new Vue({
 
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
         },
-
-        async getPositions() {
-            let response = await axios.get("/Positions/GetUniqPositions", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
-            return response.data;
-        },
         async getRolls() {
-            let response = await axios.get("/Companies/GetRolls", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
+            let response = await axios.get("/Companies/GetDevRolls");
             return response.data;
         },
         async getEmployees() {
@@ -164,30 +149,21 @@ new Vue({
                 employee.secondName == '' || employee.secondName == null || employee.secondName == undefined ||
                 employee.thirdName == '' || employee.thirdName == null || employee.thirdName == undefined ||
                 employee.birthDate == '' || employee.birthDate == null || employee.birthDate == undefined ||
-                employee.workStartDate == '' || employee.workStartDate == null || employee.workStartDate == undefined ||
-                employee.namePosition == '' || employee.namePosition == null || employee.namePosition == undefined ||
                 employee.login == '' || employee.login == null || employee.login == undefined ||
                 employee.rol == '' || employee.rol == null || employee.rol == undefined ||
                 employee.password == '' || employee.password == null || employee.password == undefined ||
                 employee.phoneWork == '' || employee.phoneWork == null || employee.phoneWork == undefined ||
-                employee.phoneSelf == '' || employee.phoneSelf == null || employee.phoneSelf == undefined ||
-                employee.emailWork == '' || employee.emailWork == null || employee.emailWork == undefined ||
-                employee.emailSelf == '' || employee.emailSelf == null || employee.emailSelf == undefined ||
-                employee.addressReg == '' || employee.addressReg == null || employee.addressReg == undefined ||
-                employee.addressFact == '' || employee.addressFact == null || employee.addressFact == undefined ||
-                employee.salary == '' || employee.salary == null || employee.salary == undefined ||
-                employee.taxNumber == '' || employee.taxNumber == null || employee.taxNumber == undefined ||
-                employee.addSalary == '' || employee.addSalary == null || employee.addSalary == undefined
-            )
+                employee.emailWork == '' || employee.emailWork == null || employee.emailWork == undefined
+               )
         },
         
        
         getSelectedRol(event) {
             this.selectedRol = event.target.value;
         },
-        getSelectedPosition(event) {
-            this.selectedPosition = event.target.value;
-        },
+        //getSelectedPosition(event) {
+        //    this.selectedPosition = event.target.value;
+        //},
        
         ToogleMode(mode) {
             if (this.mode == 'edit') {
@@ -203,9 +179,9 @@ new Vue({
         async editEmployee() {
             this.ToogleMode('standart');
             try {
-                const response = await axios.post('/Employees/EditEmployee', this.filteredEmployees[this.indexEmployee]);
+                const response = await axios.post('/Employees/EditAdministrator', this.filteredEmployees[this.indexEmployee]);
             } catch (error) {
-                console.error('Помилка під час виклику методу EditEmployee:', error);
+                console.error('Помилка під час виклику методу EditAdministrator:', error);
             }
             this.Init();
         },
@@ -256,50 +232,6 @@ new Vue({
             }
             return formattedName;
         },
-        holidayDaysCount(indexEmployee) {
-            const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].holidayDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].holidayDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }   
-        },
-        hospitalDaysCount(indexEmployee) {
-            const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].hospitalDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].hospitalDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }
-        },
-        assignmentDaysCount(indexEmployee) {
-            const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].assignmentDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].assignmentDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }
-        },
-        taketimeoffDaysCount(indexEmployee) {
-            const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].taketimeoffDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].taketimeoffDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }
-        },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
             this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
@@ -347,9 +279,9 @@ new Vue({
             const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Employees/ArchiveEmployee', ar);
+                await axios.post('/Employees/ArchiveAdministrator', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу ArchiveEmployee:', error);
+                console.error('Помилка під час виклику методу ArchiveAdministrator:', error);
             }
 
             this.Init();
@@ -363,9 +295,9 @@ new Vue({
             const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Employees/FromArchiveEmployee', ar);
+                await axios.post('/Employees/FromArchiveAdministrator', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу FromArchiveEmployee:', error);
+                console.error('Помилка під час виклику методу FromArchiveAdministrator:', error);
             }
             this.Init();
             this.closeAllAccordions();
@@ -378,9 +310,9 @@ new Vue({
             const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Employees/DeleteEmployee', ar);
+                await axios.post('/Employees/DeleteAdministrator', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу DeleteUser:', error);
+                console.error('Помилка під час виклику методу DeleteAdministrator:', error);
             }
 
             this.Init();
@@ -400,35 +332,24 @@ new Vue({
             
         },
         async addEmployee() {
-            const v0 = this.selectedCustomerId;
-            const v1 = this.selectedCompanyId;
-            const v2 = this.newEmployee.firstName;
-            const v3 = this.newEmployee.secondName;
-            const v4 = this.newEmployee.thirdName;
-            const v5 = this.newEmployee.birthDate;
-            const v6 = this.newEmployee.workStartDate;
-            const v7 = this.newEmployee.namePosition;
-            const v8 = this.newEmployee.login;
-            const v9 = this.newEmployee.rol.rolName;
-            const v10 = this.newEmployee.rol.rolType.toString();
-            const v11 = this.newEmployee.password;
-            const v12 = this.newEmployee.phoneWork;
-            const v13 = this.newEmployee.phoneSelf;
-            const v14 = this.newEmployee.emailWork;
-            const v15 = this.newEmployee.emailSelf;
-            const v16 = this.newEmployee.addressReg;
-            const v17 = this.newEmployee.addressFact;
-            const v18 = this.newEmployee.salary;
-            const v19 = this.newEmployee.taxNumber;
-            const v20 = this.newEmployee.addSalary;
+            const v0 = this.newEmployee.firstName;
+            const v1 = this.newEmployee.secondName;
+            const v2 = this.newEmployee.thirdName;
+            const v3 = this.newEmployee.birthDate;
+            const v4 = this.newEmployee.login;
+            const v5 = this.newEmployee.rol.rolName;
+            const v6 = this.newEmployee.rol.rolType.toString();
+            const v7 = this.newEmployee.password;
+            const v8 = this.newEmployee.phoneWork;
+            const v9 = this.newEmployee.emailWork;
 
-            const ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20];
+            const ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9];
 
             console.log(ar);
             try {
-                await axios.post('/Employees/CreateEmployee', ar);
+                await axios.post('/Employees/CreateAdministrator', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу CreateEmployee:', error);
+                console.error('Помилка під час виклику методу CreateAdministrator:', error);
             }
             this.closeAllAccordions();
             this.Init();

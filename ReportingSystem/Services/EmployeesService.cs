@@ -386,6 +386,53 @@ namespace ReportingSystem.Services
         }
 
 
+        // Додавання співробітників
+        public EmployeeModel? CreateAdministrator(string[] ar)
+        {
+            var administrators = DatabaseMoq.Administrators;
+
+            if (administrators == null)
+            {
+                return null;
+            }
+
+            if (!Enum.TryParse(ar[6], out EmployeeRolStatus rolType))
+            {
+                rolType = EmployeeRolStatus.DevAdministrator;
+            }
+
+
+            var employee = new EmployeeModel
+            {
+                id = Guid.NewGuid(),
+                customerId = Guid.Empty,
+                companyId = Guid.Empty,
+                firstName = ar[0],
+                secondName = ar[1],
+                thirdName = ar[2],
+                birthDate = DateTime.Parse(ar[3]),
+                login = ar[4],
+                rol = new Models.EmployeeRolModel
+                {
+                    rolName = ar[5],
+                    rolType = rolType,
+                },
+                password = ar[7],
+                phoneWork = ar[8],
+                emailWork = ar[9],
+                status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Actual,
+                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                },
+            };
+
+            administrators.Add(employee);
+                DatabaseMoq.UpdateJson();
+                return employee;
+        }
+
+
         // Відновлення співробітників з архіву
         public EmployeeModel? FromArchiveEmployee(string idCu, string idCo, string idEm)
         {

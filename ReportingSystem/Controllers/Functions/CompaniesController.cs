@@ -63,6 +63,17 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
+        [HttpGet]
+        //отримати ролі вибраної компанії вибраного замовника 
+        public async Task<IActionResult> GetDevRolls()
+        {
+            await Task.Delay(10);
+            var result = _companiesService.GetDevRolls();
+            return Json(result);
+        }
+
+
+
         //[HttpPost]
         ////зберегти компанію в конфігураторі для подальшого використання
         ////переробити на універсально для кожного користувача

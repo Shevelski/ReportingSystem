@@ -87,6 +87,15 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
+        [HttpPost]
+        // Додавання нового співробітника
+        public async Task<IActionResult> CreateAdministrator([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            var result = _employeesService.CreateAdministrator(ar);
+            return result != null ? Ok(result) : NotFound();
+        }
+
         [HttpGet]
         // Перевірка вільності email
         public async Task<IActionResult> IsBusyEmail(string email)

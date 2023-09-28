@@ -7,6 +7,7 @@ using ReportingSystem.Utils;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models;
 using Bogus.DataSets;
+using System.Collections.Generic;
 
 namespace ReportingSystem.Services
 {
@@ -60,6 +61,25 @@ namespace ReportingSystem.Services
             }
 
             return null;
+        }
+
+        //Отримання всіх ролей системи в компанії 
+        public List<EmployeeRolModel>? GetDevRolls()
+        {
+            List<EmployeeRolModel> devRols = new List<EmployeeRolModel>();
+            EmployeeRolModel devRol = new EmployeeRolModel()
+            {
+                rolType = EmployeeRolStatus.Developer,
+                rolName = EmployeeRolStatus.Developer.GetDisplayName()
+            };
+            devRols.Add(devRol);
+            devRol = new EmployeeRolModel()
+            {
+                rolType = EmployeeRolStatus.DevAdministrator,
+                rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+            };
+            devRols.Add(devRol);
+            return devRols;
         }
 
 

@@ -44,13 +44,13 @@ namespace ReportingSystem.Controllers.Functions
             }
         }
 
-        [HttpPost]
-        //створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
-        public IActionResult CreateCustomer([FromBody] string[] ar)
-        {
-            var result = _customersService.CreateCustomer(ar[0]);
-            return result != null ? Ok(result) : NotFound();
-        }
+        //[HttpPost]
+        ////створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
+        //public IActionResult CreateCustomer([FromBody] string[] ar)
+        //{
+        //    var result = _customersService.CreateCustomer(ar[0]);
+        //    return result != null ? Ok(result) : NotFound();
+        //}
 
         [HttpPost]
         //створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
