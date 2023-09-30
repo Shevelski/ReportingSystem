@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using Bogus.DataSets;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Data.SqlClient;
 
 namespace ReportingSystem
 {
@@ -41,46 +42,10 @@ namespace ReportingSystem
         }
 
         private const string DataFilePath = "data.json";
-        //static DatabaseMoq()
-        //{
-
-        //    if (File.Exists(DataFilePath) && new FileInfo(DataFilePath).Length > 0)
-        //    {
-        //        string jsonData;
-        //        using (StreamReader reader = new StreamReader(DataFilePath))
-        //        {
-        //            jsonData = reader.ReadToEnd();
-        //        }
-        //        Customers = JsonConvert.DeserializeObject<List<CustomerModel>>(jsonData);
-        //    }
-        //    else
-        //    {
-        //        string administrations = JsonConvert.SerializeObject(DatabaseMoqGenerate.Administrators, Formatting.Indented);
-        //        string configuration = JsonConvert.SerializeObject(DatabaseMoqGenerate.Configuration, Formatting.Indented);
-        //        string customers = JsonConvert.SerializeObject(DatabaseMoqGenerate.Customers, Formatting.Indented);
-
-        //        using (StreamWriter writer = new StreamWriter(DataFilePath))
-        //        {
-        //            writer.Write(administrations);
-        //            writer.Write(configuration);
-        //            writer.Write(customers);
-
-        //        }
-        //        Debug.WriteLine($"DataJson had wroten");
-        //    }
-        //}
-
-        //public static void UpdateJson()
-        //{
-        //    string jsonData = JsonConvert.SerializeObject(DatabaseMoq.Customers, Formatting.Indented);
-        //    File.WriteAllText(DataFilePath, jsonData);
-        //    UpdateCustomers = Customers;
-        //    UpdateAdministrators = Administrators;
-        //    UpdateConfiguration = Configuration;
-        //}
-
+       
         static DatabaseMoq()
         {
+
             if (File.Exists(DataFilePath) && new FileInfo(DataFilePath).Length > 0)
             {
                 string jsonData;

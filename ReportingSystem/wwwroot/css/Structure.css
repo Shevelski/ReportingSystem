@@ -51,13 +51,6 @@ body {
   margin-bottom: 60px;
 }
 
-/*.modal-dialog {
-    position: fixed;
-    top: 30%;
-    left: 30%;
-    transform: translate(-50%, -50%);
-}*/
-
 .form-select {
     font-size: 14px;
     height: 33px;
@@ -78,26 +71,6 @@ body {
     color: red;
 }
 
-.column1 {
-    width: 100%;
-    transition: width 1s ease-in-out;
-}
-    .column1.mod {
-        width: 30%;
-        transition: width 1s ease-in-out;
-    }
-
-.column2 {
-    width: 0%;
-    display: none;
-    transition: width 1s ease-in-out;
-}
-    .column2.mod {
-        display: block;
-        width: 100%;
-        transition: width 1s ease-in-out 1s;
-    }
-
 .panel-body {
     opacity: 0;
     width: 0;
@@ -112,3 +85,30 @@ body {
         transition: opacity 1s ease-in-out, width 1s ease-in-out;
         transition-delay: 1s;
     }
+
+
+
+
+.toolbox {
+    width: 20%;
+    height: 100%;
+    background-color: #f0f0f0;
+    border: 2px dashed #ccc;
+    float: left;
+}
+
+.dropzone {
+    width: 80%;
+    height: 500px;
+    background-color: #e0e0e0;
+    border: 2px solid #ccc;
+    float: left;
+}
+
+.draggable {
+    width: 90%;
+    height: 70px;
+    background-color: #808080;
+    margin: 10px;
+    cursor: pointer;
+}

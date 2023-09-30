@@ -1,11 +1,4 @@
-﻿using ReportingSystem.Enums;
-using ReportingSystem;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Customer;
-using ReportingSystem.Enums.Extensions;
-using ReportingSystem.Utils;
-using ReportingSystem.Models.User;
-using ReportingSystem.Models;
+﻿using ReportingSystem.Models.User;
 
 namespace ReportingSystem.Services
 {
@@ -37,6 +30,51 @@ namespace ReportingSystem.Services
                 {
                     return company.positions;
                 }
+            }
+
+            return null;
+        }
+
+        //Отримання списку посад компанії 
+        public List<EmployeePositionEmpModel>? GetAllPositionsWithEmployee(string idCu, string idCo)
+        {
+            List<EmployeePositionEmpModel>? positions = new List<EmployeePositionEmpModel>();
+
+            var customers = DatabaseMoq.Customers;
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+
+            if (customer == null || customer.companies == null)
+            {
+                return null;
+            }
+
+            if (Guid.TryParse(idCo, out Guid idCompany))
+            {
+                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+
+                if (company == null || company.positions == null || company.employees == null)
+                {
+                    return null;
+                }
+                int i = 0;
+                foreach (var item in company.positions)
+                {
+                    
+                    EmployeePositionEmpModel employeePositionEmpModel = new EmployeePositionEmpModel();
+                    employeePositionEmpModel.namePosition = item.namePosition;
+                    employeePositionEmpModel.employee = company.employees[i];
+                    positions.Add(employeePositionEmpModel);
+                    i++;
+                }
+                i = 0;
+                return positions;
+              
             }
 
             return null;

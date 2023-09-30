@@ -24,6 +24,15 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         //Отримання списку посад компанії 
+        public async Task<IActionResult> GetAllPositionsWithEmployee(string idCu, string idCo)
+        {
+            await Task.Delay(10);
+            var result = _positionsService.GetAllPositionsWithEmployee(idCu, idCo);
+            return Json(result);
+        }
+
+        [HttpGet]
+        //Отримання списку посад компанії 
         public async Task<IActionResult> GetUniqPositions(string idCu, string idCo)
         {
             await Task.Delay(10);
