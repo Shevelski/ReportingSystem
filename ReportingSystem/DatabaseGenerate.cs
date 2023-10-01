@@ -105,11 +105,7 @@ namespace ReportingSystem
                 customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
                 customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
                 customer.companies = GenerateRandomCompanies(customer);
-                customer.configure = new CustomerConfigModel()
-                {
-                    IsSaveCompany = false,
-                    IdSavedCompany = Guid.Empty,
-                };
+                customer.configure = new CustomerConfigModel();
                 return customer;
             }
 

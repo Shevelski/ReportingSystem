@@ -34,7 +34,7 @@ namespace ReportingSystem.Services
         //реєстрація замовника
         public CustomerModel? RegistrationCustomer(string[] ar)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            //const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
 
             Random random = new Random();
             var customer = new CustomerModel

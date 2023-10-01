@@ -5,41 +5,58 @@ namespace ReportingSystem.Data
 {
     public class CreateTables
     {
+        //----------------------------- для Customers
+        public async Task CreateEnumsTables()
+        {
+            if (!new TablesIsExist().StatusLicence())
+            {
+                await new CreateTableForCustomers().StatusLicence();
+                await new InsertData().StatusLicence();
+            }
+            if (!new TablesIsExist().AuthorizeStatus())
+            {
+                await new CreateTableForCustomers().AuthorizeStatus();
+                await new InsertData().AuthorizeStatus();
+            }
+            if (!new TablesIsExist().CompanyStatus())
+            {
+                await new CreateTableForCustomers().CompanyStatus();
+                await new InsertData().CompanyStatus();
+            }
+            if (!new TablesIsExist().EmployeeRolStatus())
+            {
+                await new CreateTableForCustomers().EmployeeRolStatus();
+                await new InsertData().EmployeeRolStatus();
+            }
+            if (!new TablesIsExist().EmployeeStatus())
+            {
+                await new CreateTableForCustomers().EmployeeStatus();
+                await new InsertData().EmployeeStatus();
+            }
+            if (!new TablesIsExist().ProjectStatus())
+            {
+                await new CreateTableForCustomers().ProjectStatus();
+                await new InsertData().ProjectStatus();
+            }
+            if (!new TablesIsExist().Status())
+            {
+                await new CreateTableForCustomers().Status();
+                await new InsertData().Status();
+            }
+        }
+
+        
+
         public async Task CreateTableCustomers()
         {
-           
-            if (!new CheckTables().IsExistsStatusLicence())
+            if (!new TablesIsExist().Configure())
             {
-                await new CreateTables().CreateTableStatusLicence();
-                await new InsertData().StatusLicence();
-                await new CreateTables().CreateTableAuthorizeStatus();
-                await new InsertData().AuthorizeStatus();
-                await new CreateTables().CreateTableCompanyStatus();
-                await new InsertData().CompanyStatus();
-                await new CreateTables().CreateTableEmployeeRolStatus();
-                await new InsertData().EmployeeRolStatus();
-                await new CreateTables().CreateTableEmployeeStatus();
-                await new InsertData().EmployeeStatus();
-                await new CreateTables().CreateTableProjectStatus();
-                await new InsertData().ProjectStatus();
-                await new CreateTables().CreateTableStatus();
-                await new InsertData().Status();
-
-
-                
+                await new CreateTableForCustomers().Configure();
             }
-
-                
-
-
-                //database.ExecuteAsync("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Customers')" +
-                //    " BEGIN " +
-                //    " CREATE TABLE Customers(" +
-                //    " id INT PRIMARY KEY," +
-                //    " col1 NVARCHAR(60) NOT NULL" +
-                //    ");" +
-                //    " END").Wait();
         }
+
+        //----------------------------- для Customers
+
         public void CreateTableAdministrators()
         {
 
@@ -48,82 +65,7 @@ namespace ReportingSystem.Data
         {
 
         }
-        public async Task CreateTableStatusLicence()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE StatusLicence ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(60) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task CreateTableAuthorizeStatus()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE AuthorizeStatus ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(200) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task CreateTableCompanyStatus()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE CompanyStatus ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(60) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task CreateTableEmployeeRolStatus()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE EmployeeRolStatus ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(60) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task CreateTableEmployeeStatus()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE EmployeeStatus ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(60) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task CreateTableProjectStatus()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE ProjectStatus ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(60) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task CreateTableStatus()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE Status ( " +
-                    "id UNIQUEIDENTIFIER PRIMARY KEY, type INT NOT NULL, name NVARCHAR(60) NOT NULL );";
-
-                await database.ExecuteAsync(query);
-            }
-        }
+        
         
     }
 }

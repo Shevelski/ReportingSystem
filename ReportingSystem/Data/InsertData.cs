@@ -1,6 +1,5 @@
 ﻿using Dapper;
 using ReportingSystem.Enums.Extensions;
-using System.Diagnostics;
 
 namespace ReportingSystem.Data
 {

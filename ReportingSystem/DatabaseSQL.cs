@@ -5,22 +5,25 @@ namespace ReportingSystem
     public static class DatabaseSQL
     {
 
-        public static void Init()
+        public static async Task Init()
         {
             try
             {
-                if (!new CheckTables().IsExistsCustomers())
-                {
-                    _ = new CreateTables().CreateTableCustomers();
-                }
-                if (!new CheckTables().IsExistsAdministrators())
-                {
-                    new CreateTables().CreateTableAdministrators();
-                }
-                if (!new CheckTables().IsExistsConfiguration())
-                {
-                    new CreateTables().CreateTableConfiguration();
-                }
+
+                await new CreateTables().CreateEnumsTables();
+              
+                //if (!new TablesIsExist().Customers())
+                //{
+                //    _ = new CreateTables().CreateTableCustomers();
+                //}
+                //if (!new TablesIsExist().Administrators())
+                //{
+                //    new CreateTables().CreateTableAdministrators();
+                //}
+                //if (!new TablesIsExist().Configuration())
+                //{
+                //    new CreateTables().CreateTableConfiguration();
+                //}
             }
             catch (Exception ex)
             {
