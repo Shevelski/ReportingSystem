@@ -1,249 +1,438 @@
-﻿@using ReportingSystem.Properties;
-
-
-<head>
-    <title>123</title>
-</head>
-
-@{
-    ViewData["Title"] = "Проекти";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Проекти</h1>
-</div>
-
-<style>
-    .modal-dialog {
-        position: fixed;
-        top: 30%;
-        left: 30%;
-        transform: translate(-50%, -50%);
-    }
-
-    .accordion-button {
-        height: 45px;
-    }
-
-    .lv1 .accordion-button {
-        background-color: #e7f4ff;
-        color: black;
-    }
-
-    .lv2 .accordion-button {
-        background-color: #b5c1ce;
-        color: black;
-    }
-
-    .red-text {
-        color: red;
-    }
-</style>
-
-
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+﻿<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="~/css/Projects.css" asp-append-version="true" />
 
-<div class="container" id="Projects">
-    <div class="accordion">
+<div class="text-center">
+    <h1 class="display-4">Проекти</h1>
+</div>
+@*---------------------------------------------------------------------------------------------------------------------*@
 
-        @* Модальне вікно редагування і створення проекту*@
+<div class="container" id="Projects">
+    <div class="accordion" id="accordionExample" v-if="projects.length != 1">
+        @*---------------------------------------------------------------------------------------------------------------------*@
+        @* Модальне вікно*@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
                     </div>
                     <div class="modal-body">
+                        <div v-if="modalType == 1">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Прізвище</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.secondName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Ім'я</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.firstName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">По-батькові</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.thirdName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Посада</label>
+                                        <select class="form-select data" aria-label="Default select example"
+                                                v-on:change="getSelectedPosition($event)"
+                                                v-model="project.namePosition">
+                                            <option v-for="position in positions" :value="position.namePosition">
+                                                {{ position.namePosition }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Пароль</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Телефон</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.phoneWork" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">E-mail</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.emailWork" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Адреса реєстрації</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.addressReg" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Оклад</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.salary" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Податковий номер</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.taxNumber" />
+                                    </div>
+                                </div>
 
-                        @*Для редагування проекту*@
-                        <div v-if="modalType === 2">
-                            <div class="form-group">
-                                <label class="form-label">{{modalName}}</label>
-                                <input class="form-control" placeholder="Введіть нову назву проекту" type="text" v-model="editProjectName" />
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Дата народження</label>
+                                        <input type="date" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.birthDate" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Дата початку роботи</label>
+                                        <input type="date" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.workStartDate" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Логін</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.login" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Роль в системі</label>
+                                        <select class="form-select data"
+                                                aria-label="Default select example"
+                                                v-on:change="getSelectedRol($event)"
+                                                v-model="newProject.rol">
+                                            <option v-for="rol in rolls" :value="rol">
+                                                {{ rol.rolName }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <button type="button" class="btn btn-secondary custom-button" v-on:click="GeneratePassword(-1)">Новий</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Телефон ос.</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.phoneSelf" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label"></label>
+                                        <button type="button" class="btn btn-secondary custom-button" v-on:click="checkEmail()">Перевірити доступність</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">E-mail ос.</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.emailSelf" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Адреса проживання</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.addressFact" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Премія</label>
+                                        <input type="text" class="form-control projectdata" v-on:change="isFormEmpty()" v-model="newProject.addSalary" />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        @*Для створення проекту*@
-                        <div v-if="modalType === 1">
-                            <div class="form-group">
-                                <input class="form-control" placeholder="Введіть назву нового проекту" type="text" v-model="editProjectName" />
-                            </div>
+                            
+                            
+                            
                         </div>
 
                         <p :class="{ 'red-text': modalProjectActive }">{{ modalOperation }}</p>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateProject()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditProject()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="Init()">Закрити</button>
+
+
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 1" v-on:click="addProject()" v-bind:disabled="isFormEmpty()">Підтвердити</button>
+
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 2" v-on:click="editProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 3" v-on:click="confirmArchiveProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 4" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType == 5" v-on:click="fromArchiveProject()">Підтвердити</button>
                     </div>
                 </div>
             </div>
         </div>
+        @*---------------------------------------------------------------------------------------------------------------------*@
 
-        @* Модальне вікно покрокового створення проекту*@
-        <div class="modal fade" id="staticBackdropCreate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+        @*<div class="btn-group mb-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Додати співробітника</button>
+        </div>*@
+
+        <div class="btn-group mb-3 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" 
+                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    v-on:click="toggleModal(1, 0)">
+                Додати проект
+            </button>
+        </div>
+
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
+            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
+                <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
+            </select>
+        </div>
+
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
+            <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
+                <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
+            </select>
+        </div>
+
+        <div style="display: flex; align-items: center;">
+
+            <input class="form-control" v-model="searchQuery" type="text" placeholder="Пошук..." style="margin-right: 20px;">
+
+            <div class="form-check mc-3">
+                <input class="form-check-input" id="showArchive" type="checkbox" v-model="showArchive" v-on:change="firstBatch()">
+                <label class="form-check-label" for="showArchive">
+                    Архівні
+                </label>
+            </div>
+        </div>
+
+
+        @*---------------------------------------------------------------------------------------------------------------------*@
+        <div class="container" v-if="countFilteredProjects > 10">
+            <div class="row">
+                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
+                        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
+                        <button type="button" v-if="countFilteredProjects > 10" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
+                        <button type="button" v-if="countFilteredProjects > 15" class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
                     </div>
-                    <div class="modal-body">
-
-                        @*Для редагування проекту*@
-                        <div v-if="modalType === 2">
-                            <div class="form-group">
-                                <label class="form-label">{{modalName}}</label>
-                                <input class="form-control" placeholder="Введіть нову назву проекту" type="text" v-model="editProjectName" />
-                            </div>
-                        </div>
-
-                        @*Для створення проекту*@
-                        <div v-if="modalType === 1">
-                            <div class="form-group">
-                                <input class="form-control" placeholder="Введіть назву нового проекту" type="text" v-model="editProjectName" />
-                            </div>
-                        </div>
-
-                        <p :class="{ 'red-text': modalProjectActive }">{{ modalOperation }}</p>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateProject()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditProject()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                    <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні" :style="{ visibility: pageCur !== 1 ? 'visible' : 'hidden' }"><<</button>
+                        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
+                        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні" :style="{ visibility: pageCur < pageCount ? 'visible' : 'hidden' }">>></button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="mb-3">
-            <!-- Поле введення для пошуку -->
-            <input v-model="searchQueryProject" type="text" class="form-control" placeholder="Пошук...">
-        </div>
-
-        <div class="row mb-3">
-            <div class="col">
-
-                <div class="btn-group d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Створити Проект</button>
-                </div>
-
-            </div>
-        </div>
-
+        @*---------------------------------------------------------------------------------------------------------------------*@
         <div style="margin-top: 1em;"></div>
-
         <div v-for="(project, index) in filteredProjects" :key="index" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + index">
                 <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
-                    {{ project.name }}
+                    {{project.secondName}} {{ project.firstName }} {{project.thirdName}}
                 </button>
             </h2>
-            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#app">
+            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Projects">
                 <div class="accordion-body">
                     <table class="table">
                         <tbody>
                             <tr>
-                                <td><strong>Назва проекту</strong></td>
-                                <td>{{project.name}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Опис проекту</strong></td>
-                                <td>{{project.description}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Статус проекту</strong></td>
-                                <td>{{project.status}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Керівник</strong></td>
-                                <td>{{project.head}}</td>
-                            </tr>
+                                <td>
+                                    <div class="panel-heading"></div>
+                                    <div>
+                                        <form v-bind:class="{editable: mode == 'edit'}">
+                                            <div class="row align-items-center">
+                                                <div class="row">
+                                                    <div class="col-sm-4">
+                                                        <div class="clearfix" style="display: flex; justify-content: center;">
+                                                            <input type="file" id="imageInput" style="display: none;" accept="image/*" v-on:change="handleImageChange" v-bind:disabled="mode=='standart'">
+                                                            <label for="imageInput">
+                                                                <img :src="project.photo" alt="Right image" style="width: 200px; height: 150px; object-fit: contain; cursor: pointer;">
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Прізвище</label>
+                                                            <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.secondName" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Ім'я</label>
+                                                            <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.firstName" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">По-батькові</label>
+                                                            <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.thirdName" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Дата народження</label>
+                                                            <input type="date" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.birthDate" />
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Дата початку роботи</label>
+                                                            <input type="date" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.workStartDate" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-8">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Посада</label>
+                                                                    <select class="form-select data" aria-label="Default select example"
+                                                                            v-bind:disabled="mode=='standart'"
+                                                                            v-on:change="getSelectedPosition($event)"
+                                                                            v-model="project.position.namePosition">
+                                                                        <option :value="project.position.namePosition" selected>
+                                                                            {{ project.position.namePosition }}
+                                                                        </option>
+                                                                        <option v-for="position in positions" :value="position.namePosition">
+                                                                            {{ position.namePosition }}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                    <label class="control-label">Логін</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.login" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Роль в системі</label>
+                                                                    <select class="form-select data"
+                                                                            aria-label="Default select example"
+                                                                            v-bind:disabled="mode=='standart'"
+                                                                            v-on:change="getSelectedRol($event)"
+                                                                            v-model="project.rol">
+                                                                        <option v-for="rol in rolls" :value="rol">
+                                                                            {{ rol.rolName }}
+                                                                        </option>
+                                                                    </select>
 
-
-                            <tr>
-                                <td><strong>Дата початку</strong></td>
-                                <td>{{formatDate(project.startDate)}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Дата закінчення</strong></td>
-                                <td>{{formatDate(project.endDate)}}</td>
-                            </tr> 
-                            <tr>
-                                <td><strong>Собівартість</strong></td>
-                                <td>{{project.projectCostsForCompany}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Вартість для замовника</strong></td>
-                                <td>{{project.projectCostsForCustomer}}</td>
-                            </tr>
-
-
-                            <tr>
-                                <td><strong>Учасники</strong></td>
-                                <td v-if="project.members.length !== 0">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Роль :</strong></td>
-                                                <td><strong>Ім'я</strong></td>
-                                            </tr>
-                                            <tr v-for="(member, indexM) in project.members" :key="indexM">
-                                                <td>{{ member.rol }} :</td>
-                                                <td>{{ member.name }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                                </div>
+                                                                <div v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                    <div v-if="mode == 'standart'" class="form-group">
+                                                                        <label class="control-label">Пароль</label>
+                                                                        <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.password" />
+                                                                    </div>
+                                                                    <div v-else>
+                                                                        <div class="row">
+                                                                            <div class="col-sm-6">
+                                                                                <div class="form-group">
+                                                                                    <label class="control-label">Пароль</label>
+                                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.password" />
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-sm-6">
+                                                                                <div class="form-group">
+                                                                                    <label class="control-label"></label>
+                                                                                    <button type="button" class="btn btn-secondary custom-button" v-on:click="GeneratePassword(indexProject)">Новий</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*----------------------------------------------------------------------------------*@
+                                                        <div class="row mt-3">
+                                                            <label class="control-label" style="text-align: center; font-weight: bold;">Робоча інформація</label>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Телефон</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.phoneWork" />
+                                                                </div>
+                                                                <div class="form-group" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                    <label class="control-label">Податковий номер</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.taxNumber" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">E-mail</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.emailWork" />
+                                                                </div>
+                                                                <div class="row" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Оклад</label>
+                                                                            <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.salary" />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Премія</label>
+                                                                            <input type="text" class="form-control projectdata" v-model="project.addSalary" v-bind:disabled="mode=='standart'" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відпустка</label>
+                                                                    <input type="text" class="form-control projectdata" :value="holidayDaysCount(indexProject)" v-bind:disabled="true" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Лікарняні</label>
+                                                                    <input type="text" class="form-control projectdata" :value="hospitalDaysCount(indexProject)" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відгули</label>
+                                                                    <input type="text" class="form-control projectdata" :value="taketimeoffDaysCount(indexProject)" v-bind:disabled="true" />
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Відрядження</label>
+                                                                    <input type="text" class="form-control projectdata" :value="assignmentDaysCount(indexProject)" v-bind:disabled="true" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @*----------------------------------------------------------------------------------*@
+                                                        <div class="row mt-3">
+                                                            <label class="control-label" style="text-align: center; font-weight: bold;">Особиста інформація</label>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">Телефон</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.phoneSelf" />
+                                                                </div>
+                                                                <div class="form-group" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                    <label class="control-label">Адреса реєстрації</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.addressReg" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <div class="form-group">
+                                                                    <label class="control-label">E-mail</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.emailSelf" />
+                                                                </div>
+                                                                <div class="form-group" v-if="rol !== 'ProjectManager' && rol !== 'User'">
+                                                                    <label class="control-label">Адреса проживання</label>
+                                                                    <input type="text" class="form-control projectdata" v-bind:disabled="mode=='standart'" v-model="project.addressFact" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td><strong>Етапи</strong></td>
-                                <td v-if="project.steps.length !== 0">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>Назва етапу</strong></td>
-                                                <td><strong>Статус</strong></td>
-                                                <td><strong>Учасники</strong></td>
-                                            </tr>
-                                            <tr v-for="(step, indexM) in project.steps" :key="indexM">
-                                                <td>{{ step.name }}</td>
-                                                <td>{{ step.status }}</td>
-                                                <td>
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td><strong>Роль :</strong></td>
-                                                                <td><strong>Ім'я</strong></td>
-                                                            </tr>
-                                                            <tr v-for="(member, indexM) in project.members" :key="indexM">
-                                                                <td>{{ member.rol }} :</td>
-                                                                <td>{{ member.name }}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-
-
-                            <tr>
+                            <tr v-if="rol !== 'ProjectManager' && rol !== 'User'">
                                 <td colspan="2" class="text-left">
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати проект" v-on:click="toggleModal(2,index)">ε</button>&nbsp;
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити проект" v-on:click="toggleModal(3,index)">-</button>
+                                    <button class="btn btn-default mt-3"
+                                            v-if="mode=='standart'"
+                                            v-bind:class="{active: mode == 'standart'}"
+                                            v-on:click="ToogleMode('edit')">
+                                        Редагувати
+                                    </button>
+
+                                    <button class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-if="mode=='edit'"
+                                            v-bind:class="{active: mode == 'edit'}"
+                                            v-on:click="ToogleMode('standart')">
+                                        Підтвердити
+                                    </button>
+
+                                    <button class="btn btn-danger mt-3"
+                                            v-if="mode=='edit'"
+                                            v-bind:class="{active: mode == 'edit'}"
+                                            v-on:click="mode='standart'">
+                                        Відмінити
+                                    </button>
+
+                                    <button v-if="project.status.projectStatusType == 1" class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-on:click="toggleModal(3, index)">
+                                        Архівувати
+                                    </button>
+                                    <button v-if="project.status.projectStatusType == 2" class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-on:click="toggleModal(5, index)">
+                                        Відновити
+                                    </button>
+                                    <button v-if="project.status.projectStatusType == 2" class="btn btn-default mt-3"
+                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                            v-on:click="toggleModal(4, index)">
+                                        Видалити
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -252,7 +441,15 @@
             </div>
         </div>
     </div>
+    <div v-else>
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div class="text-center">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-
+@*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/Projects.js" asp-append-version="true"></script>

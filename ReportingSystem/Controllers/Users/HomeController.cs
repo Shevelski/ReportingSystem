@@ -23,6 +23,7 @@ namespace ReportingSystem.Controllers.Users
         public IActionResult Authorize()
         {
             var a = DatabaseMoq.Customers;
+            var b = DatabaseSQL.Init;
             return View();
         }
 

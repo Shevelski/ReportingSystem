@@ -1,0 +1,249 @@
+﻿@using ReportingSystem.Properties;
+
+<div class="text-center">
+    <h1 class="display-4">Проекти</h1>
+</div>
+
+@*<style>
+    .modal-dialog {
+        position: fixed;
+        top: 30%;
+        left: 30%;
+        transform: translate(-50%, -50%);
+    }
+
+    .accordion-button {
+        height: 45px;
+    }
+
+    .lv1 .accordion-button {
+        background-color: #e7f4ff;
+        color: black;
+    }
+
+    .lv2 .accordion-button {
+        background-color: #b5c1ce;
+        color: black;
+    }
+
+    .red-text {
+        color: red;
+    }
+</style>*@
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="~/css/Projects.css" asp-append-version="true" />
+
+<div class="container" id="Projects">
+    <div class="accordion">
+
+        @* Модальне вікно редагування і створення проекту*@
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        @*Для редагування проекту*@
+                        <div v-if="modalType === 2">
+                            <div class="form-group">
+                                <label class="form-label">{{modalName}}</label>
+                                <input class="form-control" placeholder="Введіть нову назву проекту" type="text" v-model="editProjectName" />
+                            </div>
+                        </div>
+
+                        @*Для створення проекту*@
+                        <div v-if="modalType === 1">
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Введіть назву нового проекту" type="text" v-model="editProjectName" />
+                            </div>
+                        </div>
+
+                        <p :class="{ 'red-text': modalProjectActive }">{{ modalOperation }}</p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Модальне вікно покрокового створення проекту*@
+        <div class="modal fade" id="staticBackdropCreate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">{{modalTitle}}:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрити"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        @*Для редагування проекту*@
+                        <div v-if="modalType === 2">
+                            <div class="form-group">
+                                <label class="form-label">{{modalName}}</label>
+                                <input class="form-control" placeholder="Введіть нову назву проекту" type="text" v-model="editProjectName" />
+                            </div>
+                        </div>
+
+                        @*Для створення проекту*@
+                        <div v-if="modalType === 1">
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Введіть назву нового проекту" type="text" v-model="editProjectName" />
+                            </div>
+                        </div>
+
+                        <p :class="{ 'red-text': modalProjectActive }">{{ modalOperation }}</p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <!-- Поле введення для пошуку -->
+            <input v-model="searchQueryProject" type="text" class="form-control" placeholder="Пошук...">
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+
+                <div class="btn-group d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1, -1)">Створити Проект</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div style="margin-top: 1em;"></div>
+
+        <div v-for="(project, index) in filteredProjects" :key="index" class="accordion-item">
+            <h2 class="accordion-header" :id="'heading' + index">
+                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                    {{ project.name }}
+                </button>
+            </h2>
+            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#app">
+                <div class="accordion-body">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td><strong>Назва проекту</strong></td>
+                                <td>{{project.name}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Опис проекту</strong></td>
+                                <td>{{project.description}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Статус проекту</strong></td>
+                                <td>{{project.status}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Керівник</strong></td>
+                                <td>{{project.head}}</td>
+                            </tr>
+
+
+                            <tr>
+                                <td><strong>Дата початку</strong></td>
+                                <td>{{formatDate(project.startDate)}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Дата закінчення</strong></td>
+                                <td>{{formatDate(project.endDate)}}</td>
+                            </tr> 
+                            <tr>
+                                <td><strong>Собівартість</strong></td>
+                                <td>{{project.projectCostsForCompany}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Вартість для замовника</strong></td>
+                                <td>{{project.projectCostsForCustomer}}</td>
+                            </tr>
+
+
+                            <tr>
+                                <td><strong>Учасники</strong></td>
+                                <td v-if="project.members.length !== 0">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Роль :</strong></td>
+                                                <td><strong>Ім'я</strong></td>
+                                            </tr>
+                                            <tr v-for="(member, indexM) in project.members" :key="indexM">
+                                                <td>{{ member.rol }} :</td>
+                                                <td>{{ member.name }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Етапи</strong></td>
+                                <td v-if="project.steps.length !== 0">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Назва етапу</strong></td>
+                                                <td><strong>Статус</strong></td>
+                                                <td><strong>Учасники</strong></td>
+                                            </tr>
+                                            <tr v-for="(step, indexM) in project.steps" :key="indexM">
+                                                <td>{{ step.name }}</td>
+                                                <td>{{ step.status }}</td>
+                                                <td>
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><strong>Роль :</strong></td>
+                                                                <td><strong>Ім'я</strong></td>
+                                                            </tr>
+                                                            <tr v-for="(member, indexM) in project.members" :key="indexM">
+                                                                <td>{{ member.rol }} :</td>
+                                                                <td>{{ member.name }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати проект" v-on:click="toggleModal(2,index)">ε</button>&nbsp;
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити проект" v-on:click="toggleModal(3,index)">-</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/js/Projects.js" asp-append-version="true"></script>

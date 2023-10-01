@@ -4,13 +4,9 @@ using ReportingSystem.Models.User;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models;
-using ReportingSystem.Test.GenerateData;
-using ReportingSystem.Test.Generate;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using Bogus.DataSets;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Data.SqlClient;
+using ReportingSystem.Data;
 
 namespace ReportingSystem
 {
