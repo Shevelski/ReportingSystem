@@ -1,4 +1,13 @@
 ﻿using ReportingSystem.Data;
+using ReportingSystem.Models.Authorize;
+using ReportingSystem.Models.Company;
+using ReportingSystem.Models.Configuration;
+using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.Project.Step;
+using ReportingSystem.Models.Project;
+using ReportingSystem.Models.User;
+using ReportingSystem.Models;
+using System.Data.Entity;
 
 namespace ReportingSystem
 {
@@ -9,9 +18,10 @@ namespace ReportingSystem
         {
             try
             {
+               
+                await new CreateTables().Enums();
+                await new CreateTables().Customers();
 
-                await new CreateTables().CreateEnumsTables();
-              
                 //if (!new TablesIsExist().Customers())
                 //{
                 //    _ = new CreateTables().CreateTableCustomers();
@@ -30,5 +40,7 @@ namespace ReportingSystem
                 Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
             }
         }
+
+      
     }
 }

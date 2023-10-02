@@ -6,7 +6,7 @@ namespace ReportingSystem.Data
     public class CreateTables
     {
         //----------------------------- для Customers
-        public async Task CreateEnumsTables()
+        public async Task Enums()
         {
             if (!new TablesIsExist().StatusLicence())
             {
@@ -45,13 +45,15 @@ namespace ReportingSystem.Data
             }
         }
 
-        
-
-        public async Task CreateTableCustomers()
+        public async Task Customers()
         {
             if (!new TablesIsExist().Configure())
             {
                 await new CreateTableForCustomers().Configure();
+            }
+            if (!new TablesIsExist().HistoryOperations())
+            {
+                await new CreateTableForCustomers().HistoryOperations();
             }
         }
 

@@ -192,5 +192,22 @@ namespace ReportingSystem.Data
                 }
             }
         }
+        public bool HistoryOperations()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'HistoryOperations'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
     }
 }
