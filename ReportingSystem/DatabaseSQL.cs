@@ -1,46 +1,35 @@
 ﻿using ReportingSystem.Data;
-using ReportingSystem.Models.Authorize;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Configuration;
-using ReportingSystem.Models.Customer;
-using ReportingSystem.Models.Project.Step;
-using ReportingSystem.Models.Project;
+using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models;
-using System.Data.Entity;
+using ReportingSystem.Utils;
+using Bogus;
+using ReportingSystem.Models.Company;
+using ReportingSystem.Models.Customer;
+using ReportingSystem.Test.Generate;
+using ReportingSystem.Test.GenerateData;
+using System.Diagnostics;
+using System;
 
 namespace ReportingSystem
 {
-    public static class DatabaseSQL
+    public class DatabaseSQL
     {
-
-        public static async Task Init()
+        public async Task Init()
         {
             try
             {
-               
                 await new CreateTables().Enums();
                 await new CreateTables().Customers();
+                await new CreateTables().CreateTableAdministrators();
+                await new DatabaseGenerateSQL().GenerateAdministrators();
+                await new DatabaseGenerateSQL().GenerateCustomers();
 
-                //if (!new TablesIsExist().Customers())
-                //{
-                //    _ = new CreateTables().CreateTableCustomers();
-                //}
-                //if (!new TablesIsExist().Administrators())
-                //{
-                //    new CreateTables().CreateTableAdministrators();
-                //}
-                //if (!new TablesIsExist().Configuration())
-                //{
-                //    new CreateTables().CreateTableConfiguration();
-                //}
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
             }
         }
-
-      
     }
 }

@@ -5,23 +5,6 @@ namespace ReportingSystem.Data
 {
     public class TablesIsExist
     {
-        public bool Customers()
-        {
-            using (var database = Context.Connect)
-            {
-                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Customers'";
-                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
-
-                if (tableExists == 1)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
         public bool Administrators()
         {
             using (var database = Context.Connect)
@@ -209,5 +192,159 @@ namespace ReportingSystem.Data
                 }
             }
         }
+        public bool EmployeePosition()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EmployeePosition'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool EmployeeRol()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'EmployeeRol'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool HolidayDate()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'HolidayDate'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool HospitalDate()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'HospitalDate'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool AssignmentDate()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AssignmentDate'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool TaketimeoffDate()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'TaketimeoffDate'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool Employee()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Employee'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool Companies()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Companies'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool Customers()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Customers'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
     }
 }
