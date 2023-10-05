@@ -7,6 +7,6 @@ namespace ReportingSystem.Models
     {
         public EmployeeRolStatus rolType { get; set; }
         public string? rolName { get; set; }
-        
+
     }
 }

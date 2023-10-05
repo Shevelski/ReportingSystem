@@ -1,4 +1,6 @@
-﻿using ReportingSystem.Enums;
+﻿using Dapper;
+using ReportingSystem.Data;
+using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.Authorize;
@@ -6,6 +8,7 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.Drawing.Drawing2D;
 
 namespace ReportingSystem.Services
 {
@@ -150,7 +153,7 @@ namespace ReportingSystem.Services
                             return authorize;
                         }
                     }
-                    
+
 
                     if (customer.companies != null)
                     {
@@ -188,6 +191,133 @@ namespace ReportingSystem.Services
             authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordFailed;
             authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordFailed.GetDisplayName();
             return authorize;
+        }
+
+        public async Task<AuthorizeModel> CheckEmailSQL(string email)
+        {
+            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+            AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
+
+            using (var database = Context.Connect)
+            {
+                var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
+                var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
+                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employee] Where EmailWork = @email";
+
+                var para = new
+                {
+                    email = email,
+                };
+                var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
+                var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
+                var resultEmployee = await database.QueryAsync<Guid>(employeeTableQuery, para);
+
+                Guid id;
+
+                int count = 0;
+                if (resultAdmin.Any())
+                {
+                    count++;
+                    id = resultAdmin.First();
+                    Guid rolId = await new UserOperations().GetRoleAdminId(id);
+                    authorize.Role = await new UserOperations().GetRoleAdmin(rolId);
+                }
+                if (resultCustomer.Any())
+                {
+                    count++;
+                    id = resultCustomer.First();
+                    authorize.Role = new EmployeeRolModel()
+                    {
+                        rolType = EmployeeRolStatus.Customer,
+                        rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                    };
+                }
+                if (resultEmployee.Any())
+                {
+                    count++;
+                    id = resultEmployee.First();
+                    Guid rolId = await new UserOperations().GetRoleEmployeeId(id);
+                    authorize.Role = await new UserOperations().GetRoleEmployee(rolId);
+                }
+
+                authorize.Email = email;
+                authorizeStatusModel.authorizeStatusType = (count == 1) ? AuthorizeStatus.EmailOk : AuthorizeStatus.EmailFailed;
+                authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
+
+                return authorize;
+            }
+        }
+
+        
+        public async Task<AuthorizeModel> CheckPasswordSQL(string email, string password)
+        {
+            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
+            AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
+
+            using (var database = Context.Connect)
+            {
+                var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
+                var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
+                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employee] Where EmailWork = @email";
+
+                var para = new
+                {
+                    email = email,
+                };
+                var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
+                var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
+                var resultEmployee = await database.QueryAsync<Guid>(employeeTableQuery, para);
+
+                Guid id;
+
+                int count = 0;
+                if (resultAdmin.Any())
+                {
+                    count++;
+                    id = resultAdmin.First();
+                    Guid rolId = await new UserOperations().GetRoleAdminId(id);
+                    authorize.Role = await new UserOperations().GetRoleAdmin(rolId);
+                    if (await new UserOperations().IsPasswordAdminOk(id, password))
+                    {
+                        authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                        authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
+                        authorize.Employee = await new UserOperations().GetAdminData(id);
+                    }
+                }
+                if (resultCustomer.Any())
+                {
+                    count++;
+                    id = resultCustomer.First();
+                    authorize.Role = new EmployeeRolModel()
+                    {
+                        rolType = EmployeeRolStatus.Customer,
+                        rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                    };
+                    if (await new UserOperations().IsPasswordCustomerOk(id, password))
+                    {
+                        authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                        authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
+                    }
+                }
+                if (resultEmployee.Any())
+                {
+                    count++;
+                    id = resultEmployee.First();
+                    Guid rolId = await new UserOperations().GetRoleEmployeeId(id);
+                    authorize.Role = await new UserOperations().GetRoleEmployee(rolId);
+                    if (await new UserOperations().IsPasswordEmployeeOk(id, password))
+                    {
+                        authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
+                        authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
+                    }
+                }
+
+                authorize.Email = email;
+                authorizeStatusModel.authorizeStatusType = (count == 1) ? AuthorizeStatus.PasswordOk : AuthorizeStatus.PasswordFailed;
+                authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
+
+                return authorize;
+            }
         }
 
 

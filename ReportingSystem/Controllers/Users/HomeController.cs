@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using ReportingSystem.Enums;
 using ReportingSystem.Models;
+using ReportingSystem.Models.User;
 using ReportingSystem.Services;
+using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 
@@ -19,26 +21,47 @@ namespace ReportingSystem.Controllers.Users
             _authorizeService = authorizeService;
         }
 
-
         public IActionResult Authorize()
         {
-            
-            //var b = DatabaseMoq.Customers;
-            //var a = new DatabaseSQL().Init();
+            //генерація даних якщо таких немає, вид даних залежить від режиму
+            if (Utils.Mode.Read().Equals("json")) 
+            { 
+                var a = DatabaseMoq.Customers;
+            } else 
+            { 
+                var b = new DatabaseSQL().Init();
+            }
             return View();
         }
 
         [HttpGet]
-        public IActionResult CheckEmail(string email)
+        public async Task<IActionResult> CheckEmail(string email)
         {
-            var result = _authorizeService.CheckEmail(email);
+            AuthorizeModel? result;
+            if (Utils.Mode.Read().Equals("json"))
+            {
+                result = _authorizeService.CheckEmail(email);
+            } else
+            {
+                result = await _authorizeService.CheckEmailSQL(email);
+            }
             return Json(result);
         }
 
         [HttpGet]
-        public IActionResult CheckPassword(string email, string password)
+        public async Task<IActionResult> CheckPassword(string email, string password)
         {
-            var result = _authorizeService.CheckPassword(email, password);
+
+            AuthorizeModel? result;
+
+            if (Utils.Mode.Read().Equals("json"))
+            {
+                result = _authorizeService.CheckPassword(email, password);
+            }
+            else
+            {
+                result = await _authorizeService.CheckPasswordSQL(email, password);
+            }
 
             if (result != null && result.AuthorizeStatusModel != null)
             {
@@ -67,7 +90,6 @@ namespace ReportingSystem.Controllers.Users
                 }
                 else
                 {
-                    //return Json(result);
                     return RedirectToAction("Authorize", "Home", new { result });
                 }
             }

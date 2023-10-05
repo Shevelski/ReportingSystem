@@ -24,7 +24,7 @@ namespace ReportingSystem
                 await new CreateTables().CreateTableAdministrators();
                 await new DatabaseGenerateSQL().GenerateAdministrators();
                 await new DatabaseGenerateSQL().GenerateCustomers();
-
+                
             }
             catch (Exception ex)
             {

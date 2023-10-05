@@ -23,6 +23,7 @@
                 });
 
                 this.data = response.data;
+                console.log(this.data);
                 this.status.type = this.data.authorizeStatusModel.authorizeStatusType;
                 this.status.name = this.data.authorizeStatusModel.authorizeStatusName;
                 this.Mode(this.status.type);

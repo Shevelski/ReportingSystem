@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ReportingSystem.Data;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.User;
@@ -7,6 +8,7 @@ namespace ReportingSystem.Services
 {
     public class EmployeesService
     {
+
 
         public List<EmployeeModel>? GetEmployees(string idCu, string idCo)
         {
@@ -53,60 +55,73 @@ namespace ReportingSystem.Services
             return administrators.ToList();
         }
 
-        public EmployeeModel? GetEmployee(string idCu, string idCo, string idEm)
+        public async Task<EmployeeModel?> GetEmployee(string idCu, string idCo, string idEm)
         {
-
-            if (idCu == Guid.Empty.ToString() && idCo == Guid.Empty.ToString() && idEm != Guid.Empty.ToString())
+            if (Utils.Mode.Read().Equals("json"))
             {
-                var developers = DatabaseMoq.Administrators;
+                if (idCu == Guid.Empty.ToString() && idCo == Guid.Empty.ToString() && idEm != Guid.Empty.ToString())
+                {
 
-                if (developers == null || !Guid.TryParse(idEm, out Guid idDeveloper))
+                    var developers = DatabaseMoq.Administrators;
+
+                    if (developers == null || !Guid.TryParse(idEm, out Guid idDeveloper))
+                    {
+                        return null;
+                    }
+
+                    var developer = developers.First(dev => dev.id.Equals(idDeveloper));
+                    return developer;
+                }
+
+                var customers = DatabaseMoq.Customers;
+
+                if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
                 {
                     return null;
                 }
 
-                var developer = developers.First(dev => dev.id.Equals(idDeveloper));
-                return developer;
-            }
+                var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
 
-            var customers = DatabaseMoq.Customers;
+                if (customer == null || customer.companies == null)
+                {
+                    return null;
+                }
 
-            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+                var companies = customer.companies;
+
+                if (companies == null || !Guid.TryParse(idCo, out Guid idCompany))
+                {
+                    return null;
+                }
+
+                var company = companies.FirstOrDefault(comp => comp.id.Equals(idCompany));
+
+                if (company == null)
+                {
+                    return null;
+                }
+
+                var employees = company.employees;
+
+                if (employees == null || !Guid.TryParse(idEm, out Guid idEmployee))
+                {
+                    return null;
+                }
+
+                var employee = employees.FirstOrDefault(comp => comp.id.Equals(idEmployee));
+
+                return employee;
+            } else
             {
-                return null;
+                if (!Guid.TryParse(idCu, out Guid idCustomer) || !Guid.TryParse(idCo, out Guid idCompany) || !Guid.TryParse(idEm, out Guid idEmployee))
+                {
+                    return null;
+                }
+
+                return await new UserOperations().GetEmployeeData(idCustomer, idCompany, idEmployee);
+
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
-
-            if (customer == null || customer.companies == null)
-            {
-                return null;
-            }
-
-            var companies = customer.companies;
-
-            if (companies == null || !Guid.TryParse(idCo, out Guid idCompany))
-            {
-                return null;
-            }
-
-            var company = companies.FirstOrDefault(comp => comp.id.Equals(idCompany));
-
-            if (company == null)
-            {
-                return null;
-            }
-
-            var employees = company.employees;
-
-            if (employees == null || !Guid.TryParse(idEm, out Guid idEmployee))
-            {
-                return null;
-            }
-
-            var employee = employees.FirstOrDefault(comp => comp.id.Equals(idEmployee));
-
-            return employee;
         }
 
         //Редагування співробітника
