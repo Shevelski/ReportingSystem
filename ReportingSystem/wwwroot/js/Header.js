@@ -6,7 +6,7 @@ new Vue({
         windowHeight: window.innerHeight,
         windowWidth: window.innerWidth,
         mode: 'standart',
-        personalInfo: [0],
+          personalInfo: [0],
         lengthArray: 0,
         modalTitle: '',
         dateArray: [],
@@ -36,9 +36,9 @@ new Vue({
     },
     methods: {  
         async Init() {
-        this.personalInfo = await this.getEmployee();
-        this.firstInitial = this.personalInfo.firstName[0];
-        this.secondInitial = this.personalInfo.secondName[0];
+            this.personalInfo = await this.getEmployee();
+            this.firstInitial = this.personalInfo.firstName[0];
+            this.secondInitial = this.personalInfo.secondName[0];
     },
   
     async getEmployee() {
@@ -49,7 +49,7 @@ new Vue({
                 idEm: this.employeeId
             }
         });
-        return response.data;
+        return response.data.result;
     },
     
       onResize() {

@@ -387,7 +387,6 @@ namespace ReportingSystem.Data
                 
                 Guid id;
 
-                int count = 0;
                 if (resultAdmin.Any())
                 {
                     return employee = await GetAdminData(idEm);
