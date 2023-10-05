@@ -44,7 +44,7 @@ namespace ReportingSystem.Controllers.Functions
             await Task.Delay(0);
             using (_employeesService as IDisposable)
             {
-                var employee = _employeesService.GetEmployee(idCu, idCo, idEm);
+                var employee = await _employeesService.GetEmployee(idCu, idCo, idEm);
                 return Json(employee);
             }
         }

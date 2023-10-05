@@ -49,7 +49,7 @@ new Vue({
                 idEm: this.employeeId
             }
         });
-        return response.data.result;
+        return response.data;
     },
     
       onResize() {

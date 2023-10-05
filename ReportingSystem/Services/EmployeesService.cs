@@ -110,7 +110,7 @@ namespace ReportingSystem.Services
 
                 var employee = employees.FirstOrDefault(comp => comp.id.Equals(idEmployee));
 
-                return (EmployeeModel?)employee;
+                return employee;
             } else
             {
                 if (!Guid.TryParse(idCu, out Guid idCustomer) || !Guid.TryParse(idCo, out Guid idCompany) || !Guid.TryParse(idEm, out Guid idEmployee))
