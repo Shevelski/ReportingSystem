@@ -1388,7 +1388,18 @@
                       "id": "628db104-4dd2-4187-ad34-7e80c84fe8cc",
                       "name": "Проектування",
                       "projects": [],
-                      "categoriesLevel3": []
+                      "categoriesLevel3": [
+                        {
+                          "id": "628db104-4dd2-4187-ad34-7e80c84fe8c1",
+                          "name": "Тест1",
+                          "projects": []
+                        },
+                        {
+                          "id": "628db104-4dd2-4187-ad34-7e80c84fe8c2",
+                          "name": "Тест2",
+                          "projects": []
+                        }
+                      ]
                     },
                     {
                       "id": "5b16e2c6-2575-4e36-8b63-765f891c9155",

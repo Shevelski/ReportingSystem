@@ -78,25 +78,6 @@ body {
     color: red;
 }
 
-.column1 {
-    width: 100%;
-    transition: width 1s ease-in-out;
-}
-    .column1.mod {
-        width: 30%;
-        transition: width 1s ease-in-out;
-    }
-
-.column2 {
-    width: 0%;
-    display: none;
-    transition: width 1s ease-in-out;
-}
-    .column2.mod {
-        display: block;
-        width: 100%;
-        transition: width 1s ease-in-out 1s;
-    }
 
 .panel-body {
     opacity: 0;

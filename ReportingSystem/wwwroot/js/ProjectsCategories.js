@@ -13,6 +13,7 @@ new Vue({
         modalTitle: null,
         modalCategoryUsed:false,
         editCategoryName:'',
+        navigLevel0: -1,
         navigLevel1: -1,
         navigLevel2: -1,
         navigLevel3: -1,
@@ -81,13 +82,20 @@ new Vue({
                 this.selectedCompanyId = this.companyId;
             }
 
-            let response = await axios.get("/ProjectsCategories/GetCategories");
+            let response = await axios.get("/ProjectsCategories/GetCategories", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId
+                }
+            });
+            
             this.categoriesLevel1 = response.data;
+            console.log(this.categoriesLevel1);
         },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
         },
-        nextBatch(){
+        nextBatch() {
             this.pageCount = Math.ceil(this.countFilteredCategory / this.itemsPerPage);
 
             if (this.pageCur < this.pageCount) {
@@ -103,6 +111,7 @@ new Vue({
             if (this.pageCur !== 1) {
                 this.pageCur = 1;
             }
+            this.closeAllAccordions();
         },
         async updateCompanies() {
             let responseCompanies = '';
@@ -152,30 +161,67 @@ new Vue({
         },
         async confirmCreateCategory() {
 
-            var navigLevel = this.navigLevel1 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
-
-            var id1 = null;
-            if (this.navigLevel1 == -1) {
-                navigLevel = -1;
-            } else {
-                id1 = this.filteredCategory[this.navigLevel1].id;
-            }
+            var navigLevel = this.navigLevel0 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
 
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
-            const v2 = navigLevel;
-            const v3 = this.navigLevel2;
-            const v4 = this.navigLevel3;
-            const v5 = this.editCategoryName;
-            const v6 = id1;
+            var v2 = null;
+            var v3 = null;
+            var v4 = null;
+            var v5 = null;
 
-            const ar = [v0, v1, v2, v3, v4, v5, v6];
+            console.log(this.navigLevel0 + " " + navigLevel);
+            console.log(this.navigLevel1);
+            console.log(this.navigLevel2);
+            console.log(this.navigLevel3);
 
-            try {
-                await axios.post('/ProjectsCategories/CreateCategory', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу CreateCategory:', error);
+
+            if (navigLevel != -1) {
+                v2 = this.filteredCategory[navigLevel].id;
             }
+            if (this.navigLevel1 != -1) {
+                v3 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].id;
+            }
+            if (this.navigLevel2 != -1) {
+                v4 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
+            }
+            if (this.navigLevel3 != -1) {
+                v5 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
+            }
+            
+            const v6 = this.editCategoryName;
+            
+            const ar = [v0, v1, v2, v3, v4, v5, v6];
+            console.log(ar);
+
+            //console.log(navigLevel);
+
+            
+            //const v2 = this.filteredCategory[navigLevel].id;
+            //const v3 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].id;
+            //const v4 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
+            //const v5 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
+            //const v6 = this.editCategoryName;
+
+
+            //if (navigLevel == -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
+            //    console.log('level0');
+            //}
+            //if (navigLevel == 0 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
+            //    console.log('level1');
+            //}
+            //if (navigLevel == 0 && this.navigLevel2 == 0 && this.navigLevel3 == -1) {
+            //    console.log('level2');
+            //}
+            //if (navigLevel == 0 && this.navigLevel2 == 0 && this.navigLevel3 == 0) {
+            //    console.log('level3');
+            //}
+
+            //try {
+            //    await axios.post('/ProjectsCategories/CreateCategory', ar);
+            //} catch (error) {
+            //    console.error('Помилка під час виклику методу CreateCategory:', error);
+            //}
 
             this.Init();
 
@@ -227,14 +273,14 @@ new Vue({
             }
         },
 
-        toggleModal(type, indexLevel1, indexLevel2, indexLevel3) {
+        toggleModal(type, indexLevel0, indexLevel1, indexLevel2, indexLevel3) {
 
             this.modalType = type;
 
+            this.navigLevel0 = indexLevel0;
             this.navigLevel1 = indexLevel1;
             this.navigLevel2 = indexLevel2;
             this.navigLevel3 = indexLevel3;
-
 
             if (indexLevel1 == -1) {
                 this.modalName = '';

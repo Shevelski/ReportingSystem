@@ -19,7 +19,6 @@ namespace ReportingSystem.Controllers.Functions
         [HttpGet]
         public async Task<IActionResult> GetCategories(string idCu, string idCo)
         {
-
             await Task.Delay(10);
             var result = _projectsCategoriesService.GetCategories(idCu, idCo);
             return Json(result);

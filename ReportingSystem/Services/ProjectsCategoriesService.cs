@@ -27,7 +27,7 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            if (!Guid.TryParse(idCu, out Guid idCompany))
+            if (!Guid.TryParse(idCo, out Guid idCompany))
             {
                 return null;
             }
@@ -39,7 +39,7 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            //categoryModel = company.categories;
+            projectCategoryModels = company.categories;
 
             return projectCategoryModels;
 
