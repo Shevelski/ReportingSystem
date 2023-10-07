@@ -17,6 +17,11 @@ namespace ReportingSystem.Data
                 await new CreateTable().AuthorizeStatus();
                 await new InsertData().AuthorizeStatus();
             }
+            if (!new TablesIsExist().AuthorizeHistory())
+            {
+                await new CreateTable().AuthorizeHistory();
+                //await new InsertData().AuthorizeHistory();
+            }
             if (!new TablesIsExist().CompanyStatus())
             {
                 await new CreateTable().CompanyStatus();
@@ -37,11 +42,11 @@ namespace ReportingSystem.Data
                 await new CreateTable().ProjectStatus();
                 await new InsertData().ProjectStatus();
             }
-            if (!new TablesIsExist().Status())
-            {
-                await new CreateTable().Status();
-                await new InsertData().Status();
-            }
+            //if (!new TablesIsExist().Status())
+            //{
+            //    await new CreateTable().Status();
+            //    await new InsertData().Status();
+            //}
         }
 
         public async Task Customers()
@@ -58,10 +63,10 @@ namespace ReportingSystem.Data
             {
                 await new CreateTable().EmployeePosition();
             }
-            if (!new TablesIsExist().EmployeeRol())
-            {
-                await new CreateTable().EmployeeRol();
-            }
+            //if (!new TablesIsExist().EmployeeRol())
+            //{
+            //    await new CreateTable().EmployeeRol();
+            //}
             if (!new TablesIsExist().HolidayDate())
             {
                 await new CreateTable().HolidayDate();
@@ -78,9 +83,13 @@ namespace ReportingSystem.Data
             {
                 await new CreateTable().TaketimeoffDate();
             }
-            if (!new TablesIsExist().Employee())
+            if (!new TablesIsExist().Employees())
             {
                 await new CreateTable().Employee();
+            }
+            if (!new TablesIsExist().Projects())
+            {
+                await new CreateTable().Projects();
             }
             if (!new TablesIsExist().Companies())
             {
@@ -104,10 +113,10 @@ namespace ReportingSystem.Data
             
             
         }
-        public void CreateTableConfiguration()
-        {
+        //public void CreateTableConfiguration()
+        //{
 
-        }
+        //}
         
         
     }

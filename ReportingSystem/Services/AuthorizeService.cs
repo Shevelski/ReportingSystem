@@ -106,7 +106,7 @@ namespace ReportingSystem.Services
                 {
                     if (administrator.emailWork == email)
                     {
-                        if (administrator.password != null && administrator.password.ToLower().Equals(password.ToLower()))
+                        if (administrator.password != null && EncryptionHelper.Decrypt(administrator.password).ToLower().Equals(password.ToLower()))
                         {
                             authorize.Email = administrator.emailWork;
                             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
@@ -127,7 +127,7 @@ namespace ReportingSystem.Services
                 {
                     if (customer.email == email)
                     {
-                        if (customer.password != null && customer.password.ToLower().Equals(password.ToLower()))
+                        if (customer.password != null && EncryptionHelper.Decrypt(customer.password).ToLower().Equals(password.ToLower()))
                         {
                             authorize.Email = customer.email;
                             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
@@ -172,7 +172,7 @@ namespace ReportingSystem.Services
                                         authorize.Role = new EmployeeRolModel();
                                         authorize.Role = employee.rol;
 
-                                        if (employee.password != null && employee.password.Equals(password))
+                                        if (employee.password != null && EncryptionHelper.Decrypt(employee.password).Equals(password))
                                         {
                                             authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
                                             authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
@@ -202,7 +202,7 @@ namespace ReportingSystem.Services
             {
                 var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
                 var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
-                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employee] Where EmailWork = @email";
+                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
 
                 var para = new
                 {
@@ -258,7 +258,7 @@ namespace ReportingSystem.Services
             {
                 var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
                 var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
-                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employee] Where EmailWork = @email";
+                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
 
                 var para = new
                 {

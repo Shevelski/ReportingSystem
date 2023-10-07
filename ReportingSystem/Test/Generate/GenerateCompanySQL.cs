@@ -271,8 +271,11 @@ namespace ReportingSystem.Test.Generate
                 company.email = (Regex.Replace(company.name, "[^0-9a-zA-Z]+", "") + ".com.ua").Replace(" ", "").ToLower();
                 company.statutCapital = random.Next(1000, 300000).ToString() + " UAH";
                 company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
-                company.positions = Positions();
                 
+                await new InsertData().Company(company, customer.id);
+                
+                company.positions = Positions();
+
                 int i = 0;
 
                 foreach (var position in company.positions)
@@ -285,6 +288,7 @@ namespace ReportingSystem.Test.Generate
                 list = await Employees(company, customer.id);
 
                 company.chief = list[0];
+                //await new UpdateData().Company(company, customer.id);
 
                 list.Clear();
                 company.categories = Categories();
@@ -293,25 +297,129 @@ namespace ReportingSystem.Test.Generate
             }
             return null;
         }
-        static public ProjectCategoryModel Categories()
+        static public List<ProjectCategoryModel?> Categories()
+        {
+            List<ProjectCategoryModel> models = new List<ProjectCategoryModel>();
+            ProjectCategoryModel model = new ProjectCategoryModel();
+            ProjectCategoryModel1 model1 = new ProjectCategoryModel1();
+            ProjectCategoryModel2 model2 = new ProjectCategoryModel2();
+            ProjectCategoryModel3 model3 = new ProjectCategoryModel3();
+
+            string[] listCategories1 = { "Основні", "Допоміжні", "Адміністративні", "Соціальні" };
+
+            string[] listCategories11 = { "Розробка проекту", "Технічна підтримка", "Консультацій послуги" };
+            string[] listCategories12 = { "Офісна інфраструктура", "Хмарна інфраструктура" };
+            string[] listCategories13 = { "Бюджетна оцінка", "Внутрішня розробка", "Корпоративний захід", "Маркетинг", "Навчання", "Офісне навчання", "Продажі", "Простій" };
+            string[] listCategories14 = { "Відпустка", "Лікарняний", "Відгул", "Прогул" };
+
+            string[] listCategories111 = { "Проектування", "Розгортання", "Налаштування", "Тестування" };
+            string[] listCategories112 = { "Актуалізація ринку", "Проектування", "Розгортання", "Налаштування", "Тестування" };
+
+
+            foreach (string category in listCategories1)
+            {
+                model.id = Guid.NewGuid();
+                model.name = category;
+                model.projects = new List<Guid>();
+                model.categoriesLevel1 = new List<ProjectCategoryModel1>();
+                models.Add(model);
+            }
+
+            foreach (string category in listCategories11)
+            {
+                model1.id = Guid.NewGuid();
+                model1.name = category;
+                model1.categoriesLevel2 = new List<ProjectCategoryModel2>();
+                models[0].categoriesLevel1 = new List<ProjectCategoryModel1>
+                {
+                    model1
+                };
+            }
+
+            foreach (string category in listCategories12)
+            {
+                if (models[1] != null && models[1].categoriesLevel1 != null)
+                {
+                    model1.id = Guid.NewGuid();
+                    model1.name = category;
+                    model1.categoriesLevel2 = new List<ProjectCategoryModel2>();
+                    models[1].categoriesLevel1 = new List<ProjectCategoryModel1>
+                    {
+                        model1
+                    };
+                }
+            }
+
+            foreach (string category in listCategories13)
+            {
+                if (models[2] != null && models[2].categoriesLevel1 != null)
+                {
+                    model1.id = Guid.NewGuid();
+                    model1.name = category;
+                    model1.categoriesLevel2 = new List<ProjectCategoryModel2>();
+                    models[2].categoriesLevel1 = new List<ProjectCategoryModel1>
+                    {
+                        model1
+                    };
+                }
+            }
+
+            foreach (string category in listCategories14)
+            {
+                if (models[3] != null && models[3].categoriesLevel1 != null)
+                {
+                    model1.id = Guid.NewGuid();
+                    model1.name = category;
+                    model1.categoriesLevel2 = new List<ProjectCategoryModel2>();
+                    models[3].categoriesLevel1 = new List<ProjectCategoryModel1>
+                    {
+                        model1
+                    };
+                }
+            }
+
+            foreach (string category in listCategories111)
+            {
+                model2.id = Guid.NewGuid();
+                model2.name = category;
+                model2.categoriesLevel3 = new List<ProjectCategoryModel3>();
+                models[0].categoriesLevel1[0].categoriesLevel2 = new List<ProjectCategoryModel2>
+                {
+                    model2
+                };
+            }
+            foreach (string category in listCategories112)
+            {
+                model2.id = Guid.NewGuid();
+                model2.name = category;
+                model2.categoriesLevel3 = new List<ProjectCategoryModel3>();
+                models[0].categoriesLevel1[1].categoriesLevel2 = new List<ProjectCategoryModel2>
+                {
+                    model2
+                };
+            }
+            return models;
+        }
+
+
+
+        static public ProjectCategoryModel Category()
         {
             List<ProjectCategoryModel1> models1 = new List<ProjectCategoryModel1>();
             List<ProjectCategoryModel2> models2 = new List<ProjectCategoryModel2>();
             List<ProjectCategoryModel3> models3 = new List<ProjectCategoryModel3>();
 
-            string[] listCategories1 = {"Основні", "Допоміжні", "Адміністративні", "Соціальні"};
-            string[] listCategories12 = { "Розробка проекту", "Технічна підтримка", "Консультацій послуги"};
+            string[] listCategories1 = { "Основні", "Допоміжні", "Адміністративні", "Соціальні" };
+            string[] listCategories12 = { "Розробка проекту", "Технічна підтримка", "Консультацій послуги" };
             string[] listCategories22 = { "Офісна інфраструктура", "Хмарна інфраструктура" };
             string[] listCategories221 = { "Проектування", "Розгортання", "Налаштування", "Тестування" };
-            string[] listCategories222 = { "Актуалізація ринку" ,"Проектування", "Розгортання", "Налаштування", "Тестування" };
-            string[] listCategories23 = { "Бюджетна оцінка", "Внутрішня розробка", "Корпоративний захід", "Маркетинг", "Навчання", "Офісне навчання", "Продажі", "Простій"};
+            string[] listCategories222 = { "Актуалізація ринку", "Проектування", "Розгортання", "Налаштування", "Тестування" };
+            string[] listCategories23 = { "Бюджетна оцінка", "Внутрішня розробка", "Корпоративний захід", "Маркетинг", "Навчання", "Офісне навчання", "Продажі", "Простій" };
             string[] listCategories24 = { "Відпустка", "Лікарняний", "Відгул", "Прогул" };
 
             return new ProjectCategoryModel();
         }
-        static public ProjectCategoryModel1 ProjectCategoryModel1()
-        {
-            return new ProjectCategoryModel1();
-        }
+
+
     }
 }

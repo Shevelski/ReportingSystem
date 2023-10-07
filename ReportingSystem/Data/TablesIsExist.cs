@@ -73,11 +73,45 @@ namespace ReportingSystem.Data
                 }
             }
         }
+        public bool Projects()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Projects'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
         public bool AuthorizeStatus()
         {
             using (var database = Context.Connect)
             {
                 var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AuthorizeStatus'";
+                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+
+                if (tableExists == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+        public bool AuthorizeHistory()
+        {
+            using (var database = Context.Connect)
+            {
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AuthorizeHistory'";
                 var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
 
                 if (tableExists == 1)
@@ -158,23 +192,23 @@ namespace ReportingSystem.Data
                 }
             }
         }
-        public bool Status()
-        {
-            using (var database = Context.Connect)
-            {
-                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Status'";
-                var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
+        //public bool Status()
+        //{
+        //    using (var database = Context.Connect)
+        //    {
+        //        var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Status'";
+        //        var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
 
-                if (tableExists == 1)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        //        if (tableExists == 1)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //}
         public bool HistoryOperations()
         {
             using (var database = Context.Connect)
@@ -294,11 +328,11 @@ namespace ReportingSystem.Data
                 }
             }
         }
-        public bool Employee()
+        public bool Employees()
         {
             using (var database = Context.Connect)
             {
-                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Employee'";
+                var tableExistsQuery = "SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Employees'";
                 var tableExists = database.QueryFirstOrDefault<int>(tableExistsQuery);
 
                 if (tableExists == 1)

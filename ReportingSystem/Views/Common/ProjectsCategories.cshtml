@@ -1,10 +1,5 @@
 ﻿@using ReportingSystem.Properties;
 
-
-<head>
-    <title>123</title>
-</head>
-
 @{
     ViewData["Title"] = "Категорії проектів";
 }
@@ -21,6 +16,18 @@
 <link rel="stylesheet" href="~/css/ProjectsCategories.css" asp-append-version="true" />
 
 <div class="container" id="ProjectsCategories">
+
+    <div class="row mb-3">
+        <div class="col">
+
+            <div class="btn-group d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1,-1, -1, -1)">
+                    Додати Категорії
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="accordion" v-if="categoriesLevel1.length !== 1">
 
         @* Модальне вікно *@
@@ -61,20 +68,25 @@
             </div>
         </div>
 
+        
+
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
+            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
+                <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
+            </select>
+        </div>
+
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
+            <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
+                <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
+            </select>
+        </div>
+
         <div class="mb-3">
             <!-- Поле введення для пошуку -->
             <input v-model="searchQueryCategory" type="text" class="form-control" placeholder="Пошук...">
         </div>
 
-        <div class="row mb-3">
-            <div class="col">            
-
-                <div class="btn-group d-flex justify-content-between">
-                    <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1,-1, -1, -1)">Додати Категорії</button>
-                </div>
-
-            </div>
-        </div>
 
         <div class="container">
             <div class="row">
@@ -155,13 +167,13 @@
         </div>
     </div>
     <div v-else>
-        <div style="margin-top: 50px; margin-bottom: 50px;">
+        @*<div style="margin-top: 50px; margin-bottom: 50px;">
             <div class="text-center">
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 

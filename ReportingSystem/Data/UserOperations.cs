@@ -90,7 +90,7 @@ namespace ReportingSystem.Data
         {
             using (var database = Context.Connect)
             {
-                var query = "SELECT [Rol] FROM [ReportingSystem].[dbo].[Employee] Where Id = @Id";
+                var query = "SELECT [Rol] FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
                 var para = new
                 {
                     Id = id,
@@ -180,7 +180,7 @@ namespace ReportingSystem.Data
         {
             using (var database = Context.Connect)
             {
-                var query = "SELECT [Password] FROM [ReportingSystem].[dbo].[Employee] Where Id = @Id";
+                var query = "SELECT [Password] FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
                 var para = new
                 {
                     Id = id,
@@ -325,7 +325,7 @@ namespace ReportingSystem.Data
             EmployeeModel employee = new EmployeeModel();
             using (var database = Context.Connect)
             {
-                var query = "SELECT * FROM [ReportingSystem].[dbo].[Employee] Where Id = @Id";
+                var query = "SELECT * FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
                 var para = new
                 {
                     Id = id,

@@ -17,9 +17,23 @@ new Vue({
         navigLevel2: -1,
         navigLevel3: -1,
         levelCategory:0,
-        categoriesLevel1:[0],
+        categoriesLevel1: [0],
+        customerId: '',
+        companyId: '',
+        employeeId: '',
+        rol: '',
+        selectedCompanyId: 0,
+        selectedCustomerId: 0,
+        selectedCompanyIdCheck: 0,
+        selectedCustomerIdCheck: 0,
+        companies: [0],
+        customers: [0],
     },
     mounted() {
+        this.customerId = document.getElementById('idCu').textContent;
+        this.companyId = document.getElementById('idCo').textContent;
+        this.employeeId = document.getElementById('idEm').textContent;
+        this.rol = document.getElementById('rol').textContent;
         this.Init();
     },
     computed: {
@@ -50,7 +64,24 @@ new Vue({
         },
     methods: {
         async Init() {
-            let response = await axios.get("/ProjectCategory/GetCategories");
+            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
+                await this.updateCustomers();
+                await this.updateCompanies();
+            }
+            if (this.rol == 'Customer') {
+                this.selectedCustomerId = this.customerId;
+                await this.updateCompanies();
+            }
+            if (this.rol == 'CEO') {
+                this.selectedCustomerId = this.customerId;
+                this.selectedCompanyId = this.companyId;
+            }
+            if (this.rol == 'User') {
+                this.selectedCustomerId = this.customerId;
+                this.selectedCompanyId = this.companyId;
+            }
+
+            let response = await axios.get("/ProjectsCategories/GetCategories");
             this.categoriesLevel1 = response.data;
         },
         setItemsPerPage(count) {
@@ -73,6 +104,52 @@ new Vue({
                 this.pageCur = 1;
             }
         },
+        async updateCompanies() {
+            let responseCompanies = '';
+            responseCompanies = await axios.get("/Companies/GetCompanies", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                }
+            });
+            this.companies = responseCompanies.data;
+            if (this.selectedCompanyId == 0) {
+                this.selectedCompanyId = this.companies[0].id;
+            }
+            this.IsNewSelectedCompany = false;
+        },
+        async updateCustomers() {
+            let responseCustomers = await axios.get("/Customers/GetCustomers");
+            this.customers = responseCustomers.data;
+
+            if (this.selectedCustomerId == 0) {
+                this.selectedCustomerId = this.customers[0].id;
+            }
+        },
+        getSelectedCustomer(event) {
+            this.selectedCustomerId = event.target.value;
+
+            if (this.selectedCustomerIdCheck !== this.selectedCustomerId) {
+                this.selectedCompanyId = 0;
+                this.IsNewSelectedCustomer = true;
+                this.saveCustomer = false;
+            } else {
+                this.saveCustomer = true;
+            }
+            this.Init();
+        },
+        getSelectedCompany(event) {
+            this.selectedCompanyId = event.target.value;
+
+            if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
+                this.IsNewSelectedCompany = true;
+                this.saveCompany = false;
+
+            } else {
+                this.saveCompany = true;
+            }
+
+            this.Init();
+        },
         async confirmCreateCategory() {
 
             var navigLevel = this.navigLevel1 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
@@ -84,20 +161,25 @@ new Vue({
                 id1 = this.filteredCategory[this.navigLevel1].id;
             }
 
-            const ar = [navigLevel, this.navigLevel2, this.navigLevel3];
+            const v0 = this.selectedCustomerId;
+            const v1 = this.selectedCompanyId;
+            const v2 = navigLevel;
+            const v3 = this.navigLevel2;
+            const v4 = this.navigLevel3;
+            const v5 = this.editCategoryName;
+            const v6 = id1;
+
+            const ar = [v0, v1, v2, v3, v4, v5, v6];
 
             try {
-                await axios.post('/ProjectCategory/CreateCategory', ar, {
-                    params: { newName: this.editCategoryName, idLevel1: id1 }
-                });
+                await axios.post('/ProjectsCategories/CreateCategory', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу CreateCategory:', error);
             }
+
             this.Init();
 
             this.editCategoryName = '';
-
- 
         },
         async confirmEditCategory() {
 

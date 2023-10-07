@@ -6,7 +6,6 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
-using System.ComponentModel.Design;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 namespace ReportingSystem.Data
@@ -18,8 +17,8 @@ namespace ReportingSystem.Data
             using (var database = Context.Connect)
             {
                 var query = "INSERT INTO [dbo].[StatusLicence] " +
-                            "([Id], [Type], [Name]) " +
-                            "VALUES (@Id, @Type, @Name)";
+                            "([Id],[Type], [Name]) " +
+                            "VALUES (@Id,@Type, @Name)";
 
                 foreach (LicenceType licence in Enum.GetValues(typeof(LicenceType)))
                 {
@@ -39,7 +38,29 @@ namespace ReportingSystem.Data
             using (var database = Context.Connect)
             {
                 var query = "INSERT INTO [dbo].[AuthorizeStatus] " +
-                            "([Id], [Type], [Name]) " +
+                            "([Id],[Type], [Name]) " +
+                            "VALUES (@Id,@Type, @Name)";
+
+                foreach (Enums.AuthorizeStatus authorize in Enum.GetValues(typeof(Enums.AuthorizeStatus)))
+                {
+                    var parameters = new
+                    {
+                        Id = Guid.NewGuid(),
+                        Type = (int)authorize,
+                        Name = authorize.GetDisplayName()
+                    };
+
+                    await database.ExecuteAsync(query, parameters);
+                }
+            }
+        }
+        public async Task AuthorizeHistory()
+        {
+            using (var database = Context.Connect)
+            {
+
+                var query = "INSERT INTO [dbo].[AuthorizeHistory] " +
+                            "([Id],[EmployeeId], [RolId], [AuthorizeStatusId]) " +
                             "VALUES (@Id, @Type, @Name)";
 
                 foreach (Enums.AuthorizeStatus authorize in Enum.GetValues(typeof(Enums.AuthorizeStatus)))
@@ -60,8 +81,8 @@ namespace ReportingSystem.Data
             using (var database = Context.Connect)
             {
                 var query = "INSERT INTO [dbo].[CompanyStatus] " +
-                            "([Id], [Type], [Name]) " +
-                            "VALUES (@Id, @Type, @Name)";
+                            "([Id],[Type], [Name]) " +
+                            "VALUES (@Id,@Type, @Name)";
 
                 foreach (Enums.CompanyStatus company in Enum.GetValues(typeof(Enums.CompanyStatus)))
                 {
@@ -81,8 +102,8 @@ namespace ReportingSystem.Data
             using (var database = Context.Connect)
             {
                 var query = "INSERT INTO [dbo].[EmployeeRolStatus] " +
-                            "([Id], [Type], [Name]) " +
-                            "VALUES (@Id, @Type, @Name)";
+                            "([Id],[Type], [Name]) " +
+                            "VALUES (@Id,@Type, @Name)";
 
                 foreach (Enums.EmployeeRolStatus rol in Enum.GetValues(typeof(Enums.EmployeeRolStatus)))
                 {
@@ -102,8 +123,8 @@ namespace ReportingSystem.Data
             using (var database = Context.Connect)
             {
                 var query = "INSERT INTO [dbo].[EmployeeStatus] " +
-                            "([Id], [Type], [Name]) " +
-                            "VALUES (@Id, @Type, @Name)";
+                            "([Id],[Type], [Name]) " +
+                            "VALUES (@Id,@Type, @Name)";
 
                 foreach (Enums.EmployeeStatus employee in Enum.GetValues(typeof(Enums.EmployeeStatus)))
                 {
@@ -123,8 +144,8 @@ namespace ReportingSystem.Data
             using (var database = Context.Connect)
             {
                 var query = "INSERT INTO [dbo].[ProjectStatus] " +
-                            "([Id], [Type], [Name]) " +
-                            "VALUES (@Id, @Type, @Name)";
+                            "([Id],[Type], [Name]) " +
+                            "VALUES (@Id,@Type, @Name)";
 
                 foreach (Enums.ProjectStatus project in Enum.GetValues(typeof(Enums.ProjectStatus)))
                 {
@@ -139,27 +160,26 @@ namespace ReportingSystem.Data
                 }
             }
         }
-        public async Task Status()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "INSERT INTO [dbo].[Status] " +
-                            "([Id], [Type], [Name]) " +
-                            "VALUES (@Id, @Type, @Name)";
+        //public async Task Status()
+        //{
+        //    using (var database = Context.Connect)
+        //    {
+        //        var query = "INSERT INTO [dbo].[Status] " +
+        //                    "([Type], [Name]) " +
+        //                    "VALUES (@Type, @Name)";
 
-                foreach (Enums.Status status in Enum.GetValues(typeof(Enums.Status)))
-                {
-                    var parameters = new
-                    {
-                        Id = Guid.NewGuid(),
-                        Type = (int)status,
-                        Name = status.GetDisplayName()
-                    };
+        //        foreach (Enums.Status status in Enum.GetValues(typeof(Enums.Status)))
+        //        {
+        //            var parameters = new
+        //            {
+        //                Type = (int)status,
+        //                Name = status.GetDisplayName()
+        //            };
 
-                    await database.ExecuteAsync(query, parameters);
-                }
-            }
-        }
+        //            await database.ExecuteAsync(query, parameters);
+        //        }
+        //    }
+        //}
         public async Task EmployeePosition(EmployeePositionModel position, Guid customerId, Guid companyId, int type)
         {
             using (var database = Context.Connect)
@@ -190,7 +210,7 @@ namespace ReportingSystem.Data
                                  "FROM[ReportingSystem].[dbo].[Administrators]" +
                                  "Where EmailWork = @EmailWork";
                 var checkQuery2 = "SELECT COUNT(*) " +
-                                 "FROM[ReportingSystem].[dbo].[Employee]" +
+                                 "FROM[ReportingSystem].[dbo].[Employees]" +
                                  "Where EmailWork = @EmailWork";
                 var paraCheck = new
                 {
@@ -256,7 +276,7 @@ namespace ReportingSystem.Data
                     }
 
 
-                    var query = "INSERT INTO [dbo].[Employee]" +
+                    var query = "INSERT INTO [dbo].[Employees]" +
                         "([Id],[CompanyId],[CustomerId],[FirstName],[SecondName],[ThirdName],[PhoneWork],[PhoneSelf],[EmailWork],[EmailSelf],[TaxNumber],[AddressReg],[AddressFact],[Photo],[Login],[Password],[Salary],[AddSalary],[Status],[BirthDate],[WorkStartDate],[WorkEndDate],[Position],[Rol])" +
                         "VALUES (@Id,@CompanyId,@CustomerId,@FirstName,@SecondName,@ThirdName,@PhoneWork,@PhoneSelf,@EmailWork,@EmailSelf,@TaxNumber,@AddressReg,@AddressFact,@Photo,@Login,@Password,@Salary,@AddSalary,@Status,@BirthDate,@WorkStartDate,@WorkEndDate,@Position,@Rol)";
 
@@ -301,7 +321,7 @@ namespace ReportingSystem.Data
                                  "FROM[ReportingSystem].[dbo].[Administrators]" +
                                  "Where EmailWork = @EmailWork";
                 var checkQuery2 = "SELECT COUNT(*) " +
-                                 "FROM[ReportingSystem].[dbo].[Employee]" +
+                                 "FROM[ReportingSystem].[dbo].[Employees]" +
                                  "Where EmailWork = @EmailWork";
                 var paraCheck = new
                 {
@@ -348,7 +368,7 @@ namespace ReportingSystem.Data
 
                     var parameters = new
                     {
-                        Id = employee.id,
+                        Id = Guid.NewGuid(),
                         FirstName = employee.firstName,
                         SecondName = employee.secondName,
                         ThirdName = employee.thirdName,
@@ -370,17 +390,40 @@ namespace ReportingSystem.Data
         {
             using (var database = Context.Connect)
             {
-                var query = "INSERT INTO [dbo].[Customers]" +
-                    "([Id],[FirstName],[SecondName],[ThirdName],[StatusLicenceId],[Phone],[Email],[Password],[EndTimeLicense],[DateRegistration])" +
-                    "VALUES (@Id, @FirstName, @SecondName, @ThirdName, @StatusLicenceId, @Phone, @Email, @Password, @EndTimeLicense, @DateRegistration)";
+                // Створення нового Configure і отримання Id
+                var configureQuery = "INSERT INTO [dbo].[Configure] " +
+                                    "([Id],[Param1],[Param2],[Param3],[Param4],[Param5],[Param6],[Param7],[Param8],[Param9],[Param10],[Param11],[Param12]) " +
+                                    "VALUES (@Id, @Param1, @Param2, @Param3, @Param4, @Param5, @Param6, @Param7, @Param8, @Param9, @Param10, @Param11, @Param12); ";
+
+                var configureParameters = new
+                {
+                    Id = Guid.NewGuid(),
+                    Param1 = -1,
+                    Param2 = -1,
+                    Param3 = -1,
+                    Param4 = -1,
+                    Param5 = "string",
+                    Param6 = "string",
+                    Param7 = "string",
+                    Param8 = "string",
+                    Param9 = Guid.Empty,
+                    Param10 = Guid.Empty,
+                    Param11 = Guid.Empty,
+                    Param12 = Guid.Empty,
+                };
+
+                await database.ExecuteAsync(configureQuery, configureParameters);
+
+                // Вставка запису в таблицю Customers з використанням отриманого newConfigId
+                var customersQuery = "INSERT INTO [dbo].[Customers] " +
+                                     "([Id],[FirstName],[SecondName],[ThirdName],[StatusLicenceId],[ConfigureId],[Phone],[Email],[Password],[EndTimeLicense],[DateRegistration]) " +
+                                     "VALUES (@Id, @FirstName, @SecondName, @ThirdName, @StatusLicenceId, @ConfigureId, @Phone, @Email, @Password, @EndTimeLicense, @DateRegistration);";
+
 
                 int type = -1;
                 if (customer != null && customer.statusLicence != null)
                 {
-                    //customer.statusLicence.licenceName = LicenceType.Test.GetDisplayName();
-                    //customer.statusLicence.licenceType = LicenceType.Test;
                     type = (int)customer.statusLicence.licenceType;
-
                 }
 
                 var parametersStatus = new
@@ -409,6 +452,7 @@ namespace ReportingSystem.Data
                         SecondName = customer.secondName,
                         ThirdName = customer.thirdName,
                         StatusLicenceId = status,
+                        ConfigureId = configureParameters.Id,
                         Phone = customer.phone,
                         Email = customer.email,
                         Password = EncryptionHelper.Encrypt(customer.password),
@@ -416,8 +460,10 @@ namespace ReportingSystem.Data
                         DateRegistration = customer.dateRegistration,
                     };
 
-                    await database.ExecuteAsync(query, parameters);
+                    await database.ExecuteAsync(customersQuery, parameters);
                 }
+
+                
             }
         }
         

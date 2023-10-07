@@ -1,10 +1,11 @@
 ﻿using Dapper;
+using System.Diagnostics.Metrics;
+using System.Security.Cryptography.Xml;
 
 namespace ReportingSystem.Data
 {
     public class CreateTable
     {
-        // --------------- enums --------------------------
         public async Task StatusLicence()
         {
             using (var database = Context.Connect)
@@ -33,6 +34,22 @@ namespace ReportingSystem.Data
             }
         }
 
+        public async Task AuthorizeHistory()
+        {
+            using (var database = Context.Connect)
+            {
+                var query = "CREATE TABLE AuthorizeHistory ( " +
+                                "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
+                                "EmployeeId UNIQUEIDENTIFIER," +
+                                "RolId UNIQUEIDENTIFIER," +
+                                "AuthorizeStatusId UNIQUEIDENTIFIER NOT NULL, " +
+                                "FOREIGN KEY(AuthorizeStatusId) REFERENCES AuthorizeStatus(Id)" +
+                            ");";
+
+                await database.ExecuteAsync(query);
+            }
+        }
+
         public async Task CompanyStatus()
         {
             using (var database = Context.Connect)
@@ -55,7 +72,9 @@ namespace ReportingSystem.Data
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
                                 "Type INT NOT NULL, " +
                                 "Name NVARCHAR(MAX) NOT NULL " +
-                            ");";
+                            "); " +
+                            "ALTER TABLE AuthorizeHistory " +
+                            "ADD FOREIGN KEY (RolId) REFERENCES EmployeeRolStatus(Id);";
 
                 await database.ExecuteAsync(query);
             }
@@ -89,19 +108,19 @@ namespace ReportingSystem.Data
             }
         }
 
-        public async Task Status()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE Status ( " +
-                                "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
-                                "Type INT NOT NULL, " +
-                                "Name NVARCHAR(MAX) NOT NULL " +
-                            ");";
+        //public async Task Status()
+        //{
+        //    using (var database = Context.Connect)
+        //    {
+        //        var query = "CREATE TABLE Status ( " +
+        //                        "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
+        //                        "Type INT NOT NULL, " +
+        //                        "Name NVARCHAR(MAX) NOT NULL " +
+        //                    ");";
 
-                await database.ExecuteAsync(query);
-            }
-        }
+        //        await database.ExecuteAsync(query);
+        //    }
+        //}
 
         //----------------------------------------------------------------
         public async Task Configure()
@@ -167,28 +186,27 @@ namespace ReportingSystem.Data
             }
         }
 
-        public async Task EmployeeRol()
+        //public async Task EmployeeRol()
+        //{
+        //    using (var database = Context.Connect)
+        //    {
+        //        var query = "CREATE TABLE EmployeeRol (" +
+        //                        "Id UNIQUEIDENTIFIER PRIMARY KEY," +
+        //                        "Type UNIQUEIDENTIFIER NOT NULL," +
+        //                        "Name NVARCHAR(MAX) NOT NULL," +
+        //                        "FOREIGN KEY(Type) REFERENCES EmployeePosition(id)" +
+        //                    "); ";
+
+        //        await database.ExecuteAsync(query);
+        //    }
+        //}
+
+        public async Task Projects()
         {
             using (var database = Context.Connect)
             {
-                var query = "CREATE TABLE EmployeeRol (" +
+                var query = "CREATE TABLE Projects (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                                "Type UNIQUEIDENTIFIER NOT NULL," +
-                                "Name NVARCHAR(MAX) NOT NULL," +
-                                "FOREIGN KEY(Type) REFERENCES EmployeePosition(id)" +
-                            "); ";
-
-                await database.ExecuteAsync(query);
-            }
-        }
-
-        public async Task Project()
-        {
-            using (var database = Context.Connect)
-            {
-                var query = "CREATE TABLE Project (" +
-                                "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                                "CustomerId UNIQUEIDENTIFIER," +
                                 "CompanyId UNIQUEIDENTIFIER," +
                                 "Name NVARCHAR(MAX) NOT NULL," +
                                 "Description NVARCHAR(MAX)," +
@@ -201,7 +219,7 @@ namespace ReportingSystem.Data
                                 "CategoryModel UNIQUEIDENTIFIER," +
                                 "CategoryModel2 UNIQUEIDENTIFIER, " +
                                 "CategoryModel3 UNIQUEIDENTIFIER," +
-                                "FOREIGN KEY(Status) REFERENCES ProjectStatus(id)" +
+                                "FOREIGN KEY(Status) REFERENCES ProjectStatus(Id)" +
                             "); ";
 
                 await database.ExecuteAsync(query);
@@ -214,7 +232,7 @@ namespace ReportingSystem.Data
             {
                 var query = "CREATE TABLE HolidayDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                                "IdEmployee UNIQUEIDENTIFIER NOT NULL," +
+                                "EmployeeId UNIQUEIDENTIFIER NOT NULL," +
                                 "Date DATETIME" +
                             "); ";
 
@@ -228,7 +246,7 @@ namespace ReportingSystem.Data
             {
                 var query = "CREATE TABLE HospitalDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                                "IdEmployee UNIQUEIDENTIFIER NOT NULL," +
+                                "EmployeeId UNIQUEIDENTIFIER NOT NULL," +
                                 "Date DATETIME" +
                             "); ";
 
@@ -242,7 +260,7 @@ namespace ReportingSystem.Data
             {
                 var query = "CREATE TABLE AssignmentDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                                "IdEmployee UNIQUEIDENTIFIER NOT NULL," +
+                                "EmployeeId UNIQUEIDENTIFIER NOT NULL," +
                                 "Date DATETIME" +
                             "); ";
 
@@ -256,7 +274,7 @@ namespace ReportingSystem.Data
             {
                 var query = "CREATE TABLE TaketimeoffDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                                "IdEmployee UNIQUEIDENTIFIER NOT NULL," +
+                                "EmployeeId UNIQUEIDENTIFIER NOT NULL," +
                                 "Date DATETIME" +
                             "); ";
 
@@ -268,7 +286,7 @@ namespace ReportingSystem.Data
         {
             using (var database = Context.Connect)
             {
-                var query = "CREATE TABLE Employee (" +
+                var query = "CREATE TABLE Employees (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
                                 "CompanyId UNIQUEIDENTIFIER NOT NULL," +
                                 "CustomerId UNIQUEIDENTIFIER NOT NULL," +
@@ -293,14 +311,25 @@ namespace ReportingSystem.Data
                                 "WorkEndDate DATETIME," +
                                 "Position UNIQUEIDENTIFIER NOT NULL," +
                                 "Rol UNIQUEIDENTIFIER NOT NULL," +
-                                "FOREIGN KEY(Status) REFERENCES EmployeeStatus(id)" +
-                           "); ";
+                                "FOREIGN KEY(Status) REFERENCES EmployeeStatus(Id)," +
+                                "FOREIGN KEY(Rol) REFERENCES EmployeeRolStatus(Id)" +
+                           "); " +
+                            "ALTER TABLE AuthorizeHistory " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Employees(Id);" +
+                            "ALTER TABLE HolidayDate " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Employees(Id);" +
+                            "ALTER TABLE HospitalDate " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Employees(Id);" +
+                            "ALTER TABLE AssignmentDate " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Employees(Id);" +
+                            "ALTER TABLE TaketimeoffDate " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Employees(Id);";
 
                 await database.ExecuteAsync(query);
             }
         }
-        
 
+        
         public async Task Companies()
         {
             using (var database = Context.Connect)
@@ -318,9 +347,15 @@ namespace ReportingSystem.Data
                                 "StatutCapital NVARCHAR(MAX) NOT NULL," +
                                 "RegistrationDate NVARCHAR(MAX) NOT NULL," +
                                 "Status UNIQUEIDENTIFIER NOT NULL," +
-                                "Chief UNIQUEIDENTIFIER NOT NULL," +
-                                "FOREIGN KEY(Status) REFERENCES CompanyStatus(id)," +
-                             "); ";
+                                "Chief UNIQUEIDENTIFIER," +
+                                "FOREIGN KEY(Status) REFERENCES CompanyStatus(id)" +
+                             "); " +
+                             "ALTER TABLE EmployeePosition " +
+                             "ADD FOREIGN KEY (CompanyId) REFERENCES Companies(Id);" +
+                             "ALTER TABLE Projects " +
+                             "ADD FOREIGN KEY (CompanyId) REFERENCES Companies(Id);" +
+                             "ALTER TABLE Employees " +
+                             "ADD FOREIGN KEY (CompanyId) REFERENCES Companies(Id);";
 
                 await database.ExecuteAsync(query);
             }
@@ -336,13 +371,23 @@ namespace ReportingSystem.Data
                                 "SecondName NVARCHAR(MAX) NOT NULL," +
                                 "ThirdName NVARCHAR(MAX) NOT NULL," +
                                 "StatusLicenceId UNIQUEIDENTIFIER NOT NULL," +
+                                "ConfigureId UNIQUEIDENTIFIER NOT NULL," +
                                 "Phone NVARCHAR(MAX) NOT NULL," +
                                 "Email NVARCHAR(MAX) NOT NULL," +
                                 "Password NVARCHAR(MAX) NOT NULL," +
                                 "EndTimeLicense DATETIME NOT NULL," +
                                 "DateRegistration DATETIME NOT NULL," +
                                 "FOREIGN KEY(StatusLicenceId) REFERENCES StatusLicence(id)," +
-                            "); ";
+                                "FOREIGN KEY(ConfigureId) REFERENCES Configure(id)" +
+                            "); " +
+                            "ALTER TABLE Companies " +
+                            "ADD FOREIGN KEY (CustomerId) REFERENCES Customers(Id);" +
+                            "ALTER TABLE AuthorizeHistory " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Customers(Id);" +
+                            "ALTER TABLE EmployeePosition " +
+                            "ADD FOREIGN KEY (CustomerId) REFERENCES Customers(Id);" +
+                            "ALTER TABLE Employees " +
+                            "ADD FOREIGN KEY (CustomerId) REFERENCES Customers(Id);";
 
                 await database.ExecuteAsync(query);
             }
@@ -364,8 +409,10 @@ namespace ReportingSystem.Data
                                 "Status UNIQUEIDENTIFIER NOT NULL," +
                                 "BirthDate DATETIME," +
                                 "Rol UNIQUEIDENTIFIER NOT NULL," +
-                                "FOREIGN KEY(Status) REFERENCES EmployeeStatus(id)" +
-                            "); ";
+                                "FOREIGN KEY(Status) REFERENCES EmployeeStatus(Id)" +
+                            "); " +
+                            "ALTER TABLE AuthorizeHistory " +
+                            "ADD FOREIGN KEY (EmployeeId) REFERENCES Administrators(Id);";
 
                 await database.ExecuteAsync(query);
             }

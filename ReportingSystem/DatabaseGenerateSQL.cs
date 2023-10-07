@@ -48,7 +48,6 @@ namespace ReportingSystem
                 {
                     dev = new EmployeeModel()
                     {
-                        id = Guid.NewGuid(),
                         birthDate = e.birthDate,
                         customerId = Guid.Empty,
                         companyId = Guid.Empty,
@@ -94,9 +93,9 @@ namespace ReportingSystem
                     customer.password = GenerateInfo.Password();
                     customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
                     customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
-                    await GenerateRandomCompany(customer);
                     customer.configure = new CustomerConfigModel() { };
                     await new InsertData().Customer(customer);
+                    await GenerateRandomCompany(customer);
                     Debug.WriteLine($"Customer added");
                 }
 
@@ -109,11 +108,11 @@ namespace ReportingSystem
                         if (customer != null)
                         {
                             var company = await new GenerateCompanySQL().RandomCompany(customer);
-                            if (company != null)
-                            {
-                                await new InsertData().Company(company, customer.id);
-                                Debug.WriteLine($"Company {i} added. All is {countCompany}");
-                            }
+                            //if (company != null)
+                            //{
+                            //    await new InsertData().Company(company, customer.id);
+                            Debug.WriteLine($"Company {i} added. All is {countCompany}");
+                            //}
                         }
                     }
                 }

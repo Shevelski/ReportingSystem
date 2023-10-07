@@ -22,4 +22,6 @@
     <Folder Include="wwwroot\img\UserCertificate\" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties data_1json__JsonSchema="https://cdn.jsdelivr.net/gh/tarampampam/error-pages@latest/schemas/config/1.0.schema.json" /></VisualStudio></ProjectExtensions>
+
 </Project>
