@@ -87,87 +87,25 @@ namespace ReportingSystem.Controllers.Functions
 
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> CreateCategory([FromBody] string[] ar)
-        //{
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory([FromBody] string[] ar)
+        {
 
-        //    await Task.Delay(10);
-        //    var result = _projectsCategoriesService.CreateCategory(ar);
-        //    return result != null ? Ok(result) : NotFound();
+            await Task.Delay(10);
+            var result = _projectsCategoriesService.CreateCategory(ar);
+            return result != null ? Ok(result) : NotFound();
 
-        //}
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory([FromBody] string[] ar)
+        {
 
+            await Task.Delay(10);
+            var result = _projectsCategoriesService.DeleteCategory(ar);
+            return result != null ? Ok(result) : NotFound();
 
-
-        //[HttpPost]
-        //public async Task<IActionResult> CreateCategory([FromBody] int[] levels, string newName, Guid idLevel1)
-        //{
-
-        //    await Task.Delay(10);
-        //    if (levels[0] == -1)
-        //    {
-        //        ProjectCategoryModel projectCategoryModel = new ProjectCategoryModel();
-        //        projectCategoryModel.id = Guid.NewGuid();
-        //        projectCategoryModel.name = newName;
-        //        if (DatabaseMoq.ProjectsCategories != null)
-        //        {
-        //            DatabaseMoq.ProjectsCategories.Add(projectCategoryModel);
-        //            DatabaseMoq.UpdateJson();
-        //            return Json(DatabaseMoq.ProjectsCategories);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (DatabaseMoq.ProjectsCategories != null)
-        //        {
-        //            ProjectCategoryModel? categoryLevel1 = DatabaseMoq.ProjectsCategories.FirstOrDefault(c => c.id.Equals(idLevel1));
-        //            if (levels[1] == -1)
-        //            {
-        //                ProjectCategoryModel2 projectCategoryModel2 = new ProjectCategoryModel2();
-        //                projectCategoryModel2.id = Guid.NewGuid();
-        //                projectCategoryModel2.name = newName;
-        //                if (categoryLevel1 != null)
-        //                {
-        //                    var categoriesLevel2 = categoryLevel1.categoriesLevel2;
-        //                    if (categoriesLevel2 != null)
-        //                    {
-        //                        categoriesLevel2.Add(projectCategoryModel2);
-        //                        DatabaseMoq.UpdateJson();
-        //                        return Json(categoryLevel1.categoriesLevel2);
-        //                    }
-        //                }
-                        
-        //            }
-        //            if (levels[2] == -1)
-        //            {
-        //                ProjectCategoryModel3 projectCategoryModel3 = new ProjectCategoryModel3();
-        //                projectCategoryModel3.id = Guid.NewGuid();
-        //                projectCategoryModel3.name = newName;
-        //                if (categoryLevel1 != null)
-        //                {
-        //                    var categoriesLevel2 = categoryLevel1.categoriesLevel2;
-        //                    if (categoriesLevel2 != null)
-        //                    {
-        //                        var categoryLevel2 = categoriesLevel2[levels[1]];
-        //                        if (categoryLevel2 != null)
-        //                        {
-        //                            var categoriesLevel3 = categoryLevel2.categoriesLevel3;
-        //                            if (categoriesLevel3 != null)
-        //                            {
-        //                                categoriesLevel3.Add(projectCategoryModel3);
-        //                                DatabaseMoq.UpdateJson();
-        //                                return Json(categoriesLevel3);
-        //                            }
-                                    
-        //                        }
-        //                    } 
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return NotFound();
-        //}
-
+        }
 
 
         //[HttpPost]

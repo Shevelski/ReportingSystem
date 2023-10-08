@@ -90,7 +90,8 @@ new Vue({
             });
             
             this.categoriesLevel1 = response.data;
-            console.log(this.categoriesLevel1);
+
+            this.pageCount = Math.ceil(this.countFilteredCategory / this.itemsPerPage);
         },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
@@ -170,58 +171,29 @@ new Vue({
             var v4 = null;
             var v5 = null;
 
-            console.log(this.navigLevel0 + " " + navigLevel);
-            console.log(this.navigLevel1);
-            console.log(this.navigLevel2);
-            console.log(this.navigLevel3);
-
 
             if (navigLevel != -1) {
-                v2 = this.filteredCategory[navigLevel].id;
+                v2 = this.filteredCategory[this.navigLevel0].id;
             }
             if (this.navigLevel1 != -1) {
-                v3 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].id;
+                v3 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].id;
             }
             if (this.navigLevel2 != -1) {
-                v4 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
+                v4 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
             }
             if (this.navigLevel3 != -1) {
-                v5 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
+                v5 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
             }
             
             const v6 = this.editCategoryName;
             
             const ar = [v0, v1, v2, v3, v4, v5, v6];
-            console.log(ar);
 
-            //console.log(navigLevel);
-
-            
-            //const v2 = this.filteredCategory[navigLevel].id;
-            //const v3 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].id;
-            //const v4 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
-            //const v5 = this.filteredCategory[navigLevel].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
-            //const v6 = this.editCategoryName;
-
-
-            //if (navigLevel == -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
-            //    console.log('level0');
-            //}
-            //if (navigLevel == 0 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
-            //    console.log('level1');
-            //}
-            //if (navigLevel == 0 && this.navigLevel2 == 0 && this.navigLevel3 == -1) {
-            //    console.log('level2');
-            //}
-            //if (navigLevel == 0 && this.navigLevel2 == 0 && this.navigLevel3 == 0) {
-            //    console.log('level3');
-            //}
-
-            //try {
-            //    await axios.post('/ProjectsCategories/CreateCategory', ar);
-            //} catch (error) {
-            //    console.error('Помилка під час виклику методу CreateCategory:', error);
-            //}
+            try {
+                await axios.post('/ProjectsCategories/CreateCategory', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу CreateCategory:', error);
+            }
 
             this.Init();
 
@@ -229,16 +201,35 @@ new Vue({
         },
         async confirmEditCategory() {
 
-            const navigLevel = this.navigLevel1 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
+            var navigLevel = this.navigLevel0 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
 
-            const id1 = this.filteredCategory[this.navigLevel1].id;
+            const v0 = this.selectedCustomerId;
+            const v1 = this.selectedCompanyId;
+            var v2 = null;
+            var v3 = null;
+            var v4 = null;
+            var v5 = null;
 
-            const ar = [navigLevel, this.navigLevel2, this.navigLevel3];
+
+            if (navigLevel != -1) {
+                v2 = this.filteredCategory[this.navigLevel0].id;
+            }
+            if (this.navigLevel1 != -1) {
+                v3 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].id;
+            }
+            if (this.navigLevel2 != -1) {
+                v4 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
+            }
+            if (this.navigLevel3 != -1) {
+                v5 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
+            }
+
+            const v6 = this.editCategoryName;
+
+            const ar = [v0, v1, v2, v3, v4, v5, v6];
 
             try {
-                await axios.post('/ProjectCategory/EditNameCategory', ar, {
-                    params: { newName: this.editCategoryName, idLevel1: id1 } 
-                });
+                await axios.post('/ProjectsCategories/EditNameCategory', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу EditNameCategory:', error);
             }
@@ -251,73 +242,86 @@ new Vue({
 
         async confirmDeleteCategory() {
 
+            var navigLevel = this.navigLevel0 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
+
+            const v0 = this.selectedCustomerId;
+            const v1 = this.selectedCompanyId;
+
             if (!this.modalCategoryUsed) { 
-                var navigLevel = this.navigLevel1 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
+                
+                var v2 = null;
+                var v3 = null;
+                var v4 = null;
+                var v5 = null;
 
-                var id1 = null;
-                var id2 = null;
-                var id3 = null;
+                if (navigLevel != -1) {
+                    v2 = this.filteredCategory[this.navigLevel0].id;
+                }
+                if (this.navigLevel1 != -1) {
+                    v3 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].id;
+                }
+                if (this.navigLevel2 != -1) {
+                    v4 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
+                }
+                if (this.navigLevel3 != -1) {
+                    v5 = this.filteredCategory[this.navigLevel0].categoriesLevel1[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
+                }
 
-                if (this.navigLevel1 != -1) id1 = this.filteredCategory[this.navigLevel1].id;
-                if (this.navigLevel2 != -1) id2 = this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].id;
-                if (this.navigLevel3 != -1) id3 = this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].id;
-
-                const ids = [id1, id2, id3];
+                const ar = [v0, v1, v2, v3, v4, v5];
 
                 try {
-                    await axios.post('/ProjectCategory/DeleteCategory', ids)
+                    await axios.post('/ProjectsCategories/DeleteCategory', ar)
                 } catch (error) {
                     console.error('Помилка під час виклику методу DeleteCategory:', error);
                 }
+                this.firstBatch();
                 this.Init();
             }
         },
 
         toggleModal(type, indexLevel0, indexLevel1, indexLevel2, indexLevel3) {
 
-            this.modalType = type;
-
             this.navigLevel0 = indexLevel0;
             this.navigLevel1 = indexLevel1;
             this.navigLevel2 = indexLevel2;
             this.navigLevel3 = indexLevel3;
 
-            if (indexLevel1 == -1) {
-                this.modalName = '';
-             }
+            this.modalType = type;
 
-            if (indexLevel1 !== -1 && indexLevel2 == -1) {
-                this.modalName = this.filteredCategory[indexLevel1].name;
-                this.modalCategoryUsed = this.filteredCategory[indexLevel1].projects.length !== 0;
-                this.projectsUsed = this.filteredCategory[indexLevel1].projects;
+            if (indexLevel0 != -1) {
+                this.modalName = this.filteredCategory[indexLevel0].name;
             }
-
-            if (indexLevel1 !== -1 && indexLevel2 !== -1) {
-                this.modalName = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].name;
-                this.modalCategoryUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].projects.length !== 0;
-                this.projectsUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].projects;
+            if (indexLevel1 != -1) {
+                this.modalName = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].name;
+                this.modalCategoryUsed = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].projects.length !== 0;
+                this.projectsUsed = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].projects;
             }
+            if (indexLevel2 != -1) {
+                this.modalName = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].categoriesLevel2[indexLevel2].name;
+                this.modalCategoryUsed = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].categoriesLevel2[indexLevel2].projects.length !== 0;
+                this.projectsUsed = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].categoriesLevel2[indexLevel2].projects;
 
-            if (indexLevel1 !== -1 && indexLevel2 !== -1 && indexLevel3 !== -1) {
-                this.modalName = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].name;
-                this.modalCategoryUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].projects.length !== 0;
-                this.projectsUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].projects;
+            }
+            if (indexLevel3 != -1) {
+                this.modalName = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].name;
+                this.modalCategoryUsed = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].projects.length !== 0;
+                this.projectsUsed = this.filteredCategory[indexLevel0].categoriesLevel1[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].projects;
             }
 
             if (type === 1) {
                 this.modalCategoryUsed = false;
-                this.modalOperation = 'Ви впевнені, що хочете додати категорію в структуру? ' + this.modalName;
+                this.modalOperation = 'Ви впевнені, що хочете додати категорію в структуру? ' ;
                 this.modalTitle = 'Додавання категорії';
             }
             if (type === 2) {
                 this.modalCategoryUsed = false;
-                this.modalOperation = 'Ви впевнені, що хочете редагувати категорію проекту? ' + this.modalName;
+                this.modalOperation = 'Ви впевнені, що хочете редагувати категорію проекту - ' + this.modalName +  ' ? ';
                 this.modalTitle = 'Редагування категорії';
                 this.editCategoryName = this.modalName;
             }
             if (type === 3) {
                 if (!this.modalCategoryUsed) {
-                    this.modalOperation = 'Ви впевнені, що хочете видалити категорію проекту? ' + this.modalName;
+                    this.modalOperation = 'Ви впевнені, що хочете видалити категорію проекту - ' + this.modalName + ' ? ';
                 } else {
                     this.modalOperation = 'Категорія з назвою ' + this.modalName + ' використовується в проектах:\n' + this.projectsUsed.join('\n') + '. Видалення не буде виконане';;
                 }

@@ -1570,6 +1570,42 @@
                   "categoriesLevel2": []
                 }
               ]
+            },
+            {
+              "id": "9033b20b-3f27-4abe-a770-8fe20b974e5c",
+              "name": "1",
+              "projects": [],
+              "categoriesLevel1": []
+            },
+            {
+              "id": "667a7e0d-70f8-45d7-8d4f-799fc754a839",
+              "name": "2",
+              "projects": [],
+              "categoriesLevel1": []
+            },
+            {
+              "id": "14871a26-4cdd-483d-9914-267da4dc71cd",
+              "name": "3",
+              "projects": [],
+              "categoriesLevel1": []
+            },
+            {
+              "id": "ab423653-8952-46f8-afcc-564ffa8bfebf",
+              "name": "4",
+              "projects": [],
+              "categoriesLevel1": []
+            },
+            {
+              "id": "a74ce1e6-ea34-4ea3-abac-a2e1ad7559cb",
+              "name": "5",
+              "projects": [],
+              "categoriesLevel1": []
+            },
+            {
+              "id": "62cf0ecb-f298-4f52-83ec-403bb5785aad",
+              "name": "8",
+              "projects": [],
+              "categoriesLevel1": []
             }
           ]
         },

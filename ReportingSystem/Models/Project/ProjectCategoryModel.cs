@@ -53,12 +53,12 @@
     {
         public Guid id { get; set; }
         public string? name { get; set; }
-        public List<string>? projects { get; set; }
+        public List<Guid>? projects { get; set; }
 
         public ProjectCategoryModel3()
         {
             id = Guid.NewGuid();
-            projects = new List<string>();
+            projects = new List<Guid>();
         }
     }
 }
