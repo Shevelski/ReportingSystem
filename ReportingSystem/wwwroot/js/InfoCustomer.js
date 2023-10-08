@@ -43,9 +43,7 @@
             this.$forceUpdate();
         },
         async Init() {
-            console.log(this.rol);
             this.personalInfo = await this.getCustomer();
-            console.log(personalInfo);
             this.personalInfo.endTimeLicense = this.formatDate(this.personalInfo.endTimeLicense);
             this.personalInfo.dateRegistration = this.formatDate(this.personalInfo.dateRegistration);
         },

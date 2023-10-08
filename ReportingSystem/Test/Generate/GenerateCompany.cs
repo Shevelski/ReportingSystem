@@ -198,7 +198,7 @@ namespace ReportingSystem.Test.Generate
                 employeeStatusType = EmployeeStatus.Actual,
                 employeeStatusName = EmployeeStatus.Actual.GetDisplayName(),
             };
-            employee.password = EncryptionHelper.Encrypt(GenerateInfo.Password());
+            employee.password = GenerateInfo.Password();// EncryptionHelper.Encrypt(GenerateInfo.Password());
             employee.addressFact = faker.Address.FullAddress();
             employee.addressReg = faker.Address.FullAddress();
             employee.photo = "/img/UserPhoto/John1.jpg";

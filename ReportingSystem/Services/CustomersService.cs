@@ -3,6 +3,8 @@ using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Utils;
+using System.Collections.Generic;
 
 namespace ReportingSystem.Services
 {
@@ -12,6 +14,17 @@ namespace ReportingSystem.Services
         public List<CustomerModel>? GetCustomers()
         {
             var customers = DatabaseMoq.Customers;
+            //if (customers != null)
+            //{
+            //    foreach (var customer in customers)
+            //    {
+            //        if (customer.password != null)
+            //        {
+            //            customer.password = EncryptionHelper.Decrypt(customer.password);
+            //        }
+            //    }
+            //}
+
             return customers;
         }
         
@@ -28,6 +41,10 @@ namespace ReportingSystem.Services
             }
 
             var customer = DatabaseMoq.Customers.First(cu=>cu.id.Equals(id));
+            //if (customer.password != null)
+            //{
+            //    customer.password = EncryptionHelper.Decrypt(customer.password);
+            //}
             return customer;
         }
 
@@ -47,7 +64,7 @@ namespace ReportingSystem.Services
                 phone = ar[4],
                 dateRegistration = DateTime.Today,
                 //дилема з паролем, ввід при реєстрації чи відправка на пошту
-                password = ar[5],/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
+                password = EncryptionHelper.Encrypt(ar[5]),/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
                 statusLicence = new CustomerLicenceStatusModel
                 {
                     licenceType = LicenceType.Test,
@@ -265,6 +282,55 @@ namespace ReportingSystem.Services
 
             return null;
         }
+        
+        //public async Task<CustomerModel?> CancellationLicence(string[] ar)
+        //{
+        //    await Task.Delay(10);
+
+        //    if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || DatabaseMoq.Customers == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+
+        //    if (licence == null || licence.statusLicence == null)
+        //    {
+        //        return null;
+        //    }
+
+        //    var history = new CustomerLicenseOperationModel
+        //    {
+        //        id = Guid.NewGuid(),
+        //        idCustomer = id,
+        //        dateChange = DateTime.Now,
+        //        oldStatus = licence.statusLicence,
+        //        newStatus = new CustomerLicenceStatusModel
+        //        {
+        //            licenceType = LicenceType.Nulled,
+        //            licenceName = LicenceType.Nulled.GetDisplayName()
+        //        },
+        //        price = 0,
+        //        period = "-",
+        //        nameOperation = "Анулювання"
+        //    };
+
+        //    if (ar.Length > 1 && DateTime.TryParse(ar[1], out DateTime desiredDate))
+        //    {
+        //        history.oldEndDateLicence = licence.endTimeLicense;
+        //        licence.endTimeLicense = desiredDate;
+        //        history.newEndDateLicence = licence.endTimeLicense;
+        //    }
+
+        //    if (licence.historyOperations != null)
+        //    {
+        //        licence.historyOperations.Add(history);
+        //        DatabaseMoq.UpdateJson();
+        //        return licence;
+        //    }
+
+        //    return null;
+        //}
 
 
     }

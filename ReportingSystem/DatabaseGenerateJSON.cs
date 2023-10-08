@@ -47,7 +47,7 @@ namespace ReportingSystem
                     emailWork = "serhii@gmail.ua",
                     photo = "",
                     login = "serhii",
-                    password = EncryptionHelper.Encrypt("12345"),
+                    password = "12345",//EncryptionHelper.Encrypt("12345"),
                     rol = new EmployeeRolModel()
                     {
                         rolType = Enums.EmployeeRolStatus.Developer,
@@ -69,7 +69,7 @@ namespace ReportingSystem
                     emailWork = "alex@gmail.ua",
                     photo = "",
                     login = "alex",
-                    password = EncryptionHelper.Encrypt("12345"),
+                    password = "12345",//EncryptionHelper.Encrypt("12345"),
                     rol = new EmployeeRolModel()
                     {
                         rolType = Enums.EmployeeRolStatus.Developer,
@@ -102,7 +102,7 @@ namespace ReportingSystem
                 customer.statusLicence = GenerateCustomer.Status();
                 customer.phone = GenerateInfo.MobilePhoneNumber();
                 customer.email = (customer.secondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
-                customer.password = EncryptionHelper.Encrypt(GenerateInfo.Password());
+                customer.password = GenerateInfo.Password();//EncryptionHelper.Encrypt(GenerateInfo.Password());
                 customer.endTimeLicense = GenerateCustomer.LicenceDate(customer.statusLicence);
                 customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
                 customer.companies = GenerateRandomCompanies(customer);

@@ -1,8 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json;
 using ReportingSystem.Data;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.User;
+using ReportingSystem.Utils;
+using System.Collections.Generic;
 
 namespace ReportingSystem.Services
 {
@@ -39,8 +42,22 @@ namespace ReportingSystem.Services
             {
                 return null;
             }
+            List<EmployeeModel> list  = new List<EmployeeModel>();
+            if (company.employees == null)
+            {
+                return null;
+            }
+                list = company.employees;
 
-            return company.employees;
+            foreach (var employee in list)
+            {
+                if (employee.password != null)
+                {
+                    employee.password = EncryptionHelper.Decrypt(employee.password);
+                }
+            }       
+            
+            return list;
         }
 
         public List<EmployeeModel>? GetAdministrators()
@@ -51,8 +68,18 @@ namespace ReportingSystem.Services
             {
                 return null;
             }
-            
-            return administrators.ToList();
+
+            List<EmployeeModel> list = administrators;
+
+            foreach (var employee in list)
+            {
+                if (employee.password != null)
+                {
+                    employee.password = EncryptionHelper.Decrypt(employee.password);
+                }
+            }
+
+            return list;
         }
 
         public async Task<EmployeeModel?> GetEmployee(string idCu, string idCo, string idEm)
@@ -70,6 +97,15 @@ namespace ReportingSystem.Services
                     }
 
                     var developer = developers.First(dev => dev.id.Equals(idDeveloper));
+
+                    //var dev = developer;
+
+                    //if (dev != null && dev.password != null)
+                    //{
+                    //    dev.password = EncryptionHelper.Decrypt(dev.password);
+                    //}
+
+                    //return dev;
                     return developer;
                 }
 
@@ -111,6 +147,14 @@ namespace ReportingSystem.Services
                 var employee = employees.FirstOrDefault(comp => comp.id.Equals(idEmployee));
 
                 return employee;
+                //var empl = employee;
+
+                //if (empl != null && empl.password != null)
+                //{
+                //    empl.password = EncryptionHelper.Decrypt(empl.password);
+                //}
+
+                //return empl;
             } else
             {
                 if (!Guid.TryParse(idCu, out Guid idCustomer) || !Guid.TryParse(idCo, out Guid idCompany) || !Guid.TryParse(idEm, out Guid idEmployee))

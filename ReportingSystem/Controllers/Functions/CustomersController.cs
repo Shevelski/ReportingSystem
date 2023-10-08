@@ -95,6 +95,14 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
+        //[HttpPost]
+        ////анулювання ліцензії замовника
+        //public async Task<IActionResult> EditCustomer([FromBody] string[] ar)
+        //{
+        //    var result = await _customersService.EditCustomer(ar);
+        //    return result != null ? Ok(result) : NotFound();
+        //}
+
         //[HttpGet]
         ////перевірка збережених компаній
         //public async Task<IActionResult> GetCustomerInfo(string idCu)

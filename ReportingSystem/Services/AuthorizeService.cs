@@ -106,7 +106,7 @@ namespace ReportingSystem.Services
                 {
                     if (administrator.emailWork == email)
                     {
-                        if (administrator.password != null && EncryptionHelper.Decrypt(administrator.password).ToLower().Equals(password.ToLower()))
+                        if (administrator.password != null && administrator.password.Equals(password))//EncryptionHelper.Decrypt(administrator.password).Equals(password))
                         {
                             authorize.Email = administrator.emailWork;
                             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
@@ -127,7 +127,7 @@ namespace ReportingSystem.Services
                 {
                     if (customer.email == email)
                     {
-                        if (customer.password != null && EncryptionHelper.Decrypt(customer.password).ToLower().Equals(password.ToLower()))
+                        if (customer.password != null && customer.password.Equals(password))//EncryptionHelper.Decrypt(customer.password).Equals(password))
                         {
                             authorize.Email = customer.email;
                             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
@@ -172,7 +172,7 @@ namespace ReportingSystem.Services
                                         authorize.Role = new EmployeeRolModel();
                                         authorize.Role = employee.rol;
 
-                                        if (employee.password != null && EncryptionHelper.Decrypt(employee.password).Equals(password))
+                                        if (employee.password != null && employee.password.Equals(password))//EncryptionHelper.Decrypt(employee.password).Equals(password))
                                         {
                                             authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
                                             authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
