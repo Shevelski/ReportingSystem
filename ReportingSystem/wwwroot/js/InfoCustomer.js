@@ -50,20 +50,30 @@
         toggleModal(type) {
 
             this.modalType = type;
-            this.indexEmployee = index;
 
-            if (type === 2) {
+            if (type == 2) {
                 this.modalEmployeeActive = false;
                 this.modalOperation = 'Ви впевнені, що хочете редагувати дані ?';
                 this.modalTitle = 'Редагування власних даних';
             }
         },
         async editCustomer() {
+            const v0 = this.customerId;
+            const v1 = this.personalInfo.firstName;
+            const v2 = this.personalInfo.secondName;
+            const v3 = this.personalInfo.thirdName;
+            const v4 = this.personalInfo.phone;
+            const v5 = this.personalInfo.email;
+            const v6 = this.personalInfo.password;
+
+            const ar = [v0, v1, v2, v3, v4, v5, v6];
+
             try {
-                const response = await axios.post('/Customers/EditCustomer', this.personalInfo);
+                const response = await axios.post('/Customers/EditCustomer', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу EditCustomer:', error);
             }
+            this.Init();
         },
 
         async getCustomer() {

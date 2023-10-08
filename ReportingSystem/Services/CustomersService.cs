@@ -282,55 +282,56 @@ namespace ReportingSystem.Services
 
             return null;
         }
-        
-        //public async Task<CustomerModel?> CancellationLicence(string[] ar)
-        //{
-        //    await Task.Delay(10);
 
-        //    if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || DatabaseMoq.Customers == null)
-        //    {
-        //        return null;
-        //    }
+        public async Task<CustomerModel?> EditCustomer(string[] ar)
+        {
+            await Task.Delay(10);
 
-        //    var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+            if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || DatabaseMoq.Customers == null)
+            {
+                return null;
+            }
 
-        //    if (licence == null || licence.statusLicence == null)
-        //    {
-        //        return null;
-        //    }
+            var customer = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
 
-        //    var history = new CustomerLicenseOperationModel
-        //    {
-        //        id = Guid.NewGuid(),
-        //        idCustomer = id,
-        //        dateChange = DateTime.Now,
-        //        oldStatus = licence.statusLicence,
-        //        newStatus = new CustomerLicenceStatusModel
-        //        {
-        //            licenceType = LicenceType.Nulled,
-        //            licenceName = LicenceType.Nulled.GetDisplayName()
-        //        },
-        //        price = 0,
-        //        period = "-",
-        //        nameOperation = "Анулювання"
-        //    };
+            if (customer == null || customer.statusLicence == null)
+            {
+                return null;
+            }
 
-        //    if (ar.Length > 1 && DateTime.TryParse(ar[1], out DateTime desiredDate))
-        //    {
-        //        history.oldEndDateLicence = licence.endTimeLicense;
-        //        licence.endTimeLicense = desiredDate;
-        //        history.newEndDateLicence = licence.endTimeLicense;
-        //    }
+            if (ar[1] != customer.firstName)
+            {
+                customer.firstName = ar[1];
+            }
 
-        //    if (licence.historyOperations != null)
-        //    {
-        //        licence.historyOperations.Add(history);
-        //        DatabaseMoq.UpdateJson();
-        //        return licence;
-        //    }
+            if (ar[2] != customer.secondName)
+            {
+                customer.secondName = ar[2];
+            }
 
-        //    return null;
-        //}
+            if (ar[3] != customer.thirdName)
+            {
+                customer.thirdName = ar[3];
+            }
+
+            if (ar[4] != customer.phone)
+            {
+                customer.phone = ar[4];
+            }
+
+            if (ar[5] != customer.email)
+            {
+                customer.email = ar[5];
+            }
+
+            if (ar[6] != customer.password)
+            {
+                customer.password = ar[6];
+            }
+
+
+            return customer;
+        }
 
 
     }
