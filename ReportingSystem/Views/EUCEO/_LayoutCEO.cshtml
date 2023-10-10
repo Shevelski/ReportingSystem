@@ -63,39 +63,32 @@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/EUCEO/Report" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Report">Звіт</a>
                         </li>
-                        <div id="header_dropdown" >
-                            <div v-if="windowWidth > 992">
-                                <div class="circle border">
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {{firstInitial}}{{secondInitial}}
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
-                                            <li class="nav-item">
-                                                <a class="nav-link @(path == "/EUCEO/Info" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Info">Власні дані</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link @(path == "/EUDeveloper/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </div>
-                            </div>
-                            <div v-else>
+                       <li class="nav-item dropdown" id="header_dropdown">
+                            <ul class="first-list" v-if="windowWidth > 992">
+                                <li class="circle border">
+                                    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ firstInitial }}{{ secondInitial }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+
+                                        <li class="nav-item">
+                                            <a class="nav-link @(path == "/EUCEO/Info" ? "active" : "")" asp-area="" asp-controller="EUCEO" asp-action="Info">Власні дані</a>
+                                        </li>
+                                        <li class="nav-item" v-if="windowWidth > 992">
+                                            <a class="nav-link @(path == "/EUCEO/Authorize" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul class="second-list" v-else>
                                 <li class="nav-item">
-                                    <a class="nav-link @(path == "/EUCEO/Info" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Info">Власні дані</a>
+                                    <a class="nav-link @(path == "/EUCEO/Info" ? "active" : "")" asp-area="" asp-controller="EUCEO" asp-action="Info">Власні дані</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link @(path == "/EUCEO/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                    <a class="nav-link @(path == "/EUCEO/Authorize" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
                                 </li>
-                            </div>
-                        </div>
-                        @* <li class="nav-item">
-                            <a class="nav-link @(path == "/EUCEO/Info" ? "active": "")" asp-area="" asp-controller="EUCEO" asp-action="Info">Власні дані</a>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
-                        </li> *@
                     </ul>
                 </div>
             </div>
@@ -125,6 +118,16 @@
 
 
 <style>
+    .first-list {
+        list-style: none; /* Remove bullet points */
+        padding-left: 5px; /* Remove padding */
+        margin: 0; /* Remove margin */
+    }
+    .second-list {
+        list-style: none; /* Remove bullet points */
+        padding: 0; /* Remove padding */
+        margin: 0; /* Remove margin */
+    }
     .circle {
             width: 35px;
             height: 35px;
@@ -165,25 +168,5 @@
         color: #000;
         transition: all 0.3s ease-in;
     }
-@*     
-    .navbar-custom{
-        background-color: #387B55;
-    }
-    .navbar-nav li a {
-        color: #fff;
-        transition: all 0.3s ease-out;
-    }
-    .navbar-brand{
-        color: #fff;
-        transition: all 0.3s ease-out;
-    }
 
-    .navbar-brand:hover {
-        color: #000;
-        transition: all 0.3s ease-in;
-    }
-    .navbar-nav .nav-link:hover {
-        color: #000;
-        transition: all 0.3s ease-in;
-    } *@
 </style>
