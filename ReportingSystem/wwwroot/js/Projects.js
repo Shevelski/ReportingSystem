@@ -1,8 +1,8 @@
 ﻿
 new Vue({
-    el: '#Employees',
+    el: '#Projects',
     data: {
-        newEmployee: {
+        newProject: {
             firstName: '',
             secondName: '',
             thirdName: '',
@@ -24,9 +24,9 @@ new Vue({
         },
         customerId: '',
         companyId: '',
-        employeeId: '',
+        projectId: '',
         rol:'',
-        beforeEditEmployee: '',
+        beforeEditProject: '',
         positions: [0],
         rolls:[0],
         selectedRol:'',
@@ -39,7 +39,7 @@ new Vue({
         idCustomer: '',
         mode: 'standart',
         showOnlyActualCompany: false,
-        showEmployeeInfo: false,
+        showProjectInfo: false,
         selectedCompanyId: 0,
         selectedCompanyIdCheck: 0,
         selectedCustomerId: 0,
@@ -52,16 +52,16 @@ new Vue({
         itemsPerPage: 10,
         modalType: 0,
         modalIndex: null,
-        indexEmployee: 0,
+        indexProject: 0,
         modalName: '',
         modalOperation: null,
         modalTitle: null,
-        modalEmployeeActive: false,
-        editEmployeeFirstName: '',
-        editEmployeeSecondName: '',
-        editEmployeeThirdName: '',
-        newEmployee: {},
-        employees: [0],
+        modalProjectActive: false,
+        editProjectFirstName: '',
+        editProjectSecondName: '',
+        editProjectThirdName: '',
+        newProject: {},
+        projects: [0],
         companies: [0],
         customers: [0],
         holidayDays: 0,
@@ -80,12 +80,12 @@ new Vue({
     },
     computed: {
         
-        countFilteredEmployees() {
+        countFilteredProjects() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.employees.filter((employee) => {
-                const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status && employee.status.employeeStatusType == 2;
+            let filteredList = this.projects.filter((project) => {
+                const nameMatches = !nameFilter || project.name.toLowerCase().includes(nameFilter);
+                const isInArchive = project.status && project.status.projectStatusType == 2;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -97,12 +97,12 @@ new Vue({
             return filteredList.length;
         },
 
-        filteredEmployees() {
+        filteredProjects() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.employees.filter((employee) => {
-                const nameMatches = !nameFilter || employee.firstName.toLowerCase().includes(nameFilter) || employee.secondName.toLowerCase().includes(nameFilter) || employee.thirdName.toLowerCase().includes(nameFilter);
-                const isInArchive = employee.status && employee.status.employeeStatusType == 2;
+            let filteredList = this.projects.filter((project) => {
+                const nameMatches = !nameFilter || project.name.toLowerCase().includes(nameFilter);
+                const isInArchive = project.status && project.status.projectStatusType == 2;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -132,45 +132,28 @@ new Vue({
                 this.selectedCustomerId = this.customerId;
                 this.selectedCompanyId = this.companyId;
             }
-            if (this.rol == 'User') {
+            if (this.rol == 'ProjectManager') {
                 this.selectedCustomerId = this.customerId;
                 this.selectedCompanyId = this.companyId;
             }
-            this.positions = await this.getPositions();
-            this.rolls = await this.getRolls();
-            this.employees = await this.getEmployees();
 
+            this.projects = await this.getProjects();
 
-            console.log(this.employees);
-            for (let i = 0; i < this.employees.length; i++) {
-                this.employees[i].birthDate = this.dateCSharpToJs(this.employees[i].birthDate);
-                this.employees[i].workStartDate = this.dateCSharpToJs(this.employees[i].workStartDate);
-                this.employees[i].workEndDate = this.dateCSharpToJs(this.employees[i].workEndDate);
-            };
+            console.log(this.projects);
 
-            this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
+            //for (let i = 0; i < this.projects.length; i++) {
+            //    this.projects[i].birthDate = this.dateCSharpToJs(this.projects[i].birthDate);
+            //    this.projects[i].workStartDate = this.dateCSharpToJs(this.projects[i].workStartDate);
+            //    this.projects[i].workEndDate = this.dateCSharpToJs(this.projects[i].workEndDate);
+            //};
+
+            this.pageCount = Math.ceil(this.countFilteredProjects / this.itemsPerPage);
         },
 
-        async getPositions() {
-            let response = await axios.get("/Positions/GetUniqPositions", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
-            return response.data;
-        },
-        async getRolls() {
-            let response = await axios.get("/Companies/GetRolls", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId
-                }
-            });
-            return response.data;
-        },
-        async getEmployees() {
-            let response = await axios.get("/Employees/GetEmployees", {
+        
+        
+        async getProjects() {
+            let response = await axios.get("/Projects/GetProjects", {
                 params: {
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId
@@ -200,26 +183,12 @@ new Vue({
             }
         },
         isFormEmpty() {
-            const employee = this.newEmployee;
+            const project = this.newProject;
             return (
-                employee.firstName == '' || employee.firstName == null || employee.firstName == undefined ||
-                employee.secondName == '' || employee.secondName == null || employee.secondName == undefined ||
-                employee.thirdName == '' || employee.thirdName == null || employee.thirdName == undefined ||
-                employee.birthDate == '' || employee.birthDate == null || employee.birthDate == undefined ||
-                employee.workStartDate == '' || employee.workStartDate == null || employee.workStartDate == undefined ||
-                employee.namePosition == '' || employee.namePosition == null || employee.namePosition == undefined ||
-                employee.login == '' || employee.login == null || employee.login == undefined ||
-                employee.rol == '' || employee.rol == null || employee.rol == undefined ||
-                employee.password == '' || employee.password == null || employee.password == undefined ||
-                employee.phoneWork == '' || employee.phoneWork == null || employee.phoneWork == undefined ||
-                employee.phoneSelf == '' || employee.phoneSelf == null || employee.phoneSelf == undefined ||
-                employee.emailWork == '' || employee.emailWork == null || employee.emailWork == undefined ||
-                employee.emailSelf == '' || employee.emailSelf == null || employee.emailSelf == undefined ||
-                employee.addressReg == '' || employee.addressReg == null || employee.addressReg == undefined ||
-                employee.addressFact == '' || employee.addressFact == null || employee.addressFact == undefined ||
-                employee.salary == '' || employee.salary == null || employee.salary == undefined ||
-                employee.taxNumber == '' || employee.taxNumber == null || employee.taxNumber == undefined ||
-                employee.addSalary == '' || employee.addSalary == null || employee.addSalary == undefined
+                project.firstName == '' || project.firstName == null || project.firstName == undefined ||
+                project.secondName == '' || project.secondName == null || project.secondName == undefined ||
+                project.thirdName == '' || project.thirdName == null || project.thirdName == undefined ||
+                project.addSalary == '' || project.addSalary == null || project.addSalary == undefined
             )
         },
         getSelectedCustomer(event) {
@@ -247,30 +216,23 @@ new Vue({
 
             this.Init();
         },
-        getSelectedRol(event) {
-            this.selectedRol = event.target.value;
-        },
-        getSelectedPosition(event) {
-            this.selectedPosition = event.target.value;
-        },
-       
         ToogleMode(mode) {
             if (this.mode == 'edit') {
-                this.toggleModal(2, this.indexEmployee);
+                this.toggleModal(2, this.indexProject);
             } else {
-                this.beforeEditEmployee = this.filteredEmployees[this.indexEmployee];
+                this.beforeEditProject = this.filteredProjects[this.indexProject];
             }
 
             if (this.mode != mode) {
                 this.mode = mode;
             }
         },
-        async editEmployee() {
+        async editProject() {
             this.ToogleMode('standart');
             try {
-                const response = await axios.post('/Employees/EditEmployee', this.filteredEmployees[this.indexEmployee]);
+                const response = await axios.post('/Projects/EditProject', this.filteredProjects[this.indexProject]);
             } catch (error) {
-                console.error('Помилка під час виклику методу EditEmployee:', error);
+                console.error('Помилка під час виклику методу EditProject:', error);
             }
             this.Init();
         },
@@ -283,12 +245,12 @@ new Vue({
                 return v.toString(16);
             });
         },
-        setIndexEmployee(index) {
-            if (index == this.indexEmployee && this.showEmployeeInfo) {
-                this.showEmployeeInfo = false;
+        setIndexProject(index) {
+            if (index == this.indexProject && this.showProjectInfo) {
+                this.showProjectInfo = false;
             } else {
-                this.showEmployeeInfo = true;
-                this.indexEmployee = index;
+                this.showProjectInfo = true;
+                this.indexProject = index;
             }
         },
         GeneratePassword(index) {
@@ -302,29 +264,29 @@ new Vue({
             }
 
             if (index == -1) {
-                this.newEmployee.password = password;
+                this.newProject.password = password;
                 this.$forceUpdate();
             } else {
-                this.filteredEmployees[this.indexEmployee].password = password;
+                this.filteredProjects[this.indexProject].password = password;
                 
             }
             
         },
-        shortNameEmployee(index) {
+        shortNameProject(index) {
 
-            var formattedName = this.filteredEmployees[index].secondName + ' ';
-            if (this.filteredEmployees[index].firstName) {
-                formattedName += this.filteredEmployees[index].firstName.charAt(0) + '.';
+            var formattedName = this.filteredProjects[index].secondName + ' ';
+            if (this.filteredProjects[index].firstName) {
+                formattedName += this.filteredProjects[index].firstName.charAt(0) + '.';
             }
-            if (this.filteredEmployees[index].thirdName) {
-                formattedName += this.filteredEmployees[index].thirdName.charAt(0) + '.';
+            if (this.filteredProjects[index].thirdName) {
+                formattedName += this.filteredProjects[index].thirdName.charAt(0) + '.';
             }
             return formattedName;
         },
-        holidayDaysCount(indexEmployee) {
+        holidayDaysCount(indexProject) {
             const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].holidayDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].holidayDate.filter(date => {
+            if (this.projects[indexProject].holidayDate !== null) {
+                const datesThisYear = this.projects[indexProject].holidayDate.filter(date => {
                     return new Date(date).getFullYear() === currentYear;
                 });
                 return datesThisYear.length;
@@ -332,10 +294,10 @@ new Vue({
                 return 0;
             }   
         },
-        hospitalDaysCount(indexEmployee) {
+        hospitalDaysCount(indexProject) {
             const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].hospitalDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].hospitalDate.filter(date => {
+            if (this.projects[indexProject].hospitalDate !== null) {
+                const datesThisYear = this.projects[indexProject].hospitalDate.filter(date => {
                     return new Date(date).getFullYear() === currentYear;
                 });
                 return datesThisYear.length;
@@ -343,10 +305,10 @@ new Vue({
                 return 0;
             }
         },
-        assignmentDaysCount(indexEmployee) {
+        assignmentDaysCount(indexProject) {
             const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].assignmentDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].assignmentDate.filter(date => {
+            if (this.projects[indexProject].assignmentDate !== null) {
+                const datesThisYear = this.projects[indexProject].assignmentDate.filter(date => {
                     return new Date(date).getFullYear() === currentYear;
                 });
                 return datesThisYear.length;
@@ -354,10 +316,10 @@ new Vue({
                 return 0;
             }
         },
-        taketimeoffDaysCount(indexEmployee) {
+        taketimeoffDaysCount(indexProject) {
             const currentYear = new Date().getFullYear();
-            if (this.employees[indexEmployee].taketimeoffDate !== null) {
-                const datesThisYear = this.employees[indexEmployee].taketimeoffDate.filter(date => {
+            if (this.projects[indexProject].taketimeoffDate !== null) {
+                const datesThisYear = this.projects[indexProject].taketimeoffDate.filter(date => {
                     return new Date(date).getFullYear() === currentYear;
                 });
                 return datesThisYear.length;
@@ -367,10 +329,10 @@ new Vue({
         },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
-            this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
+            this.pageCount = Math.ceil(this.countFilteredProjects / this.itemsPerPage);
         },
         nextBatch(){
-            this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
+            this.pageCount = Math.ceil(this.countFilteredProjects / this.itemsPerPage);
 
             if (this.pageCur < this.pageCount) {
                 this.pageCur++;
@@ -387,9 +349,9 @@ new Vue({
             }
             this.closeAllAccordions();
         },
-        hasArchiveEmployee() {
-            for (let i = 0; i < this.employees.length; i++) {
-                if (this.employees[i].status.employeeStatusType === 2) {
+        hasArchiveProject() {
+            for (let i = 0; i < this.projects.length; i++) {
+                if (this.projects[i].status.projectStatusType === 2) {
                     return true;
                 }
             }
@@ -404,96 +366,73 @@ new Vue({
             return `${year}-${month}-${day}`;
         },
 
-        async confirmArchiveEmployee() {
+        async confirmArchiveProject() {
             const idCu = this.selectedCustomerId;
             const idCo = this.selectedCompanyId;
-            const idEm = this.filteredEmployees[this.indexEmployee].id;
+            const idEm = this.filteredProjects[this.indexProject].id;
 
             const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Employees/ArchiveEmployee', ar);
+                await axios.post('/Projects/ArchiveProject', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу ArchiveEmployee:', error);
+                console.error('Помилка під час виклику методу ArchiveProject:', error);
             }
 
             this.Init();
             this.closeAllAccordions();
-            this.showEmployeeInfo = !this.showEmployeeInfo;
+            this.showProjectInfo = !this.showProjectInfo;
         },
-        async fromArchiveEmployee() {
+        async fromArchiveProject() {
             const idCu = this.selectedCustomerId;
             const idCo = this.selectedCompanyId;
-            const idEm = this.filteredEmployees[this.indexEmployee].id;
+            const idEm = this.filteredProjects[this.indexProject].id;
             const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Employees/FromArchiveEmployee', ar);
+                await axios.post('/Projects/FromArchiveProject', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу FromArchiveEmployee:', error);
+                console.error('Помилка під час виклику методу FromArchiveProject:', error);
             }
             this.Init();
             this.closeAllAccordions();
-            this.showEmployeeInfo = !this.showEmployeeInfo;
+            this.showProjectInfo = !this.showProjectInfo;
         },
-        async confirmDeleteEmployee() {
+        async confirmDeleteProject() {
             const idCu = this.selectedCustomerId;
             const idCo = this.selectedCompanyId;
-            const idEm = this.filteredEmployees[this.indexEmployee].id;
+            const idEm = this.filteredProjects[this.indexProject].id;
             const ar = [idCu, idCo, idEm];
 
             try {
-                await axios.post('/Employees/DeleteEmployee', ar);
+                await axios.post('/Projects/DeleteProject', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу DeleteUser:', error);
+                console.error('Помилка під час виклику методу DeleteProject:', error);
             }
 
             this.Init();
-        },
-        async checkEmail() {
-            var email = this.newEmployee.emailWork;
-            if (this.newEmployee.emailWork != null) {
-                var response = await axios.get("/Employees/IsBusyEmail", {
-                    params: {
-                        email: email,
-                    }
-                });
-                console.log(response.data);
-            };
-
-
-            
-        },
-        async addEmployee() {
+        },    
+        async addProject() {
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
-            const v2 = this.newEmployee.firstName;
-            const v3 = this.newEmployee.secondName;
-            const v4 = this.newEmployee.thirdName;
-            const v5 = this.newEmployee.birthDate;
-            const v6 = this.newEmployee.workStartDate;
-            const v7 = this.newEmployee.namePosition;
-            const v8 = this.newEmployee.login;
-            const v9 = this.newEmployee.rol.rolName;
-            const v10 = this.newEmployee.rol.rolType.toString();
-            const v11 = this.newEmployee.password;
-            const v12 = this.newEmployee.phoneWork;
-            const v13 = this.newEmployee.phoneSelf;
-            const v14 = this.newEmployee.emailWork;
-            const v15 = this.newEmployee.emailSelf;
-            const v16 = this.newEmployee.addressReg;
-            const v17 = this.newEmployee.addressFact;
-            const v18 = this.newEmployee.salary;
-            const v19 = this.newEmployee.taxNumber;
-            const v20 = this.newEmployee.addSalary;
+            const v2 = this.newProject.firstName;
+            const v3 = this.newProject.secondName;
+            const v4 = this.newProject.thirdName;
+            const v5 = this.newProject.birthDate;
+            const v6 = this.newProject.workStartDate;
+            const v7 = this.newProject.namePosition;
+            const v8 = this.newProject.login;
+            const v9 = this.newProject.rol.rolName;
+            const v10 = this.newProject.rol.rolType.toString();
+            const v11 = this.newProject.password;
 
-            const ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20];
+            const ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11];
 
             console.log(ar);
             try {
-                await axios.post('/Employees/CreateEmployee', ar);
+                await axios.post('/Projects/CreateProject', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу CreateEmployee:', error);
+                console.error('Помилка під час виклику методу CreateProject:', error);
             }
             this.closeAllAccordions();
             this.Init();
@@ -504,68 +443,48 @@ new Vue({
         toggleModal(type, index) {
 
             this.modalType = type;
-            this.indexEmployee = index;
+            this.indexProject = index;
 
             if (type === 1) {
-                this.modalEmployeeActive = false;
+                this.modalProjectActive = false;
                 this.modalOperation = ''
                 this.modalTitle = 'Додавання співробітника';
-                this.editEmployeeName = this.modalName;
+                this.editProjectName = this.modalName;
             }
 
             if (type === 10) {
-                this.modalEmployeeActive = false;
+                this.modalProjectActive = false;
                 this.modalOperation = 'Ви впевнені, що хочете додати співробітника? ' + this.modalName;
                 this.modalTitle = 'Додавання співробітника';
-                this.editEmployeeName = this.modalName;
+                this.editProjectName = this.modalName;
             }
 
             if (type === 2) {
-                this.modalEmployeeActive = false;
-                this.modalOperation = 'Ви впевнені, що хочете редагувати співробітника ' + this.beforeEditEmployee.firstName + " " + this.beforeEditEmployee.secondName + " " + this.beforeEditEmployee.thirdName + " ?";
+                this.modalProjectActive = false;
+                this.modalOperation = 'Ви впевнені, що хочете редагувати співробітника ' + this.beforeEditProject.firstName + " " + this.beforeEditProject.secondName + " " + this.beforeEditProject.thirdName + " ?";
                 this.modalTitle = 'Редагування співробітника';
             }
             if (type === 3) {
-                if (!this.modalEmployeeActive) {
-                    this.modalOperation = 'Ви впевнені, що хочете архівувати співробітника ' + this.filteredEmployees[index].firstName + " " + this.filteredEmployees[index].secondName + " " + this.filteredEmployees[index].thirdName + " ?";
+                if (!this.modalProjectActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете архівувати співробітника ' + this.filteredProjects[index].firstName + " " + this.filteredProjects[index].secondName + " " + this.filteredProjects[index].thirdName + " ?";
                 }
                 this.modalTitle = 'Архівування співробітника';
             }
             if (type === 4) {
-                if (!this.modalEmployeeActive) {
-                    this.modalOperation = 'Ви впевнені, що хочете видалити співробітника ' + this.filteredEmployees[index].firstName + " " + this.filteredEmployees[index].secondName + " " + this.filteredEmployees[index].thirdName + " ?";
+                if (!this.modalProjectActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете видалити співробітника ' + this.filteredProjects[index].firstName + " " + this.filteredProjects[index].secondName + " " + this.filteredProjects[index].thirdName + " ?";
                 }
                 this.modalTitle = 'Видалення співробітника';
             }
             if (type === 5) {
-                if (!this.modalEmployeeActive) {
-                    this.modalOperation = 'Ви впевнені, що хочете відновити співробітника ' + this.filteredEmployees[index].firstName + " " + this.filteredEmployees[index].secondName + " " + this.filteredEmployees[index].thirdName + " ?";
+                if (!this.modalProjectActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете відновити співробітника ' + this.filteredProjects[index].firstName + " " + this.filteredProjects[index].secondName + " " + this.filteredProjects[index].thirdName + " ?";
                 }
                 this.modalTitle = 'Відновлення співробітника';
             }
         },
-        handleImageChange(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    this.$nextTick(() => {
-                        this.updateImage(e.target.result);
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        },
-        updateImage(imageData) {
-            const imageElement = this.$refs.imageElement;
-            if (imageElement) {
-                const prefix = 'data:image/jpeg;base64,';
-                const imageDataWithoutPrefix = imageData.replace(prefix, '');
-                imageElement.src = imageDataWithoutPrefix;
-            }
-        },
         closeAllAccordions() {
-            this.pageCount = Math.ceil(this.countFilteredEmployees / this.itemsPerPage);
+            this.pageCount = Math.ceil(this.countFilteredProjects / this.itemsPerPage);
             const accordionItems = document.querySelectorAll(".accordion-collapse");
             accordionItems.forEach(item => {
                 item.classList.remove("show");

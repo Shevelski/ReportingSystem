@@ -49,13 +49,13 @@ namespace ReportingSystem.Services
             }
                 list = company.employees;
 
-            foreach (var employee in list)
-            {
-                if (employee.password != null)
-                {
-                    employee.password = EncryptionHelper.Decrypt(employee.password);
-                }
-            }       
+            //foreach (var employee in list)
+            //{
+            //    if (employee.password != null)
+            //    {
+            //        employee.password = EncryptionHelper.Decrypt(employee.password);
+            //    }
+            //}       
             
             return list;
         }
@@ -71,20 +71,20 @@ namespace ReportingSystem.Services
 
             List<EmployeeModel> list = administrators;
 
-            foreach (var employee in list)
-            {
-                if (employee.password != null)
-                {
-                    employee.password = EncryptionHelper.Decrypt(employee.password);
-                }
-            }
+            //foreach (var employee in list)
+            //{
+            //    if (employee.password != null)
+            //    {
+            //        employee.password = EncryptionHelper.Decrypt(employee.password);
+            //    }
+            //}
 
             return list;
         }
 
         public async Task<EmployeeModel?> GetEmployee(string idCu, string idCo, string idEm)
         {
-            if (Utils.Mode.Read().Equals("json"))
+            if (Utils.Settings.Source().Equals("json"))
             {
                 if (idCu == Guid.Empty.ToString() && idCo == Guid.Empty.ToString() && idEm != Guid.Empty.ToString())
                 {

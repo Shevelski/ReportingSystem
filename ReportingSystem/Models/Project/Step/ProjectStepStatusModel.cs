@@ -1,8 +1,10 @@
-﻿namespace ReportingSystem.Models.Project.Step
+﻿using ReportingSystem.Enums;
+
+namespace ReportingSystem.Models.Project.Step
 {
     public class ProjectStepStatusModel
     {
-        public Guid id { get; set; }
+        public ProjectStepStatus type { get; set; }
         public string? name { get; set; }
 
     }

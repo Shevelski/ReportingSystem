@@ -1,15 +1,12 @@
 ﻿using Bogus;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Project;
 using ReportingSystem.Models;
 using ReportingSystem.Test.GenerateData;
 using ReportingSystem.Test.Generate;
 using System.Diagnostics;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Data;
-using ReportingSystem.Utils;
 
 namespace ReportingSystem
 {

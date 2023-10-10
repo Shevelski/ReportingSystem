@@ -18,19 +18,19 @@ namespace ReportingSystem
         public static CompanyModel? Configuration { get; set; }
         public static List<EmployeeModel>? Administrators { get; set; }
         public static CustomerModel? customer { get; set; }
-        public static List<List<EmployeeModel>>? AllUsers { get; set; }
+        //public static List<List<EmployeeModel>>? AllUsers { get; set; }
         public static List<EmployeeModel>? Users { get; set; }
-        public static List<ProjectCategoryModel>? AllProjectsCategories { get; set; }
-        public static List<ProjectCategoryModel>? ProjectsCategories { get; set; }
-        public static List<List<ProjectModel>>? AllProjects { get; set; }
-        public static List<ProjectModel>? Projects{ get; set; }
-        public static List<List<CompanyModel>>? AllCompanies { get; set; }
+        //public static List<ProjectCategoryModel>? AllProjectsCategories { get; set; }
+        //public static List<ProjectCategoryModel>? ProjectsCategories { get; set; }
+        //public static List<List<ProjectModel>>? AllProjects { get; set; }
+        //public static List<ProjectModel>? Projects{ get; set; }
+        //public static List<List<CompanyModel>>? AllCompanies { get; set; }
         public static List<CompanyModel>? Companies { get; set; }
-        public static List<ProjectStatusModel>? ProjectStatus { get; set; }
-        public static List<EmployeePositionModel>? UserPositions { get; set; }
-        public static List<EmployeeRolModel>? UserRolls { get; set; }
-        public static List<CompanyStatusModel>? CompanyStatus { get; set; }
-        
+        //public static List<ProjectStatusModel>? ProjectStatus { get; set; }
+        //public static List<EmployeePositionModel>? UserPositions { get; set; }
+        //public static List<EmployeeRolModel>? UserRolls { get; set; }
+        //public static List<CompanyStatusModel>? CompanyStatus { get; set; }
+
         public static Random random = new Random();
 
         static DatabaseMoqGenerate()
@@ -74,6 +74,50 @@ namespace ReportingSystem
                     {
                         rolType = Enums.EmployeeRolStatus.Developer,
                         rolName = Enums.EmployeeRolStatus.Developer.GetDisplayName()
+                    },
+                    status = new EmployeeStatusModel()
+                    {
+                        employeeStatusType = Enums.EmployeeStatus.Actual,
+                        employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
+                    }
+                },
+                new EmployeeModel()
+                {
+                    id = Guid.NewGuid(),
+                    firstName = "Голопупненко",
+                    secondName = "Іван",
+                    thirdName = "Петрович",
+                    phoneWork = "+380666666666",
+                    emailWork = "golo@gmail.ua",
+                    photo = "",
+                    login = "golo",
+                    password = "12345",//EncryptionHelper.Encrypt("12345"),
+                    rol = new EmployeeRolModel()
+                    {
+                        rolType = Enums.EmployeeRolStatus.DevAdministrator,
+                        rolName = Enums.EmployeeRolStatus.DevAdministrator.GetDisplayName()
+                    },
+                    status = new EmployeeStatusModel()
+                    {
+                        employeeStatusType = Enums.EmployeeStatus.Actual,
+                        employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
+                    }
+                },
+                new EmployeeModel()
+                {
+                    id = Guid.NewGuid(),
+                    firstName = "Стерненко",
+                    secondName = "Сергій",
+                    thirdName = "Іванович",
+                    phoneWork = "+380666666666",
+                    emailWork = "ster@gmail.ua",
+                    photo = "",
+                    login = "ster",
+                    password = "12345",//EncryptionHelper.Encrypt("12345"),
+                    rol = new EmployeeRolModel()
+                    {
+                        rolType = Enums.EmployeeRolStatus.DevAdministrator,
+                        rolName = Enums.EmployeeRolStatus.DevAdministrator.GetDisplayName()
                     },
                     status = new EmployeeStatusModel()
                     {

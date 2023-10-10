@@ -4,7 +4,6 @@ using ReportingSystem.Enums;
 using ReportingSystem.Models;
 using ReportingSystem.Models.User;
 using ReportingSystem.Services;
-using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 
@@ -23,12 +22,10 @@ namespace ReportingSystem.Controllers.Users
 
         public IActionResult Authorize()
         {
-            //генерація даних якщо таких немає, вид даних залежить від режиму
-            if (Utils.Mode.Read().Equals("json")) 
+            //генерація даних, залежить від режиму в Settings
+            if (Utils.Settings.Mode().Equals("write")) 
             { 
                 var a = DatabaseMoq.Customers;
-            } else 
-            { 
                 var b = new DatabaseSQL().Init();
             }
             return View();
@@ -38,10 +35,11 @@ namespace ReportingSystem.Controllers.Users
         public async Task<IActionResult> CheckEmail(string email)
         {
             AuthorizeModel? result;
-            if (Utils.Mode.Read().Equals("json"))
+            if (Utils.Settings.Source().Equals("json"))
             {
                 result = _authorizeService.CheckEmail(email);
-            } else
+            } 
+            else
             {
                 result = await _authorizeService.CheckEmailSQL(email);
             }
@@ -54,7 +52,7 @@ namespace ReportingSystem.Controllers.Users
 
             AuthorizeModel? result;
 
-            if (Utils.Mode.Read().Equals("json"))
+            if (Utils.Settings.Source().Equals("json"))
             {
                 result = _authorizeService.CheckPassword(email, password);
             }

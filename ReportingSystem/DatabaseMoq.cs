@@ -1,12 +1,10 @@
-﻿using Bogus;
-using ReportingSystem.Models.Customer;
+﻿using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models;
 using System.Diagnostics;
 using Newtonsoft.Json;
-using ReportingSystem.Data;
 
 namespace ReportingSystem
 {
@@ -15,21 +13,7 @@ namespace ReportingSystem
         public static CompanyModel? Configuration { get; set; }
         public static List<CustomerModel>? Customers { get; set; }
         public static List<EmployeeModel>? Administrators { get; set; }
-        public static List<CustomerModel>? UpdateCustomers { get; set; }
-        public static List<EmployeeModel>? UpdateAdministrators { get; set; }
-        public static CompanyModel? UpdateConfiguration { get; set; }
-        public static List<List<EmployeeModel>>? AllUsers { get; set; }
-        public static List<EmployeeModel>? Users { get; set; }
-        public static List<List<ProjectCategoryModel>>? AllProjectsCategories { get; set; }
-        public static List<ProjectCategoryModel>? ProjectsCategories { get; set; }
-        public static List<List<ProjectModel>>? AllProjects { get; set; }
-        public static List<ProjectModel>? Projects{ get; set; }
-        public static List<List<CompanyModel>>? AllCompanies { get; set; }
-        public static List<CompanyModel>? Companies { get; set; }
-        public static List<ProjectStatusModel>? ProjectStatus { get; set; }
-        public static List<EmployeePositionModel>? UserPositions { get; set; }
-        public static List<EmployeeRolModel>? UserRolls { get; set; }
-        public static List<CompanyStatusModel>? CompanyStatus { get; set; }
+     
         private class DatabaseMoqData
         {
             public List<CustomerModel>? Customers { get; set; }
@@ -59,7 +43,7 @@ namespace ReportingSystem
             }
             else
             {
-                // Ініціалізація даних, якщо файл не існує
+                // Генерування даних, якщо файл не існує
                 Customers = DatabaseMoqGenerate.Customers;
                 Administrators = DatabaseMoqGenerate.Administrators;
                 Configuration = DatabaseMoqGenerate.Configuration;
@@ -93,6 +77,5 @@ namespace ReportingSystem
             string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(DataFilePath, jsonData);
         }
-
     }
 }
