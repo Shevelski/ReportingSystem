@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using ReportingSystem.Data.Generate;
 using ReportingSystem.Enums;
 using ReportingSystem.Models;
 using ReportingSystem.Models.User;
@@ -24,9 +25,18 @@ namespace ReportingSystem.Controllers.Users
         {
             //генерація даних, залежить від режиму в Settings
             if (Utils.Settings.Mode().Equals("write")) 
-            { 
-                var a = DatabaseMoq.Customers;
-                var b = new DatabaseSQL().Init();
+            {
+                //var a = DatabaseMoq.Customers;
+                //var b = new DatabaseSQL().Init();
+                try
+                {
+                    var a = new GenerateMain().Data();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+                }
+
             }
             return View();
         }
@@ -38,6 +48,7 @@ namespace ReportingSystem.Controllers.Users
             if (Utils.Settings.Source().Equals("json"))
             {
                 result = _authorizeService.CheckEmail(email);
+                
             } 
             else
             {

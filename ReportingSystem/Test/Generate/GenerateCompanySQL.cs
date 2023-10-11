@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using ReportingSystem.Data;
+using ReportingSystem.Data.SQL;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
@@ -8,9 +8,6 @@ using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Test.GenerateData;
-using ReportingSystem.Utils;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 

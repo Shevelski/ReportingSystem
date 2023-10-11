@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using ReportingSystem.Enums;
 
-namespace ReportingSystem.Data
+namespace ReportingSystem.Data.SQL
 {
     public class CreateTables
     {
@@ -20,7 +20,6 @@ namespace ReportingSystem.Data
             if (!new TablesIsExist().AuthorizeHistory())
             {
                 await new CreateTable().AuthorizeHistory();
-                //await new InsertData().AuthorizeHistory();
             }
             if (!new TablesIsExist().CompanyStatus())
             {
@@ -102,22 +101,18 @@ namespace ReportingSystem.Data
         }
 
 
-        public async Task CreateTableAdministrators()
+        public async Task Administrators()
         {
-
             if (!new TablesIsExist().Administrators())
             {
                 await new CreateTable().Administrators();
             }
-
-            
-            
         }
         //public void CreateTableConfiguration()
         //{
 
         //}
-        
-        
+
+
     }
 }

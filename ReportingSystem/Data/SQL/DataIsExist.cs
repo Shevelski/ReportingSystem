@@ -1,6 +1,6 @@
 ﻿using Dapper;
 
-namespace ReportingSystem.Data
+namespace ReportingSystem.Data.SQL
 {
     public class DataIsExist
     {

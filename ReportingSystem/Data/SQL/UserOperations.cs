@@ -2,12 +2,10 @@
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
-using ReportingSystem.Models.Authorize;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
-using ReportingSystem.Utils;
 
-namespace ReportingSystem.Data
+namespace ReportingSystem.Data.SQL
 {
     public class UserOperations
     {
@@ -168,7 +166,7 @@ namespace ReportingSystem.Data
                 var result = await database.QueryAsync<string>(query, para);
 
                 string encryptPassword = result.First();
-                string decryptPassword = EncryptionHelper.Decrypt(encryptPassword);
+                string decryptPassword = encryptPassword;//EncryptionHelper.Decrypt(encryptPassword);
 
                 if (decryptPassword.Equals(inputPassword))
                     return true;
@@ -188,7 +186,7 @@ namespace ReportingSystem.Data
                 var result = await database.QueryAsync<string>(query, para);
 
                 string encryptPassword = result.First();
-                string decryptPassword = EncryptionHelper.Decrypt(encryptPassword);
+                string decryptPassword = encryptPassword;//EncryptionHelper.Decrypt(encryptPassword);
 
                 if (decryptPassword.Equals(inputPassword))
                     return true;
@@ -208,7 +206,7 @@ namespace ReportingSystem.Data
                 var result = await database.QueryAsync<string>(query, para);
 
                 string encryptPassword = result.First();
-                string decryptPassword = EncryptionHelper.Decrypt(encryptPassword);
+                string decryptPassword = encryptPassword;//EncryptionHelper.Decrypt(encryptPassword);
 
                 if (decryptPassword.Equals(inputPassword))
                     return true;
@@ -227,7 +225,7 @@ namespace ReportingSystem.Data
                     Id = id,
                 };
                 var result = await database.QueryAsync<int>(query, para);
-                
+
                 status.licenceType = (LicenceType)result.First();
                 status.licenceName = status.licenceType.GetDisplayName();
 
@@ -277,7 +275,7 @@ namespace ReportingSystem.Data
                     employee.phoneWork = administrator.PhoneWork;
                     employee.emailWork = administrator.EmailWork;
                     employee.login = administrator.Login;
-                    employee.password = administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
+                    employee.password = administrator.Password;//administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
                     employee.status = await GetEmployeeStatus(administrator.Status); ;
                     employee.birthDate = administrator.BirthDate;
                     employee.rol = await GetRoleAdmin(administrator.Rol);
@@ -311,7 +309,7 @@ namespace ReportingSystem.Data
                     employee.phoneWork = customer.Phone;
                     employee.emailWork = customer.Email;
                     employee.login = customer.Login;
-                    employee.password = customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
+                    employee.password = customer.Password; //customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
                     employee.rol = new EmployeeRolModel();
                     employee.rol.rolType = EmployeeRolStatus.Customer;
                     employee.rol.rolName = employee.rol.rolType.GetDisplayName();
@@ -349,7 +347,7 @@ namespace ReportingSystem.Data
                     employee.addressFact = employees.AddressFact;
                     employee.photo = employees.Photo;
                     employee.login = employees.Login;
-                    employee.password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
+                    employee.password = employees.Password;//employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
                     employee.salary = employees.Salary;
                     employee.addSalary = employees.AddSalary;
                     employee.status = await GetEmployeeStatus(employees.Status);
@@ -384,7 +382,7 @@ namespace ReportingSystem.Data
                 };
                 var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
                 var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
-                
+
                 Guid id;
 
                 if (resultAdmin.Any())

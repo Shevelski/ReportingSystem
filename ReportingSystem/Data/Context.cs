@@ -12,5 +12,13 @@ namespace ReportingSystem.Data
                 return new SqlConnection("Server=localhost\\SQLEXPRESS;Database=ReportingSystem;Trusted_Connection=True;");
             }
         }
+        
+        public static string Json 
+        {
+            get
+            {
+                return "data.json";
+            }
+        }
     }
 }

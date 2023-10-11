@@ -1,7 +1,6 @@
 ﻿using Dapper;
-using ReportingSystem.Data;
 
-namespace ReportingSystem.Data
+namespace ReportingSystem.Data.SQL
 {
     public class TablesIsExist
     {

@@ -57,14 +57,12 @@ namespace ReportingSystem.Test.Generate
             int countPositions = 0;
             //директор
             EmployeePositionModel userPosition = new EmployeePositionModel();
-            //userPosition.employees = new List<EmployeeModel>();
             userPosition.namePosition = positions[0];
             UserPositions.Add(userPosition);
             countPositions++;
 
             //адміністратор
             userPosition = new EmployeePositionModel();
-            //userPosition.employees = new List<EmployeeModel>();
             userPosition.namePosition = positions[1];
             UserPositions.Add(userPosition);
             countPositions++;
@@ -75,19 +73,15 @@ namespace ReportingSystem.Test.Generate
             for (int i = 0; i < rnd; i++)
             {
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[2];
                 UserPositions.Add(userPosition);
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[3];
                 UserPositions.Add(userPosition);
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[4];
                 UserPositions.Add(userPosition);
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[5];
                 UserPositions.Add(userPosition);
             }
@@ -97,7 +91,6 @@ namespace ReportingSystem.Test.Generate
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[6];
                 UserPositions.Add(userPosition);
             }
@@ -109,7 +102,6 @@ namespace ReportingSystem.Test.Generate
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[7];
                 UserPositions.Add(userPosition);
             }
@@ -121,7 +113,6 @@ namespace ReportingSystem.Test.Generate
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[8];
                 UserPositions.Add(userPosition);
             }
@@ -133,7 +124,6 @@ namespace ReportingSystem.Test.Generate
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
-                //userPosition.employees = new List<EmployeeModel>();
                 userPosition.namePosition = positions[9];
                 UserPositions.Add(userPosition);
             }

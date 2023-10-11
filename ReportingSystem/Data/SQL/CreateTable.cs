@@ -2,7 +2,7 @@
 using System.Diagnostics.Metrics;
 using System.Security.Cryptography.Xml;
 
-namespace ReportingSystem.Data
+namespace ReportingSystem.Data.SQL
 {
     public class CreateTable
     {
@@ -329,7 +329,7 @@ namespace ReportingSystem.Data
             }
         }
 
-        
+
         public async Task Companies()
         {
             using (var database = Context.Connect)

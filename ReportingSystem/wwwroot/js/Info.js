@@ -46,6 +46,7 @@
         },
         async EditEmployeeInfo() {
             if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
+                console.log(this.personalInfo);
                 try {
                     const response = await axios.post('/Employees/EditAdministrator', this.personalInfo);
                 } catch (error) {
@@ -125,7 +126,7 @@
         toggleModal(type) {
 
             this.modalType = type;
-            this.indexEmployee = index;
+            //this.indexEmployee = index;
 
             if (type === 2) {
                 this.modalEmployeeActive = false;

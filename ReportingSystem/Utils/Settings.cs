@@ -11,15 +11,14 @@
             .Build();
             configuration.Reload();
             string source = configuration.GetValue<string>("Source:source");
-
             if (source.Equals("0"))
             {
-                return "sql";
+                return "json";
             }
 
             if (source.Equals("1"))
             {
-                return "json";
+                return "sql";
             }
 
             return "json";

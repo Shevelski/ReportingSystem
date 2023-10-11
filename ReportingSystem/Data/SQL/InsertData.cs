@@ -8,7 +8,7 @@ using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
-namespace ReportingSystem.Data
+namespace ReportingSystem.Data.SQL
 {
     public class InsertData
     {
@@ -41,7 +41,7 @@ namespace ReportingSystem.Data
                             "([Id],[Type], [Name]) " +
                             "VALUES (@Id,@Type, @Name)";
 
-                foreach (Enums.AuthorizeStatus authorize in Enum.GetValues(typeof(Enums.AuthorizeStatus)))
+                foreach (AuthorizeStatus authorize in Enum.GetValues(typeof(AuthorizeStatus)))
                 {
                     var parameters = new
                     {
@@ -63,7 +63,7 @@ namespace ReportingSystem.Data
                             "([Id],[EmployeeId], [RolId], [AuthorizeStatusId]) " +
                             "VALUES (@Id, @Type, @Name)";
 
-                foreach (Enums.AuthorizeStatus authorize in Enum.GetValues(typeof(Enums.AuthorizeStatus)))
+                foreach (AuthorizeStatus authorize in Enum.GetValues(typeof(AuthorizeStatus)))
                 {
                     var parameters = new
                     {
@@ -84,7 +84,7 @@ namespace ReportingSystem.Data
                             "([Id],[Type], [Name]) " +
                             "VALUES (@Id,@Type, @Name)";
 
-                foreach (Enums.CompanyStatus company in Enum.GetValues(typeof(Enums.CompanyStatus)))
+                foreach (CompanyStatus company in Enum.GetValues(typeof(CompanyStatus)))
                 {
                     var parameters = new
                     {
@@ -105,7 +105,7 @@ namespace ReportingSystem.Data
                             "([Id],[Type], [Name]) " +
                             "VALUES (@Id,@Type, @Name)";
 
-                foreach (Enums.EmployeeRolStatus rol in Enum.GetValues(typeof(Enums.EmployeeRolStatus)))
+                foreach (EmployeeRolStatus rol in Enum.GetValues(typeof(EmployeeRolStatus)))
                 {
                     var parameters = new
                     {
@@ -126,7 +126,7 @@ namespace ReportingSystem.Data
                             "([Id],[Type], [Name]) " +
                             "VALUES (@Id,@Type, @Name)";
 
-                foreach (Enums.EmployeeStatus employee in Enum.GetValues(typeof(Enums.EmployeeStatus)))
+                foreach (EmployeeStatus employee in Enum.GetValues(typeof(EmployeeStatus)))
                 {
                     var parameters = new
                     {
@@ -147,7 +147,7 @@ namespace ReportingSystem.Data
                             "([Id],[Type], [Name]) " +
                             "VALUES (@Id,@Type, @Name)";
 
-                foreach (Enums.ProjectStatus project in Enum.GetValues(typeof(Enums.ProjectStatus)))
+                foreach (ProjectStatus project in Enum.GetValues(typeof(ProjectStatus)))
                 {
                     var parameters = new
                     {
@@ -198,7 +198,7 @@ namespace ReportingSystem.Data
                 };
 
                 await database.ExecuteAsync(query, parameters);
-                
+
             }
         }
 
@@ -304,7 +304,7 @@ namespace ReportingSystem.Data
                         BirthDate = employee.birthDate,
                         WorkStartDate = employee.workStartDate,
                         WorkEndDate = employee.workEndDate,
-                        Position= statusPos,
+                        Position = statusPos,
                         Rol = rol
                     };
 
@@ -313,7 +313,15 @@ namespace ReportingSystem.Data
             }
         }
 
-        public async Task Developer(EmployeeModel employee)
+        public async Task Administrators(List<EmployeeModel> employees)
+        {
+            foreach (EmployeeModel employee in employees)
+            {
+                await new InsertData().Administrator(employee);
+            }
+        }
+
+        public async Task Administrator(EmployeeModel employee)
         {
             using (var database = Context.Connect)
             {
@@ -345,10 +353,15 @@ namespace ReportingSystem.Data
                         status = statusResult.First();
                     }
 
+                    var paraStatus1 = new
+                    {
+                        Type = employee.rol.rolType,
+                    };
+
                     var rolQuery = "SELECT [id]" +
                               "FROM [ReportingSystem].[dbo].[EmployeeRolStatus]" +
-                              "Where Type = 1";
-                    var rolResult = await database.QueryAsync<Guid>(rolQuery);
+                              "Where Type = @Type";
+                    var rolResult = await database.QueryAsync<Guid>(rolQuery, paraStatus1);
 
                     Guid rol = Guid.Empty;
 
@@ -368,14 +381,14 @@ namespace ReportingSystem.Data
 
                     var parameters = new
                     {
-                        Id = Guid.NewGuid(),
+                        Id = employee.id,
                         FirstName = employee.firstName,
                         SecondName = employee.secondName,
                         ThirdName = employee.thirdName,
                         PhoneWork = employee.phoneWork,
                         EmailWork = employee.emailWork,
                         Login = employee.login,
-                        Password = EncryptionHelper.Encrypt(employee.password),
+                        Password = employee.password,//EncryptionHelper.Encrypt(employee.password),
                         Status = status,
                         BirthDate = employee.birthDate,
                         Rol = rol
@@ -463,10 +476,10 @@ namespace ReportingSystem.Data
                     await database.ExecuteAsync(customersQuery, parameters);
                 }
 
-                
+
             }
         }
-        
+
         public async Task Company(CompanyModel company, Guid customerId)
         {
             using (var database = Context.Connect)

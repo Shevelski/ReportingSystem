@@ -1,10 +1,9 @@
 ﻿using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Project;
-using ReportingSystem.Models;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using ReportingSystem.Data;
 
 namespace ReportingSystem
 {
@@ -21,15 +20,13 @@ namespace ReportingSystem
             public CompanyModel? Configuration { get; set; }
         }
 
-        private const string DataFilePath = "data.json";
        
         static DatabaseMoq()
         {
-
-            if (File.Exists(DataFilePath) && new FileInfo(DataFilePath).Length > 0)
+            if (File.Exists(Context.Json) && new FileInfo(Context.Json).Length > 0)
             {
                 string jsonData;
-                using (StreamReader reader = new StreamReader(DataFilePath))
+                using (StreamReader reader = new StreamReader(Context.Json))
                 {
                     jsonData = reader.ReadToEnd();
                 }
@@ -41,15 +38,15 @@ namespace ReportingSystem
                     Configuration = data.Configuration;
                 }
             }
-            else
-            {
-                // Генерування даних, якщо файл не існує
-                Customers = DatabaseMoqGenerate.Customers;
-                Administrators = DatabaseMoqGenerate.Administrators;
-                Configuration = DatabaseMoqGenerate.Configuration;
-                SaveDataToFile();
-                Debug.WriteLine("DataJson було записано");
-            }
+            //else
+            //{
+            //    // Генерування даних, якщо файл не існує
+            //    Customers = DatabaseMoqGenerate.Customers;
+            //    Administrators = DatabaseMoqGenerate.Administrators;
+            //    Configuration = DatabaseMoqGenerate.Configuration;
+            //    SaveDataToFile();
+            //    Debug.WriteLine("DataJson було записано");
+            //}
         }
 
         public static void UpdateJson()
@@ -62,20 +59,20 @@ namespace ReportingSystem
             };
 
             string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
-            File.WriteAllText(DataFilePath, jsonData);
+            File.WriteAllText(Context.Json, jsonData);
         }
 
-        private static void SaveDataToFile()
-        {
-            var data = new DatabaseMoqData
-            {
-                Customers = Customers,
-                Administrators = Administrators,
-                Configuration = Configuration
-            };
+        //private static void SaveDataToFile()
+        //{
+        //    var data = new DatabaseMoqData
+        //    {
+        //        Customers = Customers,
+        //        Administrators = Administrators,
+        //        Configuration = Configuration
+        //    };
 
-            string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
-            File.WriteAllText(DataFilePath, jsonData);
-        }
+        //    string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
+        //    File.WriteAllText(DataFilePath, jsonData);
+        //}
     }
 }

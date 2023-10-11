@@ -1,11 +1,8 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Newtonsoft.Json;
-using ReportingSystem.Data;
+﻿using Newtonsoft.Json;
+using ReportingSystem.Data.SQL;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.User;
-using ReportingSystem.Utils;
-using System.Collections.Generic;
 
 namespace ReportingSystem.Services
 {
