@@ -353,9 +353,11 @@ namespace ReportingSystem.Data.SQL
                         status = statusResult.First();
                     }
 
+                    var rol0 = employee.rol;
+                    
                     var paraStatus1 = new
                     {
-                        Type = employee.rol.rolType,
+                        Type = rol0 != null ? rol0.rolType : Enums.EmployeeRolStatus.Developer,
                     };
 
                     var rolQuery = "SELECT [id]" +

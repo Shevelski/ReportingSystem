@@ -89,7 +89,17 @@ namespace ReportingSystem.Data.Generate
                     name = category,
                     categoriesLevel3 = new List<ProjectCategoryModel3>()
                 };
-                models[0].categoriesLevel1[0].categoriesLevel2.Add(model2);
+                var model0 = models[0];
+                var model01 = model0.categoriesLevel1;
+                var model02 = model01 != null ? model01[0] : null;
+                var model03 = model02 != null ? model02.categoriesLevel2 : null;
+                if (model03 != null)
+                {
+                    model03.Add(model2);
+                }
+
+                //models[0].categoriesLevel1[0].categoriesLevel2.Add(model2);
+                
             }
 
             foreach (string category in listCategories112)
@@ -100,7 +110,15 @@ namespace ReportingSystem.Data.Generate
                     name = category,
                     categoriesLevel3 = new List<ProjectCategoryModel3>()
                 };
-                models[0].categoriesLevel1[1].categoriesLevel2.Add(model2);
+                var model0 = models[0];
+                var model01 = model0.categoriesLevel1;
+                var model02 = model01 != null ? model01[1] : null;
+                var model03 = model02 != null ? model02.categoriesLevel2 : null;
+                if (model03 != null)
+                {
+                    model03.Add(model2);
+                }
+                //models[0].categoriesLevel1[1].categoriesLevel2.Add(model2);
             }
 
             return models;

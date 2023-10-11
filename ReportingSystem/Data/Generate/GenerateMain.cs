@@ -1,12 +1,8 @@
-﻿using ReportingSystem.Enums.Extensions;
-using ReportingSystem.Models.User;
-using ReportingSystem.Models;
+﻿using ReportingSystem.Models.User;
 using Newtonsoft.Json;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
-using ReportingSystem.Enums;
 using ReportingSystem.Data.SQL;
-using ReportingSystem.Test.Generate;
 using System.Diagnostics;
 
 namespace ReportingSystem.Data.Generate

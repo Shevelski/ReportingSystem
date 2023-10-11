@@ -383,8 +383,6 @@ namespace ReportingSystem.Data.SQL
                 var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
                 var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
 
-                Guid id;
-
                 if (resultAdmin.Any())
                 {
                     return employee = await GetAdminData(idEm);

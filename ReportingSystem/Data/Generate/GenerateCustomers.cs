@@ -4,7 +4,6 @@ using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
-using ReportingSystem.Test.Generate;
 using System.Diagnostics;
 
 namespace ReportingSystem.Data.Generate
@@ -45,7 +44,7 @@ namespace ReportingSystem.Data.Generate
             customer.firstName = faker.Name.FirstName();
             customer.secondName = faker.Name.LastName();
             customer.thirdName = faker.Name.FirstName();
-            customer.statusLicence = GenerateCustomer.Status();
+            customer.statusLicence = CustomerLicenceStatus();
             customer.phone = GenerateInfo.MobilePhoneNumber();
             customer.email = (customer.secondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
             customer.password = GenerateInfo.Password();//EncryptionHelper.Encrypt(GenerateInfo.Password());
@@ -54,6 +53,19 @@ namespace ReportingSystem.Data.Generate
             customer.companies = new GenerateCompanies().GenerateRandomCompanies(customer);
             customer.configure = new CustomerConfigModel();
             return customer;
+        }
+
+        public static CustomerLicenceStatusModel CustomerLicenceStatus()
+        {
+            Random random = new Random();
+            CustomerLicenceStatusModel result = new CustomerLicenceStatusModel();
+            LicenceType[] values = { LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled };
+            LicenceType status = values[random.Next(values.Length)];
+
+            result.licenceType = status;
+            result.licenceName = status.GetDisplayName();
+
+            return result;
         }
 
         private class LicenseCustomer
