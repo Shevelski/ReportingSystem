@@ -26,8 +26,6 @@ namespace ReportingSystem.Controllers.Users
             //генерація даних, залежить від режиму в Settings
             if (Utils.Settings.Mode().Equals("write")) 
             {
-                //var a = DatabaseMoq.Customers;
-                //var b = new DatabaseSQL().Init();
                 try
                 {
                     var a = new GenerateMain().Data();
@@ -47,7 +45,8 @@ namespace ReportingSystem.Controllers.Users
             AuthorizeModel? result;
             if (Utils.Settings.Source().Equals("json"))
             {
-                result = _authorizeService.CheckEmail(email);
+                //result = _authorizeService.CheckEmail(email);
+                result = _authorizeService.CheckEmailJson(email);
                 
             } 
             else
@@ -63,14 +62,9 @@ namespace ReportingSystem.Controllers.Users
 
             AuthorizeModel? result;
 
-            if (Utils.Settings.Source().Equals("json"))
-            {
-                result = _authorizeService.CheckPassword(email, password);
-            }
-            else
-            {
-                result = await _authorizeService.CheckPasswordSQL(email, password);
-            }
+            bool mode = Utils.Settings.Source().Equals("json");
+            result = mode ? _authorizeService.CheckPasswordJson(email, password) :
+                      await _authorizeService.CheckPasswordSQL(email, password);
 
             if (result != null && result.AuthorizeStatusModel != null)
             {
@@ -110,7 +104,7 @@ namespace ReportingSystem.Controllers.Users
             await Task.Delay(10);
             return View();
         }
-        public async Task<IActionResult> Index()
+         public async Task<IActionResult> Index()
         {
             await Task.Delay(10);
             return View();
@@ -120,11 +114,12 @@ namespace ReportingSystem.Controllers.Users
             await Task.Delay(10);
             return View();
         }
-        public async Task<IActionResult>  Contacts()
-        {
+         public async Task<IActionResult>  Contacts()
+         {
             await Task.Delay(10);
             return View();
-        }
+         }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

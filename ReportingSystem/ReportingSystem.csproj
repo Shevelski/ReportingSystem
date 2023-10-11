@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\JSON\" />
     <Folder Include="wwwroot\img\UserCertificate\" />
   </ItemGroup>
 

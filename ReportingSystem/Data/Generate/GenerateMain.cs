@@ -22,7 +22,6 @@ namespace ReportingSystem.Data.Generate
                 //Configuration = configuration
             };
 
-
             try
             {
                 //write SQL

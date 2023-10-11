@@ -4,12 +4,13 @@ using ReportingSystem.Models.Company;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using ReportingSystem.Data;
+using ReportingSystem.Models.Configuration;
 
 namespace ReportingSystem
 {
     public static class DatabaseMoq
     {
-        public static CompanyModel? Configuration { get; set; }
+        public static ConfigurationModel? Configuration { get; set; }
         public static List<CustomerModel>? Customers { get; set; }
         public static List<EmployeeModel>? Administrators { get; set; }
      
@@ -17,7 +18,7 @@ namespace ReportingSystem
         {
             public List<CustomerModel>? Customers { get; set; }
             public List<EmployeeModel>? Administrators { get; set; }
-            public CompanyModel? Configuration { get; set; }
+            public ConfigurationModel? Configuration { get; set; }
         }
 
        
