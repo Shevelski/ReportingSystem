@@ -183,7 +183,7 @@
             const v3 = this.editCompanyActions;
             const v4 = this.editCompanyPhone;
             const v5 = this.editCompanyEmail;
-            const v6 = this.customerId;
+            const v6 = this.selectedCustomerId;
             var ar = [v0, v1, v2, v3, v4, v5, v6];
 
             try {
@@ -197,7 +197,7 @@
         },
         async confirmArchiveCompany() {
             const v0 = this.filteredCompanies[this.indexCompany].id;
-            const v1 = this.customerId;
+            const v1 = this.selectedCustomerId;
             var ar = [v0, v1];
 
             try {

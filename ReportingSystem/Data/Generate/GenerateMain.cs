@@ -4,6 +4,7 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Data.SQL;
 using System.Diagnostics;
+using ReportingSystem.Models.Configuration;
 
 namespace ReportingSystem.Data.Generate
 {
@@ -19,7 +20,7 @@ namespace ReportingSystem.Data.Generate
             {
                 Administrators = new GenerateAdministrators().Administrators(),
                 Customers = new GenerateCustomers().Customers(),
-                //Configuration = configuration
+                Configuration = new ConfigurationModel()
             };
 
             try

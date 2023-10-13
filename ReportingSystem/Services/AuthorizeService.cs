@@ -225,8 +225,8 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultAdmin.First();
-                    Guid rolId = await new UserOperations().GetRoleAdminId(id);
-                    authorize.Role = await new UserOperations().GetRoleAdmin(rolId);
+                    Guid rolId = await new SQLRead().GetRoleAdministratorId(id);
+                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
                 }
                 if (resultCustomer.Any())
                 {
@@ -242,8 +242,8 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultEmployee.First();
-                    Guid rolId = await new UserOperations().GetRoleEmployeeId(id);
-                    authorize.Role = await new UserOperations().GetRoleEmployee(rolId);
+                    Guid rolId = await new SQLRead().GetRoleEmployeeId(id);
+                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
                 }
 
                 authorize.Email = email;
@@ -363,13 +363,13 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultAdmin.First();
-                    Guid rolId = await new UserOperations().GetRoleAdminId(id);
-                    authorize.Role = await new UserOperations().GetRoleAdmin(rolId);
-                    if (await new UserOperations().IsPasswordAdminOk(id, password))
+                    Guid rolId = await new SQLRead().GetRoleAdministratorId(id);
+                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
+                    if (await new SQLRead().IsPasswordAdminOk(id, password))
                     {
                         authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
                         authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
-                        authorize.Employee = await new UserOperations().GetAdminData(id);
+                        authorize.Employee = await new SQLRead().GetEmployeeAdministrator(id);
                     }
                 }
                 if (resultCustomer.Any())
@@ -381,7 +381,7 @@ namespace ReportingSystem.Services
                         rolType = EmployeeRolStatus.Customer,
                         rolName = EmployeeRolStatus.Customer.GetDisplayName(),
                     };
-                    if (await new UserOperations().IsPasswordCustomerOk(id, password))
+                    if (await new SQLRead().IsPasswordCustomerOk(id, password))
                     {
                         authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
                         authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
@@ -391,9 +391,9 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultEmployee.First();
-                    Guid rolId = await new UserOperations().GetRoleEmployeeId(id);
-                    authorize.Role = await new UserOperations().GetRoleEmployee(rolId);
-                    if (await new UserOperations().IsPasswordEmployeeOk(id, password))
+                    Guid rolId = await new SQLRead().GetRoleEmployeeId(id);
+                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
+                    if (await new SQLRead().IsPasswordEmployeeOk(id, password))
                     {
                         authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
                         authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();

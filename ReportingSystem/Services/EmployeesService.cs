@@ -159,7 +159,7 @@ namespace ReportingSystem.Services
                     return null;
                 }
 
-                EmployeeModel employee = await new UserOperations().GetEmployeeData(idCustomer, idCompany, idEmployee);
+                EmployeeModel employee = await new SQLRead().GetEmployee(idCustomer, idCompany, idEmployee);
                 return employee;
             }
 

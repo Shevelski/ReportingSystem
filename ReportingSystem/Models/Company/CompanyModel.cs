@@ -8,6 +8,7 @@ namespace ReportingSystem.Models.Company
     public class CompanyModel
     {
         public Guid id { get; set; }
+        public Guid idCustomer { get; set; }
         public string? name { get; set; }
         public string? address { get; set; }
         public string? code { get; set; }

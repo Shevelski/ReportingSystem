@@ -40,6 +40,7 @@ namespace ReportingSystem.Data.Generate
             if (company != null)
             {
                 company.id = Guid.NewGuid();
+                company.idCustomer = customer.id;
                 company.name = faker.Company.CompanyName();
                 company.address = faker.Address.FullAddress();
                 company.code = GenerateInfo.Code();

@@ -17,23 +17,17 @@ namespace ReportingSystem.Controllers.Functions
         //отримати компанії вказаного замовника
         public async Task<IActionResult> GetCompanies(string idCu)
         {
-            using (_companiesService as IDisposable)
-            {
-                await Task.Delay(10);
-                var result = _companiesService.GetCompanies(idCu);
-                return Json(result);
-            }
+            var result = await _companiesService.GetCompanies(idCu);
+            return Json(result);   
         }
 
         [HttpGet]
         //отримати компанії з статусом актуальні вказаного замовника
         public async Task<IActionResult> GetActualCompanies(string idCu)
         {
-            await Task.Delay(10);
-            var result = _companiesService.GetActualCompanies(idCu);
+            var result = await _companiesService.GetActualCompanies(idCu);
             return Json(result);
         }
-
 
         //[HttpGet]
         ////перевірка збереженої компанії в конфігурації 
@@ -58,8 +52,7 @@ namespace ReportingSystem.Controllers.Functions
         //отримати ролі вибраної компанії вибраного замовника 
         public async Task<IActionResult> GetRolls(string idCu, string idCo)
         {
-            await Task.Delay(10);
-            var result = _companiesService.GetRolls(idCu, idCo);
+            var result = await _companiesService.GetRolls(idCu, idCo);
             return Json(result);
         }
 
@@ -67,12 +60,9 @@ namespace ReportingSystem.Controllers.Functions
         //отримати ролі вибраної компанії вибраного замовника 
         public async Task<IActionResult> GetDevRolls()
         {
-            await Task.Delay(10);
-            var result = _companiesService.GetDevRolls();
+            var result = await _companiesService.GetDevRolls();
             return Json(result);
         }
-
-
 
         //[HttpPost]
         ////зберегти компанію в конфігураторі для подальшого використання
@@ -88,8 +78,7 @@ namespace ReportingSystem.Controllers.Functions
         //змінити компанію
         public async Task<IActionResult> EditCompany([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _companiesService.EditCompany(ar);
+            var result = await _companiesService.EditCompany(ar);
             return Json(result);
         }
 
@@ -98,9 +87,8 @@ namespace ReportingSystem.Controllers.Functions
         //архівація компанії
         public async Task<IActionResult> ArchiveCompany([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _companiesService.ArchiveCompany(ar);
-            return result != null ? Ok(result) : NotFound();
+            var result = await _companiesService.ArchiveCompany(ar);
+            return Json(result);
         }
 
 
@@ -108,9 +96,8 @@ namespace ReportingSystem.Controllers.Functions
         //видалення компанії
         public async Task<IActionResult> DeleteCompany([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _companiesService.DeleteCompany(ar);
-            return result != null ? Ok(result) : NotFound();
+            var result = await _companiesService.DeleteCompany(ar);
+            return Json(result);
         }
 
         [HttpPost]
@@ -121,7 +108,6 @@ namespace ReportingSystem.Controllers.Functions
             _companiesService.PostCheckCompany(ar);
         }
 
-        
         [HttpGet]
         //перевірка єдрпу компанії при створенні
         public async Task<IActionResult> GetCheckCompany(string id)
@@ -131,14 +117,12 @@ namespace ReportingSystem.Controllers.Functions
             return result != null ? Ok(result) : NotFound();
         }
 
-        //
         [HttpPost]
         //створення компанії
         public async Task<IActionResult> CreateCompany([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _companiesService.CreateCompany(ar);
-            return result != null ? Ok(result) : NotFound();
+            var result = await _companiesService.CreateCompany(ar);
+            return Json(result);
         }
     }
 }

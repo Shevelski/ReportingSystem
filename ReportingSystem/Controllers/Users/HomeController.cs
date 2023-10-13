@@ -43,16 +43,10 @@ namespace ReportingSystem.Controllers.Users
         public async Task<IActionResult> CheckEmail(string email)
         {
             AuthorizeModel? result;
-            if (Utils.Settings.Source().Equals("json"))
-            {
-                //result = _authorizeService.CheckEmail(email);
-                result = _authorizeService.CheckEmailJson(email);
-                
-            } 
-            else
-            {
-                result = await _authorizeService.CheckEmailSQL(email);
-            }
+
+            bool mode = Utils.Settings.Source().Equals("json");
+            result = mode ? _authorizeService.CheckEmailJson(email) :
+                      await _authorizeService.CheckEmailSQL(email);
             return Json(result);
         }
 
