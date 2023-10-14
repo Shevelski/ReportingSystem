@@ -8,7 +8,7 @@ namespace ReportingSystem.Data.SQL
     {
         public async Task StatusLicence()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE StatusLicence ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -22,7 +22,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task AuthorizeStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE AuthorizeStatus ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -36,7 +36,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task AuthorizeHistory()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE AuthorizeHistory ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -52,7 +52,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task CompanyStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE CompanyStatus ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -66,7 +66,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task EmployeeRolStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE EmployeeRolStatus ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -82,7 +82,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task EmployeeStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE EmployeeStatus ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -96,7 +96,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task ProjectStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE ProjectStatus ( " +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY, " +
@@ -125,7 +125,7 @@ namespace ReportingSystem.Data.SQL
         //----------------------------------------------------------------
         public async Task Configure()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE Configure(" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -149,7 +149,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task HistoryOperations()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE HistoryOperations (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -172,7 +172,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task EmployeePosition()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE EmployeePosition (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -201,9 +201,27 @@ namespace ReportingSystem.Data.SQL
         //    }
         //}
 
-        public async Task Projects()
+    public async Task CompanyRolls()
+    {
+        using (var database = Context.ConnectToSQL)
         {
-            using (var database = Context.Connect)
+            var query = "CREATE TABLE CompanyRolls (" +
+                            "Id UNIQUEIDENTIFIER PRIMARY KEY," +
+                            "CustomerId UNIQUEIDENTIFIER NOT NULL," +
+                            "CompanyId UNIQUEIDENTIFIER NOT NULL," +
+                            "RolId UNIQUEIDENTIFIER NOT NULL," +
+                            "FOREIGN KEY(CustomerId) REFERENCES Customers(Id)," +
+                            "FOREIGN KEY(CompanyId) REFERENCES Companies(Id)," +
+                            "FOREIGN KEY(RolId) REFERENCES EmployeeRolStatus(Id)" +
+                        "); ";
+
+            await database.ExecuteAsync(query);
+        }
+    }
+
+    public async Task Projects()
+        {
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE Projects (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -228,7 +246,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task HolidayDate()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE HolidayDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -242,7 +260,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task HospitalDate()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE HospitalDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -256,7 +274,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task AssignmentDate()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE AssignmentDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -270,7 +288,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task TaketimeoffDate()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE TaketimeoffDate (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -284,7 +302,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Employee()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE Employees (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -332,7 +350,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Companies()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE Companies (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -350,6 +368,8 @@ namespace ReportingSystem.Data.SQL
                                 "Chief UNIQUEIDENTIFIER," +
                                 "FOREIGN KEY(Status) REFERENCES CompanyStatus(id)" +
                              "); " +
+                             //"ALTER TABLE CompanyRolls " +
+                             //"ADD FOREIGN KEY (CompanyId) REFERENCES Companies(Id);" +
                              "ALTER TABLE EmployeePosition " +
                              "ADD FOREIGN KEY (CompanyId) REFERENCES Companies(Id);" +
                              "ALTER TABLE Projects " +
@@ -363,7 +383,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Customers()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE Customers (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +
@@ -380,6 +400,8 @@ namespace ReportingSystem.Data.SQL
                                 "FOREIGN KEY(StatusLicenceId) REFERENCES StatusLicence(id)," +
                                 "FOREIGN KEY(ConfigureId) REFERENCES Configure(id)" +
                             "); " +
+                            //"ALTER TABLE CompanyRolls " +
+                            //"ADD FOREIGN KEY (CustomerId) REFERENCES Customers(Id);" +
                             "ALTER TABLE Companies " +
                             "ADD FOREIGN KEY (CustomerId) REFERENCES Customers(Id);" +
                             "ALTER TABLE AuthorizeHistory " +
@@ -395,7 +417,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Administrators()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "CREATE TABLE Administrators (" +
                                 "Id UNIQUEIDENTIFIER PRIMARY KEY," +

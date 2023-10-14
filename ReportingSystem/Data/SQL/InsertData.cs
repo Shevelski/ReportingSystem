@@ -2,6 +2,7 @@
 using Dapper;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
+using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
@@ -14,7 +15,7 @@ namespace ReportingSystem.Data.SQL
     {
         public async Task StatusLicence()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[StatusLicence] " +
                             "([Id],[Type], [Name]) " +
@@ -35,7 +36,7 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task AuthorizeStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[AuthorizeStatus] " +
                             "([Id],[Type], [Name]) " +
@@ -56,7 +57,7 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task AuthorizeHistory()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
 
                 var query = "INSERT INTO [dbo].[AuthorizeHistory] " +
@@ -78,7 +79,7 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task CompanyStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[CompanyStatus] " +
                             "([Id],[Type], [Name]) " +
@@ -99,7 +100,7 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task EmployeeRolStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[EmployeeRolStatus] " +
                             "([Id],[Type], [Name]) " +
@@ -116,11 +117,22 @@ namespace ReportingSystem.Data.SQL
 
                     await database.ExecuteAsync(query, parameters);
                 }
+                foreach (EmployeeRolStatus rol in Enum.GetValues(typeof(EmployeeRolStatus)))
+                {
+                    var parameters = new
+                    {
+                        Id = Guid.NewGuid(),
+                        Type = (int)rol,
+                        Name = rol.GetDisplayName()
+                    };
+
+                    await database.ExecuteAsync(query, parameters);
+                }
             }
         }
         public async Task EmployeeStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[EmployeeStatus] " +
                             "([Id],[Type], [Name]) " +
@@ -141,7 +153,7 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task ProjectStatus()
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[ProjectStatus] " +
                             "([Id],[Type], [Name]) " +
@@ -182,7 +194,7 @@ namespace ReportingSystem.Data.SQL
         //}
         public async Task EmployeePosition(EmployeePositionModel position, Guid customerId, Guid companyId, int type)
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[EmployeePosition]" +
                             "([Id],[CustomerId],[CompanyId],[Type],[Name])" +
@@ -201,10 +213,29 @@ namespace ReportingSystem.Data.SQL
 
             }
         }
+        public async Task CompanyRolls(Guid rolId, Guid customerId, Guid companyId)
+        {
+            using (var database = Context.ConnectToSQL)
+            {
+                var query = "INSERT INTO [dbo].[CompanyRolls]" +
+                            "([Id],[CustomerId],[CompanyId],[RolId])" +
+                            "VALUES (@Id, @CustomerId, @CompanyId, @RolId)";
+                var parameters = new
+                {
+                    Id = Guid.NewGuid(),
+                    CustomerId = customerId,
+                    CompanyId = companyId,
+                    RolId = rolId
+                };
+
+                await database.ExecuteAsync(query, parameters);
+
+            }
+        }
 
         public async Task Employee(EmployeeModel employee)
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var checkQuery1 = "SELECT COUNT(*) " +
                                  "FROM[ReportingSystem].[dbo].[Administrators]" +
@@ -323,7 +354,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Administrator(EmployeeModel employee)
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var checkQuery1 = "SELECT COUNT(*) " +
                                  "FROM[ReportingSystem].[dbo].[Administrators]" +
@@ -403,7 +434,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Customer(CustomerModel customer)
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 // Створення нового Configure і отримання Id
                 var configureQuery = "INSERT INTO [dbo].[Configure] " +
@@ -484,7 +515,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Company(CompanyModel company, Guid customerId)
         {
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var query = "INSERT INTO [dbo].[Companies]" +
                     "([Id],[CustomerId],[Name],[Address],[Code],[Actions],[StatusWeb],[Phone],[Email],[StatutCapital],[RegistrationDate],[Status],[Chief])" +

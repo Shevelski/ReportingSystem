@@ -76,28 +76,26 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpPost]
         //змінити компанію
-        public async Task<IActionResult> EditCompany([FromBody] string[] ar)
+        public async Task EditCompany([FromBody] string[] ar)
         {
-            var result = await _companiesService.EditCompany(ar);
-            return Json(result);
+            await _companiesService.EditCompany(ar);
+            //return Json(result);
         }
 
 
         [HttpPost]
         //архівація компанії
-        public async Task<IActionResult> ArchiveCompany([FromBody] string[] ar)
+        public async Task ArchiveCompany([FromBody] string[] ar)
         {
-            var result = await _companiesService.ArchiveCompany(ar);
-            return Json(result);
+            await _companiesService.ArchiveCompany(ar);
         }
 
 
         [HttpPost]
         //видалення компанії
-        public async Task<IActionResult> DeleteCompany([FromBody] string[] ar)
+        public async Task DeleteCompany([FromBody] string[] ar)
         {
-            var result = await _companiesService.DeleteCompany(ar);
-            return Json(result);
+            await _companiesService.DeleteCompany(ar);
         }
 
         [HttpPost]

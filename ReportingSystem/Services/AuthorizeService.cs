@@ -204,7 +204,7 @@ namespace ReportingSystem.Services
             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
             AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
 
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
                 var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
@@ -225,8 +225,8 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultAdmin.First();
-                    Guid rolId = await new SQLRead().GetRoleAdministratorId(id);
-                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
+                    Guid rolId = await new SQLRead().GetAdministratorRoleId(id);
+                    authorize.Role = await new SQLRead().GetRoleById(rolId);
                 }
                 if (resultCustomer.Any())
                 {
@@ -242,8 +242,8 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultEmployee.First();
-                    Guid rolId = await new SQLRead().GetRoleEmployeeId(id);
-                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
+                    Guid rolId = await new SQLRead().GetEmployeeRoleId(id);
+                    authorize.Role = await new SQLRead().GetRoleById(rolId);
                 }
 
                 authorize.Email = email;
@@ -342,7 +342,7 @@ namespace ReportingSystem.Services
             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
             AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
 
-            using (var database = Context.Connect)
+            using (var database = Context.ConnectToSQL)
             {
                 var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
                 var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
@@ -363,8 +363,8 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultAdmin.First();
-                    Guid rolId = await new SQLRead().GetRoleAdministratorId(id);
-                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
+                    Guid rolId = await new SQLRead().GetAdministratorRoleId(id);
+                    authorize.Role = await new SQLRead().GetRoleById(rolId);
                     if (await new SQLRead().IsPasswordAdminOk(id, password))
                     {
                         authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
@@ -391,8 +391,8 @@ namespace ReportingSystem.Services
                 {
                     count++;
                     id = resultEmployee.First();
-                    Guid rolId = await new SQLRead().GetRoleEmployeeId(id);
-                    authorize.Role = await new SQLRead().GetRoleUser(rolId);
+                    Guid rolId = await new SQLRead().GetEmployeeRoleId(id);
+                    authorize.Role = await new SQLRead().GetRoleById(rolId);
                     if (await new SQLRead().IsPasswordEmployeeOk(id, password))
                     {
                         authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;

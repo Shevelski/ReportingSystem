@@ -5,7 +5,7 @@ namespace ReportingSystem.Data
 {
     public static class Context
     {
-        public static IDbConnection Connect 
+        public static IDbConnection ConnectToSQL 
         {
             get
             {

@@ -40,6 +40,7 @@ namespace ReportingSystem.Data.Generate
                         foreach (var company in customer.companies)
                         {
                             await new InsertData().Company(company, customer.id);
+
                             if (company.positions != null)
                             {
                                 int i = 0;
@@ -54,6 +55,14 @@ namespace ReportingSystem.Data.Generate
                                             await new InsertData().Employee(employee);
                                         }
                                     }
+                                }
+                            }
+                            if (company.rolls != null)
+                            {
+                                foreach (var rol in company.rolls)
+                                {
+                                    var idRol = await new SQLRead().GetRolIdByType(rol);
+                                    await new InsertData().CompanyRolls(idRol, customer.id, company.id);
                                 }
                             }
                         }

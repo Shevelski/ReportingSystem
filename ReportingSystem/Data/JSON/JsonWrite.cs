@@ -19,13 +19,13 @@ namespace ReportingSystem.Data.JSON
             public ConfigurationModel? Configuration { get; set; }
         }
        
-        public async Task<CompanyModel?> EditCompany(string[] ar)
+        public async Task EditCompany(string[] ar)
         {
             List<CustomerModel>? customers = await new JsonRead().GetCustomers();
 
             if (customers == null || ar.Length < 7 || !Guid.TryParse(ar[6], out Guid idCustomer))
             {
-                return null;
+                return;
             }
 
             var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
@@ -41,11 +41,8 @@ namespace ReportingSystem.Data.JSON
                     company.phone = ar[4];
                     company.email = ar[5];
                     UpdateJsonCustomers(customers);
-                    return company;
                 }
             }
-
-            return null;
         }
         public async Task EditCompanyJson(string[] ar)
         {
@@ -72,13 +69,13 @@ namespace ReportingSystem.Data.JSON
                 }
             }
         }
-        public async Task<CompanyModel?> ArchiveCompany(string[] ar)
+        public async Task ArchiveCompany(string[] ar)
         {
             List<CustomerModel>? customers = await new JsonRead().GetCustomers();
 
             if (customers == null || ar.Length < 2 || !Guid.TryParse(ar[1], out Guid idCustomer))
             {
-                return null;
+                return;
             }
 
             var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
@@ -94,19 +91,16 @@ namespace ReportingSystem.Data.JSON
                         companyStatusName = CompanyStatus.Archive.GetDisplayName()
                     };
                     UpdateJsonCustomers(customers);
-                    return company;
                 }
             }
-
-            return null;
         }
-        public async Task<CompanyModel?> DeleteCompany(string[] ar)
+        public async Task DeleteCompany(string[] ar)
         {
             List<CustomerModel>? customers = await new JsonRead().GetCustomers();
 
             if (customers == null || ar.Length < 2 || !Guid.TryParse(ar[1], out Guid idCustomer))
             {
-                return null;
+                return;
             }
 
             var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
@@ -118,11 +112,8 @@ namespace ReportingSystem.Data.JSON
                 {
                     customer.companies.Remove(company);
                     UpdateJsonCustomers(customers);
-                    return company;
                 }
             }
-
-            return null;
         }
         public async Task<CompanyModel?> CreateCompany(string[] ar)
         {

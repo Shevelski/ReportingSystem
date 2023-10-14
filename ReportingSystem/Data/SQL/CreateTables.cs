@@ -90,6 +90,7 @@ namespace ReportingSystem.Data.SQL
             {
                 await new CreateTable().Projects();
             }
+            
             if (!new TablesIsExist().Companies())
             {
                 await new CreateTable().Companies();
@@ -98,9 +99,11 @@ namespace ReportingSystem.Data.SQL
             {
                 await new CreateTable().Customers();
             }
+            if (!new TablesIsExist().CompanyRolls())
+            {
+                await new CreateTable().CompanyRolls();
+            }
         }
-
-
         public async Task Administrators()
         {
             if (!new TablesIsExist().Administrators())

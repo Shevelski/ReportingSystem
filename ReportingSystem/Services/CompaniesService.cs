@@ -49,31 +49,25 @@ namespace ReportingSystem.Services
         }
         
         //редагування компанії
-        public async Task<CompanyModel?> EditCompany(string[] ar)
+        public async Task EditCompany(string[] ar)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result1 = await new JsonWrite().EditCompany(ar);
-            var result2 = await new SQLWrite().EditCompany(ar);
-            return mode ? result1 : result2;
+            await new JsonWrite().EditCompany(ar);
+            await new SQLWrite().EditCompany(ar);
         }
 
 
         //архівування компанії
-        public async Task<CompanyModel?> ArchiveCompany(string[] ar)
+        public async Task ArchiveCompany(string[] ar)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result1 = await new JsonWrite().ArchiveCompany(ar);
-            var result2 = await new SQLWrite().ArchiveCompany(ar);
-            return mode ? result1 : result2;
+            await new JsonWrite().ArchiveCompany(ar);
+            await new SQLWrite().ArchiveCompany(ar);
         }
 
         //видалення компанії
-        public async Task<CompanyModel?> DeleteCompany(string[] ar)
+        public async Task DeleteCompany(string[] ar)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result1 = await new JsonWrite().DeleteCompany(ar);
-            var result2 = await new SQLWrite().DeleteCompany(ar);
-            return mode ? result1 : result2;
+            await new JsonWrite().DeleteCompany(ar);
+            await new SQLWrite().DeleteCompany(ar);
         }
 
         private static Dictionary<Guid, CompanyModel> companiesData = new Dictionary<Guid, CompanyModel>();
