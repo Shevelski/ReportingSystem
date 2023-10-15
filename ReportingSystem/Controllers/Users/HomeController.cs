@@ -21,6 +21,8 @@ namespace ReportingSystem.Controllers.Users
             _authorizeService = authorizeService;
         }
 
+       
+
         public IActionResult Authorize()
         {
             //генерація даних, залежить від режиму в Settings
@@ -92,7 +94,11 @@ namespace ReportingSystem.Controllers.Users
             }
             return Json(result);
         }
-
+        public async Task<IActionResult>  Registration()
+        {   
+            await Task.Delay(10);
+            return View();
+        }
          public async Task<IActionResult> LogIn()
         {
             await Task.Delay(10);
