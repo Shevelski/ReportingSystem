@@ -12,6 +12,6 @@ namespace ReportingSystem.Models.Project.Step
         public DateTime endDate { get; set; }
         public ProjectStatusModel? status { get; set; }
         public List<EmployeePositionModel>? positions { get; set; }
-        public List<EmployeePositionModel>? members { get; set; }
+        public List<EmployeeModel>? members { get; set; }
     }
 }

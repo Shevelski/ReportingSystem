@@ -10,10 +10,9 @@ namespace ReportingSystem.Services
     public class ProjectsService
     {
 
-        public List<ProjectCategoryModel>? GetProjects(string idCu, string idCo)
+        public List<ProjectModel>? GetProjects(string idCu, string idCo)
         {
-            List<ProjectCategoryModel> projectCategoryModels = new List<ProjectCategoryModel>();
-            ProjectCategoryModel categoryModel = new ProjectCategoryModel();
+            List<ProjectModel> projects= new List<ProjectModel>();
 
             if (DatabaseMoq.Customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
             {
@@ -34,14 +33,14 @@ namespace ReportingSystem.Services
 
             var company = customer.companies.First(co => co.id.Equals(idCompany));
 
-            if (company.categories == null)
+            if (company.projects == null)
             {
                 return null;
             }
 
-            projectCategoryModels = company.categories;
+            projects = company.projects;
 
-            return projectCategoryModels;
+            return projects;
 
 
         }

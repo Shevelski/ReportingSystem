@@ -1,4 +1,5 @@
-﻿using ReportingSystem.Models.User;
+﻿using ReportingSystem.Models.Company;
+using ReportingSystem.Models.User;
 using System.Diagnostics;
 
 namespace ReportingSystem.Data.Generate
@@ -59,7 +60,8 @@ namespace ReportingSystem.Data.Generate
             }
             countPositions += rnd;
 
-            int countPos = rnd * 2;
+            int countManager = rnd * 2;
+            int countPos = countManager;
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
@@ -70,7 +72,7 @@ namespace ReportingSystem.Data.Generate
 
 
             int rnd1 = random.Next(1, 4);
-            countPos = rnd * rnd1;
+            countPos = countManager * rnd1;
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
@@ -81,7 +83,7 @@ namespace ReportingSystem.Data.Generate
             countPositions += countPos;
 
             rnd1 = random.Next(1, 4);
-            countPos = rnd * rnd1;
+            countPos = countManager * rnd1;
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
@@ -92,7 +94,7 @@ namespace ReportingSystem.Data.Generate
 
 
             rnd1 = random.Next(1, 4);
-            countPos = rnd * rnd1;
+            countPos = countManager * rnd1;
             for (int i = 0; i < countPos; i++)
             {
                 userPosition = new EmployeePositionModel();
@@ -104,5 +106,7 @@ namespace ReportingSystem.Data.Generate
             Debug.WriteLine($"All is position {countPositions}");
             return UserPositions;
         }
+        
+        
     }
 }

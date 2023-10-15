@@ -60,6 +60,7 @@ namespace ReportingSystem.Data.Generate
                 company.email = (Regex.Replace(company.name, "[^0-9a-zA-Z]+", "") + ".com.ua").Replace(" ", "").ToLower();
                 company.statutCapital = random.Next(1000, 300000).ToString() + " UAH";
                 company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
+
                 company.positions = new GeneratePositions().Positions();
                 company.rolls = DefaultEmployeeRolls.GetForEmployee();
 
@@ -67,7 +68,7 @@ namespace ReportingSystem.Data.Generate
                 company.chief = company.employees.First(u => u.position != null && u.position.namePosition != null && u.position.namePosition.Equals("Директор"));
 
                 company.categories = new GenerateCategories().Categories();
-                //company.projects = GenerateProjects();
+                //company.projects = new GenerateProjects().RandomProjects(company);
                 return company;
             }
             return null;

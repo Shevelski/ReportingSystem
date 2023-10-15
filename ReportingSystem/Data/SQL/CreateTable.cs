@@ -201,25 +201,25 @@ namespace ReportingSystem.Data.SQL
         //    }
         //}
 
-    public async Task CompanyRolls()
-    {
-        using (var database = Context.ConnectToSQL)
+        public async Task CompanyRolls()
         {
-            var query = "CREATE TABLE CompanyRolls (" +
-                            "Id UNIQUEIDENTIFIER PRIMARY KEY," +
-                            "CustomerId UNIQUEIDENTIFIER NOT NULL," +
-                            "CompanyId UNIQUEIDENTIFIER NOT NULL," +
-                            "RolId UNIQUEIDENTIFIER NOT NULL," +
-                            "FOREIGN KEY(CustomerId) REFERENCES Customers(Id)," +
-                            "FOREIGN KEY(CompanyId) REFERENCES Companies(Id)," +
-                            "FOREIGN KEY(RolId) REFERENCES EmployeeRolStatus(Id)" +
-                        "); ";
+            using (var database = Context.ConnectToSQL)
+            {
+                var query = "CREATE TABLE CompanyRolls (" +
+                                "Id UNIQUEIDENTIFIER PRIMARY KEY," +
+                                "CustomerId UNIQUEIDENTIFIER NOT NULL," +
+                                "CompanyId UNIQUEIDENTIFIER NOT NULL," +
+                                "RolId UNIQUEIDENTIFIER NOT NULL," +
+                                "FOREIGN KEY(CustomerId) REFERENCES Customers(Id)," +
+                                "FOREIGN KEY(CompanyId) REFERENCES Companies(Id)," +
+                                "FOREIGN KEY(RolId) REFERENCES EmployeeRolStatus(Id)" +
+                            "); ";
 
-            await database.ExecuteAsync(query);
+                await database.ExecuteAsync(query);
+            }
         }
-    }
 
-    public async Task Projects()
+        public async Task Projects()
         {
             using (var database = Context.ConnectToSQL)
             {
