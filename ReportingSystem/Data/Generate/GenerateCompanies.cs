@@ -68,7 +68,7 @@ namespace ReportingSystem.Data.Generate
                 company.chief = company.employees.First(u => u.position != null && u.position.namePosition != null && u.position.namePosition.Equals("Директор"));
 
                 company.categories = new GenerateCategories().Categories();
-                //company.projects = new GenerateProjects().RandomProjects(company);
+                company.projects = new GenerateProjects().RandomProjects(company);
                 return company;
             }
             return null;

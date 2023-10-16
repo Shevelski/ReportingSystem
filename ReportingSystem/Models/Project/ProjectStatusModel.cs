@@ -1,4 +1,5 @@
 ﻿using ReportingSystem.Enums;
+using ReportingSystem.Models.User;
 
 namespace ReportingSystem.Models.Project
 {

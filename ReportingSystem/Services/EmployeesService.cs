@@ -9,7 +9,6 @@ namespace ReportingSystem.Services
     public class EmployeesService
     {
 
-
         public List<EmployeeModel>? GetEmployees(string idCu, string idCo)
         {
             var customers = DatabaseMoq.Customers;

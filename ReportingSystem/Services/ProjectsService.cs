@@ -10,7 +10,7 @@ namespace ReportingSystem.Services
     public class ProjectsService
     {
 
-        public List<ProjectModel>? GetProjects(string idCu, string idCo)
+        public async Task<List<ProjectModel>?> GetProjects(string idCu, string idCo)
         {
             List<ProjectModel> projects= new List<ProjectModel>();
 

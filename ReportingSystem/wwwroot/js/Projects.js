@@ -74,18 +74,15 @@ new Vue({
         this.companyId = document.getElementById('idCo').textContent;
         this.employeeId = document.getElementById('idEm').textContent;
         this.rol = document.getElementById('rol').textContent;
-
-
         this.Init();
     },
     computed: {
-        
         countFilteredProjects() {
             const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
             let filteredList = this.projects.filter((project) => {
                 const nameMatches = !nameFilter || project.name.toLowerCase().includes(nameFilter);
-                const isInArchive = project.status && project.status.projectStatusType == 2;
+                const isInArchive = project.status && project.status.type == 5;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -102,7 +99,7 @@ new Vue({
 
             let filteredList = this.projects.filter((project) => {
                 const nameMatches = !nameFilter || project.name.toLowerCase().includes(nameFilter);
-                const isInArchive = project.status && project.status.projectStatusType == 2;
+                const isInArchive = project.status && project.status.type == 5;
 
                 if (this.showArchive) {
                     return isInArchive && nameMatches;
@@ -137,22 +134,25 @@ new Vue({
                 this.selectedCompanyId = this.companyId;
             }
 
+            //console.log(this.customers);
+            //console.log(this.companies);
+
             this.projects = await this.getProjects();
 
             console.log(this.projects);
 
-            //for (let i = 0; i < this.projects.length; i++) {
-            //    this.projects[i].birthDate = this.dateCSharpToJs(this.projects[i].birthDate);
-            //    this.projects[i].workStartDate = this.dateCSharpToJs(this.projects[i].workStartDate);
-            //    this.projects[i].workEndDate = this.dateCSharpToJs(this.projects[i].workEndDate);
-            //};
+            for (let i = 0; i < this.projects.length; i++) {
+                this.projects[i].startDate = this.dateCSharpToJs(this.projects[i].startDate);
+                this.projects[i].endDate = this.dateCSharpToJs(this.projects[i].endDate);
+                this.projects[i].planDate = this.dateCSharpToJs(this.projects[i].planDate);
+            };
 
             this.pageCount = Math.ceil(this.countFilteredProjects / this.itemsPerPage);
         },
-
-        
-        
         async getProjects() {
+
+            //const ar = [this.selectedCustomerId, this.selectedCompanyId];
+            //let response = await axios.get("/Projects/GetProjects", ar);
             let response = await axios.get("/Projects/GetProjects", {
                 params: {
                     idCu: this.selectedCustomerId,
@@ -283,50 +283,7 @@ new Vue({
             }
             return formattedName;
         },
-        holidayDaysCount(indexProject) {
-            const currentYear = new Date().getFullYear();
-            if (this.projects[indexProject].holidayDate !== null) {
-                const datesThisYear = this.projects[indexProject].holidayDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }   
-        },
-        hospitalDaysCount(indexProject) {
-            const currentYear = new Date().getFullYear();
-            if (this.projects[indexProject].hospitalDate !== null) {
-                const datesThisYear = this.projects[indexProject].hospitalDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }
-        },
-        assignmentDaysCount(indexProject) {
-            const currentYear = new Date().getFullYear();
-            if (this.projects[indexProject].assignmentDate !== null) {
-                const datesThisYear = this.projects[indexProject].assignmentDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }
-        },
-        taketimeoffDaysCount(indexProject) {
-            const currentYear = new Date().getFullYear();
-            if (this.projects[indexProject].taketimeoffDate !== null) {
-                const datesThisYear = this.projects[indexProject].taketimeoffDate.filter(date => {
-                    return new Date(date).getFullYear() === currentYear;
-                });
-                return datesThisYear.length;
-            } else {
-                return 0;
-            }
-        },
+        
         setItemsPerPage(count) {
             this.itemsPerPage = count;
             this.pageCount = Math.ceil(this.countFilteredProjects / this.itemsPerPage);

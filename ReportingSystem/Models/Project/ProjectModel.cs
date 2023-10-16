@@ -19,9 +19,9 @@ namespace ReportingSystem.Models.Project
         public List<EmployeeModel>? members { get; set; }
         public EmployeeModel? head { get; set; }
         public ProjectCategoryModel? categoryModel { get; set; }
-        public ProjectCategoryModel1? categoryModel1{ get; set; }
-        public ProjectCategoryModel2? categoryModel2 { get; set; }
-        public ProjectCategoryModel3? categoryModel3 { get; set; }
+        //public ProjectCategoryModel1? categoryModel1 { get; set; }
+        //public ProjectCategoryModel2? categoryModel2 { get; set; }
+        //public ProjectCategoryModel3? categoryModel3 { get; set; }
         public List<ProjectStepModel>? steps { get; set; }
     }
 }
