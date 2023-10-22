@@ -20,6 +20,7 @@ namespace ReportingSystem
             builder.Services.AddScoped<RollsService>();
             builder.Services.AddScoped<ProjectsCategoriesService>();
             builder.Services.AddScoped<ProjectsService>();
+            builder.Services.AddScoped<ReportService>();
 
             builder.Services.AddDistributedMemoryCache();
 

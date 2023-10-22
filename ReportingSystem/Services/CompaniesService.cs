@@ -1,12 +1,6 @@
-﻿using ReportingSystem.Enums;
-using ReportingSystem.Models.Company;
-using ReportingSystem.Models.Customer;
-using ReportingSystem.Enums.Extensions;
+﻿using ReportingSystem.Models.Company;
 using ReportingSystem.Utils;
-using ReportingSystem.Models.User;
 using ReportingSystem.Models;
-using Newtonsoft.Json;
-using ReportingSystem.Data;
 using ReportingSystem.Data.JSON;
 using ReportingSystem.Data.SQL;
 
@@ -103,57 +97,5 @@ namespace ReportingSystem.Services
             var result2 = await new SQLWrite().CreateCompany(ar);
             return mode ? result1 : result2;
         }
-
-        //public CompanyModel? CreateCompany(string[] ar)
-        //{
-        //    if (ar.Length < 7 || !Guid.TryParse(ar[6], out Guid idCustomer))
-        //    {
-        //        return null;
-        //    }
-
-        //    var company = new CompanyModel
-        //    {
-        //        name = ar[0],
-        //        code = ar[1],
-        //        address = ar[2],
-        //        actions = ar[3],
-        //        phone = ar[4],
-        //        email = ar[5],
-        //        registrationDate = DateTime.Today,
-        //        rolls = DefaultEmployeeRolls.Get(),
-        //        positions = new List<EmployeePositionModel>(),
-        //        employees = new List<EmployeeModel>(),
-        //        status = new CompanyStatusModel
-        //        {
-        //            companyStatusType = CompanyStatus.Project,
-        //            companyStatusName = CompanyStatus.Project.GetDisplayName()
-        //        }
-        //    };
-
-        //    if (DatabaseMoq.Customers != null)
-        //    {
-        //        var customers = DatabaseMoq.Customers;
-        //        var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
-
-        //        if (customer != null && customer.companies != null)
-        //        {
-        //            var chief = new EmployeeModel
-        //            {
-        //                firstName = customer.firstName,
-        //                secondName = customer.secondName,
-        //                thirdName = customer.thirdName,
-        //                emailWork = customer.email
-        //            };
-
-        //            company.chief = chief;
-        //            customer.companies.Add(company);
-        //            DatabaseMoq.UpdateJson();
-        //            return company;
-        //        }
-        //    }
-
-        //    return null;
-        //}
-
     }
 }

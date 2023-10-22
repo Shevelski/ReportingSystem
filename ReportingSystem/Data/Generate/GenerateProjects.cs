@@ -67,7 +67,11 @@ namespace ReportingSystem.Data.Generate
 
                 if (company.categories != null)
                 {
-                    project.categoryModel = company.categories[0]; 
+                    project.category = new ProjectChCategoryModel();
+                    project.category.level0CatId = company.categories[0].id;
+                    project.category.level0CatName = company.categories[0].name;
+                    project.category.level1CatId = company.categories[0].categoriesLevel1[0].id;
+                    project.category.level1CatName = company.categories[0].categoriesLevel1[0].name;
                 }
 
                 for (int d = 0; d < numberPosOfDevelopers; d++)
