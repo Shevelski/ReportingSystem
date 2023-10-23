@@ -8,13 +8,5 @@ namespace ReportingSystem.Data.SQL
 {
     public class UserOperations
     {
-
-
-       
-
-
-        
-
-
     }
 }

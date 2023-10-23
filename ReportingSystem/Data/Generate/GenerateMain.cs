@@ -25,50 +25,50 @@ namespace ReportingSystem.Data.Generate
 
             try
             {
-                ////write SQL
-                //Debug.WriteLine($"SQL write Start " + DateTime.Now);
-                //await new CreateTables().Enums();
-                //await new CreateTables().Customers();
-                //await new CreateTables().Administrators();
-                //await new InsertData().Administrators(databaseMoqData.Administrators);
+                //write SQL
+                Debug.WriteLine($"SQL write Start " + DateTime.Now);
+                await new CreateTables().Enums();
+                await new CreateTables().Customers();
+                await new CreateTables().Administrators();
+                await new InsertData().Administrators(databaseMoqData.Administrators);
 
-                //foreach (var customer in databaseMoqData.Customers)
-                //{
-                //    await new InsertData().Customer(customer);
-                //    if (customer.companies != null)
-                //    {
-                //        foreach (var company in customer.companies)
-                //        {
-                //            await new InsertData().Company(company, customer.id);
+                foreach (var customer in databaseMoqData.Customers)
+                {
+                    await new InsertData().Customer(customer);
+                    if (customer.companies != null)
+                    {
+                        foreach (var company in customer.companies)
+                        {
+                            await new InsertData().Company(company, customer.id);
 
-                //            if (company.positions != null)
-                //            {
-                //                int i = 0;
-                //                foreach (var position in company.positions)
-                //                {
-                //                    await new InsertData().EmployeePosition(position, customer.id, company.id, i);
-                //                    i++;
-                //                    if (company.employees != null)
-                //                    {
-                //                        foreach (var employee in company.employees)
-                //                        {
-                //                            await new InsertData().Employee(employee);
-                //                        }
-                //                    }
-                //                }
-                //            }
-                //            if (company.rolls != null)
-                //            {
-                //                foreach (var rol in company.rolls)
-                //                {
-                //                    var idRol = await new SQLRead().GetRolIdByType(rol);
-                //                    await new InsertData().CompanyRolls(idRol, customer.id, company.id);
-                //                }
-                //            }
-                //        }
-                //    }
-                //}
-                //Debug.WriteLine($"SQL write End " + DateTime.Now);
+                            if (company.positions != null)
+                            {
+                                int i = 0;
+                                foreach (var position in company.positions)
+                                {
+                                    await new InsertData().EmployeePosition(position, customer.id, company.id, i);
+                                    i++;
+                                    if (company.employees != null)
+                                    {
+                                        foreach (var employee in company.employees)
+                                        {
+                                            await new InsertData().Employee(employee);
+                                        }
+                                    }
+                                }
+                            }
+                            if (company.rolls != null)
+                            {
+                                foreach (var rol in company.rolls)
+                                {
+                                    var idRol = await new SQLRead().GetRolIdByType(rol);
+                                    await new InsertData().CompanyRolls(idRol, customer.id, company.id);
+                                }
+                            }
+                        }
+                    }
+                }
+                Debug.WriteLine($"SQL write End " + DateTime.Now);
 
                 //write Json
                 Debug.WriteLine($"Json write Start " + DateTime.Now);

@@ -82,9 +82,6 @@ namespace ReportingSystem.Data.SQL
                     customer.password = customerSQL.Password;
                     customer.endTimeLicense = customerSQL.EndTimeLicense;
                     customer.dateRegistration = customerSQL.DateRegistration;
-                    //customer.companies = ;
-                    //customer.historyOperations = ;
-                    //customer.configure = ;
                     customers.Add(customer);
                 }
             }
@@ -117,9 +114,6 @@ namespace ReportingSystem.Data.SQL
                     customer.password = customerSQL.Password;
                     customer.endTimeLicense = customerSQL.EndTimeLicense;
                     customer.dateRegistration = customerSQL.DateRegistration;
-                    //customer.companies = ;
-                    //customer.historyOperations = ;
-                    //customer.configure = ;
                 }
             }
             return customer;

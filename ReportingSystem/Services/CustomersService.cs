@@ -64,7 +64,7 @@ namespace ReportingSystem.Services
                 phone = ar[4],
                 dateRegistration = DateTime.Today,
                 //дилема з паролем, ввід при реєстрації чи відправка на пошту
-                password = EncryptionHelper.Encrypt(ar[5]),/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
+                password = ar[5],//EncryptionHelper.Encrypt(ar[5]),/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
                 statusLicence = new CustomerLicenceStatusModel
                 {
                     licenceType = LicenceType.Test,
@@ -77,6 +77,8 @@ namespace ReportingSystem.Services
 
             var history = new CustomerLicenseOperationModel
             {
+                id = Guid.NewGuid(),
+                idCustomer = customer.id,
                 oldEndDateLicence = DateTime.Today,
                 newEndDateLicence = customer.endTimeLicense,
                 oldStatus = new CustomerLicenceStatusModel(),
@@ -84,16 +86,12 @@ namespace ReportingSystem.Services
             };
 
             customer.historyOperations.Add(history);
+            var a = DatabaseMoq.Customers;
+            var customers = DatabaseMoq.Customers;
+            customers.Add(customer);
+            DatabaseMoq.UpdateJson();
+            return customer;
 
-            if (DatabaseMoq.Customers != null)
-            {
-                var customers = DatabaseMoq.Customers;
-                customers.Add(customer);
-                DatabaseMoq.UpdateJson();
-                return customer;
-            }
-
-            return null;
         }
 
         //продовження ліцензії

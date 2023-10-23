@@ -1,121 +1,53 @@
 ﻿using Dapper;
 using ReportingSystem.Enums;
+using System.Data.Entity.Migrations.Model;
 
 namespace ReportingSystem.Data.SQL
 {
     public class CreateTables
     {
+        private async Task CreateTableAndInsertIfNotExistsAsync(string tableName, Func<Task> createTableAsync, Func<Task> insertDataAsync = null)
+        {
+            if (!await new TablesIsExist().TableExistsAsync(tableName))
+            {
+                await createTableAsync();
+                if (insertDataAsync != null)
+                {
+                    await insertDataAsync();
+                }
+            }
+        }
+
         public async Task Enums()
         {
-            if (!new TablesIsExist().StatusLicence())
-            {
-                await new CreateTable().StatusLicence();
-                await new InsertData().StatusLicence();
-            }
-            if (!new TablesIsExist().AuthorizeStatus())
-            {
-                await new CreateTable().AuthorizeStatus();
-                await new InsertData().AuthorizeStatus();
-            }
-            if (!new TablesIsExist().AuthorizeHistory())
-            {
-                await new CreateTable().AuthorizeHistory();
-            }
-            if (!new TablesIsExist().CompanyStatus())
-            {
-                await new CreateTable().CompanyStatus();
-                await new InsertData().CompanyStatus();
-            }
-            if (!new TablesIsExist().EmployeeRolStatus())
-            {
-                await new CreateTable().EmployeeRolStatus();
-                await new InsertData().EmployeeRolStatus();
-            }
-            if (!new TablesIsExist().EmployeeStatus())
-            {
-                await new CreateTable().EmployeeStatus();
-                await new InsertData().EmployeeStatus();
-            }
-            if (!new TablesIsExist().ProjectStatus())
-            {
-                await new CreateTable().ProjectStatus();
-                await new InsertData().ProjectStatus();
-            }
-            //if (!new TablesIsExist().Status())
-            //{
-            //    await new CreateTable().Status();
-            //    await new InsertData().Status();
-            //}
+            await CreateTableAndInsertIfNotExistsAsync("StatusLicence", () => new CreateTable().StatusLicence(), () => new InsertData().StatusLicence());
+            await CreateTableAndInsertIfNotExistsAsync("AuthorizeStatus", () => new CreateTable().AuthorizeStatus(), () => new InsertData().AuthorizeStatus());
+            await CreateTableAndInsertIfNotExistsAsync("AuthorizeHistory", () => new CreateTable().AuthorizeHistory());
+            await CreateTableAndInsertIfNotExistsAsync("CompanyStatus", () => new CreateTable().CompanyStatus(), () => new InsertData().CompanyStatus());
+            await CreateTableAndInsertIfNotExistsAsync("EmployeeRolStatus", () => new CreateTable().EmployeeRolStatus(), () => new InsertData().EmployeeRolStatus());
+            await CreateTableAndInsertIfNotExistsAsync("EmployeeStatus", () => new CreateTable().EmployeeStatus(), () => new InsertData().EmployeeStatus());
+            await CreateTableAndInsertIfNotExistsAsync("ProjectStatus", () => new CreateTable().ProjectStatus(), () => new InsertData().ProjectStatus());
         }
 
         public async Task Customers()
         {
-            if (!new TablesIsExist().Configure())
-            {
-                await new CreateTable().Configure();
-            }
-            if (!new TablesIsExist().HistoryOperations())
-            {
-                await new CreateTable().HistoryOperations();
-            }
-            if (!new TablesIsExist().EmployeePosition())
-            {
-                await new CreateTable().EmployeePosition();
-            }
-            //if (!new TablesIsExist().EmployeeRol())
-            //{
-            //    await new CreateTable().EmployeeRol();
-            //}
-            if (!new TablesIsExist().HolidayDate())
-            {
-                await new CreateTable().HolidayDate();
-            }
-            if (!new TablesIsExist().HospitalDate())
-            {
-                await new CreateTable().HospitalDate();
-            }
-            if (!new TablesIsExist().AssignmentDate())
-            {
-                await new CreateTable().AssignmentDate();
-            }
-            if (!new TablesIsExist().TaketimeoffDate())
-            {
-                await new CreateTable().TaketimeoffDate();
-            }
-            if (!new TablesIsExist().Employees())
-            {
-                await new CreateTable().Employee();
-            }
-            if (!new TablesIsExist().Projects())
-            {
-                await new CreateTable().Projects();
-            }
-            
-            if (!new TablesIsExist().Companies())
-            {
-                await new CreateTable().Companies();
-            }
-            if (!new TablesIsExist().Customers())
-            {
-                await new CreateTable().Customers();
-            }
-            if (!new TablesIsExist().CompanyRolls())
-            {
-                await new CreateTable().CompanyRolls();
-            }
+            await CreateTableAndInsertIfNotExistsAsync("Configure", () => new CreateTable().Configure());
+            await CreateTableAndInsertIfNotExistsAsync("HistoryOperations", () => new CreateTable().HistoryOperations());
+            await CreateTableAndInsertIfNotExistsAsync("EmployeePosition", () => new CreateTable().EmployeePosition());
+            await CreateTableAndInsertIfNotExistsAsync("HolidayDate", () => new CreateTable().HolidayDate());
+            await CreateTableAndInsertIfNotExistsAsync("HospitalDate", () => new CreateTable().HospitalDate());
+            await CreateTableAndInsertIfNotExistsAsync("AssignmentDate", () => new CreateTable().AssignmentDate());
+            await CreateTableAndInsertIfNotExistsAsync("TaketimeoffDate", () => new CreateTable().TaketimeoffDate());
+            await CreateTableAndInsertIfNotExistsAsync("Employees", () => new CreateTable().Employees());
+            await CreateTableAndInsertIfNotExistsAsync("Projects", () => new CreateTable().Projects());
+            await CreateTableAndInsertIfNotExistsAsync("Companies", () => new CreateTable().Companies());
+            await CreateTableAndInsertIfNotExistsAsync("Customers", () => new CreateTable().Customers());
+            await CreateTableAndInsertIfNotExistsAsync("CompanyRolls", () => new CreateTable().CompanyRolls());
         }
+
         public async Task Administrators()
         {
-            if (!new TablesIsExist().Administrators())
-            {
-                await new CreateTable().Administrators();
-            }
+            await CreateTableAndInsertIfNotExistsAsync("Administrators", () => new CreateTable().Administrators());
         }
-        //public void CreateTableConfiguration()
-        //{
-
-        //}
-
-
     }
 }
