@@ -20,14 +20,14 @@ namespace ReportingSystem.Services
         //Отримання ролей системи в компанії 
         public async Task<List<EmployeeRolModel>?> GetRolls(string idCu, string idCo)
         {
-            bool mode = Utils.Settings.Source().Equals("json");
+            bool mode = Settings.Source().Equals("json");
             var result = mode ? await new JsonRead().GetRolls(idCu, idCo) :
                       await new SQLRead().GetRolls(idCu, idCo);
             return result;
         }
         public async Task<List<EmployeeRolModel>?> GetDevRolls()
         {
-            bool mode = Utils.Settings.Source().Equals("json");
+            bool mode = Settings.Source().Equals("json");
             var result = mode ? await new JsonRead().GetDevRolls() :
                       await new SQLRead().GetDevRolls();
             return result;
@@ -80,8 +80,8 @@ namespace ReportingSystem.Services
         {
             if (Guid.TryParse(id, out Guid guid) && companiesData.TryGetValue(guid, out var companyDetails))
             {
-                companiesData.Remove(guid);
-                DatabaseMoq.UpdateJson();
+                companiesData.Remove(guid);//??
+                DatabaseMoq.UpdateJson();//??
                 return companyDetails;
             }
             return null;

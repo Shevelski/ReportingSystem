@@ -4,36 +4,72 @@
     @* bool authorize = User.Identity?.IsAuthenticated ?? false; *@
 }
 
+@{
+    var path = Context.Request.Path;
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.10/signalr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="~/css/Start.css" asp-append-version="true" />
+
 <div class="text-center">
     <div class="container">
         <div class="row">
             <div class="col">
-                <h2 class="text-start">Welcome</h2>
+                <h1 class="text-start">Welcome</h1>
                 @*<p class="text-start custom-input-font">@Localizer["Welcome")</p>*@
             </div>
         </div>
-        @* <div class="row">
-            <div class="col">
-                <h2 class="text-start">ComprehensiveAnalysisCompanySctivities</h2>
+
+        <div id="Start">
+            <div v-if="hasDatabase">
+                <p>База даних існує. Перехід на сторінку авторизації</p>
+                <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
             </div>
-            
+            <div v-else>
+                <p>База даних відсутня</p>
+                <p>Створити нову базу даних та згенерувати дані</p>
+                <p>База буде створена на локальному хості з іменем ReportingSystem</p>
+
+                <div v-if="databaseStatus != '' && databaseStatus != null">
+                    @* <button v-on:click="createDatabase">Так</button>
+                    <button v-on:click="cancelCreation">Ні</button> *@
+                    
+                    @* <p class="percent-transition">{{ percentOperation }}</p> *@
+
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated"
+                             role="progressbar"
+                             :aria-valuenow="percentOperation"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             :style="{ width: percentOperation + '%' }">
+                        </div>
+                    </div>
+
+                    <p>{{databaseStatus}}</p>
+                </div>
+                <div v-else>
+                    <button v-on:click="createDatabase">Так</button>
+                    <button v-on:click="cancelCreation">Ні</button>
+                </div>
+            </div>
+
+                
+
+
+            @* <div class="alert" :class="{ 'alert-success': hasDatabase, 'alert-danger': !hasDatabase }" role="alert">
+                {{ databaseStatus }}
+            </div> *@
+
+            @* <button v-if="!hasDatabase" v-on:click="generateDatabase" class="btn btn-primary">Generate Database</button> *@
         </div>
-        <div class="row">
-            <div class="col">
-                <h2 class="text-start">OptimizationResourcesProjects</h2>
-            </div>
-        </div> *@
+
         <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-                @* <div class="carousel-item active custom-carousel" data-bs-interval="3000">
-                    <img src="/img/bis_intel.jpg" class="d-block w-100" alt="...">
-                </div> *@
-                @*<div class="carousel-item" data-bs-interval="2000">
-                    <img src="/img/Business-Intelligence.jpg" class="d-block w-100" alt="...">
-                </div>*@
-                @* <div class="carousel-item" data-bs-interval="3000">
-                    <img src="/img/blogart3.jpg" class="d-block w-100" alt="...">
-                </div> *@
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -46,3 +82,6 @@
         </div>
     </div>
 </div>
+
+@*---------------------------------------------------------------------------------------------------------------------*@
+<script src="~/js/Start.js" asp-append-version="true"></script>

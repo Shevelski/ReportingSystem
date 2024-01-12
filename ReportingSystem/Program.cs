@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using ReportingSystem.Data;
+using ReportingSystem.Hubs;
 using ReportingSystem.Services;
+using System.Configuration;
 
 namespace ReportingSystem
 {
@@ -6,6 +10,8 @@ namespace ReportingSystem
     {
         public static void Main(string[] args)
         {
+            //SQLitePCL.Batteries.Init();
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -22,6 +28,8 @@ namespace ReportingSystem
             builder.Services.AddScoped<ProjectsService>();
             builder.Services.AddScoped<ReportService>();
 
+            builder.Services.AddSignalR();
+
             builder.Services.AddDistributedMemoryCache();
 
             builder.Services.AddSession(options =>
@@ -37,6 +45,10 @@ namespace ReportingSystem
             //builder.Services.Configure<CustomerModel>(config);
 
             var app = builder.Build();
+
+            //// Configure SQLite connection
+            //app.Configuration["ConnectionStrings:SQLiteConnection"] = "Data Source=mydatabase.db";
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -58,6 +70,8 @@ namespace ReportingSystem
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<StatusHub>("/statusHub");
 
             app.Run();
         }

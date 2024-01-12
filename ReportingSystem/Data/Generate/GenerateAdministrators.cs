@@ -3,6 +3,7 @@ using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.User;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 namespace ReportingSystem.Data.Generate
 {
     public class GenerateAdministrators
@@ -32,7 +33,14 @@ namespace ReportingSystem.Data.Generate
                     {
                         employeeStatusType = EmployeeStatus.Actual,
                         employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
-                    }
+                    },
+                    position = new EmployeePositionModel()
+                    {
+                        namePosition = EmployeeRolStatus.Developer.GetDisplayName(),
+                    },
+                    workStartDate = DateTime.Now, 
+                    workEndDate = DateTime.Now,
+                    
                 },
                 new EmployeeModel()
                 {
@@ -55,7 +63,13 @@ namespace ReportingSystem.Data.Generate
                     {
                         employeeStatusType = EmployeeStatus.Actual,
                         employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
-                    }
+                    },
+                    position = new EmployeePositionModel()
+                    {
+                        namePosition = EmployeeRolStatus.Developer.GetDisplayName(),
+                    },
+                    workStartDate = DateTime.Now,
+                    workEndDate = DateTime.Now,
                 },
                 new EmployeeModel()
                 {
@@ -78,7 +92,13 @@ namespace ReportingSystem.Data.Generate
                     {
                         employeeStatusType = EmployeeStatus.Actual,
                         employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
-                    }
+                    },
+                    position = new EmployeePositionModel()
+                    {
+                        namePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
+                    },
+                    workStartDate = DateTime.Now,
+                    workEndDate = DateTime.Now,
                 },
                 new EmployeeModel()
                 {
@@ -101,7 +121,13 @@ namespace ReportingSystem.Data.Generate
                     {
                         employeeStatusType = EmployeeStatus.Actual,
                         employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
-                    }
+                    },
+                    position = new EmployeePositionModel()
+                    {
+                        namePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
+                    },
+                    workStartDate = DateTime.Now,
+                    workEndDate = DateTime.Now,
                 }
             };
 

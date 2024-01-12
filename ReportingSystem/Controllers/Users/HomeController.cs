@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using ReportingSystem.Data;
 using ReportingSystem.Data.Generate;
 using ReportingSystem.Enums;
 using ReportingSystem.Models;
@@ -7,6 +8,9 @@ using ReportingSystem.Models.User;
 using ReportingSystem.Services;
 using System.Diagnostics;
 using System.Text;
+using ReportingSystem.Data.SQL;
+using Microsoft.AspNetCore.SignalR;
+using ReportingSystem.Hubs;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -14,31 +18,35 @@ namespace ReportingSystem.Controllers.Users
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AuthorizeService _authorizeService;
+        private readonly IHubContext<StatusHub> _hubContext;
 
-        public HomeController(ILogger<HomeController> logger, AuthorizeService authorizeService)
+        public HomeController(ILogger<HomeController> logger, AuthorizeService authorizeService, IHubContext<StatusHub> hubContext)
         {
             _logger = logger;
             _authorizeService = authorizeService;
+            _hubContext = hubContext;  // Added this line
         }
-
-       
 
         public IActionResult Authorize()
         {
             //генерація даних, залежить від режиму в Settings
-            if (Utils.Settings.Mode().Equals("write")) 
-            {
-                try
-                {
-                    var a = new GenerateMain().Data();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
-                }
-
-            }
             return View();
+        }
+
+        public void GenerateData()
+        {
+            //if (Utils.Settings.Mode().Equals("write"))
+            //{
+
+            //}
+            try
+            {
+                var a = new GenerateMain(_hubContext).Data();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+            }
         }
 
         [HttpGet]
@@ -119,12 +127,22 @@ namespace ReportingSystem.Controllers.Users
             await Task.Delay(10);
             return View();
          }
-        
+
+
+
+        [HttpGet]
+        public async Task<bool> HasDatabase()
+        {
+            await Task.Delay(10);
+            bool result = Database.IsExist(Context.connectionDB, Context.dbName);
+            return result;
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
     }
 }

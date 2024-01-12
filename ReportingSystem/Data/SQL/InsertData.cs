@@ -2,11 +2,9 @@
 using Dapper;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
-using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
-using ReportingSystem.Utils;
 using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
@@ -183,8 +181,15 @@ namespace ReportingSystem.Data.SQL
                     Position = statusPos,
                     Rol = rol
                 };
-
-                await _database.ExecuteAsync(query, parameters);
+                try
+                {
+                    await _database.ExecuteAsync(query, parameters);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+                }
+                
             }
         }
 
@@ -192,7 +197,7 @@ namespace ReportingSystem.Data.SQL
         {
             foreach (EmployeeModel employee in employees)
             {
-                await Employee(employee);
+                await Administrator(employee);
             }
         }
 
@@ -269,8 +274,15 @@ namespace ReportingSystem.Data.SQL
                     BirthDate = employee.birthDate,
                     Rol = rol
                 };
-
-                await _database.ExecuteAsync(query, parameters);
+                try
+                {
+                    await _database.ExecuteAsync(query, parameters);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+                }
+                
             }
         }
 
