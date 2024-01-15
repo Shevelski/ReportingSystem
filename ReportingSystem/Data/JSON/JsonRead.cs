@@ -19,14 +19,14 @@ namespace ReportingSystem.Data.JSON
         }
         private async Task<List<CustomerModel>> LoadCustomersFromJson()
         {
-            await Task.Delay(10); // Simulate async delay
+            //await Task.Delay(10); // Simulate async delay
 
             if (File.Exists(Context.Json) && new FileInfo(Context.Json).Length > 0)
             {
                 string jsonData;
-                using (StreamReader reader = new (Context.Json))
+                using (StreamReader reader = new StreamReader(Context.Json))
                 {
-                    jsonData = await reader.ReadToEndAsync();
+                    jsonData = reader.ReadToEnd();
                 }
                 var data = JsonConvert.DeserializeObject<DatabaseData>(jsonData);
                 if (data != null && data.Customers != null)
@@ -34,9 +34,38 @@ namespace ReportingSystem.Data.JSON
                     return data.Customers;
                 }
             }
-
             return [];
         }
+
+        //private async Task<List<CustomerModel>> LoadCustomersFromJson()
+        //{
+        //    // Симулюємо асинхронне затримку, якщо це потрібно
+        //    await Task.Delay(10);
+
+        //    if (File.Exists(Context.Json))
+        //    {
+        //        try
+        //        {
+        //            string jsonData;
+        //            using (StreamReader reader = new StreamReader(Context.Json))
+        //            {
+        //                jsonData = reader.ReadToEnd();
+        //            }
+
+        //            var data = Newtonsoft.Json.JsonConvert.DeserializeObject<DatabaseData>(jsonData);
+        //            return data?.Customers ?? new List<CustomerModel>();
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Обробляйте виняток, реєструйте або кидайте його в залежності від ваших потреб.
+        //            // Наприклад: Log.Error($"Помилка завантаження клієнтів з JSON: {ex.Message}");
+        //        }
+        //    }
+
+        //    return new List<CustomerModel>();
+        //}
+
+
         public async Task<List<CustomerModel>?> GetCustomers()
         {
             List<CustomerModel>? Customers = await LoadCustomersFromJson();

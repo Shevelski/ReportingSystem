@@ -37,67 +37,10 @@ namespace ReportingSystem.Services
         }
 
         //продовження ліцензії
-        public async Task<CustomerModel?> RenewalLicense(string[] ar)
+        public async Task RenewalLicense(string[] ar)
         {
-            await Task.Delay(10);
-
-            if (ar.Length < 4 || !Guid.TryParse(ar[0], out Guid id) || !DateTime.TryParse(ar[1], out DateTime desiredDate))
-            {
-                return null;
-            }
-
-            if (DatabaseMoq.Customers == null)
-            {
-                return null;
-            }
-
-            var customers = DatabaseMoq.Customers;
-            var customer = customers.FirstOrDefault(c => c.Id.Equals(id));
-
-            if (customer == null || customer.StatusLicence == null)
-            {
-                return null;
-            }
-
-            var history = new CustomerLicenseOperationModel
-            {
-                id = Guid.NewGuid(),
-                idCustomer = id,
-                dateChange = DateTime.Now,
-                oldStatus = customer.StatusLicence,
-                oldEndDateLicence = customer.EndTimeLicense
-            };
-
-            customer.StatusLicence = new CustomerLicenceStatusModel
-            {
-                licenceType = LicenceType.Main,
-                licenceName = LicenceType.Main.GetDisplayName()
-            };
-
-            customer.EndTimeLicense = desiredDate;
-            history.newStatus = customer.StatusLicence;
-            history.newEndDateLicence = customer.EndTimeLicense;
-
-            if (double.TryParse(ar[2].Trim(), out double parsedPrice))
-            {
-                history.price = parsedPrice;
-            }
-            else
-            {
-                history.price = 0.0;
-            }
-
-            history.period = ar[3].Trim();
-            history.nameOperation = "Продовження";
-
-            if (customer.HistoryOperations != null)
-            {
-                customer.HistoryOperations.Add(history);
-                DatabaseMoq.UpdateJson();
-                return customer;
-            }
-
-            return null;
+            await new JsonWrite().RenewalLicense(ar);
+            await new SQLWrite().RenewalLicense(ar);
         }
 
 

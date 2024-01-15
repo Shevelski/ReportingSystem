@@ -7,6 +7,7 @@ using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.Data.Entity.Migrations.Model;
 
 namespace ReportingSystem.Data.SQL
 {
@@ -80,7 +81,8 @@ namespace ReportingSystem.Data.SQL
                         Password = customerSQL.Password != null ? EncryptionHelper.Decrypt(customerSQL.Password) : "1111",
                         EndTimeLicense = customerSQL.EndTimeLicense,
                         DateRegistration = customerSQL.DateRegistration,
-                        Companies = await new SQLRead().GetCompanies(customerSQL.Id.ToString())
+                        Companies = await new SQLRead().GetCompanies(customerSQL.Id.ToString()),
+                        HistoryOperations = await new SQLRead().GetHistoryOperations(customerSQL.Id),
                     };
                     if (customer.Companies != null)
                     {
@@ -97,6 +99,39 @@ namespace ReportingSystem.Data.SQL
             }
             return customers;
         }
+
+        public async Task<List<CustomerLicenseOperationModel>> GetHistoryOperations(Guid idCu)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT * FROM[ReportingSystem].[dbo].[HistoryOperations] WHERE[CustomerId] = @Id";
+            var para = new
+            {
+                Id = idCu,
+            };
+            var results = await database.QueryAsync<TableTypeSQL.HistoryOperation>(query, para);
+
+            List<CustomerLicenseOperationModel> list = new List<CustomerLicenseOperationModel>();
+            
+            foreach (var ho in results)
+            {
+                CustomerLicenseOperationModel customerLicenseOperationModel = new()
+                {
+                    id = ho.Id,
+                    idCustomer = ho.IdCustomer,
+                    dateChange = ho.DateChange,
+                    oldEndDateLicence = ho.OldEndDateLicence,
+                    newEndDateLicence = ho.NewEndDateLicence,
+                    oldStatus = await new SQLRead().GetLicenceStatus(ho.OldStatus),
+                    newStatus = await new SQLRead().GetLicenceStatus(ho.NewStatus),
+                    price = ho.Price,
+                    period = ho.Period,
+                    nameOperation = ho.NameOperation
+                };
+                list.Add(customerLicenseOperationModel);
+            }
+            return list; ;
+        }
+
         public async Task<CustomerModel> GetCustomer(Guid id)
         {
             CustomerModel customer = new ();

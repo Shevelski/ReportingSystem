@@ -44,11 +44,11 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpPost]
         //продовження ліцензії замовника
-        public async Task<IActionResult> RenewalLicence([FromBody] string[] ar)
+        public async Task RenewalLicence([FromBody] string[] ar)
         {
-            var result = await _customersService.RenewalLicense(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            //var result = 
+                await _customersService.RenewalLicense(ar);
+            //return result != null ? Ok(result) : NotFound();
         }
 
         [HttpPost]

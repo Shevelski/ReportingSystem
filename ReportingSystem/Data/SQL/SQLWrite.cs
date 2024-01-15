@@ -11,6 +11,7 @@ using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations.Model;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
@@ -25,6 +26,47 @@ namespace ReportingSystem.Data.SQL
         }
 
 
+        public async Task RenewalLicense(string[] ar)
+        {
+            if (ar.Length < 4 || !Guid.TryParse(ar[0], out Guid id) || !DateTime.TryParse(ar[1], out DateTime desiredDate))
+            {
+                return;
+            }
+
+            var query1 = "INSERT INTO[dbo].[HistoryOperations]([Id], [CustomerId], [DateChange], [OldEndDateLicence], [NewEndDateLicence], [OldStatus], [NewStatus], [Price], [Period], [NameOperation])" +
+                         "VALUES(@Id, @CustomerId, @DateChange, @OldEndDateLicence, @NewEndDateLicence, @OldStatus, @NewStatus, @Price, @Period, @NameOperation)";
+            var para1 = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = id,
+                DateChange = DateTime.Now,
+                OldEndDateLicence = await GetEndDateLicence(id),
+                NewEndDateLicence = desiredDate,
+                OldStatus = await GetLicenceId(id),
+                NewStatus = await GetLicenceIdByType(2),
+                Price = double.TryParse(ar[2].Trim(), out double parsedPrice) ? parsedPrice : 0.0,
+                Period = ar[3].Trim(),
+                NameOperation = "Продовження"
+            };
+            var query2 = "UPDATE [dbo].[Customers] SET [StatusLicenceId] = @StatusLicenceId,[EndTimeLicense] = @EndTimeLicense WHERE [Id] = @Id";
+            var para2 = new
+            {
+                StatusLicenceId = await GetLicenceIdByType(2),
+                @EndTimeLicense = desiredDate,
+                @Id = id
+            };
+            using (var database = Context.ConnectToSQL)
+            {
+                await database.QueryAsync(query1, para1);
+                
+            }
+
+            using (var database = Context.ConnectToSQL)
+            {
+                await database.QueryAsync(query2, para2);
+            }
+        }
+
         public async Task<Guid> GetLicenceIdByType(int type)
         {
             using var database = Context.ConnectToSQL;
@@ -37,6 +79,31 @@ namespace ReportingSystem.Data.SQL
             return result.FirstOrDefault();
 
         }
+
+        public async Task<Guid> GetLicenceId(Guid idCu)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT[StatusLicenceId] FROM[ReportingSystem].[dbo].[Customers] WHERE Id = @Id";
+            var para = new
+            {
+                Id = idCu,
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+            return result.FirstOrDefault();
+        }
+
+        public async Task<DateTime> GetEndDateLicence(Guid idCu)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT[EndTimeLicense] FROM[ReportingSystem].[dbo].[Customers] WHERE Id = @Id";
+            var para = new
+            {
+                Id = idCu,
+            };
+            var result = await database.QueryFirstOrDefaultAsync<DateTime?>(query, para);
+            return result ?? DateTime.MinValue;
+        }
+
 
         public async Task InsertCustomerHistory(Guid customerId, DateTime oldEndDateLicence, DateTime newEndDateLicence, Guid oldStatus, Guid newStatus, double price, string period, string nameOperation)
         {
@@ -126,7 +193,7 @@ namespace ReportingSystem.Data.SQL
                 CustomerId = ar[1],
                 Status = companyStatusId
             };
-            var result = await database.QueryAsync(query, para);
+            await database.QueryAsync(query, para);
         }
 
         public async Task DeleteCompany(string[] ar)

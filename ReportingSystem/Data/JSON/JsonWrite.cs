@@ -18,7 +18,69 @@ namespace ReportingSystem.Data.JSON
             public List<EmployeeModel>? Administrators { get; set; }
             public ConfigurationModel? Configuration { get; set; }
         }
-       
+
+
+        public async Task RenewalLicense(string[] ar)
+        {
+            if (ar.Length < 4 || !Guid.TryParse(ar[0], out Guid id) || !DateTime.TryParse(ar[1], out DateTime desiredDate))
+            {
+                return;
+            }
+
+            var customers = await new JsonRead().GetCustomers();
+
+            if (customers == null)
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(id));
+
+            if (customer == null || customer.StatusLicence == null)
+            {
+                return;
+            }
+
+            var history = new CustomerLicenseOperationModel
+            {
+                id = Guid.NewGuid(),
+                idCustomer = id,
+                dateChange = DateTime.Now,
+                oldStatus = customer.StatusLicence,
+                oldEndDateLicence = customer.EndTimeLicense
+            };
+
+            customer.StatusLicence = new CustomerLicenceStatusModel
+            {
+                licenceType = LicenceType.Main,
+                licenceName = LicenceType.Main.GetDisplayName()
+            };
+
+            customer.EndTimeLicense = desiredDate;
+            history.newStatus = customer.StatusLicence;
+            history.newEndDateLicence = customer.EndTimeLicense;
+
+            if (double.TryParse(ar[2].Trim(), out double parsedPrice))
+            {
+                history.price = parsedPrice;
+            }
+            else
+            {
+                history.price = 0.0;
+            }
+
+            history.period = ar[3].Trim();
+            history.nameOperation = "Продовження";
+
+            if (customer.HistoryOperations != null)
+            {
+                customer.HistoryOperations.Add(history);
+                if (customers != null)
+                {
+                    UpdateJsonCustomers(customers);
+                }
+            }
+        }
 
         public async Task RegistrationCustomer(string[] ar)
         {
@@ -205,7 +267,7 @@ namespace ReportingSystem.Data.JSON
 
                     company.Chief = chief;
                     customer.Companies.Add(company);
-                    DatabaseMoq.UpdateJson();
+                    UpdateJsonCustomers(customers);
                     return company;
                 }
             }

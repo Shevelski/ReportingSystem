@@ -82,5 +82,19 @@ namespace ReportingSystem.Data.SQL
             public Guid Status;
             public Guid Chief;
         }
+
+        public class HistoryOperation
+        {
+            public Guid Id;
+            public Guid IdCustomer;
+            public DateTime DateChange;
+            public DateTime OldEndDateLicence;
+            public DateTime NewEndDateLicence;
+            public Guid OldStatus;
+            public Guid NewStatus;
+            public Double Price;
+            public string? Period;
+            public string? NameOperation;
+        }
     }
 }
