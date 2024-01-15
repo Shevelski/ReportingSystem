@@ -15,8 +15,8 @@ namespace ReportingSystem.Data.Generate
         {
             List<ProjectModel> projects = new List<ProjectModel>();
 
-            List<EmployeePositionModel> teamP = company.positions != null ? company.positions : new List<EmployeePositionModel>();
-            List<EmployeeModel> teamE = company.employees != null ? company.employees : new List<EmployeeModel>();
+            List<EmployeePositionModel> teamP = company.Positions != null ? company.Positions : new List<EmployeePositionModel>();
+            List<EmployeeModel> teamE = company.Employees != null ? company.Employees : new List<EmployeeModel>();
 
             List<EmployeePositionModel> managersP = teamP.Where(e => e.namePosition == "Проект-менеджер").ToList();
             List<EmployeeModel> managersE = teamE.Where(e => e.position != null && e.position.namePosition == "Проект-менеджер").ToList();
@@ -48,7 +48,7 @@ namespace ReportingSystem.Data.Generate
                 Random random = new Random();
                 Faker faker = new Faker();
                 ProjectModel project = new ProjectModel();
-                project.companyId = company.id;
+                project.companyId = company.Id;
                 project.id = Guid.NewGuid();
                 project.head = managersE[m];
                 project.name = faker.Commerce.ProductMaterial();
@@ -65,13 +65,13 @@ namespace ReportingSystem.Data.Generate
                 project.status.type = values[random.Next(values.Length)];
                 project.status.name = project.status.type.GetDisplayName();
 
-                if (company.categories != null)
+                if (company.Categories != null)
                 {
                     project.category = new ProjectChCategoryModel();
-                    project.category.level0CatId = company.categories[0].id;
-                    project.category.level0CatName = company.categories[0].name;
-                    project.category.level1CatId = company.categories[0].categoriesLevel1[0].id;
-                    project.category.level1CatName = company.categories[0].categoriesLevel1[0].name;
+                    project.category.level0CatId = company.Categories[0].id;
+                    project.category.level0CatName = company.Categories[0].name;
+                    project.category.level1CatId = company.Categories[0].categoriesLevel1[0].id;
+                    project.category.level1CatName = company.Categories[0].categoriesLevel1[0].name;
                 }
 
                 for (int d = 0; d < numberPosOfDevelopers; d++)

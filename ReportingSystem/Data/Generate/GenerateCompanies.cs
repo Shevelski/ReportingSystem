@@ -9,12 +9,12 @@ using System.Text.RegularExpressions;
 
 namespace ReportingSystem.Data.Generate
 {
-    public class GenerateCompanies
+    public partial class GenerateCompanies
     {
         public List<CompanyModel> GenerateRandomCompanies(CustomerModel customer)
         {
-            Random random = new Random();
-            List<CompanyModel> companies = new List<CompanyModel>();
+            Random random = new();
+            List<CompanyModel> companies = [];
             var countCompany = random.Next(15, 22);
             for (int i = 0; i < countCompany; i++)
             {
@@ -35,43 +35,46 @@ namespace ReportingSystem.Data.Generate
         private CompanyModel? RandomCompany(CustomerModel customer)
         {
             var faker = new Faker();
-            CompanyModel company = new CompanyModel();
-            Random random = new Random();
+            CompanyModel company = new();
+            Random random = new();
             if (company != null)
             {
-                company.id = Guid.NewGuid();
-                company.idCustomer = customer.id;
-                company.name = faker.Company.CompanyName();
-                company.address = faker.Address.FullAddress();
-                company.code = GenerateInfo.Code();
-                company.actions = faker.Commerce.ProductAdjective();
+                company.Id = Guid.NewGuid();
+                company.IdCustomer = customer.Id;
+                company.Name = faker.Company.CompanyName();
+                company.Address = faker.Address.FullAddress();
+                company.Code = GenerateInfo.Code();
+                company.Actions = faker.Commerce.ProductAdjective();
 
-                List<string> statusCompanyFromWeb = new List<string> { "Зареєстровано", "На реєстрації", "Актуальна", "На перегляді" };
-                company.statusWeb = statusCompanyFromWeb[random.Next(statusCompanyFromWeb.Count)];
+                List<string> statusCompanyFromWeb = ["Зареєстровано", "На реєстрації", "Актуальна", "На перегляді"];
+                company.StatusWeb = statusCompanyFromWeb[random.Next(statusCompanyFromWeb.Count)];
 
-                CompanyStatusModel resultStatus = new CompanyStatusModel();
-                CompanyStatus[] values = { CompanyStatus.Project, CompanyStatus.Actual, CompanyStatus.Archive };
+                CompanyStatusModel resultStatus = new();
+                CompanyStatus[] values = [CompanyStatus.Project, CompanyStatus.Actual, CompanyStatus.Archive];
                 CompanyStatus status = values[random.Next(values.Length)];
                 resultStatus.companyStatusType = status;
                 resultStatus.companyStatusName = status.GetDisplayName();
-                company.status = resultStatus;
+                company.Status = resultStatus;
 
-                company.phone = GenerateInfo.PhoneNumber();
-                company.email = (Regex.Replace(company.name, "[^0-9a-zA-Z]+", "") + ".com.ua").Replace(" ", "").ToLower();
-                company.statutCapital = random.Next(1000, 300000).ToString() + " UAH";
-                company.registrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
+                company.Phone = GenerateInfo.PhoneNumber();
+                company.Email = (MyRegex().Replace(company.Name, "") + ".com.ua").Replace(" ", "").ToLower();
+                company.StatutCapital = random.Next(1000, 300000).ToString() + " UAH";
+                company.RegistrationDate = GenerateDate.BetweenDates(new DateTime(2000, 01, 01), new DateTime(2010, 01, 01));
 
-                company.positions = new GeneratePositions().Positions();
-                company.rolls = DefaultEmployeeRolls.GetForEmployee();
+                company.Positions = new GeneratePositions().Positions();
+                company.Rolls = DefaultEmployeeRolls.GetForEmployee();
 
-                company.employees = new GenerateEmployees().Employees(company, customer.id);
-                company.chief = company.employees.First(u => u.position != null && u.position.namePosition != null && u.position.namePosition.Equals("Директор"));
+                company.Employees = new GenerateEmployees().Employees(company, customer.Id);
+                company.Chief = company.Employees.First(u => u.position != null && u.position.namePosition != null && u.position.namePosition.Equals("Директор"));
 
-                company.categories = new GenerateCategories().Categories();
-                company.projects = new GenerateProjects().RandomProjects(company);
+                company.Categories = new GenerateCategories().Categories();
+                company.Projects = new GenerateProjects().RandomProjects(company);
                 return company;
             }
             return null;
         }
+
+        [GeneratedRegex("[^0-9a-zA-Z]+")]
+        private static partial Regex MyRegex();
     }
 }

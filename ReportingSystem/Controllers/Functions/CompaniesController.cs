@@ -4,14 +4,9 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class CompaniesController : Controller
+    public class CompaniesController(CompaniesService companiesService) : Controller
     {
-        private readonly CompaniesService _companiesService;
-
-        public CompaniesController(CompaniesService companiesService)
-        {
-            _companiesService = companiesService;
-        }
+        private readonly CompaniesService _companiesService = companiesService;
 
         [HttpGet]
         //отримати компанії вказаного замовника
@@ -29,25 +24,6 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
-        //[HttpGet]
-        ////перевірка збереженої компанії в конфігурації 
-        ////переробити на універсально для кожного користувача
-        //public async Task<IActionResult> CheckSave(string idCu)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _companiesService.CheckSave(idCu);
-        //    return Json(result);
-        //}
-
-        //отримати посади вибраної компанії вибраного замовника
-        //[HttpGet]
-        //public async Task<IActionResult> GetPositions(string idCu, string idCo)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _companiesService.GetPositions(idCu, idCo);
-        //    return Json(result);
-        //}
-
         [HttpGet]
         //отримати ролі вибраної компанії вибраного замовника 
         public async Task<IActionResult> GetRolls(string idCu, string idCo)
@@ -64,22 +40,11 @@ namespace ReportingSystem.Controllers.Functions
             return Json(result);
         }
 
-        //[HttpPost]
-        ////зберегти компанію в конфігураторі для подальшого використання
-        ////переробити на універсально для кожного користувача
-        //public async Task<IActionResult> SavePermanentCompany([FromBody] string idCu, string idCo)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _companiesService.SavePermanentCompany(idCu, idCo);
-        //    return Json(result);
-        //}
-
         [HttpPost]
         //змінити компанію
         public async Task EditCompany([FromBody] string[] ar)
         {
             await _companiesService.EditCompany(ar);
-            //return Json(result);
         }
 
 

@@ -19,6 +19,52 @@ namespace ReportingSystem.Data.JSON
             public ConfigurationModel? Configuration { get; set; }
         }
        
+
+        public async Task RegistrationCustomer(string[] ar)
+        {
+            //const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+            Random random = new ();
+            var customer = new CustomerModel
+            {
+                Id = Guid.NewGuid(),
+                Email = ar[0],
+                FirstName = ar[1],
+                SecondName = ar[2],
+                ThirdName = ar[3],
+                Phone = ar[4],
+                DateRegistration = DateTime.Today,
+                //дилема з паролем, ввід при реєстрації чи відправка на пошту
+                Password = EncryptionHelper.Encrypt(ar[5]),/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
+                StatusLicence = new CustomerLicenceStatusModel
+                {
+                    licenceType = LicenceType.Test,
+                    licenceName = LicenceType.Test.GetDisplayName()
+                },
+                Companies = [],
+                EndTimeLicense = DateTime.Today.AddDays(30),
+                HistoryOperations = []
+            };
+
+            var history = new CustomerLicenseOperationModel
+            {
+                id = Guid.NewGuid(),
+                idCustomer = customer.Id,
+                oldEndDateLicence = DateTime.Today,
+                newEndDateLicence = customer.EndTimeLicense,
+                oldStatus = new CustomerLicenceStatusModel(),
+                newStatus = customer.StatusLicence
+            };
+
+            customer.HistoryOperations.Add(history);
+
+            var customers = await new JsonRead().GetCustomers();
+            if (customers != null)
+            {
+                customers.Add(customer);
+                UpdateJsonCustomers(customers);
+            }
+        }
+
         public async Task EditCompany(string[] ar)
         {
             List<CustomerModel>? customers = await new JsonRead().GetCustomers();
@@ -28,18 +74,18 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-            if (customer != null && customer.companies != null && Guid.TryParse(ar[0], out Guid idCompany))
+            if (customer != null && customer.Companies != null && Guid.TryParse(ar[0], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(c => c.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(idCompany));
                 if (company != null)
                 {
-                    company.name = ar[1];
-                    company.address = ar[2];
-                    company.actions = ar[3];
-                    company.phone = ar[4];
-                    company.email = ar[5];
+                    company.Name = ar[1];
+                    company.Address = ar[2];
+                    company.Actions = ar[3];
+                    company.Phone = ar[4];
+                    company.Email = ar[5];
                     UpdateJsonCustomers(customers);
                 }
             }
@@ -53,18 +99,18 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-            if (customer != null && customer.companies != null && Guid.TryParse(ar[0], out Guid idCompany))
+            if (customer != null && customer.Companies != null && Guid.TryParse(ar[0], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(c => c.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(idCompany));
                 if (company != null)
                 {
-                    company.name = ar[1];
-                    company.address = ar[2];
-                    company.actions = ar[3];
-                    company.phone = ar[4];
-                    company.email = ar[5];
+                    company.Name = ar[1];
+                    company.Address = ar[2];
+                    company.Actions = ar[3];
+                    company.Phone = ar[4];
+                    company.Email = ar[5];
                     UpdateJsonCustomers(customers);
                 }
             }
@@ -78,14 +124,14 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-            if (customer != null && customer.companies != null && Guid.TryParse(ar[0], out Guid idCompany))
+            if (customer != null && customer.Companies != null && Guid.TryParse(ar[0], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(c => c.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(idCompany));
                 if (company != null)
                 {
-                    company.status = new CompanyStatusModel
+                    company.Status = new CompanyStatusModel
                     {
                         companyStatusType = CompanyStatus.Archive,
                         companyStatusName = CompanyStatus.Archive.GetDisplayName()
@@ -103,14 +149,14 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-            if (customer != null && customer.companies != null && Guid.TryParse(ar[0], out Guid idCompany))
+            if (customer != null && customer.Companies != null && Guid.TryParse(ar[0], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(c => c.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(idCompany));
                 if (company != null)
                 {
-                    customer.companies.Remove(company);
+                    customer.Companies.Remove(company);
                     UpdateJsonCustomers(customers);
                 }
             }
@@ -126,17 +172,17 @@ namespace ReportingSystem.Data.JSON
 
             var company = new CompanyModel
             {
-                name = ar[0],
-                code = ar[1],
-                address = ar[2],
-                actions = ar[3],
-                phone = ar[4],
-                email = ar[5],
-                registrationDate = DateTime.Today,
-                rolls = DefaultEmployeeRolls.Get(),
-                positions = new List<EmployeePositionModel>(),
-                employees = new List<EmployeeModel>(),
-                status = new CompanyStatusModel
+                Name = ar[0],
+                Code = ar[1],
+                Address = ar[2],
+                Actions = ar[3],
+                Phone = ar[4],
+                Email = ar[5],
+                RegistrationDate = DateTime.Today,
+                Rolls = DefaultEmployeeRolls.Get(),
+                Positions = [],
+                Employees = [],
+                Status = new CompanyStatusModel
                 {
                     companyStatusType = CompanyStatus.Project,
                     companyStatusName = CompanyStatus.Project.GetDisplayName()
@@ -145,20 +191,20 @@ namespace ReportingSystem.Data.JSON
 
             if (customers != null)
             {
-                var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+                var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-                if (customer != null && customer.companies != null)
+                if (customer != null && customer.Companies != null)
                 {
                     var chief = new EmployeeModel
                     {
-                        firstName = customer.firstName,
-                        secondName = customer.secondName,
-                        thirdName = customer.thirdName,
-                        emailWork = customer.email
+                        firstName = customer.FirstName,
+                        secondName = customer.SecondName,
+                        thirdName = customer.ThirdName,
+                        emailWork = customer.Email
                     };
 
-                    company.chief = chief;
-                    customer.companies.Add(company);
+                    company.Chief = chief;
+                    customer.Companies.Add(company);
                     DatabaseMoq.UpdateJson();
                     return company;
                 }
@@ -178,7 +224,7 @@ namespace ReportingSystem.Data.JSON
             string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(Context.Json, jsonData);
         }
-        private void UpdateJsonAdministrators(List<EmployeeModel> administrators)
+        private static void UpdateJsonAdministrators(List<EmployeeModel> administrators)
         {
             var data = new DatabaseData
             {
@@ -198,7 +244,7 @@ namespace ReportingSystem.Data.JSON
             string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(Context.Json, jsonData);
         }
-        private void UpdateJsonAll(DatabaseData DatabaseData)
+        private static void UpdateJsonAll(DatabaseData DatabaseData)
         {
             var data = new DatabaseData
             {

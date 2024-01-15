@@ -4,6 +4,7 @@ using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
+using ReportingSystem.Utils;
 using System.Diagnostics;
 
 namespace ReportingSystem.Data.Generate
@@ -12,18 +13,15 @@ namespace ReportingSystem.Data.Generate
     {
         public List<CustomerModel> Customers()
         {
-            List<CustomerModel> Customers = new List<CustomerModel>();
-            CustomerModel Customer = new CustomerModel();
-            List<CompanyModel> Companies = new List<CompanyModel>();
-            List<EmployeeModel> Users = new List<EmployeeModel>();
-            Random random = new Random();
+            List<CustomerModel> Customers = [];
+            Random random = new();
 
             try
             {
                 int countCustomer = random.Next(2, 3);
                 for (int i = 0; i < countCustomer; i++)
                 {
-                    Customer = RandomCustomer();
+                    CustomerModel Customer = RandomCustomer();
                     Customers.Add(Customer);
                     Debug.WriteLine($"Customer {i} added. All is " + countCustomer);
                 }
@@ -36,30 +34,32 @@ namespace ReportingSystem.Data.Generate
             return Customers;
         }
 
-        private CustomerModel RandomCustomer()
+        private static CustomerModel RandomCustomer()
         {
             var faker = new Faker();
-            CustomerModel customer = new CustomerModel();
-            customer.id = Guid.NewGuid();
-            customer.firstName = faker.Name.FirstName();
-            customer.secondName = faker.Name.LastName();
-            customer.thirdName = faker.Name.FirstName();
-            customer.statusLicence = CustomerLicenceStatus();
-            customer.phone = GenerateInfo.MobilePhoneNumber();
-            customer.email = (customer.secondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
-            customer.password = GenerateInfo.Password();//EncryptionHelper.Encrypt(GenerateInfo.Password());
-            customer.endTimeLicense = LicenseCustomer.LicenceDate(customer.statusLicence);
-            customer.dateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
-            customer.companies = new GenerateCompanies().GenerateRandomCompanies(customer);
-            customer.configure = new CustomerConfigModel();
+            CustomerModel customer = new()
+            {
+                Id = Guid.NewGuid(),
+                FirstName = faker.Name.FirstName(),
+                SecondName = faker.Name.LastName(),
+                ThirdName = faker.Name.FirstName(),
+                StatusLicence = CustomerLicenceStatus(),
+                Phone = GenerateInfo.MobilePhoneNumber()
+            };
+            customer.Email = (customer.SecondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
+            customer.Password = EncryptionHelper.Encrypt(GenerateInfo.Password());
+            customer.EndTimeLicense = LicenseCustomer.LicenceDate(customer.StatusLicence);
+            customer.DateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
+            customer.Companies = new GenerateCompanies().GenerateRandomCompanies(customer);
+            customer.Configure = new CustomerConfigModel();
             return customer;
         }
 
         public static CustomerLicenceStatusModel CustomerLicenceStatus()
         {
-            Random random = new Random();
-            CustomerLicenceStatusModel result = new CustomerLicenceStatusModel();
-            LicenceType[] values = { LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled };
+            Random random = new();
+            CustomerLicenceStatusModel result = new();
+            LicenceType[] values = [LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled];
             LicenceType status = values[random.Next(values.Length)];
 
             result.licenceType = status;
@@ -70,7 +70,7 @@ namespace ReportingSystem.Data.Generate
 
         private class LicenseCustomer
         {
-            static Random random = new Random();
+            static readonly Random random = new();
             public static DateTime LicenceDate(CustomerLicenceStatusModel status)
             {
                 DateTime generateDate = DateTime.Now;
@@ -101,8 +101,8 @@ namespace ReportingSystem.Data.Generate
 
             private CustomerLicenceStatusModel Status()
             {
-                CustomerLicenceStatusModel result = new CustomerLicenceStatusModel();
-                LicenceType[] values = { LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled };
+                CustomerLicenceStatusModel result = new();
+                LicenceType[] values = [LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled];
                 LicenceType status = values[random.Next(values.Length)];
 
                 result.licenceType = status;

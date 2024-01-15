@@ -3,15 +3,10 @@ using ReportingSystem.Services;
 
 namespace ReportingSystem.Controllers.Functions
 {
-    public class EmployeesController : Controller
+    public class EmployeesController(EmployeesService employeesService) : Controller
     {
 
-        private readonly EmployeesService _employeesService;
-
-        public EmployeesController(EmployeesService employeesService)
-        {
-            _employeesService = employeesService;
-        }
+        private readonly EmployeesService _employeesService = employeesService;
 
         [HttpGet]
         // отримання співробітників

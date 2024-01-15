@@ -4,19 +4,19 @@ namespace ReportingSystem.Models.Customer
 {
     public class CustomerModel
     {
-        public Guid id { get; set; }
-        public string? firstName { get; set; }
-        public string? secondName { get; set; }
-        public string? thirdName { get; set; }
-        public CustomerLicenceStatusModel? statusLicence { get; set; }
-        public string? phone { get; set; }
-        public string? email { get; set; }
-        public string? password { get; set; }
-        public DateTime endTimeLicense { get; set; }
-        public DateTime dateRegistration { get; set; }
-        public List<CompanyModel>? companies { get; set; }
-        public List<CustomerLicenseOperationModel>? historyOperations { get; set; } = new List<CustomerLicenseOperationModel>();
-        public CustomerConfigModel? configure{ get; set; }
+        public Guid Id { get; set; }
+        public string? FirstName { get; set; }
+        public string? SecondName { get; set; }
+        public string? ThirdName { get; set; }
+        public CustomerLicenceStatusModel? StatusLicence { get; set; }
+        public string? Phone { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
+        public DateTime EndTimeLicense { get; set; }
+        public DateTime DateRegistration { get; set; }
+        public List<CompanyModel>? Companies { get; set; }
+        public List<CustomerLicenseOperationModel>? HistoryOperations { get; set; } = [];
+        public CustomerConfigModel? Configure{ get; set; }
     }
 }
 

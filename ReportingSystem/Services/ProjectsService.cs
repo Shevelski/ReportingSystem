@@ -12,16 +12,16 @@ namespace ReportingSystem.Services
 
         public async Task<List<ProjectModel>?> GetProjects(string idCu, string idCo)
         {
-            List<ProjectModel> projects= new List<ProjectModel>();
+            List<ProjectModel> projects = [];
 
             if (DatabaseMoq.Customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
             {
                 return null;
             }
 
-            var customer = DatabaseMoq.Customers.First(cu => cu.id.Equals(idCustomer));
+            var customer = DatabaseMoq.Customers.First(cu => cu.Id.Equals(idCustomer));
 
-            if (customer.companies == null)
+            if (customer.Companies == null)
             {
                 return null;
             }
@@ -31,14 +31,14 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var company = customer.companies.First(co => co.id.Equals(idCompany));
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
 
-            if (company.projects == null)
+            if (company.Projects == null)
             {
                 return null;
             }
 
-            projects = company.projects;
+            projects = company.Projects;
 
             return projects;
 
@@ -50,128 +50,136 @@ namespace ReportingSystem.Services
 
             if (DatabaseMoq.Customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var customer = DatabaseMoq.Customers.First(cu => cu.id.Equals(idCustomer));
+            var customer = DatabaseMoq.Customers.First(cu => cu.Id.Equals(idCustomer));
 
-            if (customer.companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
+            if (customer.Companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var company = customer.companies.First(co => co.id.Equals(idCompany));
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
 
             //-----------------------------------------------------------------------------0
 
-            if (ar[2] == null && company.categories != null)
+            if (ar[2] == null && company.Categories != null)
             {
-                ProjectCategoryModel categoryModel = new ProjectCategoryModel();
-                categoryModel.id = Guid.NewGuid();
-                categoryModel.name = ar[6];
-                categoryModel.projects = new List<Guid>();
-                categoryModel.categoriesLevel1 = new List<ProjectCategoryModel1>();
-                company.categories.Add(categoryModel);
+                ProjectCategoryModel categoryModel = new()
+                {
+                    id = Guid.NewGuid(),
+                    name = ar[6],
+                    projects = [],
+                    categoriesLevel1 = []
+                };
+                company.Categories.Add(categoryModel);
                 DatabaseMoq.UpdateJson();
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
             //-----------------------------------------------------------------------------1
 
-            if (ar[2] != null && ar[3] == null && company.categories != null)
+            if (ar[2] != null && ar[3] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
-                ProjectCategoryModel1 categoryModel1 = new ProjectCategoryModel1();
-                categoryModel1.id = Guid.NewGuid();
-                categoryModel1.name = ar[6];
-                categoryModel1.projects = new List<Guid>();
-                categoryModel1.categoriesLevel2 = new List<ProjectCategoryModel2>();
+                ProjectCategoryModel1 categoryModel1 = new()
+                {
+                    id = Guid.NewGuid(),
+                    name = ar[6],
+                    projects = [],
+                    categoriesLevel2 = []
+                };
                 cat0.categoriesLevel1.Add(categoryModel1);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------2
 
-            if (ar[2] != null && ar[3] != null && ar[4] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] == null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
 
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
-                ProjectCategoryModel2 categoryModel2 = new ProjectCategoryModel2();
-                categoryModel2.id = Guid.NewGuid();
-                categoryModel2.name = ar[6];
-                categoryModel2.projects = new List<Guid>();
-                categoryModel2.categoriesLevel3 = new List<ProjectCategoryModel3>();
+                ProjectCategoryModel2 categoryModel2 = new()
+                {
+                    id = Guid.NewGuid(),
+                    name = ar[6],
+                    projects = [],
+                    categoriesLevel3 = []
+                };
                 cat1.categoriesLevel2.Add(categoryModel2);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
             //-----------------------------------------------------------------------------3
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 if (cat2.categoriesLevel3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                ProjectCategoryModel3 categoryModel3 = new ProjectCategoryModel3();
-                categoryModel3.id = Guid.NewGuid();
-                categoryModel3.name = ar[6];
-                categoryModel3.projects = new List<Guid>();
+                ProjectCategoryModel3 categoryModel3 = new()
+                {
+                    id = Guid.NewGuid(),
+                    name = ar[6],
+                    projects = []
+                };
                 cat2.categoriesLevel3.Add(categoryModel3);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
-            return new List<ProjectCategoryModel>();
+            return [];
         }
 
 
@@ -179,191 +187,191 @@ namespace ReportingSystem.Services
         {
             if (DatabaseMoq.Customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var customer = DatabaseMoq.Customers.First(cu => cu.id.Equals(idCustomer));
+            var customer = DatabaseMoq.Customers.First(cu => cu.Id.Equals(idCustomer));
 
-            if (customer.companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
+            if (customer.Companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var company = customer.companies.First(co => co.id.Equals(idCompany));
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
 
             //---------------------------------------------------------
 
-            if (ar[2] != null && ar[3] == null && company.categories != null)
+            if (ar[2] != null && ar[3] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 cat0.name = ar[6];
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------1
 
-            if (ar[2] != null && ar[3] != null && ar[4] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
 
                 cat1.name = ar[6];
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------2
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
 
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 cat2.name = ar[6];
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
             //-----------------------------------------------------------------------------3
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3) || !Guid.TryParse(ar[5], out Guid idCatLevel4))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 if (cat2.categoriesLevel3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat3 = cat2.categoriesLevel3.First(ca1 => ca1.id.Equals(idCatLevel4));
                 if (cat3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
                 cat3.name = ar[6];
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
-            return new List<ProjectCategoryModel>();
+            return [];
         }
 
         public List<ProjectCategoryModel>? DeleteProject(string[] ar)
         {
             if (DatabaseMoq.Customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var customer = DatabaseMoq.Customers.First(cu => cu.id.Equals(idCustomer));
+            var customer = DatabaseMoq.Customers.First(cu => cu.Id.Equals(idCustomer));
 
-            if (customer.companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
+            if (customer.Companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var company = customer.companies.First(co => co.id.Equals(idCompany));
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
 
             //---------------------------------------------------------
 
-            if (ar[2] != null && ar[3] == null && company.categories != null)
+            if (ar[2] != null && ar[3] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                company.categories.Remove(cat0);
+                company.Categories.Remove(cat0);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------1
 
-            if (ar[2] != null && ar[3] != null && ar[4] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
@@ -371,134 +379,134 @@ namespace ReportingSystem.Services
                 cat0.categoriesLevel1.Remove(cat1);
 
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------2
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
 
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 cat1.categoriesLevel2.Remove(cat2);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
             //-----------------------------------------------------------------------------3
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3) || !Guid.TryParse(ar[5], out Guid idCatLevel4))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 if (cat2.categoriesLevel3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat3 = cat2.categoriesLevel3.First(ca1 => ca1.id.Equals(idCatLevel4));
                 if (cat3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
                 cat2.categoriesLevel3.Remove(cat3);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
-            return new List<ProjectCategoryModel>();
+            return [];
         }
 
         public List<ProjectCategoryModel>? ArchiveProject(string[] ar)
         {
             if (DatabaseMoq.Customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var customer = DatabaseMoq.Customers.First(cu => cu.id.Equals(idCustomer));
+            var customer = DatabaseMoq.Customers.First(cu => cu.Id.Equals(idCustomer));
 
-            if (customer.companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
+            if (customer.Companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
             {
-                return new List<ProjectCategoryModel>();
+                return [];
             }
 
-            var company = customer.companies.First(co => co.id.Equals(idCompany));
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
 
             //---------------------------------------------------------
 
-            if (ar[2] != null && ar[3] == null && company.categories != null)
+            if (ar[2] != null && ar[3] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                company.categories.Remove(cat0);
+                company.Categories.Remove(cat0);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------1
 
-            if (ar[2] != null && ar[3] != null && ar[4] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] == null && company.Categories != null)
             {
 
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
 
 
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
@@ -506,77 +514,77 @@ namespace ReportingSystem.Services
                 cat0.categoriesLevel1.Remove(cat1);
 
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
             }
 
             //-----------------------------------------------------------------------------2
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
 
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 cat1.categoriesLevel2.Remove(cat2);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
             //-----------------------------------------------------------------------------3
 
-            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null && company.categories != null)
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null && company.Categories != null)
             {
                 if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3) || !Guid.TryParse(ar[5], out Guid idCatLevel4))
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
-                var cat0 = company.categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
                 if (cat0.categoriesLevel1 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
                 if (cat1.categoriesLevel2 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
                 if (cat2.categoriesLevel3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
 
                 var cat3 = cat2.categoriesLevel3.First(ca1 => ca1.id.Equals(idCatLevel4));
                 if (cat3 == null)
                 {
-                    return new List<ProjectCategoryModel>();
+                    return [];
                 }
                 cat2.categoriesLevel3.Remove(cat3);
                 DatabaseMoq.UpdateJson();
-                return company.categories;
+                return company.Categories;
 
             }
 
-            return new List<ProjectCategoryModel>();
+            return [];
         }
     }
 }

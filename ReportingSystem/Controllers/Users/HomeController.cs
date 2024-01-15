@@ -14,18 +14,11 @@ using ReportingSystem.Hubs;
 
 namespace ReportingSystem.Controllers.Users
 {
-    public class HomeController : Controller
+    public class HomeController(ILogger<HomeController> logger, AuthorizeService authorizeService, IHubContext<StatusHub> hubContext) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private readonly AuthorizeService _authorizeService;
-        private readonly IHubContext<StatusHub> _hubContext;
-
-        public HomeController(ILogger<HomeController> logger, AuthorizeService authorizeService, IHubContext<StatusHub> hubContext)
-        {
-            _logger = logger;
-            _authorizeService = authorizeService;
-            _hubContext = hubContext;  // Added this line
-        }
+        private readonly ILogger<HomeController> _logger = logger;
+        private readonly AuthorizeService _authorizeService = authorizeService;
+        private readonly IHubContext<StatusHub> _hubContext = hubContext;
 
         public IActionResult Authorize()
         {
@@ -37,16 +30,16 @@ namespace ReportingSystem.Controllers.Users
         {
             //if (Utils.Settings.Mode().Equals("write"))
             //{
-
+                try
+                {
+                    var a = new GenerateMain(_hubContext).Data();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+                }
             //}
-            try
-            {
-                var a = new GenerateMain(_hubContext).Data();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
-            }
+
         }
 
         [HttpGet]
@@ -72,10 +65,10 @@ namespace ReportingSystem.Controllers.Users
 
             if (result != null && result.AuthorizeStatusModel != null)
             {
-                var check = result.AuthorizeStatusModel.authorizeStatusType;
+                var check = result.AuthorizeStatusModel.AuthorizeStatusType;
                 if (check.Equals(AuthorizeStatus.PasswordOk))
                 {
-                    var controller = _authorizeService.GetRolController(result);
+                    var controller = _authorizeService.GetRolController();
 
                     if (!string.IsNullOrEmpty(controller))
                     {
@@ -89,7 +82,7 @@ namespace ReportingSystem.Controllers.Users
                             {
                                 rol = result.Employee.rol.rolType.ToString();
                             }
-                            string[] ids = { custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()};
+                            string[] ids = [custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()];
                             HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));
                             return RedirectToAction("Index", controller, new { ids });
                         }

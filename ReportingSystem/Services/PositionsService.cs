@@ -15,20 +15,20 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(idCo, out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
                 if (company != null)
                 {
-                    return company.positions;
+                    return company.Positions;
                 }
             }
 
@@ -47,28 +47,28 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(idCo, out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company == null || company.positions == null || company.employees == null)
+                if (company == null || company.Positions == null || company.Employees == null)
                 {
                     return null;
                 }
                 int i = 0;
-                foreach (var item in company.positions)
+                foreach (var item in company.Positions)
                 {
                     
                     EmployeePositionEmpModel employeePositionEmpModel = new EmployeePositionEmpModel();
                     employeePositionEmpModel.namePosition = item.namePosition;
-                    employeePositionEmpModel.employee = company.employees[i];
+                    employeePositionEmpModel.employee = company.Employees[i];
                     positions.Add(employeePositionEmpModel);
                     i++;
                 }
@@ -91,20 +91,20 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(idCo, out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company != null && company.positions != null)
+                if (company != null && company.Positions != null)
                 {
-                    var uniquePositions = company.positions
+                    var uniquePositions = company.Positions
                         .Where(position => !string.IsNullOrEmpty(position.namePosition))
                         .GroupBy(position => position.namePosition)
                         .Select(group => group.First())
@@ -131,20 +131,20 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(idCo, out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company != null && company.employees != null)
+                if (company != null && company.Employees != null)
                 {
-                    var employees = company.employees;
+                    var employees = company.Employees;
                     employeesByPosition = employees
                         .Where(employee => employee.position != null && !string.IsNullOrEmpty(employee.position.namePosition) && employee.position.namePosition.Equals(pos))
                         .ToList();
@@ -170,24 +170,24 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(ar[1], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company != null && company.positions != null)
+                if (company != null && company.Positions != null)
                 {
                     EmployeePositionModel newEmployeePosition = new EmployeePositionModel()
                     {
                         namePosition = ar[2]
                     };
-                    company.positions.Add(newEmployeePosition);
+                    company.Positions.Add(newEmployeePosition);
                     DatabaseMoq.UpdateJson();
                 }
             }
@@ -206,31 +206,31 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(ar[1], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company != null && company.positions != null)
+                if (company != null && company.Positions != null)
                 {
                     string oldPositionName = ar[2];
                     string newPositionName = ar[3];
 
-                    EmployeePositionModel? position = company.positions.FirstOrDefault(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
+                    EmployeePositionModel? position = company.Positions.FirstOrDefault(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
 
                     if (position != null)
                     {
                         position.namePosition = newPositionName;
 
-                        if (company.employees != null)
+                        if (company.Employees != null)
                         {
-                            foreach (var emp in company.employees.Where(emp => emp.position != null && emp.position.namePosition != null && emp.position.namePosition.Equals(oldPositionName)))
+                            foreach (var emp in company.Employees.Where(emp => emp.position != null && emp.position.namePosition != null && emp.position.namePosition.Equals(oldPositionName)))
                             {
                                 if (emp.position != null)
                                 {
@@ -240,7 +240,7 @@ namespace ReportingSystem.Services
                             }
                         }
 
-                        company.positions.RemoveAll(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
+                        company.Positions.RemoveAll(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
                         DatabaseMoq.UpdateJson();
                     }
                 }
@@ -260,21 +260,21 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(ar[1], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company != null && company.positions != null)
+                if (company != null && company.Positions != null)
                 {
                     string positionNameToDelete = ar[2];
-                    company.positions.RemoveAll(pos => pos.namePosition != null && pos.namePosition.Equals(positionNameToDelete));
+                    company.Positions.RemoveAll(pos => pos.namePosition != null && pos.namePosition.Equals(positionNameToDelete));
                     DatabaseMoq.UpdateJson();
                 }
             }
@@ -293,22 +293,22 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(ar[1], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company != null && company.employees != null)
+                if (company != null && company.Employees != null)
                 {
                     if (Guid.TryParse(ar[2], out Guid idEmployee))
                     {
-                        var employee = company.employees.FirstOrDefault(em => em.id.Equals(idEmployee));
+                        var employee = company.Employees.FirstOrDefault(em => em.id.Equals(idEmployee));
 
                         if (employee != null && employee.position != null)
                         {

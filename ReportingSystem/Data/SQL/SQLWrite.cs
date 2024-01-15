@@ -1,4 +1,5 @@
-﻿using Bogus.DataSets;
+﻿using Bogus;
+using Bogus.DataSets;
 using Dapper;
 using Newtonsoft.Json;
 using ReportingSystem.Data.JSON;
@@ -9,6 +10,7 @@ using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.Collections.Generic;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
@@ -21,61 +23,110 @@ namespace ReportingSystem.Data.SQL
             public List<EmployeeModel>? Administrators { get; set; }
             public ConfigurationModel? Configuration { get; set; }
         }
+
+
+        public async Task<Guid> GetLicenceIdByType(int type)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[StatusLicence] Where Type = @type";
+            var para = new
+            {
+                Type = type,
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+            return result.FirstOrDefault();
+
+        }
+
+        public async Task InsertCustomerHistory(Guid customerId, DateTime oldEndDateLicence, DateTime newEndDateLicence, Guid oldStatus, Guid newStatus, double price, string period, string nameOperation)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "INSERT INTO [dbo].[HistoryOperations] ([Id],[CustomerId],[DateChange],[OldEndDateLicence],[NewEndDateLicence],[OldStatus],[NewStatus],[Price],[Period],[NameOperation])" +
+                        "VALUES (@id,@CustomerId,@DateChange,@OldEndDateLicence,@NewEndDateLicence,@OldStatus,@NewStatus,@Price,@Period,@NameOperation);";
+            var para = new
+            {
+                id = Guid.NewGuid(),
+                CustomerId = customerId,
+                DateChange = DateTime.Today,
+                OldEndDateLicence = oldEndDateLicence,
+                NewEndDateLicence = newEndDateLicence,
+                OldStatus = oldStatus,
+                NewStatus = newStatus,
+                Price = price,
+                Period = period,
+                NameOperation = nameOperation
+            };
+            await database.QueryAsync<Guid>(query, para);
+        }
+
+        public async Task RegistrationCustomer(string[] ar)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "INSERT INTO[dbo].[Customers]([Id], [FirstName], [SecondName], [ThirdName], [StatusLicenceId], [ConfigureId], [Phone], [Email], [Password], [EndTimeLicense], [DateRegistration])" +
+                        "VALUES(@id, @firstName, @secondName, @thirdName, @statusLicenceId, @phone, @email, @password, @endTimeLicense, @dateRegistration)";
+            var para = new
+            {
+                id = Guid.NewGuid(),
+                firstName = ar[1],
+                secondName = ar[2],
+                thirdName = ar[3],
+                statusLicenceId = GetLicenceIdByType(4),
+                phone = ar[4],
+                email = ar[0],
+                password = EncryptionHelper.Encrypt(ar[5]),
+                endTimeLicense = DateTime.Today.AddDays(30),
+                dateRegistration = DateTime.Today
+            };
+            await database.QueryAsync(query, para);
+
+            await InsertCustomerHistory(para.id,
+                para.dateRegistration, para.endTimeLicense,
+                await GetLicenceIdByType(0), await GetLicenceIdByType(4),
+                0.0, "30d", "Реєстрація замовника");
+        }
+
         public async Task EditCompany(string[] ar)
         {
-            var CompanyId = ar[0];
-            var CustomerId = ar[6];
-            var Name = ar[1];
-            var Address = ar[2];
-            var Actions = ar[3];
-            var Phone = ar[4];  
-            var Email = ar[5];
-
-            using (var database = Context.ConnectToSQL)
+            using var database = Context.ConnectToSQL;
+            var query = "UPDATE [dbo].[Companies]" +
+                        "SET [Name] = @Name" +
+                        ",[Address] = @Address" +
+                        ",[Actions] = @Actions" +
+                        ",[Phone] = @Phone" +
+                        ",[Email] = @Email " +
+                        "WHERE Id = @Id AND CustomerId = @CustomerId";
+            var para = new
             {
-                var query = "UPDATE [dbo].[Companies]" +
-                            "SET [Name] = @Name" +
-                            ",[Address] = @Address" +
-                            ",[Actions] = @Actions" +
-                            ",[Phone] = @Phone" +
-                            ",[Email] = @Email " +
-                            "WHERE Id = @Id AND CustomerId = @CustomerId";
-                var para = new
-                {
-                    Id = CompanyId,
-                    CustomerId = CustomerId,
-                    Name = Name,
-                    Address = Address,
-                    Actions = Actions,
-                    Phone = Phone,
-                    Email = Email
-                };
-                var result = await database.QueryAsync(query, para);
-            }
+                Id = ar[0],
+                CustomerId = ar[6],
+                Name = ar[1],
+                Address = ar[2],
+                Actions = ar[3],
+                Phone = ar[4],
+                Email = ar[5]
+            };
+            await database.QueryAsync(query, para);
         }
         public async Task ArchiveCompany(string[] ar)
         {
-            var CompanyId = ar[0];
-            var CustomerId = ar[1];
-
-            CompanyStatusModel companyStatusModel = new CompanyStatusModel();
-            companyStatusModel.companyStatusType = CompanyStatus.Archive;
+            CompanyStatusModel companyStatusModel = new()
+            {
+                companyStatusType = CompanyStatus.Archive
+            };
             companyStatusModel.companyStatusName = companyStatusModel.companyStatusType.GetDisplayName();
             var companyStatusId = await new SQLRead().GetCompanyStatusId(companyStatusModel);
 
-            using (var database = Context.ConnectToSQL)
+            using var database = Context.ConnectToSQL;
+            var query = "UPDATE [dbo].[Companies]" +
+                        "SET [Status] = @Status " +
+                        "WHERE Id = @Id AND CustomerId = @CustomerId";
+            var para = new
             {
-                var query = "UPDATE [dbo].[Companies]" +
-                            "SET [Status] = @Status " +
-                            "WHERE Id = @Id AND CustomerId = @CustomerId";
-                var para = new
-                {
-                    Id = CompanyId,
-                    CustomerId = CustomerId,
-                    Status = companyStatusId
-                };
-                var result = await database.QueryAsync(query, para);
-            }
+                Id = ar[0],
+                CustomerId = ar[1],
+                Status = companyStatusId
+            };
+            var result = await database.QueryAsync(query, para);
         }
 
         public async Task DeleteCompany(string[] ar)
@@ -97,14 +148,14 @@ namespace ReportingSystem.Data.SQL
                 return;
             }
 
-            var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-            if (customer != null && customer.companies != null && Guid.TryParse(ar[0], out Guid idCompany))
+            if (customer != null && customer.Companies != null && Guid.TryParse(ar[0], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(c => c.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(idCompany));
                 if (company != null)
                 {
-                    customer.companies.Remove(company);
+                    customer.Companies.Remove(company);
                 }
             }
         }
@@ -119,17 +170,17 @@ namespace ReportingSystem.Data.SQL
 
             var company = new CompanyModel
             {
-                name = ar[0],
-                code = ar[1],
-                address = ar[2],
-                actions = ar[3],
-                phone = ar[4],
-                email = ar[5],
-                registrationDate = DateTime.Today,
-                rolls = DefaultEmployeeRolls.Get(),
-                positions = new List<EmployeePositionModel>(),
-                employees = new List<EmployeeModel>(),
-                status = new CompanyStatusModel
+                Name = ar[0],
+                Code = ar[1],
+                Address = ar[2],
+                Actions = ar[3],
+                Phone = ar[4],
+                Email = ar[5],
+                RegistrationDate = DateTime.Today,
+                Rolls = DefaultEmployeeRolls.Get(),
+                Positions = [],
+                Employees = [],
+                Status = new CompanyStatusModel
                 {
                     companyStatusType = CompanyStatus.Project,
                     companyStatusName = CompanyStatus.Project.GetDisplayName()
@@ -138,20 +189,20 @@ namespace ReportingSystem.Data.SQL
 
             if (customers != null)
             {
-                var customer = customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+                var customer = customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-                if (customer != null && customer.companies != null)
+                if (customer != null && customer.Companies != null)
                 {
                     var chief = new EmployeeModel
                     {
-                        firstName = customer.firstName,
-                        secondName = customer.secondName,
-                        thirdName = customer.thirdName,
-                        emailWork = customer.email
+                        firstName = customer.FirstName,
+                        secondName = customer.SecondName,
+                        thirdName = customer.ThirdName,
+                        emailWork = customer.Email
                     };
 
-                    company.chief = chief;
-                    customer.companies.Add(company);
+                    company.Chief = chief;
+                    customer.Companies.Add(company);
                     DatabaseMoq.UpdateJson();
                     return company;
                 }

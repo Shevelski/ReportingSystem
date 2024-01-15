@@ -5,16 +5,10 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class ProjectsCategoriesController : Controller
+    public class ProjectsCategoriesController(ProjectsCategoriesService projectsCategoriesService) : Controller
     {
 
-        private readonly ProjectsCategoriesService _projectsCategoriesService;
-
-        public ProjectsCategoriesController(ProjectsCategoriesService projectsCategoriesService)
-        {
-            _projectsCategoriesService = projectsCategoriesService;
-        }
-
+        private readonly ProjectsCategoriesService _projectsCategoriesService = projectsCategoriesService;
 
         [HttpGet]
         public async Task<IActionResult> GetCategories(string idCu, string idCo)

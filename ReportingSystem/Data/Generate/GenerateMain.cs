@@ -10,14 +10,9 @@ using ReportingSystem.Hubs;
 
 namespace ReportingSystem.Data.Generate
 {
-    public class GenerateMain
+    public class GenerateMain(IHubContext<StatusHub> hubContext)
     {
-        private readonly IHubContext<StatusHub> _hubContext;
-
-        public GenerateMain(IHubContext<StatusHub> hubContext)
-        {
-            _hubContext = hubContext;
-        }
+        private readonly IHubContext<StatusHub> _hubContext = hubContext;
 
         private async Task UpdateStatusOnClient(string status, int percent)
         {
@@ -60,34 +55,34 @@ namespace ReportingSystem.Data.Generate
                 {
                     await UpdateStatusOnClient("Вставлення даних по замовникам ...", 50);
                     await new InsertData().Customer(customer);
-                    if (customer.companies != null)
+                    if (customer.Companies != null)
                     {
-                        foreach (var company in customer.companies)
+                        foreach (var company in customer.Companies)
                         {
-                            await new InsertData().Company(company, customer.id);
+                            await new InsertData().Company(company, customer.Id);
 
-                            if (company.positions != null)
+                            if (company.Positions != null)
                             {
                                 int i = 0;
-                                foreach (var position in company.positions)
+                                foreach (var position in company.Positions)
                                 {
-                                    await new InsertData().EmployeePosition(position, customer.id, company.id, i);
+                                    await new InsertData().EmployeePosition(position, customer.Id, company.Id, i);
                                     i++;
-                                    if (company.employees != null)
+                                    if (company.Employees != null)
                                     {
-                                        foreach (var employee in company.employees)
+                                        foreach (var employee in company.Employees)
                                         {
                                             await new InsertData().Employee(employee);
                                         }
                                     }
                                 }
                             }
-                            if (company.rolls != null)
+                            if (company.Rolls != null)
                             {
-                                foreach (var rol in company.rolls)
+                                foreach (var rol in company.Rolls)
                                 {
                                     var idRol = await new SQLRead().GetRolIdByType(rol);
-                                    await new InsertData().CompanyRolls(idRol, customer.id, company.id);
+                                    await new InsertData().CompanyRolls(idRol, customer.Id, company.Id);
                                 }
                             }
                         }

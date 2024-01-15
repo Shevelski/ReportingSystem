@@ -22,23 +22,23 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(idCo, out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company == null || company.rolls == null)
+                if (company == null || company.Rolls == null)
                 {
                     return null;
                 }
 
-                return company.rolls;
+                return company.Rolls;
 
                 //if (Guid.TryParse(idEm, out Guid idEmployee))
                 //{
@@ -71,23 +71,23 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(idCo, out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company == null || company.employees == null)
+                if (company == null || company.Employees == null)
                 {
                     return null;
                 }
 
-                return company.employees.Where(employee => employee.rol != null && employee.rol.rolName != null && employee.rol.rolName.Equals(rol)).ToList();
+                return company.Employees.Where(employee => employee.rol != null && employee.rol.rolName != null && employee.rol.rolName.Equals(rol)).ToList();
             }
 
             return null;
@@ -104,29 +104,29 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(co => co.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
             if (Guid.TryParse(ar[1], out Guid idCompany))
             {
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company == null || company.employees == null)
+                if (company == null || company.Employees == null)
                 {
                     return null;
                 }
 
                 if (Guid.TryParse(ar[2], out Guid idEmployee))
                 {
-                    var employee = company.employees.FirstOrDefault(emp => emp.id.Equals(idEmployee));
+                    var employee = company.Employees.FirstOrDefault(emp => emp.id.Equals(idEmployee));
 
-                    if (employee != null && employee.rol != null && company.rolls != null)
+                    if (employee != null && employee.rol != null && company.Rolls != null)
                     {
-                        var newRol = company.rolls.FirstOrDefault(rol => rol.rolName != null && rol.rolName.Equals(ar[3]));
+                        var newRol = company.Rolls.FirstOrDefault(rol => rol.rolName != null && rol.rolName.Equals(ar[3]));
 
                         if (newRol != null)
                         {

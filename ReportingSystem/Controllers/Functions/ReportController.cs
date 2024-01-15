@@ -4,14 +4,9 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class ReportController : Controller
+    public class ReportController(ReportService reportService) : Controller
     {
-        private readonly ReportService _reportService;
-
-        public ReportController(ReportService reportService)
-        {
-            _reportService = reportService;
-        }
+        private readonly ReportService _reportService = reportService;
 
         //[HttpGet]
         ////Отримання списку посад компанії 
@@ -21,7 +16,7 @@ namespace ReportingSystem.Controllers.Functions
         //    var result = _reportService.GetAllRolls(idCu, idCo, idEm);
         //    return Json(result);
         //}
-        
+
         //[HttpGet]
         ////Отримання списку посад компанії 
         //public async Task<IActionResult> GetEmployeesByRoll(string idCu, string idCo, string rol)
@@ -30,7 +25,7 @@ namespace ReportingSystem.Controllers.Functions
         //    var result = _reportService.GetEmployeesByRoll(idCu, idCo, rol);
         //    return Json(result);
         //}
-       
+
 
         //[HttpPost]
         //// редагування ролі у користовуча

@@ -4,14 +4,9 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class RollsController : Controller
+    public class RollsController(RollsService rollsService) : Controller
     {
-        private readonly RollsService _rollsService;
-
-        public RollsController(RollsService rollsService)
-        {
-            _rollsService = rollsService;
-        }
+        private readonly RollsService _rollsService = rollsService;
 
         [HttpGet]
         //Отримання списку посад компанії 

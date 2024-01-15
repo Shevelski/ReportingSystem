@@ -4,14 +4,9 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class PositionsController : Controller
+    public class PositionsController(PositionsService positionsService) : Controller
     {
-        private readonly PositionsService _positionsService;
-
-        public PositionsController(PositionsService positionsService)
-        {
-            _positionsService = positionsService;
-        }
+        private readonly PositionsService _positionsService = positionsService;
 
         [HttpGet]
         //Отримання списку посад компанії 

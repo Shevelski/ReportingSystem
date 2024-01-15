@@ -14,14 +14,14 @@
 }
 
 @model string[];
-<div>
-    <p hidden id="idCu">@Model[0]</p>
-    <p hidden id="idCo">@Model[1]</p>
-    <p hidden id="idEm">@Model[2]</p>
-    <p hidden id="rol">@Model[3]</p>
-</div>
 
 <body>
+    <div>
+        <p hidden id="idCu">@Model[0]</p>
+        <p hidden id="idCo">@Model[1]</p>
+        <p hidden id="idEm">@Model[2]</p>
+        <p hidden id="rol">@Model[3]</p>
+    </div>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -130,7 +130,6 @@
             justify-content: center;
             align-items: center;
             color: rgb(224, 224, 224); /* Text color */
-            @* font-size: 24px; /* Font size for initials */ *@
         }
     .dropdown-menu{
         background-color: #72767c;

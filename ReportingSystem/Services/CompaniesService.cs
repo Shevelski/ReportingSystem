@@ -49,7 +49,6 @@ namespace ReportingSystem.Services
             await new SQLWrite().EditCompany(ar);
         }
 
-
         //архівування компанії
         public async Task ArchiveCompany(string[] ar)
         {
@@ -64,7 +63,7 @@ namespace ReportingSystem.Services
             await new SQLWrite().DeleteCompany(ar);
         }
 
-        private static Dictionary<Guid, CompanyModel> companiesData = new Dictionary<Guid, CompanyModel>();
+        private static Dictionary<Guid, CompanyModel> companiesData = [];
 
         //перевірка єдрпу компанії при створенні - повернення даних про компанію
         public void PostCheckCompany(string[] ar)
@@ -86,7 +85,6 @@ namespace ReportingSystem.Services
             }
             return null;
         }
-
 
         //створення компанії
 

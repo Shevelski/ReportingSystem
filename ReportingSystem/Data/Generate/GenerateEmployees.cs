@@ -3,30 +3,31 @@ using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.User;
+using ReportingSystem.Utils;
 using System.Diagnostics;
 
 namespace ReportingSystem.Data.Generate
 {
     public class GenerateEmployees
     {
-        static List<string> listEm = new List<string>();
+        static List<string> listEm = [];
         public List<EmployeeModel> Employees(CompanyModel company, Guid customerId)
         {
-            List<EmployeeModel> results = new List<EmployeeModel>();
+            List<EmployeeModel> results = [];
 
-            if (company.positions != null)
+            if (company.Positions != null)
             {
                 int i = 0;
-                foreach (EmployeePositionModel userPosition in company.positions)
+                foreach (EmployeePositionModel userPosition in company.Positions)
                 {
 
-                    EmployeeModel user = new EmployeeModel();
+                    EmployeeModel user = new();
                     user = GenerateEmployee(company, customerId);
                     user.position = userPosition;
                     user.rol = new GenerateRolls().GenerateRol(user.position);
                     //userPosition.employees.Add(user);
                     results.Add(user);
-                    Debug.WriteLine($"User {i} added from {company.positions.Count}");
+                    Debug.WriteLine($"User {i} added from {company.Positions.Count}");
                     i++;
                 }
             }
@@ -36,12 +37,12 @@ namespace ReportingSystem.Data.Generate
         public EmployeeModel GenerateEmployee(CompanyModel company, Guid customerId)
         {
 
-            EmployeeModel employee = new EmployeeModel();
-            Random rnd = new Random();
+            EmployeeModel employee = new();
+            Random rnd = new();
             var faker = new Faker();
 
             employee.id = Guid.NewGuid();
-            employee.companyId = company.id;
+            employee.companyId = company.Id;
             employee.customerId = customerId;
             employee.firstName = faker.Name.FirstName();
             employee.secondName = faker.Name.LastName();
@@ -66,14 +67,14 @@ namespace ReportingSystem.Data.Generate
                 employeeStatusType = EmployeeStatus.Actual,
                 employeeStatusName = EmployeeStatus.Actual.GetDisplayName(),
             };
-            employee.password = GenerateInfo.Password();// EncryptionHelper.Encrypt(GenerateInfo.Password());
+            employee.password = EncryptionHelper.Encrypt(GenerateInfo.Password());
             employee.addressFact = faker.Address.FullAddress();
             employee.addressReg = faker.Address.FullAddress();
             employee.photo = "/img/UserPhoto/John1.jpg";
             employee.salary = rnd.Next(20000, 100000);
             employee.addSalary = employee.salary * rnd.Next(10, 60) / 100.0;
             employee.birthDate = GenerateDate.BetweenDates(DateTime.Today.AddYears(-60), DateTime.Today.AddYears(-20));
-            employee.workStartDate = GenerateDate.BetweenDates(company.registrationDate, DateTime.Today);
+            employee.workStartDate = GenerateDate.BetweenDates(company.RegistrationDate, DateTime.Today);
             employee.workEndDate = employee.workStartDate.AddDays(-1);
             employee.holidayDate = GenerateDate.RangeDates(employee.workStartDate, 3, true);
             employee.taketimeoffDate = GenerateDate.RangeDates(employee.workStartDate, 1, false);

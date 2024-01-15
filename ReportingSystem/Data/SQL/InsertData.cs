@@ -322,9 +322,9 @@ namespace ReportingSystem.Data.SQL
 
 
                 int type = -1;
-                if (customer != null && customer.statusLicence != null)
+                if (customer != null && customer.StatusLicence != null)
                 {
-                    type = (int)customer.statusLicence.licenceType;
+                    type = (int)customer.StatusLicence.licenceType;
                 }
 
                 var parametersStatus = new
@@ -344,21 +344,21 @@ namespace ReportingSystem.Data.SQL
                     status = statusResult.First();
                 }
 
-                if (customer != null && customer.password != null)
+                if (customer != null && customer.Password != null)
                 {
                     var parameters = new
                     {
-                        Id = customer.id,
-                        FirstName = customer.firstName,
-                        SecondName = customer.secondName,
-                        ThirdName = customer.thirdName,
+                        Id = customer.Id,
+                        FirstName = customer.FirstName,
+                        SecondName = customer.SecondName,
+                        ThirdName = customer.ThirdName,
                         StatusLicenceId = status,
                         ConfigureId = configureParameters.Id,
-                        Phone = customer.phone,
-                        Email = customer.email,
-                        Password = customer.password,//EncryptionHelper.Encrypt(customer.password),
-                        EndTimeLicense = customer.endTimeLicense,
-                        DateRegistration = customer.dateRegistration,
+                        Phone = customer.Phone,
+                        Email = customer.Email,
+                        Password = customer.Password,//EncryptionHelper.Encrypt(customer.password),
+                        EndTimeLicense = customer.EndTimeLicense,
+                        DateRegistration = customer.DateRegistration,
                     };
 
                     await _database.ExecuteAsync(customersQuery, parameters);
@@ -374,11 +374,11 @@ namespace ReportingSystem.Data.SQL
                 "VALUES (@Id, @CustomerId, @Name, @Address, @Code, @Actions, @StatusWeb, @Phone, @Email, @StatutCapital, @RegistrationDate, @Status, @Chief)";
 
             int type = -1;
-            if (company != null && company.status != null && company.status != null)
+            if (company != null && company.Status != null && company.Status != null)
             {
-                company.status.companyStatusName = Enums.CompanyStatus.Actual.GetDisplayName();
-                company.status.companyStatusType = Enums.CompanyStatus.Actual;
-                type = (int)company.status.companyStatusType;
+                company.Status.companyStatusName = Enums.CompanyStatus.Actual.GetDisplayName();
+                company.Status.companyStatusType = Enums.CompanyStatus.Actual;
+                type = (int)company.Status.companyStatusType;
             }
 
             var parametersStatus = new
@@ -401,23 +401,23 @@ namespace ReportingSystem.Data.SQL
             if (company != null)
             {
                 Guid? chief = Guid.Empty;
-                if (company.chief != null)
+                if (company.Chief != null)
                 {
-                    chief = company.chief.id;
+                    chief = company.Chief.id;
                 }
                 var parameters = new
                 {
-                    Id = company.id,
+                    Id = company.Id,
                     CustomerId = customerId,
-                    Name = company.name,
-                    Address = company.address,
-                    Code = company.code,
-                    Actions = company.actions,
-                    StatusWeb = company.statusWeb,
-                    Phone = company.phone,
-                    Email = company.email,
-                    StatutCapital = company.statutCapital,
-                    RegistrationDate = company.registrationDate,
+                    Name = company.Name,
+                    Address = company.Address,
+                    Code = company.Code,
+                    Actions = company.Actions,
+                    StatusWeb = company.StatusWeb,
+                    Phone = company.Phone,
+                    Email = company.Email,
+                    StatutCapital = company.StatutCapital,
+                    RegistrationDate = company.RegistrationDate,
                     Status = status,
                     Chief = chief
                 };

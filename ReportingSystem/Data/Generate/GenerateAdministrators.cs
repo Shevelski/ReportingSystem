@@ -3,6 +3,7 @@ using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.User;
+using ReportingSystem.Utils;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 namespace ReportingSystem.Data.Generate
 {
@@ -10,10 +11,9 @@ namespace ReportingSystem.Data.Generate
     {
         public List<EmployeeModel> Administrators()
         {
-            var x = new List<EmployeeModel>()
+            var x = new List<EmployeeModel>
             {
-                new EmployeeModel()
-                {
+                new() {
                     id = Guid.NewGuid(),
                     birthDate = DateTime.Parse("10.04.1991"),
                     firstName = "Сергій",
@@ -23,7 +23,7 @@ namespace ReportingSystem.Data.Generate
                     emailWork = "serhii@gmail.ua",
                     photo = "",
                     login = "serhii",
-                    password = "12345",//EncryptionHelper.Encrypt("12345"),
+                    password = EncryptionHelper.Encrypt("12345"),
                     rol = new EmployeeRolModel()
                     {
                         rolType = EmployeeRolStatus.Developer,
@@ -42,8 +42,7 @@ namespace ReportingSystem.Data.Generate
                     workEndDate = DateTime.Now,
                     
                 },
-                new EmployeeModel()
-                {
+                new() {
                     id = Guid.NewGuid(),
                     birthDate = DateTime.Parse("01.01.1990"),
                     firstName = "Олександр",
@@ -53,7 +52,7 @@ namespace ReportingSystem.Data.Generate
                     emailWork = "alex@gmail.ua",
                     photo = "",
                     login = "alex",
-                    password = "12345",//EncryptionHelper.Encrypt("12345"),
+                    password = EncryptionHelper.Encrypt("12345"),
                     rol = new EmployeeRolModel()
                     {
                         rolType = EmployeeRolStatus.Developer,
@@ -71,8 +70,7 @@ namespace ReportingSystem.Data.Generate
                     workStartDate = DateTime.Now,
                     workEndDate = DateTime.Now,
                 },
-                new EmployeeModel()
-                {
+                new() {
                     id = Guid.NewGuid(),
                     birthDate = DateTime.Parse("01.01.1990"),
                     firstName = "Голопупненко",
@@ -82,7 +80,7 @@ namespace ReportingSystem.Data.Generate
                     emailWork = "golo@gmail.ua",
                     photo = "",
                     login = "golo",
-                    password = "12345",//EncryptionHelper.Encrypt("12345"),
+                    password = EncryptionHelper.Encrypt("12345"),
                     rol = new EmployeeRolModel()
                     {
                         rolType = EmployeeRolStatus.DevAdministrator,
@@ -100,8 +98,7 @@ namespace ReportingSystem.Data.Generate
                     workStartDate = DateTime.Now,
                     workEndDate = DateTime.Now,
                 },
-                new EmployeeModel()
-                {
+                new() {
                     id = Guid.NewGuid(),
                     birthDate = DateTime.Parse("01.01.1990"),
                     firstName = "Стерненко",
@@ -111,7 +108,7 @@ namespace ReportingSystem.Data.Generate
                     emailWork = "ster@gmail.ua",
                     photo = "",
                     login = "ster",
-                    password = "12345",//EncryptionHelper.Encrypt("12345"),
+                    password = EncryptionHelper.Encrypt("12345"),
                     rol = new EmployeeRolModel()
                     {
                         rolType = EmployeeRolStatus.DevAdministrator,

@@ -25,21 +25,21 @@ namespace ReportingSystem.Utils
                 HtmlNode spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[2]/div[2]/span");
                 if (spanElement != null)
                 {
-                    company.name = (spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039", "\'"));
+                    company.Name = (spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039", "\'"));
                 }
 
                 //edrpu
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[5]/div[2]/span");
                 if (spanElement != null)
                 {
-                    company.code =(spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039", "\'"));
+                    company.Code =(spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039", "\'"));
                 }
 
                 //dateregistration
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[6]/div[2]/div[1]");
                 if (spanElement != null)
                 {
-                    company.registrationDate = DateTime.Parse(spanElement.InnerText.ToString().Trim().Substring(0, 15).Trim());
+                    company.RegistrationDate = DateTime.Parse(spanElement.InnerText.ToString().Trim().Substring(0, 15).Trim());
                 }
 
                 //header
@@ -59,7 +59,7 @@ namespace ReportingSystem.Utils
                         thirdName = nameParts[2];
                     }
 
-                    company.chief = new Models.User.EmployeeModel()
+                    company.Chief = new Models.User.EmployeeModel()
                     {
                         firstName = firstName,
                         secondName = secondName,
@@ -72,35 +72,35 @@ namespace ReportingSystem.Utils
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[8]/div[2]");
                 if (spanElement != null)
                 {
-                    company.statutCapital = spanElement.InnerText.ToString().Trim();
+                    company.StatutCapital = spanElement.InnerText.ToString().Trim();
                 }
 
                 //address
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[12]/div[2]/table/tbody/tr[1]/td[2]");
                 if (spanElement != null)
                 {
-                    company.address = spanElement.InnerText.ToString().Trim();
+                    company.Address = spanElement.InnerText.ToString().Trim();
                 }
 
                 //email
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[12]/div[2]/table/tbody/tr[2]/td[2]/text()");
                 if (spanElement != null)
                 {
-                    company.email = spanElement.InnerText.ToString().Trim();
+                    company.Email = spanElement.InnerText.ToString().Trim();
                 }
                 
                 //phone
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[12]/div[2]/table/tbody/tr[3]/td[2]/a");
                 if (spanElement != null)
                 {
-                    company.phone = spanElement.InnerText.ToString().Trim();
+                    company.Phone = spanElement.InnerText.ToString().Trim();
                 }
 
                 //main action
                 spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/span");
                 if (spanElement != null)
                 {
-                    company.actions = spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039;", "\'");
+                    company.Actions = spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039;", "\'");
                 }
 
                 //other action
@@ -111,7 +111,7 @@ namespace ReportingSystem.Utils
                     spanElement = document.DocumentNode.SelectSingleNode($"//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/ul/li[{i}]");
                     if (spanElement != null)
                     {
-                        company.actions += "\n" + (spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039;", "\'"));
+                        company.Actions += "\n" + (spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039;", "\'"));
                         i++;
                     }
                     else

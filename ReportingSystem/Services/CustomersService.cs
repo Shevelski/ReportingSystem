@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReportingSystem.Data.JSON;
+using ReportingSystem.Data.SQL;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
@@ -11,87 +13,27 @@ namespace ReportingSystem.Services
     public class CustomersService
     {
 
-        public List<CustomerModel>? GetCustomers()
+        public async Task<List<CustomerModel>?> GetCustomers()
         {
-            var customers = DatabaseMoq.Customers;
-            //if (customers != null)
-            //{
-            //    foreach (var customer in customers)
-            //    {
-            //        if (customer.password != null)
-            //        {
-            //            customer.password = EncryptionHelper.Decrypt(customer.password);
-            //        }
-            //    }
-            //}
-
-            return customers;
+            bool mode = Settings.Source().Equals("json");
+            var result = mode ? await new JsonRead().GetCustomers() :
+                      await new SQLRead().GetCustomers();
+            return result;
         }
         
-        public CustomerModel? GetCustomer(string idCu)
+        public async Task<CustomerModel?> GetCustomer(string idCu)
         {
-            if (DatabaseMoq.Customers == null)
-            {
-                return null;
-            }
-            Guid id;
-            if (!Guid.TryParse(idCu, out id) || id.Equals(Guid.Empty))
-            {
-                id = DatabaseMoq.Customers[0].id;
-            }
-
-            var customer = DatabaseMoq.Customers.First(cu=>cu.id.Equals(id));
-            //if (customer.password != null)
-            //{
-            //    customer.password = EncryptionHelper.Decrypt(customer.password);
-            //}
-            return customer;
+            bool mode = Settings.Source().Equals("json");
+            var result = mode ? await new JsonRead().GetCustomer(idCu) :
+                      await new SQLRead().GetCustomer(new Guid(idCu));
+            return result;
         }
 
         //реєстрація замовника
-        public CustomerModel? RegistrationCustomer(string[] ar)
+        public async Task RegistrationCustomer(string[] ar)
         {
-            //const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
-
-            Random random = new Random();
-            var customer = new CustomerModel
-            {
-                id = Guid.NewGuid(),
-                email = ar[0],
-                firstName = ar[1],
-                secondName = ar[2],
-                thirdName = ar[3],
-                phone = ar[4],
-                dateRegistration = DateTime.Today,
-                //дилема з паролем, ввід при реєстрації чи відправка на пошту
-                password = ar[5],//EncryptionHelper.Encrypt(ar[5]),/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
-                statusLicence = new CustomerLicenceStatusModel
-                {
-                    licenceType = LicenceType.Test,
-                    licenceName = LicenceType.Test.GetDisplayName()
-                },
-                companies = new List<CompanyModel>(),
-                endTimeLicense = DateTime.Today.AddDays(30),
-                historyOperations = new List<CustomerLicenseOperationModel>()
-            };
-
-            var history = new CustomerLicenseOperationModel
-            {
-                id = Guid.NewGuid(),
-                idCustomer = customer.id,
-                oldEndDateLicence = DateTime.Today,
-                newEndDateLicence = customer.endTimeLicense,
-                oldStatus = new CustomerLicenceStatusModel(),
-                newStatus = customer.statusLicence
-            };
-
-            customer.historyOperations.Add(history);
-            var a = DatabaseMoq.Customers;
-            var customers = DatabaseMoq.Customers;
-            customers.Add(customer);
-            DatabaseMoq.UpdateJson();
-            return customer;
-
+            await new JsonWrite().RegistrationCustomer(ar);
+            await new SQLWrite().RegistrationCustomer(ar);
         }
 
         //продовження ліцензії
@@ -110,9 +52,9 @@ namespace ReportingSystem.Services
             }
 
             var customers = DatabaseMoq.Customers;
-            var customer = customers.FirstOrDefault(c => c.id.Equals(id));
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(id));
 
-            if (customer == null || customer.statusLicence == null)
+            if (customer == null || customer.StatusLicence == null)
             {
                 return null;
             }
@@ -122,19 +64,19 @@ namespace ReportingSystem.Services
                 id = Guid.NewGuid(),
                 idCustomer = id,
                 dateChange = DateTime.Now,
-                oldStatus = customer.statusLicence,
-                oldEndDateLicence = customer.endTimeLicense
+                oldStatus = customer.StatusLicence,
+                oldEndDateLicence = customer.EndTimeLicense
             };
 
-            customer.statusLicence = new CustomerLicenceStatusModel
+            customer.StatusLicence = new CustomerLicenceStatusModel
             {
                 licenceType = LicenceType.Main,
                 licenceName = LicenceType.Main.GetDisplayName()
             };
 
-            customer.endTimeLicense = desiredDate;
-            history.newStatus = customer.statusLicence;
-            history.newEndDateLicence = customer.endTimeLicense;
+            customer.EndTimeLicense = desiredDate;
+            history.newStatus = customer.StatusLicence;
+            history.newEndDateLicence = customer.EndTimeLicense;
 
             if (double.TryParse(ar[2].Trim(), out double parsedPrice))
             {
@@ -148,9 +90,9 @@ namespace ReportingSystem.Services
             history.period = ar[3].Trim();
             history.nameOperation = "Продовження";
 
-            if (customer.historyOperations != null)
+            if (customer.HistoryOperations != null)
             {
-                customer.historyOperations.Add(history);
+                customer.HistoryOperations.Add(history);
                 DatabaseMoq.UpdateJson();
                 return customer;
             }
@@ -168,14 +110,14 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.Id.Equals(id));
 
-            if (licence == null || licence.statusLicence == null)
+            if (licence == null || licence.StatusLicence == null)
             {
                 return null;
             }
 
-            licence.statusLicence = new CustomerLicenceStatusModel
+            licence.StatusLicence = new CustomerLicenceStatusModel
             {
                 licenceType = LicenceType.Archive,
                 licenceName = LicenceType.Archive.GetDisplayName()
@@ -186,22 +128,22 @@ namespace ReportingSystem.Services
                 id = Guid.NewGuid(),
                 idCustomer = id,
                 dateChange = DateTime.Now,
-                oldStatus = licence.statusLicence,
+                oldStatus = licence.StatusLicence,
                 newStatus = new CustomerLicenceStatusModel
                 {
                     licenceType = LicenceType.Archive,
                     licenceName = LicenceType.Archive.GetDisplayName()
                 },
-                oldEndDateLicence = licence.endTimeLicense,
-                newEndDateLicence = licence.endTimeLicense,
+                oldEndDateLicence = licence.EndTimeLicense,
+                newEndDateLicence = licence.EndTimeLicense,
                 price = 0,
                 period = "-",
                 nameOperation = "Архівування"
             };
 
-            if (licence.historyOperations != null)
+            if (licence.HistoryOperations != null)
             {
-                licence.historyOperations.Add(history);
+                licence.HistoryOperations.Add(history);
                 DatabaseMoq.UpdateJson();
                 return licence;
             }
@@ -219,9 +161,9 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.Id.Equals(id));
 
-            if (licence == null || licence.statusLicence == null)
+            if (licence == null || licence.StatusLicence == null)
             {
                 return null;
             }
@@ -241,9 +183,9 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+            var licence = DatabaseMoq.Customers.FirstOrDefault(c => c.Id.Equals(id));
 
-            if (licence == null || licence.statusLicence == null)
+            if (licence == null || licence.StatusLicence == null)
             {
                 return null;
             }
@@ -253,7 +195,7 @@ namespace ReportingSystem.Services
                 id = Guid.NewGuid(),
                 idCustomer = id,
                 dateChange = DateTime.Now,
-                oldStatus = licence.statusLicence,
+                oldStatus = licence.StatusLicence,
                 newStatus = new CustomerLicenceStatusModel
                 {
                     licenceType = LicenceType.Nulled,
@@ -266,14 +208,14 @@ namespace ReportingSystem.Services
 
             if (ar.Length > 1 && DateTime.TryParse(ar[1], out DateTime desiredDate))
             {
-                history.oldEndDateLicence = licence.endTimeLicense;
-                licence.endTimeLicense = desiredDate;
-                history.newEndDateLicence = licence.endTimeLicense;
+                history.oldEndDateLicence = licence.EndTimeLicense;
+                licence.EndTimeLicense = desiredDate;
+                history.newEndDateLicence = licence.EndTimeLicense;
             }
 
-            if (licence.historyOperations != null)
+            if (licence.HistoryOperations != null)
             {
-                licence.historyOperations.Add(history);
+                licence.HistoryOperations.Add(history);
                 DatabaseMoq.UpdateJson();
                 return licence;
             }
@@ -290,41 +232,41 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = DatabaseMoq.Customers.FirstOrDefault(c => c.id.Equals(id));
+            var customer = DatabaseMoq.Customers.FirstOrDefault(c => c.Id.Equals(id));
 
-            if (customer == null || customer.statusLicence == null)
+            if (customer == null || customer.StatusLicence == null)
             {
                 return null;
             }
 
-            if (ar[1] != customer.firstName)
+            if (ar[1] != customer.FirstName)
             {
-                customer.firstName = ar[1];
+                customer.FirstName = ar[1];
             }
 
-            if (ar[2] != customer.secondName)
+            if (ar[2] != customer.SecondName)
             {
-                customer.secondName = ar[2];
+                customer.SecondName = ar[2];
             }
 
-            if (ar[3] != customer.thirdName)
+            if (ar[3] != customer.ThirdName)
             {
-                customer.thirdName = ar[3];
+                customer.ThirdName = ar[3];
             }
 
-            if (ar[4] != customer.phone)
+            if (ar[4] != customer.Phone)
             {
-                customer.phone = ar[4];
+                customer.Phone = ar[4];
             }
 
-            if (ar[5] != customer.email)
+            if (ar[5] != customer.Email)
             {
-                customer.email = ar[5];
+                customer.Email = ar[5];
             }
 
-            if (ar[6] != customer.password)
+            if (ar[6] != customer.Password)
             {
-                customer.password = ar[6];
+                customer.Password = ar[6];
             }
 
 

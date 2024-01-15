@@ -16,15 +16,15 @@ namespace ReportingSystem.Services
 {
     public class AuthorizeService
     {
-        CustomerModel customer = new CustomerModel();
-        List<CustomerModel> customers = new List<CustomerModel>();
-        List<EmployeeModel> administrators = new List<EmployeeModel>();
-        CompanyModel company = new CompanyModel();
-        List<CompanyModel> companies = new List<CompanyModel>();
-        EmployeeModel employee = new EmployeeModel();
-        List<EmployeeModel> employees = new List<EmployeeModel>();
-        AuthorizeModel authorize = new AuthorizeModel();
-        List<EmployeeRolModel> employeeRolModels = new List<EmployeeRolModel>();
+        CustomerModel customer = new();
+        List<CustomerModel> customers = [];
+        List<EmployeeModel> administrators = [];
+        CompanyModel company = new();
+        List<CompanyModel> companies = [];
+        EmployeeModel employee = new();
+        List<EmployeeModel> employees = [];
+        AuthorizeModel authorize = new();
+        List<EmployeeRolModel> employeeRolModels = [];
 
         private class DatabaseData
         {
@@ -38,64 +38,58 @@ namespace ReportingSystem.Services
             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
             AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
 
-            using (var database = Context.ConnectToSQL)
+            using var database = Context.ConnectToSQL;
+            var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
+            var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
+            var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
+
+            var para = new { email };
+            var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
+            var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
+            var resultEmployee = await database.QueryAsync<Guid>(employeeTableQuery, para);
+
+            Guid id;
+
+            int count = 0;
+            if (resultAdmin.Any())
             {
-                var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
-                var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
-                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
-
-                var para = new
-                {
-                    email = email,
-                };
-                var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
-                var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
-                var resultEmployee = await database.QueryAsync<Guid>(employeeTableQuery, para);
-
-                Guid id;
-
-                int count = 0;
-                if (resultAdmin.Any())
-                {
-                    count++;
-                    id = resultAdmin.First();
-                    Guid rolId = await new SQLRead().GetAdministratorRoleId(id);
-                    authorize.Role = await new SQLRead().GetRoleById(rolId);
-                }
-                if (resultCustomer.Any())
-                {
-                    count++;
-                    id = resultCustomer.First();
-                    authorize.Role = new EmployeeRolModel()
-                    {
-                        rolType = EmployeeRolStatus.Customer,
-                        rolName = EmployeeRolStatus.Customer.GetDisplayName(),
-                    };
-                }
-                if (resultEmployee.Any())
-                {
-                    count++;
-                    id = resultEmployee.First();
-                    Guid rolId = await new SQLRead().GetEmployeeRoleId(id);
-                    authorize.Role = await new SQLRead().GetRoleById(rolId);
-                }
-
-                authorize.Email = email;
-                authorizeStatusModel.authorizeStatusType = (count == 1) ? AuthorizeStatus.EmailOk : AuthorizeStatus.EmailFailed;
-                authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
-
-                return authorize;
+                count++;
+                id = resultAdmin.First();
+                Guid rolId = await new SQLRead().GetAdministratorRoleId(id);
+                authorize.Role = await new SQLRead().GetRoleById(rolId);
             }
+            if (resultCustomer.Any())
+            {
+                count++;
+                authorize.Role = new EmployeeRolModel()
+                {
+                    rolType = EmployeeRolStatus.Customer,
+                    rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                };
+            }
+            if (resultEmployee.Any())
+            {
+                count++;
+                id = resultEmployee.First();
+                Guid rolId = await new SQLRead().GetEmployeeRoleId(id);
+                authorize.Role = await new SQLRead().GetRoleById(rolId);
+            }
+
+            authorize.Email = email;
+            authorizeStatusModel.AuthorizeStatusType = (count == 1) ? AuthorizeStatus.EmailOk : AuthorizeStatus.EmailFailed;
+            authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+
+            return authorize;
         }
         public AuthorizeModel? CheckEmailJson(string email)
         {
-            List<CustomerModel>? Customers = new List<CustomerModel>();
-            List<EmployeeModel>? Administrators = new List<EmployeeModel>();
+            List<CustomerModel>? Customers = [];
+            List<EmployeeModel>? Administrators = [];
 
             if (File.Exists(Context.Json) && new FileInfo(Context.Json).Length > 0)
             {
                 string jsonData;
-                using (StreamReader reader = new StreamReader(Context.Json))
+                using (StreamReader reader = new(Context.Json))
                 {
                     jsonData = reader.ReadToEnd();
                 }
@@ -114,9 +108,11 @@ namespace ReportingSystem.Services
                     if (administrator.emailWork != null && administrator.emailWork.ToLower().Equals(email.ToLower()))
                     {
                         authorize.Email = administrator.emailWork;
-                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
-                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+                        {
+                            AuthorizeStatusType = AuthorizeStatus.EmailOk,
+                            AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
+                        };
                         authorize.Role = administrator.rol;
                         return authorize;
                     }
@@ -127,12 +123,14 @@ namespace ReportingSystem.Services
             {
                 foreach (var customer in Customers)
                 {
-                    if (customer.email != null && customer.email.ToLower().Equals(email.ToLower()))
+                    if (customer.Email != null && customer.Email.ToLower().Equals(email.ToLower()))
                     {
-                        authorize.Email = customer.email;
-                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
-                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                        authorize.Email = customer.Email;
+                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+                        {
+                            AuthorizeStatusType = AuthorizeStatus.EmailOk,
+                            AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
+                        };
                         authorize.Role = new EmployeeRolModel()
                         {
                             rolType = EmployeeRolStatus.Customer,
@@ -141,20 +139,22 @@ namespace ReportingSystem.Services
                         return authorize;
                     }
 
-                    if (customer.companies != null)
+                    if (customer.Companies != null)
                     {
-                        foreach (var company in customer.companies)
+                        foreach (var company in customer.Companies)
                         {
-                            if (company.employees != null)
+                            if (company.Employees != null)
                             {
-                                foreach (var employee in company.employees)
+                                foreach (var employee in company.Employees)
                                 {
                                     if (employee.emailWork != null && employee.emailWork.ToLower().Equals(email.ToLower()))
                                     {
                                         authorize.Email = employee.emailWork;
-                                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
-                                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+                                        {
+                                            AuthorizeStatusType = AuthorizeStatus.EmailOk,
+                                            AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
+                                        };
                                         authorize.Role = new EmployeeRolModel();
                                         authorize.Role = employee.rol;
                                         return authorize;
@@ -166,9 +166,11 @@ namespace ReportingSystem.Services
                 }
             }
 
-            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailFailed;
-            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailFailed.GetDisplayName();
+            authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+            {
+                AuthorizeStatusType = AuthorizeStatus.EmailFailed,
+                AuthorizeStatusName = AuthorizeStatus.EmailFailed.GetDisplayName()
+            };
             return authorize;
         }
         public async Task<AuthorizeModel> CheckPasswordSQL(string email, string password)
@@ -176,81 +178,76 @@ namespace ReportingSystem.Services
             authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
             AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
 
-            using (var database = Context.ConnectToSQL)
+            using var database = Context.ConnectToSQL;
+            var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
+            var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
+            var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
+
+            var para = new { email };
+            var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
+            var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
+            var resultEmployee = await database.QueryAsync<Guid>(employeeTableQuery, para);
+
+            Guid id;
+
+            int count = 0;
+            if (resultAdmin.Any())
             {
-                var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
-                var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
-                var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
-
-                var para = new
+                count++;
+                id = resultAdmin.First();
+                Guid rolId = await new SQLRead().GetAdministratorRoleId(id);
+                authorize.Role = await new SQLRead().GetRoleById(rolId);
+                if (await new SQLRead().IsPasswordAdminOk(id, password))
                 {
-                    email = email,
-                };
-                var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
-                var resultCustomer = await database.QueryAsync<Guid>(customerTableQuery, para);
-                var resultEmployee = await database.QueryAsync<Guid>(employeeTableQuery, para);
-
-                Guid id;
-
-                int count = 0;
-                if (resultAdmin.Any())
-                {
-                    count++;
-                    id = resultAdmin.First();
-                    Guid rolId = await new SQLRead().GetAdministratorRoleId(id);
-                    authorize.Role = await new SQLRead().GetRoleById(rolId);
-                    if (await new SQLRead().IsPasswordAdminOk(id, password))
-                    {
-                        authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                        authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
-                        authorize.Employee = await new SQLRead().GetEmployeeAdministrator(id);
-                    }
+                    authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
+                    authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                    authorize.Employee = await new SQLRead().GetEmployeeAdministrator(id);
                 }
-                if (resultCustomer.Any())
-                {
-                    count++;
-                    id = resultCustomer.First();
-                    authorize.Role = new EmployeeRolModel()
-                    {
-                        rolType = EmployeeRolStatus.Customer,
-                        rolName = EmployeeRolStatus.Customer.GetDisplayName(),
-                    };
-                    if (await new SQLRead().IsPasswordCustomerOk(id, password))
-                    {
-                        authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                        authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
-                    }
-                }
-                if (resultEmployee.Any())
-                {
-                    count++;
-                    id = resultEmployee.First();
-                    Guid rolId = await new SQLRead().GetEmployeeRoleId(id);
-                    authorize.Role = await new SQLRead().GetRoleById(rolId);
-                    if (await new SQLRead().IsPasswordEmployeeOk(id, password))
-                    {
-                        authorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                        authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
-                    }
-                }
-
-                authorize.Email = email;
-                authorizeStatusModel.authorizeStatusType = (count == 1) ? AuthorizeStatus.PasswordOk : AuthorizeStatus.PasswordFailed;
-                authorizeStatusModel.authorizeStatusName = authorizeStatusModel.authorizeStatusType.GetDisplayName();
-
-                return authorize;
             }
+            if (resultCustomer.Any())
+            {
+                count++;
+                id = resultCustomer.First();
+                authorize.Role = new EmployeeRolModel()
+                {
+                    rolType = EmployeeRolStatus.Customer,
+                    rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                };
+                if (await new SQLRead().IsPasswordCustomerOk(id, password))
+                {
+                    authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
+                    authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                }
+            }
+            if (resultEmployee.Any())
+            {
+                count++;
+                id = resultEmployee.First();
+                Guid rolId = await new SQLRead().GetEmployeeRoleId(id);
+                authorize.Role = await new SQLRead().GetRoleById(rolId);
+                if (await new SQLRead().IsPasswordEmployeeOk(id, password))
+                {
+                    authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
+                    authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                }
+            }
+
+            authorize.Email = email;
+            authorizeStatusModel.AuthorizeStatusType = (count == 1) ? AuthorizeStatus.PasswordOk : AuthorizeStatus.PasswordFailed;
+            authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+
+            return authorize;
         }
         public AuthorizeModel? CheckPasswordJson(string email, string password)
         {
 
-            List<CustomerModel>? Customers = new List<CustomerModel>();
-            List<EmployeeModel>? Administrators = new List<EmployeeModel>();
+            List<CustomerModel>? Customers = [];
+            List<EmployeeModel>? Administrators = [];
 
             if (File.Exists(Context.Json) && new FileInfo(Context.Json).Length > 0)
             {
                 string jsonData;
-                using (StreamReader reader = new StreamReader(Context.Json))
+                using (StreamReader reader = new(Context.Json))
                 {
                     jsonData = reader.ReadToEnd();
                 }
@@ -269,12 +266,14 @@ namespace ReportingSystem.Services
                 {
                     if (administrator.emailWork == email)
                     {
-                        if (administrator.password != null && administrator.password.Equals(password))//EncryptionHelper.Decrypt(administrator.password).Equals(password))
+                        if (administrator.password != null && EncryptionHelper.Decrypt(administrator.password).Equals(password))
                         {
                             authorize.Email = administrator.emailWork;
-                            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                            authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+                            {
+                                AuthorizeStatusType = AuthorizeStatus.PasswordOk,
+                                AuthorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName()
+                            };
                             authorize.Role = administrator.rol;
                             authorize.Employee = administrator;
                             return authorize;
@@ -288,14 +287,16 @@ namespace ReportingSystem.Services
                 customers = Customers;
                 foreach (var customer in customers)
                 {
-                    if (customer.email == email)
+                    if (customer.Email == email)
                     {
-                        if (customer.password != null && customer.password.Equals(password))//EncryptionHelper.Decrypt(customer.password).Equals(password))
+                        if (customer.Password != null && EncryptionHelper.Decrypt(customer.Password).Equals(password))
                         {
-                            authorize.Email = customer.email;
-                            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                            authorize.Email = customer.Email;
+                            authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+                            {
+                                AuthorizeStatusType = AuthorizeStatus.PasswordOk,
+                                AuthorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName()
+                            };
                             authorize.Role = new EmployeeRolModel()
                             {
                                 rolType = EmployeeRolStatus.Customer,
@@ -303,10 +304,10 @@ namespace ReportingSystem.Services
                             };
                             authorize.Employee = new EmployeeModel()
                             {
-                                customerId = customer.id,
-                                firstName = customer.firstName,
-                                secondName = customer.secondName,
-                                thirdName = customer.thirdName,
+                                customerId = customer.Id,
+                                firstName = customer.FirstName,
+                                secondName = customer.SecondName,
+                                thirdName = customer.ThirdName,
                                 rol = new EmployeeRolModel()
                                 {
                                     rolType = EmployeeRolStatus.Customer,
@@ -318,27 +319,29 @@ namespace ReportingSystem.Services
                     }
 
 
-                    if (customer.companies != null)
+                    if (customer.Companies != null)
                     {
-                        foreach (var company in customer.companies)
+                        foreach (var company in customer.Companies)
                         {
-                            if (company.employees != null)
+                            if (company.Employees != null)
                             {
-                                foreach (var employee in company.employees)
+                                foreach (var employee in company.Employees)
                                 {
                                     if (employee.emailWork != null && employee.emailWork.ToLower().Equals(email.ToLower()))
                                     {
                                         authorize.Email = employee.emailWork;
-                                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-                                        authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.EmailOk;
-                                        authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName();
+                                        authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+                                        {
+                                            AuthorizeStatusType = AuthorizeStatus.EmailOk,
+                                            AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
+                                        };
                                         authorize.Role = new EmployeeRolModel();
                                         authorize.Role = employee.rol;
 
-                                        if (employee.password != null && employee.password.Equals(password))//EncryptionHelper.Decrypt(employee.password).Equals(password))
+                                        if (employee.password != null && EncryptionHelper.Decrypt(employee.password).Equals(password))
                                         {
-                                            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordOk;
-                                            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
+                                            authorize.AuthorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
+                                            authorize.AuthorizeStatusModel.AuthorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
                                             authorize.Employee = employee;
                                             return authorize;
                                         }
@@ -350,12 +353,14 @@ namespace ReportingSystem.Services
                 }
             }
 
-            authorize.AuthorizeStatusModel = new AuthorizeStatusModel();
-            authorize.AuthorizeStatusModel.authorizeStatusType = AuthorizeStatus.PasswordFailed;
-            authorize.AuthorizeStatusModel.authorizeStatusName = AuthorizeStatus.PasswordFailed.GetDisplayName();
+            authorize.AuthorizeStatusModel = new AuthorizeStatusModel
+            {
+                AuthorizeStatusType = AuthorizeStatus.PasswordFailed,
+                AuthorizeStatusName = AuthorizeStatus.PasswordFailed.GetDisplayName()
+            };
             return authorize;
         }
-        public string? GetRolController(AuthorizeModel authorizeModel)
+        public string? GetRolController()
             {
             employeeRolModels = DefaultEmployeeRolls.Get();
             foreach (var item in employeeRolModels)
@@ -379,6 +384,8 @@ namespace ReportingSystem.Services
                             return "EUCustomer";
                         case EmployeeRolStatus.CEO:
                             return "EUCEO";
+                        case EmployeeRolStatus.NoUser:
+                            break;
                         default:
                             return "EUUser";
                     }

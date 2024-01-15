@@ -6,19 +6,9 @@ using ReportingSystem.Services;
 namespace ReportingSystem.Controllers.Functions
 {
 
-    public class CustomersController : Controller
+    public class CustomersController(CustomersService customersService) : Controller
     {
-        private readonly CustomersService _customersService;
-
-        public CustomersController(CustomersService customersService)
-        {
-            _customersService = customersService;
-        }
-
-        CustomerModel customer = new CustomerModel();
-        List<CustomerModel> customers = new List<CustomerModel>();
-        CompanyModel company = new CompanyModel();
-        List<CompanyModel> companies = new List<CompanyModel>();
+        private readonly CustomersService _customersService = customersService;
 
         [HttpGet]
         //отримати замовників
@@ -27,7 +17,7 @@ namespace ReportingSystem.Controllers.Functions
             using (_customersService as IDisposable)
             {
                 await Task.Delay(10);
-                var result = _customersService.GetCustomers();
+                var result = await _customersService.GetCustomers();
                 return Json(result);
             }
         }
@@ -43,14 +33,6 @@ namespace ReportingSystem.Controllers.Functions
                 return Json(result);
             }
         }
-
-        //[HttpPost]
-        ////створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
-        //public IActionResult CreateCustomer([FromBody] string[] ar)
-        //{
-        //    var result = _customersService.CreateCustomer(ar[0]);
-        //    return result != null ? Ok(result) : NotFound();
-        //}
 
         [HttpPost]
         //створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
@@ -102,24 +84,6 @@ namespace ReportingSystem.Controllers.Functions
             var result = await _customersService.EditCustomer(ar);
             return result != null ? Ok(result) : NotFound();
         }
-
-        //[HttpGet]
-        ////перевірка збережених компаній
-        //public async Task<IActionResult> GetCustomerInfo(string idCu)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _customersService.GetCustomerInfo(idCu);
-        //    return Json(result);
-        //}
-
-        //[HttpPost]
-        ////перевірка збережених компаній
-        //public async Task<IActionResult> SetCustomerInfo(string idCu)
-        //{
-        //    await Task.Delay(10);
-        //    var result = _customersService.SetCustomerInfo(idCu);
-        //    return Json(result);
-        //}
 
     }
 }

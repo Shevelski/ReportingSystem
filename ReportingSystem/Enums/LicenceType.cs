@@ -4,6 +4,9 @@ namespace ReportingSystem.Enums
 {
     public enum LicenceType
     {
+        [EnumDisplayName("Неіснуюча")]
+        None = 0,
+
         [EnumDisplayName("Тестова")]
         Test = 1,
 

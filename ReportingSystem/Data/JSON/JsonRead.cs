@@ -24,7 +24,7 @@ namespace ReportingSystem.Data.JSON
             if (File.Exists(Context.Json) && new FileInfo(Context.Json).Length > 0)
             {
                 string jsonData;
-                using (StreamReader reader = new StreamReader(Context.Json))
+                using (StreamReader reader = new (Context.Json))
                 {
                     jsonData = await reader.ReadToEndAsync();
                 }
@@ -35,17 +35,17 @@ namespace ReportingSystem.Data.JSON
                 }
             }
 
-            return new List<CustomerModel>();
+            return [];
         }
         public async Task<List<CustomerModel>?> GetCustomers()
         {
             List<CustomerModel>? Customers = await LoadCustomersFromJson();
             return Customers;
         }
-        public async Task<CustomerModel?> GetCustomer(string id)
+        public async Task<CustomerModel?> GetCustomer(string idCu)
         {
             List<CustomerModel>? customers = await LoadCustomersFromJson();
-            CustomerModel? customer = customers.FirstOrDefault(id=>id.Equals(id));
+            CustomerModel? customer = customers.FirstOrDefault(id=>id.Equals(idCu));
             return customer;
         }
         public async Task<List<CompanyModel>?> GetCompanies(string idCu)
@@ -57,17 +57,16 @@ namespace ReportingSystem.Data.JSON
                 return null;
             }
 
-            Guid id;
-            if (!Guid.TryParse(idCu, out id) || id.Equals(Guid.Empty))
+            if (!Guid.TryParse(idCu, out Guid id) || id.Equals(Guid.Empty))
             {
-                id = Customers[0].id;
+                id = Customers[0].Id;
             }
 
-            var customer = Customers.FirstOrDefault(co => co.id.Equals(id));
+            var customer = Customers.FirstOrDefault(co => co.Id.Equals(id));
 
-            if (customer != null && customer.companies != null)
+            if (customer != null && customer.Companies != null)
             {
-                return customer.companies;
+                return customer.Companies;
             }
 
             return null;
@@ -81,24 +80,22 @@ namespace ReportingSystem.Data.JSON
                 return null;
             }
 
-            Guid idCustomer;
-            if (!Guid.TryParse(idCu, out idCustomer) || idCustomer.Equals(Guid.Empty))
+            if (!Guid.TryParse(idCu, out Guid idCustomer) || idCustomer.Equals(Guid.Empty))
             {
                 return null;
             }
 
-            var customer = Customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
+            var customer = Customers.FirstOrDefault(cu => cu.Id.Equals(idCustomer));
 
 
 
-            if (customer != null && customer.companies != null)
+            if (customer != null && customer.Companies != null)
             {
-                Guid idCompany;
-                if (!Guid.TryParse(idCo, out idCompany) || idCompany.Equals(Guid.Empty))
+                if (!Guid.TryParse(idCo, out Guid idCompany) || idCompany.Equals(Guid.Empty))
                 {
                     return null;
                 }
-                var company = customer.companies.First(co => co.id.Equals(idCompany));
+                var company = customer.Companies.First(co => co.Id.Equals(idCompany));
                 return company;
             }
 
@@ -113,12 +110,12 @@ namespace ReportingSystem.Data.JSON
                 return null;
             }
 
-            var customer = Customers.FirstOrDefault(co => co.id.Equals(id));
+            var customer = Customers.FirstOrDefault(co => co.Id.Equals(id));
 
-            if (customer != null && customer.companies != null)
+            if (customer != null && customer.Companies != null)
             {
-                return customer.companies
-                    .Where(item => item.status != null && item.status.companyStatusType.Equals(CompanyStatus.Actual))
+                return customer.Companies
+                    .Where(item => item.Status != null && item.Status.companyStatusType.Equals(CompanyStatus.Actual))
                     .ToList();
             }
 
@@ -133,18 +130,18 @@ namespace ReportingSystem.Data.JSON
                 return null;
             }
 
-            var customer = Customers.FirstOrDefault(c => c.id.Equals(idCustomer));
+            var customer = Customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
-            var company = customer.companies.FirstOrDefault(co => co.id.Equals(idCompany));
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-            if (company != null && company.rolls != null)
+            if (company != null && company.Rolls != null)
             {
-                return company.rolls;
+                return company.Rolls;
             }
 
             return null;
@@ -152,8 +149,8 @@ namespace ReportingSystem.Data.JSON
         public async Task<List<EmployeeRolModel>?> GetDevRolls()
         {
             await Task.Delay(10);
-            List<EmployeeRolModel> devRols = new List<EmployeeRolModel>();
-            EmployeeRolModel devRol = new EmployeeRolModel()
+            List<EmployeeRolModel> devRols = [];
+            EmployeeRolModel devRol = new ()
             {
                 rolType = EmployeeRolStatus.Developer,
                 rolName = EmployeeRolStatus.Developer.GetDisplayName()

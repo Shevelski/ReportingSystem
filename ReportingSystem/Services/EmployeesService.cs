@@ -18,32 +18,32 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(idCustomer));
 
-            if (customer == null || customer.companies == null)
+            if (customer == null || customer.Companies == null)
             {
                 return null;
             }
 
-            var companies = customer.companies;
+            var companies = customer.Companies;
 
             if (companies == null || !Guid.TryParse(idCo, out Guid idCompany))
             {
                 return null;
             }
             
-            var company = companies.FirstOrDefault(comp => comp.id.Equals(idCompany));
+            var company = companies.FirstOrDefault(comp => comp.Id.Equals(idCompany));
             
             if (company == null)
             {
                 return null;
             }
-            List<EmployeeModel> list  = new List<EmployeeModel>();
-            if (company.employees == null)
+            List<EmployeeModel> list  = [];
+            if (company.Employees == null)
             {
                 return null;
             }
-                list = company.employees;
+                list = company.Employees;
 
             //foreach (var employee in list)
             //{
@@ -112,28 +112,28 @@ namespace ReportingSystem.Services
                     return null;
                 }
 
-                var customer = customers.FirstOrDefault(cu => cu.id.Equals(idCustomer));
+                var customer = customers.FirstOrDefault(cu => cu.Id.Equals(idCustomer));
 
-                if (customer == null || customer.companies == null)
+                if (customer == null || customer.Companies == null)
                 {
                     return null;
                 }
 
-                var companies = customer.companies;
+                var companies = customer.Companies;
 
                 if (companies == null || !Guid.TryParse(idCo, out Guid idCompany))
                 {
                     return null;
                 }
 
-                var company = companies.FirstOrDefault(comp => comp.id.Equals(idCompany));
+                var company = companies.FirstOrDefault(comp => comp.Id.Equals(idCompany));
 
                 if (company == null)
                 {
                     return null;
                 }
 
-                var employees = company.employees;
+                var employees = company.Employees;
 
                 if (employees == null || !Guid.TryParse(idEm, out Guid idEmployee))
                 {
@@ -188,21 +188,21 @@ namespace ReportingSystem.Services
                     return null;
                 }
 
-                var customer = customers.FirstOrDefault(c => c.id.Equals(customerId));
+                var customer = customers.FirstOrDefault(c => c.Id.Equals(customerId));
 
-                if (customer == null || customer.companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
+                if (customer == null || customer.Companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
                 {
                     return null;
                 }
 
-                var company = customer.companies.FirstOrDefault(c => c.id.Equals(companyId));
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(companyId));
 
-                if (company == null || company.employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
+                if (company == null || company.Employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
                 {
                     return null;
                 }
 
-                var employee = company.employees.FirstOrDefault(e => e.id.Equals(employeeId));
+                var employee = company.Employees.FirstOrDefault(e => e.id.Equals(employeeId));
 
                 if (employee != null)
                 {
@@ -212,10 +212,7 @@ namespace ReportingSystem.Services
                         if (editedValue != null)
                         {
                             var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
-                            if (employeeProperty != null)
-                            {
-                                employeeProperty.SetValue(employee, editedValue);
-                            }
+                            employeeProperty?.SetValue(employee, editedValue);
                         }
                     }
                     DatabaseMoq.UpdateJson();
@@ -259,10 +256,7 @@ namespace ReportingSystem.Services
                         if (editedValue != null)
                         {
                             var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
-                            if (employeeProperty != null)
-                            {
-                                employeeProperty.SetValue(employee, editedValue);
-                            }
+                            employeeProperty?.SetValue(employee, editedValue);
                         }
                     }
                     DatabaseMoq.UpdateJson();
@@ -283,21 +277,21 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
 
-            if (customer == null || customer.companies == null || !Guid.TryParse(idCo, out Guid companyId))
+            if (customer == null || customer.Companies == null || !Guid.TryParse(idCo, out Guid companyId))
             {
                 return null;
             }
 
-            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
 
-            if (company == null || company.employees == null || !Guid.TryParse(idEm, out Guid employeeId))
+            if (company == null || company.Employees == null || !Guid.TryParse(idEm, out Guid employeeId))
             {
                 return null;
             }
 
-            var employee = company.employees.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = company.Employees.FirstOrDefault(em => em.id.Equals(employeeId));
 
             if (employee != null)
             {
@@ -354,7 +348,7 @@ namespace ReportingSystem.Services
 
             foreach (var administrator in administrators)
             {
-                if (administrator.emailWork != null && administrator.emailWork.ToLower() == email.ToLower())
+                if (administrator.emailWork != null && administrator.emailWork.Equals(email, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return true;
                 }
@@ -369,20 +363,20 @@ namespace ReportingSystem.Services
 
             foreach (var customer in customers)
             {
-                if (customer.email != null && customer.email.ToLower() == email.ToLower())
+                if (customer.Email != null && customer.Email.Equals(email, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return true;
                 }
 
-                if (customer.companies != null)
+                if (customer.Companies != null)
                 {
-                    foreach (var company in customer.companies)
+                    foreach (var company in customer.Companies)
                     {
-                        if (company.employees != null)
+                        if (company.Employees != null)
                         {
-                            foreach (var employee in company.employees)
+                            foreach (var employee in company.Employees)
                             {
-                                if (employee.emailWork != null && employee.emailWork.ToLower() == email.ToLower())
+                                if (employee.emailWork != null && employee.emailWork.Equals(email, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     return true;
                                 }
@@ -406,16 +400,16 @@ namespace ReportingSystem.Services
                     return null;
                 }
 
-                var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+                var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
 
-                if (customer == null || customer.companies == null)
+                if (customer == null || customer.Companies == null)
                 {
                     return null;
                 }
 
-                var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
 
-                if (company == null || company.employees == null)
+                if (company == null || company.Employees == null)
                 {
                     return null;
                 }
@@ -462,7 +456,7 @@ namespace ReportingSystem.Services
                     },
                 };
 
-                company.employees.Add(employee);
+                company.Employees.Add(employee);
                 DatabaseMoq.UpdateJson();
                 return employee;
         }
@@ -524,21 +518,21 @@ namespace ReportingSystem.Services
                 return null;
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
 
-            if (customer == null || customer.companies == null || !Guid.TryParse(idCo, out Guid companyId))
+            if (customer == null || customer.Companies == null || !Guid.TryParse(idCo, out Guid companyId))
             {
                 return null;
             }
 
-            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
 
-            if (company == null || company.employees == null || !Guid.TryParse(idEm, out Guid employeeId))
+            if (company == null || company.Employees == null || !Guid.TryParse(idEm, out Guid employeeId))
             {
                 return null;
             }
 
-            var employee = company.employees.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = company.Employees.FirstOrDefault(em => em.id.Equals(employeeId));
 
             if (employee != null)
             {
@@ -590,21 +584,21 @@ namespace ReportingSystem.Services
                 return;
             }
 
-            var customer = customers.FirstOrDefault(cu => cu.id.Equals(customerId));
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
 
-            if (customer == null || customer.companies == null || !Guid.TryParse(idCo, out Guid companyId))
+            if (customer == null || customer.Companies == null || !Guid.TryParse(idCo, out Guid companyId))
             {
                 return;
             }
 
-            var company = customer.companies.FirstOrDefault(co => co.id.Equals(companyId));
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
 
-            if (company == null || company.employees == null || !Guid.TryParse(idEm, out Guid employeeId))
+            if (company == null || company.Employees == null || !Guid.TryParse(idEm, out Guid employeeId))
             {
                 return;
             }
 
-            var employees = company.employees;
+            var employees = company.Employees;
             var employee = employees.FirstOrDefault(em => em.id.Equals(employeeId));
 
             if (employee != null)
