@@ -36,7 +36,7 @@ namespace ReportingSystem.Data.Generate
                     },
                     position = new EmployeePositionModel()
                     {
-                        namePosition = EmployeeRolStatus.Developer.GetDisplayName(),
+                        NamePosition = EmployeeRolStatus.Developer.GetDisplayName(),
                     },
                     workStartDate = DateTime.Now, 
                     workEndDate = DateTime.Now,
@@ -65,7 +65,7 @@ namespace ReportingSystem.Data.Generate
                     },
                     position = new EmployeePositionModel()
                     {
-                        namePosition = EmployeeRolStatus.Developer.GetDisplayName(),
+                        NamePosition = EmployeeRolStatus.Developer.GetDisplayName(),
                     },
                     workStartDate = DateTime.Now,
                     workEndDate = DateTime.Now,
@@ -93,7 +93,7 @@ namespace ReportingSystem.Data.Generate
                     },
                     position = new EmployeePositionModel()
                     {
-                        namePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
+                        NamePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
                     },
                     workStartDate = DateTime.Now,
                     workEndDate = DateTime.Now,
@@ -121,7 +121,7 @@ namespace ReportingSystem.Data.Generate
                     },
                     position = new EmployeePositionModel()
                     {
-                        namePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
+                        NamePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
                     },
                     workStartDate = DateTime.Now,
                     workEndDate = DateTime.Now,

@@ -28,7 +28,7 @@ namespace ReportingSystem.Data.SQL
             int existingDatabaseCount = (int)checkCommand.ExecuteScalar();
             if (existingDatabaseCount > 0)
             {
-                Console.WriteLine($"База даних '{databaseName}' вже існує.");
+                //Console.WriteLine($"База даних '{databaseName}' вже існує.");
                 return true;
             }
             return false;

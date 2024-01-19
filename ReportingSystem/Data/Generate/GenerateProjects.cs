@@ -13,22 +13,22 @@ namespace ReportingSystem.Data.Generate
 
         public List<ProjectModel> RandomProjects(CompanyModel company)
         {
-            List<ProjectModel> projects = new List<ProjectModel>();
+            List<ProjectModel> projects = [];
 
-            List<EmployeePositionModel> teamP = company.Positions != null ? company.Positions : new List<EmployeePositionModel>();
-            List<EmployeeModel> teamE = company.Employees != null ? company.Employees : new List<EmployeeModel>();
+            List<EmployeePositionModel> teamP = company.Positions ?? ([]);
+            List<EmployeeModel> teamE = company.Employees ?? ([]);
 
-            List<EmployeePositionModel> managersP = teamP.Where(e => e.namePosition == "Проект-менеджер").ToList();
-            List<EmployeeModel> managersE = teamE.Where(e => e.position != null && e.position.namePosition == "Проект-менеджер").ToList();
+            List<EmployeePositionModel> managersP = teamP.Where(e => e.NamePosition == "Проект-менеджер").ToList();
+            List<EmployeeModel> managersE = teamE.Where(e => e.position != null && e.position.NamePosition == "Проект-менеджер").ToList();
 
-            List<EmployeePositionModel> developersP = teamP.Where(e => e.namePosition == "Розробник").ToList();
-            List<EmployeeModel> developersE = teamE.Where(e => e.position!= null && e.position.namePosition == "Розробник").ToList();
+            List<EmployeePositionModel> developersP = teamP.Where(e => e.NamePosition == "Розробник").ToList();
+            List<EmployeeModel> developersE = teamE.Where(e => e.position!= null && e.position.NamePosition == "Розробник").ToList();
 
-            List<EmployeePositionModel> designersP = teamP.Where(e => e.namePosition == "Графічний дизайнер").ToList();
-            List<EmployeeModel> designersE = teamE.Where(e => e.position != null && e.position.namePosition == "Графічний дизайнер").ToList();
+            List<EmployeePositionModel> designersP = teamP.Where(e => e.NamePosition == "Графічний дизайнер").ToList();
+            List<EmployeeModel> designersE = teamE.Where(e => e.position != null && e.position.NamePosition == "Графічний дизайнер").ToList();
 
-            List<EmployeePositionModel> testersP = teamP.Where(e => e.namePosition == "Тестувальник").ToList();
-            List<EmployeeModel> testersE = teamE.Where(e => e.position != null &&  e.position.namePosition == "Тестувальник").ToList();
+            List<EmployeePositionModel> testersP = teamP.Where(e => e.NamePosition == "Тестувальник").ToList();
+            List<EmployeeModel> testersE = teamE.Where(e => e.position != null &&  e.position.NamePosition == "Тестувальник").ToList();
 
             int numberPosOfManagers = managersP.Count;
             int numberPosOfDevelopers = developersP.Count / numberPosOfManagers;
@@ -45,33 +45,38 @@ namespace ReportingSystem.Data.Generate
 
             for (int m = 0; m < numberPosOfManagers; m++)
             {
-                Random random = new Random();
-                Faker faker = new Faker();
-                ProjectModel project = new ProjectModel();
-                project.companyId = company.Id;
-                project.id = Guid.NewGuid();
-                project.head = managersE[m];
-                project.name = faker.Commerce.ProductMaterial();
-                project.description = faker.Commerce.ProductDescription();
-                project.startDate = DateTime.Now.AddDays(random.Next(-180, -5));
-                project.planDate = DateTime.Now.AddDays(random.Next(20, 35));
-                project.endDate = DateTime.Now.AddDays(random.Next(30, 35));
-                project.positions = new List<EmployeePositionModel>();
+                Random random = new();
+                Faker faker = new();
+                ProjectModel project = new()
+                {
+                    companyId = company.Id,
+                    id = Guid.NewGuid(),
+                    head = managersE[m],
+                    name = faker.Commerce.ProductMaterial(),
+                    description = faker.Commerce.ProductDescription(),
+                    startDate = DateTime.Now.AddDays(random.Next(-180, -5)),
+                    planDate = DateTime.Now.AddDays(random.Next(20, 35)),
+                    endDate = DateTime.Now.AddDays(random.Next(30, 35)),
+                    positions = []
+                };
                 project.positions.Add(managersP[m]);
-                project.members = new List<EmployeeModel>();
-                project.members.Add(managersE[m]);
-                ProjectStatus[] values = { ProjectStatus.Project, ProjectStatus.InProcess, ProjectStatus.Support, ProjectStatus.InImprove, ProjectStatus.Archive };
-                project.status = new ProjectStatusModel();
-                project.status.type = values[random.Next(values.Length)];
+                project.members = [managersE[m]];
+                ProjectStatus[] values = [ProjectStatus.Project, ProjectStatus.InProcess, ProjectStatus.Support, ProjectStatus.InImprove, ProjectStatus.Archive];
+                project.status = new ProjectStatusModel
+                {
+                    type = values[random.Next(values.Length)]
+                };
                 project.status.name = project.status.type.GetDisplayName();
 
                 if (company.Categories != null)
                 {
-                    project.category = new ProjectChCategoryModel();
-                    project.category.level0CatId = company.Categories[0].id;
-                    project.category.level0CatName = company.Categories[0].name;
-                    project.category.level1CatId = company.Categories[0].categoriesLevel1[0].id;
-                    project.category.level1CatName = company.Categories[0].categoriesLevel1[0].name;
+                    project.category = new ProjectChCategoryModel
+                    {
+                        level0CatId = company.Categories[0].id,
+                        level0CatName = company.Categories[0].name,
+                        level1CatId = company.Categories[0].categoriesLevel1[0].id,
+                        level1CatName = company.Categories[0].categoriesLevel1[0].name
+                    };
                 }
 
                 for (int d = 0; d < numberPosOfDevelopers; d++)
@@ -90,25 +95,29 @@ namespace ReportingSystem.Data.Generate
                     project.members.Add(testersE[t]);
                 }
 
-                project.steps = new List<ProjectStepModel>();
-                ProjectStepModel stepModel = new ProjectStepModel();
-                stepModel.name = "Step 1";
-                stepModel.description = "Description 1";
-                stepModel.positions = project.positions;
-                stepModel.members = project.members;
-                stepModel.status = project.status;
-                stepModel.startDate = project.startDate;
-                stepModel.endDate = project.endDate;
+                project.steps = [];
+                ProjectStepModel stepModel = new()
+                {
+                    name = "Step 1",
+                    description = "Description 1",
+                    positions = project.positions,
+                    members = project.members,
+                    status = project.status,
+                    startDate = project.startDate,
+                    endDate = project.endDate
+                };
                 project.steps.Add(stepModel);
-                
-                stepModel = new ProjectStepModel();
-                stepModel.name = "Step 2";
-                stepModel.description = "Description 1";
-                stepModel.positions = project.positions;
-                stepModel.members = project.members;
-                stepModel.status = project.status;
-                stepModel.startDate = project.startDate;
-                stepModel.endDate = project.endDate;
+
+                stepModel = new ProjectStepModel
+                {
+                    name = "Step 2",
+                    description = "Description 1",
+                    positions = project.positions,
+                    members = project.members,
+                    status = project.status,
+                    startDate = project.startDate,
+                    endDate = project.endDate
+                };
                 project.steps.Add(stepModel);
 
                 projects.Add(project);

@@ -60,7 +60,7 @@ namespace ReportingSystem.Data.SQL
                 CustomerId = customerId,
                 CompanyId = companyId,
                 Type = type,
-                Name = position.namePosition
+                Name = position.NamePosition
             };
 
             await _database.ExecuteAsync(query, parameters);
@@ -136,7 +136,7 @@ namespace ReportingSystem.Data.SQL
 
                 var paraPosition = new
                 {
-                    Name = employee.position.namePosition,
+                    Name = employee.position.NamePosition,
                 };
                 var statusPosition = "SELECT [id]" +
                               "FROM [ReportingSystem].[dbo].[EmployeePosition]" +
@@ -324,7 +324,7 @@ namespace ReportingSystem.Data.SQL
                 int type = -1;
                 if (customer != null && customer.StatusLicence != null)
                 {
-                    type = (int)customer.StatusLicence.licenceType;
+                    type = (int)customer.StatusLicence.LicenceType;
                 }
 
                 var parametersStatus = new

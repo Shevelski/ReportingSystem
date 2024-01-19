@@ -2,7 +2,7 @@
 {
     public class EmployeePositionModel
     {
-        public string? namePosition { get; set; }
+        public string? NamePosition { get; set; }
         //public EmployeeModel? employees { get; set; }
     }
 }

@@ -79,8 +79,8 @@ namespace ReportingSystem.Services
         {
             if (Guid.TryParse(id, out Guid guid) && companiesData.TryGetValue(guid, out var companyDetails))
             {
-                companiesData.Remove(guid);//??
-                DatabaseMoq.UpdateJson();//??
+                companiesData.Remove(guid);
+                //DatabaseMoq.UpdateJson();
                 return companyDetails;
             }
             return null;
@@ -88,12 +88,10 @@ namespace ReportingSystem.Services
 
         //створення компанії
 
-        public async Task<CompanyModel?> CreateCompany(string[] ar)
+        public async Task CreateCompany(string[] ar)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result1 = await new JsonWrite().CreateCompany(ar);
-            var result2 = await new SQLWrite().CreateCompany(ar);
-            return mode ? result1 : result2;
+            await new JsonWrite().CreateCompany(ar);
+            await new SQLWrite().CreateCompany(ar);
         }
     }
 }

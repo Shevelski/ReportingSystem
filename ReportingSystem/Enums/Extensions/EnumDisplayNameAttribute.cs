@@ -1,12 +1,7 @@
 ﻿namespace ReportingSystem.Enums.Extensions
 {
-    public class EnumDisplayNameAttribute : Attribute
+    public class EnumDisplayNameAttribute(string displayName) : Attribute
     {
-        public string DisplayName { get; }
-
-        public EnumDisplayNameAttribute(string displayName)
-        {
-            DisplayName = displayName;
-        }
+        public string DisplayName { get; } = displayName;
     }
 }

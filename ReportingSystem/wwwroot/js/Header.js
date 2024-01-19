@@ -42,6 +42,23 @@ new Vue({
     },
   
     async getEmployee() {
+        var arq = [this.customerId, this.companyId, this.employeeId]; 
+        //let response = await axios.get("/Employees/GetEmployee", {
+        //    params: {
+        //        //idCu: this.customerId,
+        //        //idCo: this.companyId,
+        //        //idEm: this.employeeId
+        //        ar: ar
+        //    }
+        //});
+
+        //let response = await axios.get("/Companies/GetRolls", {
+        //    params: {
+        //        idCu: this.selectedCustomerId,
+        //        idCo: this.selectedCompanyId
+        //    }
+        //});
+
         let response = await axios.get("/Employees/GetEmployee", {
             params: {
                 idCu: this.customerId,

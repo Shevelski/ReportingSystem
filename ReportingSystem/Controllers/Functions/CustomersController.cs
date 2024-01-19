@@ -14,24 +14,24 @@ namespace ReportingSystem.Controllers.Functions
         //отримати замовників
         public async Task<IActionResult> GetCustomers()
         {
-            using (_customersService as IDisposable)
-            {
+            //using (_customersService as IDisposable)
+            //{
                 await Task.Delay(10);
                 var result = await _customersService.GetCustomers();
                 return Json(result);
-            }
+            //}
         }
 
         [HttpGet]
-        //отримати замовників
+        //отримати замовника
         public async Task<IActionResult> GetCustomer(string idCu)
         {
-            using (_customersService as IDisposable)
-            {
+            //using (_customersService as IDisposable)
+            //{
                 await Task.Delay(10);
                 var result = _customersService.GetCustomer(idCu);
                 return Json(result);
-            }
+            //}
         }
 
         [HttpPost]
@@ -46,43 +46,35 @@ namespace ReportingSystem.Controllers.Functions
         //продовження ліцензії замовника
         public async Task RenewalLicence([FromBody] string[] ar)
         {
-            //var result = 
-                await _customersService.RenewalLicense(ar);
-            //return result != null ? Ok(result) : NotFound();
+            await _customersService.RenewalLicense(ar);
         }
 
         [HttpPost]
         //ліцензія замовника - статус архів
-        public async Task<IActionResult> ArchivingLicence([FromBody] string[] ar)
+        public async Task ArchivingLicence([FromBody] string[] ar)
         {
-            var result = await _customersService.ArchivingLicence(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _customersService.ArchivingLicence(ar);
         }
 
         [HttpPost]
         //видалення замовника
-        public async Task<IActionResult> DeleteLicence([FromBody] string[] ar)
+        public async Task DeleteLicence([FromBody] string[] ar)
         {
-            var result = await _customersService.DeleteLicence(ar);
-            return Ok(result);
-
+            await _customersService.DeleteLicence(ar);
         }
 
         [HttpPost]
         //анулювання ліцензії замовника
-        public async Task<IActionResult> CancellationLicence([FromBody] string[] ar)
+        public async Task CancellationLicence([FromBody] string[] ar)
         {
-            var result = await _customersService.CancellationLicence(ar);
-            return result != null ? Ok(result) : NotFound();
+            await _customersService.CancellationLicence(ar);
         }
 
         [HttpPost]
         //анулювання ліцензії замовника
-        public async Task<IActionResult> EditCustomer([FromBody] string[] ar)
+        public async Task EditCustomer([FromBody] string[] ar)
         {
-            var result = await _customersService.EditCustomer(ar);
-            return result != null ? Ok(result) : NotFound();
+            await _customersService.EditCustomer(ar);
         }
 
     }

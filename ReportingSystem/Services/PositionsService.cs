@@ -67,7 +67,7 @@ namespace ReportingSystem.Services
                 {
                     
                     EmployeePositionEmpModel employeePositionEmpModel = new EmployeePositionEmpModel();
-                    employeePositionEmpModel.namePosition = item.namePosition;
+                    employeePositionEmpModel.namePosition = item.NamePosition;
                     employeePositionEmpModel.employee = company.Employees[i];
                     positions.Add(employeePositionEmpModel);
                     i++;
@@ -105,8 +105,8 @@ namespace ReportingSystem.Services
                 if (company != null && company.Positions != null)
                 {
                     var uniquePositions = company.Positions
-                        .Where(position => !string.IsNullOrEmpty(position.namePosition))
-                        .GroupBy(position => position.namePosition)
+                        .Where(position => !string.IsNullOrEmpty(position.NamePosition))
+                        .GroupBy(position => position.NamePosition)
                         .Select(group => group.First())
                         .ToList();
 
@@ -146,7 +146,7 @@ namespace ReportingSystem.Services
                 {
                     var employees = company.Employees;
                     employeesByPosition = employees
-                        .Where(employee => employee.position != null && !string.IsNullOrEmpty(employee.position.namePosition) && employee.position.namePosition.Equals(pos))
+                        .Where(employee => employee.position != null && !string.IsNullOrEmpty(employee.position.NamePosition) && employee.position.NamePosition.Equals(pos))
                         .ToList();
 
                     if (employeesByPosition.Any())
@@ -185,7 +185,7 @@ namespace ReportingSystem.Services
                 {
                     EmployeePositionModel newEmployeePosition = new EmployeePositionModel()
                     {
-                        namePosition = ar[2]
+                        NamePosition = ar[2]
                     };
                     company.Positions.Add(newEmployeePosition);
                     DatabaseMoq.UpdateJson();
@@ -222,25 +222,25 @@ namespace ReportingSystem.Services
                     string oldPositionName = ar[2];
                     string newPositionName = ar[3];
 
-                    EmployeePositionModel? position = company.Positions.FirstOrDefault(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
+                    EmployeePositionModel? position = company.Positions.FirstOrDefault(pos => pos.NamePosition != null && pos.NamePosition.Equals(oldPositionName));
 
                     if (position != null)
                     {
-                        position.namePosition = newPositionName;
+                        position.NamePosition = newPositionName;
 
                         if (company.Employees != null)
                         {
-                            foreach (var emp in company.Employees.Where(emp => emp.position != null && emp.position.namePosition != null && emp.position.namePosition.Equals(oldPositionName)))
+                            foreach (var emp in company.Employees.Where(emp => emp.position != null && emp.position.NamePosition != null && emp.position.NamePosition.Equals(oldPositionName)))
                             {
                                 if (emp.position != null)
                                 {
-                                    emp.position.namePosition = newPositionName;
+                                    emp.position.NamePosition = newPositionName;
                                 }
                                 
                             }
                         }
 
-                        company.Positions.RemoveAll(pos => pos.namePosition != null && pos.namePosition.Equals(oldPositionName));
+                        company.Positions.RemoveAll(pos => pos.NamePosition != null && pos.NamePosition.Equals(oldPositionName));
                         DatabaseMoq.UpdateJson();
                     }
                 }
@@ -274,7 +274,7 @@ namespace ReportingSystem.Services
                 if (company != null && company.Positions != null)
                 {
                     string positionNameToDelete = ar[2];
-                    company.Positions.RemoveAll(pos => pos.namePosition != null && pos.namePosition.Equals(positionNameToDelete));
+                    company.Positions.RemoveAll(pos => pos.NamePosition != null && pos.NamePosition.Equals(positionNameToDelete));
                     DatabaseMoq.UpdateJson();
                 }
             }
@@ -312,7 +312,7 @@ namespace ReportingSystem.Services
 
                         if (employee != null && employee.position != null)
                         {
-                            employee.position.namePosition = ar[3];
+                            employee.position.NamePosition = ar[3];
                             DatabaseMoq.UpdateJson();
                             return employee;
                         }

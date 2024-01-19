@@ -8,12 +8,12 @@ namespace ReportingSystem.Data.Generate
     {
         public List<EmployeePositionModel> Positions()
         {
-            List<EmployeePositionModel> UserPositions = new List<EmployeePositionModel>();
+            List<EmployeePositionModel> UserPositions = [];
 
-            Random random = new Random();
+            Random random = new();
 
-            List<string> positions = new List<string>
-            {
+            List<string> positions =
+            [
                 "Директор",
                 "Адміністратор",
                 "Заступник директора",
@@ -24,18 +24,22 @@ namespace ReportingSystem.Data.Generate
                 "Розробник",
                 "Тестувальник",
                 "Графічний дизайнер"
-            };
+            ];
 
             int countPositions = 0;
             //директор
-            EmployeePositionModel userPosition = new EmployeePositionModel();
-            userPosition.namePosition = positions[0];
+            EmployeePositionModel userPosition = new()
+            {
+                NamePosition = positions[0]
+            };
             UserPositions.Add(userPosition);
             countPositions++;
 
             //адміністратор
-            userPosition = new EmployeePositionModel();
-            userPosition.namePosition = positions[1];
+            userPosition = new EmployeePositionModel
+            {
+                NamePosition = positions[1]
+            };
             UserPositions.Add(userPosition);
             countPositions++;
 
@@ -45,17 +49,25 @@ namespace ReportingSystem.Data.Generate
 
             for (int i = 0; i < rnd; i++)
             {
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[2];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[2]
+                };
                 UserPositions.Add(userPosition);
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[3];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[3]
+                };
                 UserPositions.Add(userPosition);
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[4];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[4]
+                };
                 UserPositions.Add(userPosition);
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[5];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[5]
+                };
                 UserPositions.Add(userPosition);
             }
             countPositions += rnd;
@@ -64,8 +76,10 @@ namespace ReportingSystem.Data.Generate
             int countPos = countManager;
             for (int i = 0; i < countPos; i++)
             {
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[6];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[6]
+                };
                 UserPositions.Add(userPosition);
             }
             countPositions += countPos;
@@ -75,8 +89,10 @@ namespace ReportingSystem.Data.Generate
             countPos = countManager * rnd1;
             for (int i = 0; i < countPos; i++)
             {
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[7];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[7]
+                };
                 UserPositions.Add(userPosition);
             }
 
@@ -86,8 +102,10 @@ namespace ReportingSystem.Data.Generate
             countPos = countManager * rnd1;
             for (int i = 0; i < countPos; i++)
             {
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[8];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[8]
+                };
                 UserPositions.Add(userPosition);
             }
             countPositions += countPos;
@@ -97,8 +115,10 @@ namespace ReportingSystem.Data.Generate
             countPos = countManager * rnd1;
             for (int i = 0; i < countPos; i++)
             {
-                userPosition = new EmployeePositionModel();
-                userPosition.namePosition = positions[9];
+                userPosition = new EmployeePositionModel
+                {
+                    NamePosition = positions[9]
+                };
                 UserPositions.Add(userPosition);
             }
             countPositions += countPos;

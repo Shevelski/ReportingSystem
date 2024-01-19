@@ -24,23 +24,23 @@ namespace ReportingSystem.Data.Generate
                 "Графічний дизайнер"
             };
 
-            if (position.namePosition == positions[0] || position.namePosition == positions[2])
+            if (position.NamePosition == positions[0] || position.NamePosition == positions[2])
             {
                 rol.rolType = EmployeeRolStatus.CEO;
                 rol.rolName = EmployeeRolStatus.CEO.GetDisplayName();
                 return rol;
             }
-            if (position.namePosition == positions[1])
+            if (position.NamePosition == positions[1])
             {
                 rol.rolType = EmployeeRolStatus.Administrator;
                 rol.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
             }
-            if (position.namePosition == positions[3] || position.namePosition == positions[4] || position.namePosition == positions[5] || position.namePosition == positions[6])
+            if (position.NamePosition == positions[3] || position.NamePosition == positions[4] || position.NamePosition == positions[5] || position.NamePosition == positions[6])
             {
                 rol.rolType = EmployeeRolStatus.ProjectManager;
                 rol.rolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
             }
-            if (position.namePosition == positions[7] || position.namePosition == positions[8] || position.namePosition == positions[9])
+            if (position.NamePosition == positions[7] || position.NamePosition == positions[8] || position.NamePosition == positions[9])
             {
                 rol.rolType = EmployeeRolStatus.User;
                 rol.rolName = EmployeeRolStatus.User.GetDisplayName();

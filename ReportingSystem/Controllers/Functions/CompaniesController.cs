@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReportingSystem.Models.Company;
 using ReportingSystem.Services;
 
 namespace ReportingSystem.Controllers.Functions
@@ -71,6 +72,8 @@ namespace ReportingSystem.Controllers.Functions
             _companiesService.PostCheckCompany(ar);
         }
 
+        private static Dictionary<Guid, CompanyModel> companiesData = [];
+
         [HttpGet]
         //перевірка єдрпу компанії при створенні
         public async Task<IActionResult> GetCheckCompany(string id)
@@ -82,10 +85,9 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpPost]
         //створення компанії
-        public async Task<IActionResult> CreateCompany([FromBody] string[] ar)
+        public async Task CreateCompany([FromBody] string[] ar)
         {
-            var result = await _companiesService.CreateCompany(ar);
-            return Json(result);
+            await _companiesService.CreateCompany(ar);
         }
     }
 }

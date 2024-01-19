@@ -9,8 +9,8 @@ namespace ReportingSystem.Utils
     {
         static public CompanyModel ByCode(string searchString)
         {
-            CompanyModel company = new CompanyModel();
-            StringBuilder searchUrl = new StringBuilder();
+            CompanyModel company = new();
+            StringBuilder searchUrl = new();
 
             bool containsOnlyDigits = searchString.All(char.IsDigit);
             if (containsOnlyDigits)
@@ -18,7 +18,7 @@ namespace ReportingSystem.Utils
                 searchUrl.Append($"https://youcontrol.com.ua/catalog/company_details/{searchString}/");
                 
                 
-                HtmlWeb web = new HtmlWeb();
+                HtmlWeb web = new();
                 HtmlDocument document = web.Load(searchUrl.ToString());
 
 
@@ -76,39 +76,39 @@ namespace ReportingSystem.Utils
                 }
 
                 //address
-                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[12]/div[2]/table/tbody/tr[1]/td[2]");
+                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/table/tbody/tr[1]/td[2]");
                 if (spanElement != null)
                 {
                     company.Address = spanElement.InnerText.ToString().Trim();
                 }
 
                 //email
-                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[12]/div[2]/table/tbody/tr[2]/td[2]/text()");
+                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/table/tbody/tr[2]/td[2]/text()");
                 if (spanElement != null)
                 {
                     company.Email = spanElement.InnerText.ToString().Trim();
                 }
                 
                 //phone
-                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[12]/div[2]/table/tbody/tr[3]/td[2]/a");
+                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/table/tbody/tr[3]/td[2]/a");
                 if (spanElement != null)
                 {
                     company.Phone = spanElement.InnerText.ToString().Trim();
                 }
 
                 //main action
-                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/span");
+                spanElement = document.DocumentNode.SelectSingleNode("//*[@id='catalog-company-file']/div[2]/div[10]/div[2]/div[2]/span");
                 if (spanElement != null)
                 {
                     company.Actions = spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039;", "\'");
                 }
 
                 //other action
-                List<string> actionsOther = new List<string>();
+                List<string> actionsOther = [];
                 int i = 1;
                 while (true)
                 {
-                    spanElement = document.DocumentNode.SelectSingleNode($"//*[@id='catalog-company-file']/div[2]/div[11]/div[2]/ul/li[{i}]");
+                    spanElement = document.DocumentNode.SelectSingleNode($"//*[@id='catalog-company-file']/div[2]/div[10]/div[2]/ul/li[{i}]");
                     if (spanElement != null)
                     {
                         company.Actions += "\n" + (spanElement.InnerText.ToString().Replace("&quot;", "\"").Replace("&#039;", "\'"));

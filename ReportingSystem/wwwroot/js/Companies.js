@@ -28,6 +28,8 @@
         editCompanyActions: '',
         editCompanyPhone: '',
         editCompanyEmail: '',
+        editStatusWeb: '',
+        StatutCapital: '',
         newCompany: [0],
         companies: [0],
     },
@@ -232,13 +234,15 @@
             const v4 = this.editCompanyPhone;
             const v5 = this.editCompanyEmail;
             const v6 = this.selectedCustomerId;
+            const v7 = this.editStatusWeb;
+            const v8 = this.StatutCapital;
 
-            var ar = [v0, v1, v2, v3, v4, v5, v6];
+            var ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8];
             console.log('create');
             try {
                 await axios.post('/Companies/CreateCompany', ar);
             } catch (error) {
-                console.error('Помилка під час виклику методу DeleteCompany:', error);
+                console.error('Помилка під час виклику методу CreateCompany:', error);
             }
             this.Init();
             this.closeAllAccordions();

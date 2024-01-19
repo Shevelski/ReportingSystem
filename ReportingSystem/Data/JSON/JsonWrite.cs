@@ -6,7 +6,6 @@ using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
-using System.Configuration;
 
 namespace ReportingSystem.Data.JSON
 {
@@ -18,6 +17,545 @@ namespace ReportingSystem.Data.JSON
             public List<EmployeeModel>? Administrators { get; set; }
             public ConfigurationModel? Configuration { get; set; }
         }
+
+        public async Task DeleteAdministrator(string id)
+        {
+            var administrators = await new JsonRead().LoadAdministratorsFromJson();
+
+            if (administrators == null || !Guid.TryParse(id, out Guid employeeId))
+            {
+                return;
+            }
+
+            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                administrators.Remove(employee);
+                UpdateJsonAdministrators(administrators);
+            }
+        }
+
+        public async Task DeleteEmployee(string[] ar)
+        {
+            var customers = await new JsonRead().LoadCustomersFromJson();
+
+            if (customers == null || !Guid.TryParse(ar[0], out Guid customerId))
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
+
+            if (customer == null || customer.Companies == null || !Guid.TryParse(ar[1], out Guid companyId))
+            {
+                return;
+            }
+
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
+
+            if (company == null || company.Employees == null || !Guid.TryParse(ar[2], out Guid employeeId))
+            {
+                return;
+            }
+
+            var employees = company.Employees;
+            var employee = employees.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employees.Remove(employee);
+                UpdateJsonCustomers(customers);
+            }
+        }
+
+        public async Task FromArchiveAdministrator(string id)
+        {
+            var administrators = await new JsonRead().LoadAdministratorsFromJson();
+
+            if (administrators == null || !Guid.TryParse(id, out Guid employeeId))
+            {
+                return;
+            }
+
+            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Actual,
+                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                };
+                UpdateJsonAdministrators(administrators);
+            }
+        }
+
+        public async Task FromArchiveEmployee(string[] ar)
+        {
+            var customers = await new JsonRead().LoadCustomersFromJson();
+
+            if (customers == null || !Guid.TryParse(ar[0], out Guid customerId))
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
+
+            if (customer == null || customer.Companies == null || !Guid.TryParse(ar[1], out Guid companyId))
+            {
+                return;
+            }
+
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
+
+            if (company == null || company.Employees == null || !Guid.TryParse(ar[3], out Guid employeeId))
+            {
+                return;
+            }
+
+            var employee = company.Employees.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = Enums.EmployeeStatus.Actual,
+                    employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
+                };
+                UpdateJsonCustomers(customers);
+            }
+        }
+
+        public async Task CreateAdministrator(string[] ar)
+        {
+            var administrators = await new JsonRead().LoadAdministratorsFromJson();
+
+            if (administrators == null)
+            {
+                return;
+            }
+
+            if (!Enum.TryParse(ar[6], out EmployeeRolStatus rolType))
+            {
+                rolType = EmployeeRolStatus.DevAdministrator;
+            }
+
+            var employee = new EmployeeModel
+            {
+                id = Guid.NewGuid(),
+                customerId = Guid.Empty,
+                companyId = Guid.Empty,
+                firstName = ar[0],
+                secondName = ar[1],
+                thirdName = ar[2],
+                birthDate = DateTime.Parse(ar[3]),
+                login = ar[4],
+                rol = new Models.EmployeeRolModel
+                {
+                    rolName = ar[5],
+                    rolType = rolType,
+                },
+                password = ar[7],
+                phoneWork = ar[8],
+                emailWork = ar[9],
+                status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Actual,
+                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                },
+            };
+
+            administrators.Add(employee);
+            UpdateJsonAdministrators(administrators);
+        }
+
+        public async Task CreateEmployee(string[] ar)
+        {
+            var customers = await new JsonRead().LoadCustomersFromJson();
+
+            if (customers == null || ar.Length != 21 || !Guid.TryParse(ar[0], out Guid customerId) || !Guid.TryParse(ar[1], out Guid companyId))
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return;
+            }
+
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
+
+            if (company == null || company.Employees == null)
+            {
+                return;
+            }
+
+            if (!Enum.TryParse(ar[10], out EmployeeRolStatus rolType))
+            {
+                rolType = EmployeeRolStatus.User;
+            }
+
+            var employee = new EmployeeModel
+            {
+                id = Guid.NewGuid(),
+                customerId = customerId,
+                companyId = companyId,
+                firstName = ar[2],
+                secondName = ar[3],
+                thirdName = ar[4],
+                birthDate = DateTime.Parse(ar[5]),
+                workStartDate = DateTime.Parse(ar[6]),
+                position = new EmployeePositionModel
+                {
+                    NamePosition = ar[7]
+                },
+                login = ar[8],
+                rol = new Models.EmployeeRolModel
+                {
+                    rolName = ar[9],
+                    rolType = rolType,
+                },
+                password = ar[11],
+                phoneWork = ar[12],
+                phoneSelf = ar[13],
+                emailWork = ar[14],
+                emailSelf = ar[15],
+                addressReg = ar[16],
+                addressFact = ar[17],
+                salary = double.TryParse(ar[18], out double parsedSalary) ? parsedSalary : 0.0,
+                taxNumber = ar[19],
+                addSalary = double.TryParse(ar[20], out double parsedAddSalary) ? parsedAddSalary : 0.0,
+                status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Actual,
+                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                },
+            };
+
+            company.Employees.Add(employee);
+            UpdateJsonCustomers(customers);
+        }
+
+
+        public async Task ArchiveEmployee(string[] ar)
+        {
+            List<CustomerModel>? customers = await new JsonRead().LoadCustomersFromJson();
+
+            if (customers == null || !Guid.TryParse(ar[0], out Guid customerId))
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(customerId));
+
+            if (customer == null || customer.Companies == null || !Guid.TryParse(ar[1], out Guid companyId))
+            {
+                return;
+            }
+
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
+
+            if (company == null || company.Employees == null || !Guid.TryParse(ar[2], out Guid employeeId))
+            {
+                return;
+            }
+
+            var employee = company.Employees.FirstOrDefault(em => em.id.Equals(employeeId));
+
+            if (employee != null)
+            {
+                employee.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Archive,
+                    employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
+                };
+                UpdateJsonCustomers(customers);
+            }
+        }
+
+        public async Task ArchiveAdministrator(string[] ar)
+        {
+            List<EmployeeModel>? administrators = await new JsonRead().LoadAdministratorsFromJson();
+
+            if (administrators == null || !Guid.TryParse(ar[0], out Guid administratorId))
+            {
+                return;
+            }
+
+            var administrator = administrators.FirstOrDefault(ad => ad.id.Equals(administratorId));
+
+            if (administrator != null)
+            {
+                administrator.status = new EmployeeStatusModel
+                {
+                    employeeStatusType = EmployeeStatus.Archive,
+                    employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
+                };
+                UpdateJsonAdministrators(administrators);
+            }
+        }
+
+
+
+        public async Task EditEmployee(Object employeeInput)
+        {
+            if (employeeInput == null)
+            {
+                return;
+            }
+
+            var obj = employeeInput.ToString();
+            if (!string.IsNullOrEmpty(obj))
+            {
+                var editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
+                if (editedEmployee == null)
+                {
+                    return;
+                }
+
+                List<CustomerModel>? customers = await new JsonRead().LoadCustomersFromJson();
+
+                if (customers == null || !Guid.TryParse(editedEmployee.customerId.ToString(), out Guid customerId))
+                {
+                    return;
+                }
+
+                var customer = customers.FirstOrDefault(c => c.Id.Equals(customerId));
+
+                if (customer == null || customer.Companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
+                {
+                    return;
+                }
+
+                var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(companyId));
+
+                if (company == null || company.Employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
+                {
+                    return;
+                }
+
+                var employee = company.Employees.FirstOrDefault(e => e.id.Equals(employeeId));
+
+                if (employee != null)
+                {
+                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
+                    {
+                        var editedValue = propertyInfo.GetValue(editedEmployee);
+                        if (editedValue != null)
+                        {
+                            var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
+                            employeeProperty?.SetValue(employee, editedValue);
+                        }
+                    }
+                    UpdateJsonCustomers(customers);
+                    return;
+                }
+            }
+            return;
+        }
+
+        
+        public async Task EditAdministrator(Object employeeInput)
+        {
+            if (employeeInput == null)
+            {
+                return;
+            }
+
+            var obj = employeeInput.ToString();
+            if (!string.IsNullOrEmpty(obj))
+            {
+                var editedEmployee = JsonConvert.DeserializeObject<EmployeeModel>(obj);
+                if (editedEmployee == null)
+                {
+                    return;
+                }
+
+                List<EmployeeModel>? administrators = await new JsonRead().LoadAdministratorsFromJson();
+
+                if (administrators == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid id))
+                {
+                    return;
+                }
+
+                var administrator = administrators.FirstOrDefault(c => c.id.Equals(id));
+
+                if (administrator != null)
+                {
+                    foreach (var propertyInfo in typeof(EmployeeModel).GetProperties())
+                    {
+                        var editedValue = propertyInfo.GetValue(editedEmployee);
+                        if (editedValue != null)
+                        {
+                            var employeeProperty = typeof(EmployeeModel).GetProperty(propertyInfo.Name);
+                            employeeProperty?.SetValue(administrator, editedValue);
+                        }
+                    }
+                    UpdateJsonAdministrators(administrators);
+                    return;
+                }
+            }
+            return;
+        }
+
+        public async Task EditCustomer(string[] ar)
+        {
+            var customers = await new JsonRead().GetCustomers();
+
+            if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || customers == null)
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(id));
+
+            if (customer == null || customer.StatusLicence == null)
+            {
+                return;
+            }
+
+            if (ar[1] != customer.FirstName)
+            {
+                customer.FirstName = ar[1];
+            }
+
+            if (ar[2] != customer.SecondName)
+            {
+                customer.SecondName = ar[2];
+            }
+
+            if (ar[3] != customer.ThirdName)
+            {
+                customer.ThirdName = ar[3];
+            }
+
+            if (ar[4] != customer.Phone)
+            {
+                customer.Phone = ar[4];
+            }
+
+            if (ar[5] != customer.Email)
+            {
+                customer.Email = ar[5];
+            }
+
+            if (ar[6] != customer.Password)
+            {
+                customer.Password = ar[6];
+            }
+            UpdateJsonCustomers(customers);
+        }
+
+
+        public async Task CancellationLicence(string[] ar)
+        {
+            var customers = await new JsonRead().GetCustomers();
+
+            if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || customers == null)
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(id));
+
+            if (customer == null || customer.StatusLicence == null)
+            {
+                return;
+            }
+
+            var history = new CustomerLicenseOperationModel
+            {
+                Id = Guid.NewGuid(),
+                IdCustomer = id,
+                DateChange = DateTime.Now,
+                OldStatus = customer.StatusLicence,
+                NewStatus = new CustomerLicenceStatusModel
+                {
+                    LicenceType = LicenceType.Nulled,
+                    LicenceName = LicenceType.Nulled.GetDisplayName()
+                },
+                Price = 0,
+                Period = "",
+                NameOperation = "Анулювання",
+            };
+
+            if (customer.HistoryOperations != null)
+            {
+                customer.HistoryOperations.Add(history);
+                UpdateJsonCustomers(customers);
+            }
+        }
+        public async Task DeleteLicence(string[] ar)
+        {
+            var customers = await new JsonRead().GetCustomers();
+
+            if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || customers == null)
+            {
+                return;
+            }
+
+            var customer = customers.FirstOrDefault(c => c.Id.Equals(id));
+
+            if (customer == null || customer.StatusLicence == null)
+            {
+                return;
+            }
+
+            customers.Remove(customer);
+            UpdateJsonCustomers(customers);
+        }
+
+        public async Task ArchivingLicence(string[] ar)
+        {
+            var customers = await new JsonRead().GetCustomers();
+
+            if (ar.Length < 1 || !Guid.TryParse(ar[0], out Guid id) || customers == null)
+            {
+                return;
+            }
+
+            var licence = customers.FirstOrDefault(c => c.Id.Equals(id));
+
+            if (licence == null || licence.StatusLicence == null)
+            {
+                return;
+            }
+
+            licence.StatusLicence = new CustomerLicenceStatusModel
+            {
+                LicenceType = LicenceType.Archive,
+                LicenceName = LicenceType.Archive.GetDisplayName()
+            };
+
+            var history = new CustomerLicenseOperationModel
+            {
+                Id = Guid.NewGuid(),
+                IdCustomer = id,
+                DateChange = DateTime.Now,
+                OldStatus = licence.StatusLicence,
+                NewStatus = new CustomerLicenceStatusModel
+                {
+                    LicenceType = LicenceType.Archive,
+                    LicenceName = LicenceType.Archive.GetDisplayName()
+                },
+                OldEndDateLicence = licence.EndTimeLicense,
+                NewEndDateLicence = licence.EndTimeLicense,
+                Price = 0,
+                Period = "-",
+                NameOperation = "Архівування"
+            };
+
+            if (licence.HistoryOperations != null && customers != null)
+            {
+                licence.HistoryOperations.Add(history);
+                UpdateJsonCustomers(customers);
+            }
+        }
+
+
 
 
         public async Task RenewalLicense(string[] ar)
@@ -43,34 +581,34 @@ namespace ReportingSystem.Data.JSON
 
             var history = new CustomerLicenseOperationModel
             {
-                id = Guid.NewGuid(),
-                idCustomer = id,
-                dateChange = DateTime.Now,
-                oldStatus = customer.StatusLicence,
-                oldEndDateLicence = customer.EndTimeLicense
+                Id = Guid.NewGuid(),
+                IdCustomer = id,
+                DateChange = DateTime.Now,
+                OldStatus = customer.StatusLicence,
+                OldEndDateLicence = customer.EndTimeLicense
             };
 
             customer.StatusLicence = new CustomerLicenceStatusModel
             {
-                licenceType = LicenceType.Main,
-                licenceName = LicenceType.Main.GetDisplayName()
+                LicenceType = LicenceType.Main,
+                LicenceName = LicenceType.Main.GetDisplayName()
             };
 
             customer.EndTimeLicense = desiredDate;
-            history.newStatus = customer.StatusLicence;
-            history.newEndDateLicence = customer.EndTimeLicense;
+            history.NewStatus = customer.StatusLicence;
+            history.NewEndDateLicence = customer.EndTimeLicense;
 
             if (double.TryParse(ar[2].Trim(), out double parsedPrice))
             {
-                history.price = parsedPrice;
+                history.Price = parsedPrice;
             }
             else
             {
-                history.price = 0.0;
+                history.Price = 0.0;
             }
 
-            history.period = ar[3].Trim();
-            history.nameOperation = "Продовження";
+            history.Period = ar[3].Trim();
+            history.NameOperation = "Продовження";
 
             if (customer.HistoryOperations != null)
             {
@@ -99,8 +637,8 @@ namespace ReportingSystem.Data.JSON
                 Password = EncryptionHelper.Encrypt(ar[5]),/*new string(Enumerable.Repeat(chars, 8).Select(s => s[random.Next(s.Length)]).ToArray()),*/
                 StatusLicence = new CustomerLicenceStatusModel
                 {
-                    licenceType = LicenceType.Test,
-                    licenceName = LicenceType.Test.GetDisplayName()
+                    LicenceType = LicenceType.Test,
+                    LicenceName = LicenceType.Test.GetDisplayName()
                 },
                 Companies = [],
                 EndTimeLicense = DateTime.Today.AddDays(30),
@@ -109,12 +647,12 @@ namespace ReportingSystem.Data.JSON
 
             var history = new CustomerLicenseOperationModel
             {
-                id = Guid.NewGuid(),
-                idCustomer = customer.Id,
-                oldEndDateLicence = DateTime.Today,
-                newEndDateLicence = customer.EndTimeLicense,
-                oldStatus = new CustomerLicenceStatusModel(),
-                newStatus = customer.StatusLicence
+                Id = Guid.NewGuid(),
+                IdCustomer = customer.Id,
+                OldEndDateLicence = DateTime.Today,
+                NewEndDateLicence = customer.EndTimeLicense,
+                OldStatus = new CustomerLicenceStatusModel(),
+                NewStatus = customer.StatusLicence
             };
 
             customer.HistoryOperations.Add(history);
@@ -223,13 +761,13 @@ namespace ReportingSystem.Data.JSON
                 }
             }
         }
-        public async Task<CompanyModel?> CreateCompany(string[] ar)
+        public async Task CreateCompany(string[] ar)
         {
             List<CustomerModel>? customers = await new JsonRead().GetCustomers();
 
             if (ar.Length < 7 || !Guid.TryParse(ar[6], out Guid idCustomer))
             {
-                return null;
+                return;
             }
 
             var company = new CompanyModel
@@ -268,11 +806,8 @@ namespace ReportingSystem.Data.JSON
                     company.Chief = chief;
                     customer.Companies.Add(company);
                     UpdateJsonCustomers(customers);
-                    return company;
                 }
             }
-
-            return null;
         }
 
 
@@ -286,6 +821,7 @@ namespace ReportingSystem.Data.JSON
             string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(Context.Json, jsonData);
         }
+
         private static void UpdateJsonAdministrators(List<EmployeeModel> administrators)
         {
             var data = new DatabaseData

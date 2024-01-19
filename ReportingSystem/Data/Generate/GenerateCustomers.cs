@@ -62,8 +62,8 @@ namespace ReportingSystem.Data.Generate
             LicenceType[] values = [LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled];
             LicenceType status = values[random.Next(values.Length)];
 
-            result.licenceType = status;
-            result.licenceName = status.GetDisplayName();
+            result.LicenceType = status;
+            result.LicenceName = status.GetDisplayName();
 
             return result;
         }
@@ -75,23 +75,23 @@ namespace ReportingSystem.Data.Generate
             {
                 DateTime generateDate = DateTime.Now;
 
-                if (status.licenceType == LicenceType.Archive)
+                if (status.LicenceType == LicenceType.Archive)
                 {
                     generateDate = DateTime.Now.AddDays(random.Next(-200, -100));
                 };
-                if (status.licenceType == LicenceType.Main)
+                if (status.LicenceType == LicenceType.Main)
                 {
                     generateDate = DateTime.Now.AddDays(random.Next(100, 1000));
                 };
-                if (status.licenceType == LicenceType.Nulled)
+                if (status.LicenceType == LicenceType.Nulled)
                 {
                     generateDate = DateTime.Now.AddDays(-1000);
                 };
-                if (status.licenceType == LicenceType.Test)
+                if (status.LicenceType == LicenceType.Test)
                 {
                     generateDate = DateTime.Now.AddDays(30);
                 };
-                if (status.licenceType == LicenceType.Expired)
+                if (status.LicenceType == LicenceType.Expired)
                 {
                     generateDate = DateTime.Now.AddDays(random.Next(-30, -5));
                 };
@@ -105,8 +105,8 @@ namespace ReportingSystem.Data.Generate
                 LicenceType[] values = [LicenceType.Archive, LicenceType.Test, LicenceType.Main, LicenceType.Expired, LicenceType.Nulled];
                 LicenceType status = values[random.Next(values.Length)];
 
-                result.licenceType = status;
-                result.licenceName = status.GetDisplayName();
+                result.LicenceType = status;
+                result.LicenceName = status.GetDisplayName();
 
                 return result;
             }

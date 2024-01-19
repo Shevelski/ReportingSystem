@@ -6,7 +6,7 @@ namespace ReportingSystem.Data.SQL
 {
     public class CreateTables
     {
-        private async Task CreateTableAndInsertIfNotExistsAsync(string tableName, Func<Task> createTableAsync, Func<Task> insertDataAsync = null)
+        private async Task CreateTableAndInsertIfNotExistsAsync(string tableName, Func<Task> createTableAsync, Func<Task>? insertDataAsync = null)
         {
             if (!await new TablesIsExist().TableExistsAsync(tableName))
             {

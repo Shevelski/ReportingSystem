@@ -65,7 +65,7 @@ namespace ReportingSystem.Data.Generate
                 company.Rolls = DefaultEmployeeRolls.GetForEmployee();
 
                 company.Employees = new GenerateEmployees().Employees(company, customer.Id);
-                company.Chief = company.Employees.First(u => u.position != null && u.position.namePosition != null && u.position.namePosition.Equals("Директор"));
+                company.Chief = company.Employees.First(u => u.position != null && u.position.NamePosition != null && u.position.NamePosition.Equals("Директор"));
 
                 company.Categories = new GenerateCategories().Categories();
                 company.Projects = new GenerateProjects().RandomProjects(company);

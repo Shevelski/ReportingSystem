@@ -6,10 +6,12 @@
         databaseStatus: '',
         showButtons: false,
         percentOperation: 0,
+        isPageLoaded: false
     },
     mounted() {
         this.Init();
         this.setupSignalR();
+        this.isPageLoaded = true;
     },
     computed: {
     },

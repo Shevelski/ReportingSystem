@@ -5,15 +5,15 @@ namespace ReportingSystem.Models.Customer
 {
     public class CustomerLicenseOperationModel
     {
-        public Guid id { get; set; }
-        public Guid idCustomer { get; set; }
-        public DateTime dateChange { get; set; }
-        public DateTime oldEndDateLicence { get; set; }
-        public DateTime newEndDateLicence { get; set; }
-        public CustomerLicenceStatusModel? oldStatus { get; set; }
-        public CustomerLicenceStatusModel? newStatus { get; set; }
-        public Double price { get; set; }
-        public string? period { get; set; }
-        public string? nameOperation { get; set; }
+        public Guid Id { get; set; }
+        public Guid IdCustomer { get; set; }
+        public DateTime DateChange { get; set; }
+        public DateTime OldEndDateLicence { get; set; }
+        public DateTime NewEndDateLicence { get; set; }
+        public CustomerLicenceStatusModel? OldStatus { get; set; }
+        public CustomerLicenceStatusModel? NewStatus { get; set; }
+        public Double Price { get; set; }
+        public string? Period { get; set; }
+        public string? NameOperation { get; set; }
     }
 }
