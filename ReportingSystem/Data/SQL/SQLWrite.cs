@@ -655,6 +655,7 @@ namespace ReportingSystem.Data.SQL
             await database.QueryAsync(query, para);
         }
 
+
         public async Task DeleteEmployeePosition(Guid idCo, Guid idCu)
         {   
             var query = "DELETE FROM [dbo].[EmployeePosition] WHERE CompanyId = @CompanyId AND CustomerId = @CustomerId ";
@@ -738,7 +739,7 @@ namespace ReportingSystem.Data.SQL
             await DeleteEmployees(idCo, idCu);
 
 
-            var query = "DELETE FROM [dbo].[Companies] WHERE CompanyId = @CompanyId AND CustomerId = @CustomerId ";
+            var query = "DELETE FROM [dbo].[Companies] WHERE Id = @CompanyId AND CustomerId = @CustomerId ";
             var para = new
             {
                 CompanyId = idCo,
@@ -746,6 +747,7 @@ namespace ReportingSystem.Data.SQL
             };
             using var database = Context.ConnectToSQL;
             await database.QueryAsync(query, para);
+
         }
 
         public async Task DeleteCompanies(Guid idCu)
@@ -765,28 +767,23 @@ namespace ReportingSystem.Data.SQL
             await database.QueryAsync(query, para);
         }
 
-        //public async Task DeleteEmployee(string[] ar)
-        //{
-        //    if (!Guid.TryParse(ar[0], out Guid idCu) || !Guid.TryParse(ar[1], out Guid idCo))
-        //    {
-        //        return;
-        //    }
+        public async Task CreateEmployeePosition(Guid idCu, Guid idCo, string name)
+        {         
+            int countPosition = await new SQLRead().GetEmployeePositionCount(idCu, idCo);
+            countPosition++;
 
-        //    await DeleteEmployeePosition(idCu);
-        //    await DeleteCompanyRolls(idCu);
-        //    await DeleteEmployees(idCu);
-
-
-        //    var query = "DELETE FROM [dbo].[Companies] WHERE CustomerId = @CustomerId";
-        //    var para = new
-        //    {
-        //        CustomerId = idCu
-        //    };
-        //    using var database = Context.ConnectToSQL;
-        //    await database.QueryAsync(query, para);
-        //}
-
-
+            var query = "INSERT INTO[dbo].[EmployeePosition]([Id], [CustomerId], [CompanyId], [Type], [Name]) VALUES(@Id, @CustomerId, @CompanyId, @Type, @Name)";
+            var para = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = idCu,
+                CompanyId = idCo,
+                Type = countPosition,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
 
         public async Task CreateCompany(string[] ar)
         {
@@ -795,15 +792,23 @@ namespace ReportingSystem.Data.SQL
                 return;
             }
 
-            Guid IdCo = Guid.NewGuid();
+            Guid idCo = Guid.NewGuid();
             Guid statusId = await new SQLRead().GetCompanyStatusId(CompanyStatus.Actual);
 
-            //допрацювати механізм додавання директора для порожньої компанії
+            string vId = Guid.NewGuid().ToString();
+            string vIdCo = idCo.ToString();
+            string vIdCu = idCu.ToString();
 
-            var query = "INSERT FROM [dbo].[Companies] WHERE CustomerId = @CustomerId ";
+
+            string[] arEm = [vId,vIdCo,vIdCu,];
+            //var chief = await CreateEmployee(arEm);
+
+            var query = "INSERT INTO [dbo].[Companies] ([Id], [CustomerId], [Name], [Address], [Code], [Actions], [StatusWeb], [Phone], [Email], [StatutCapital], [RegistrationDate], [Status], [Chief]) " +
+                        "VALUES(@Id, @CustomerId, @Name, @Address, @Code, @Actions, @StatusWeb, @Phone, @Email, @StatutCapital, @RegistrationDate, @Status, @Chief)";
+
             var para = new
             {
-                Id = IdCo,
+                Id = idCo,
                 CustomerId = idCu,
                 Name = ar[0],
                 Address = ar[2],
@@ -815,10 +820,19 @@ namespace ReportingSystem.Data.SQL
                 StatutCapital = ar[8],
                 RegistrationDate = DateTime.Today,
                 Status = statusId,
-                Chief = ""
+                Chief = Guid.Empty
             };
             using var database = Context.ConnectToSQL;
-            await database.QueryAsync(query, para);
+            try
+            {
+                await database.QueryAsync(query, para);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
           
         }
     }

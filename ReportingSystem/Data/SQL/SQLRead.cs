@@ -21,11 +21,15 @@ namespace ReportingSystem.Data.SQL
             public List<EmployeeModel>? Administrators { get; set; }
             public ConfigurationModel? Configuration { get; set; }
         }
+
+        #region Administrators
         public async Task<Guid> GetAdministratorRoleId(Guid id)
         {
             var query = "SELECT [Rol] FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
             return await GetRoleId(id, query);
         }
+        #endregion
+
         public async Task<Guid> GetEmployeeRoleId(Guid id)
         {
             var query = "SELECT [Rol] FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
@@ -38,6 +42,17 @@ namespace ReportingSystem.Data.SQL
             var para = new
             {
                 Name = name,
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+            return result.First();
+        }
+        public async Task<Guid> GetEmployeeRoleIdByType(int type)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Type = @type";
+            var para = new
+            {
+                Type = type,
             };
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
@@ -669,6 +684,8 @@ namespace ReportingSystem.Data.SQL
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
         }
+
+
         public async Task<List<CompanyModel>?> GetActualCompanies(string idCu)
         {
             await Task.Delay(10);
@@ -752,6 +769,19 @@ namespace ReportingSystem.Data.SQL
             };
             devRols.Add(devRol);
             return devRols;
+        }
+
+        public async Task<int> GetEmployeePositionCount(Guid idCu, Guid idCo)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT COUNT(*) FROM[ReportingSystem].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            var result = await database.QueryAsync<int>(query, para);
+            return result.First();
         }
     }
 }

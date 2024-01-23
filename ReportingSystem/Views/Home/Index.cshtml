@@ -26,21 +26,12 @@
 
         <div id="Start">
             <div id="Start" v-if="isPageLoaded">
-                <div v-if="hasDatabase">
-                    <p>База даних існує. Перехід на сторінку авторизації</p>
-                    <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
-                </div>
-                <div v-else>
+                <div v-if="!hasDatabase">
                     <p>База даних відсутня</p>
                     <p>Створити нову базу даних та згенерувати дані</p>
                     <p>База буде створена на локальному хості з іменем ReportingSystem</p>
 
                     <div v-if="databaseStatus != '' && databaseStatus != null">
-                        @* <button v-on:click="createDatabase">Так</button>
-                        <button v-on:click="cancelCreation">Ні</button> *@
-                    
-                        @* <p class="percent-transition">{{ percentOperation }}</p> *@
-
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated"
                                  role="progressbar"
@@ -58,16 +49,12 @@
                         <button v-on:click="cancelCreation">Ні</button>
                     </div>
                 </div>
-             </div>
-
+                <div v-else>
+                    <p>База даних існує. Перехід на сторінку авторизації</p>
+                    <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
+                </div>
                 
-
-
-            @* <div class="alert" :class="{ 'alert-success': hasDatabase, 'alert-danger': !hasDatabase }" role="alert">
-                {{ databaseStatus }}
-            </div> *@
-
-            @* <button v-if="!hasDatabase" v-on:click="generateDatabase" class="btn btn-primary">Generate Database</button> *@
+             </div>
         </div>
 
         <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
