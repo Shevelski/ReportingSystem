@@ -109,7 +109,7 @@ namespace ReportingSystem.Data.JSON
 
             var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(companyId));
 
-            if (company == null || company.Employees == null || !Guid.TryParse(ar[3], out Guid employeeId))
+            if (company == null || company.Employees == null || !Guid.TryParse(ar[2], out Guid employeeId))
             {
                 return;
             }

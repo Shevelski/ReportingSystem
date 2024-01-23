@@ -59,6 +59,7 @@ namespace ReportingSystem.Data.Generate
                     {
                         foreach (var company in customer.Companies)
                         {
+                            await UpdateStatusOnClient("Вставлення даних по компаніям ...", 55);
                             await new InsertData().Company(company, customer.Id);
 
                             if (company.Positions != null)
@@ -66,6 +67,7 @@ namespace ReportingSystem.Data.Generate
                                 int i = 0;
                                 foreach (var position in company.Positions)
                                 {
+                                    await UpdateStatusOnClient("Вставлення даних по співробітникам ...", 60);
                                     await new InsertData().EmployeePosition(position, customer.Id, company.Id, i);
                                     i++;
                                     if (company.Employees != null)
@@ -81,6 +83,7 @@ namespace ReportingSystem.Data.Generate
                             {
                                 foreach (var rol in company.Rolls)
                                 {
+                                    await UpdateStatusOnClient("Оновлення ролей ...", 65);
                                     var idRol = await new SQLRead().GetRolIdByType(rol);
                                     await new InsertData().CompanyRolls(idRol, customer.Id, company.Id);
                                 }

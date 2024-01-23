@@ -401,7 +401,7 @@ namespace ReportingSystem.Data.SQL
                 employee.phoneWork = administrator.PhoneWork;
                 employee.emailWork = administrator.EmailWork;
                 employee.login = administrator.Login;
-                employee.password = administrator.Password;//administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
+                employee.password = administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
                 employee.status = await GetEmployeeStatus(administrator.Status); ;
                 employee.birthDate = administrator.BirthDate;
                 employee.rol = await new SQLRead().GetRoleById(administrator.Rol);
