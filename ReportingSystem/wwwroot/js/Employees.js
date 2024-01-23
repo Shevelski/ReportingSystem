@@ -8,7 +8,7 @@ new Vue({
             thirdName: '',
             birthDate: '',
             workStartDate: '',
-            namePosition:'',
+            namePosition: '',
             login: '',
             rol: '',
             password: '',
@@ -20,16 +20,19 @@ new Vue({
             addressFact: '',
             salary: '',
             taxNumber: '',
-            addSalary:'',
+            addSalary: '',
+            namePosition: ''
         },
         customerId: '',
         companyId: '',
         employeeId: '',
-        rol:'',
+        rol: '',
         beforeEditEmployee: '',
-        positions: [0],
-        rolls:[0],
-        selectedRol:'',
+        positions: [{
+            namePosition: ''
+        }],
+        rolls: [0],
+        selectedRol: '',
         selectedPosition: '',
         isNewSelectedCompany: false,
         saveCompany: false,
@@ -61,7 +64,11 @@ new Vue({
         editEmployeeSecondName: '',
         editEmployeeThirdName: '',
         newEmployee: {},
-        employees: [0],
+        employees: [{
+            positions: [{
+                        namePosition: ''
+                        }],
+        }],
         companies: [0],
         customers: [0],
         holidayDays: 0,

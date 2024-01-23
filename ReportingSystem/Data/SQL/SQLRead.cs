@@ -118,7 +118,7 @@ namespace ReportingSystem.Data.SQL
                         {
                             if (company != null)
                             {
-                                company.Employees = await new SQLRead().GetEmployees(customerSQL.Id, company.Id);
+                                company.Employees = await new SQLRead().GetEmployeesInfo(customerSQL.Id, company.Id);
                             }
                         }
                     }
@@ -195,21 +195,30 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task<EmployeeRolModel> GetRoleById(Guid id)
         {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT [Type] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Id = @Id";
-            var paraRol = new
+            try
             {
-                Id = id,
-            };
-            var resultRol = await database.QueryAsync<int>(query, paraRol);
-            int typeRol = resultRol.First();
-            EmployeeRolModel model = new()
-            {
-                rolType = (EmployeeRolStatus)typeRol
-            };
-            model.rolName = model.rolType.GetDisplayName();
+                using var database = Context.ConnectToSQL;
+                var query = "SELECT [Type] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Id = @Id";
+                var paraRol = new
+                {
+                    Id = id,
+                };
+                var resultRol = await database.QueryAsync<int>(query, paraRol);
+                int typeRol = resultRol.First();
+                EmployeeRolModel model = new()
+                {
+                    rolType = (EmployeeRolStatus)typeRol
+                };
+                model.rolName = model.rolType.GetDisplayName();
 
-            return model;
+                return model;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            
         }
         public async Task<Guid> GetRolIdByType(EmployeeRolModel rol)
         {
@@ -423,7 +432,7 @@ namespace ReportingSystem.Data.SQL
                 employee.phoneWork = customer.Phone;
                 employee.emailWork = customer.Email;
                 employee.login = customer.Login;
-                employee.password = customer.Password; //customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
+                employee.password = customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
                 employee.rol = new EmployeeRolModel
                 {
                     rolType = EmployeeRolStatus.Customer
@@ -539,42 +548,89 @@ namespace ReportingSystem.Data.SQL
             EmployeeModel employee = new();
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT * FROM[ReportingSystem].[dbo].[Admonistrators] Where Id = @Id";
+                var query = "SELECT * FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
                 var para = new
                 {
                     Id = id,
                 };
-                var results = await database.QueryAsync<TableTypeSQL.Employee>(query, para);
-                foreach (var employees in results)
+                
+                try
                 {
-                    employee.id = employees.Id;
-                    employee.companyId = employees.CompanyId;
-                    employee.customerId = employees.CustomerId;
-                    employee.firstName = employees.FirstName;
-                    employee.secondName = employees.SecondName;
-                    employee.thirdName = employees.ThirdName;
-                    employee.phoneWork = employees.PhoneWork;
-                    employee.phoneSelf = employees.PhoneSelf;
-                    employee.emailWork = employees.EmailWork;
-                    employee.emailSelf = employees.EmailSelf;
-                    employee.taxNumber = employees.TaxNumber;
-                    employee.addressReg = employees.AddressReg;
-                    employee.addressFact = employees.AddressFact;
-                    employee.photo = employees.Photo;
-                    employee.login = employees.Login;
-                    employee.password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
-                    employee.salary = employees.Salary;
-                    employee.addSalary = employees.AddSalary;
-                    employee.status = await GetEmployeeStatus(employees.Status);
+                    var results = await database.QueryAsync<TableTypeSQL.Employee>(query, para);
+                    foreach (var employees in results)
+                    {
+                        employee.id = employees.Id;
+                        employee.companyId = employees.CompanyId;
+                        employee.customerId = employees.CustomerId;
+                        employee.firstName = employees.FirstName;
+                        employee.secondName = employees.SecondName;
+                        employee.thirdName = employees.ThirdName;
+                        employee.phoneWork = employees.PhoneWork;
+                        employee.phoneSelf = employees.PhoneSelf;
+                        employee.emailWork = employees.EmailWork;
+                        employee.emailSelf = employees.EmailSelf;
+                        employee.taxNumber = employees.TaxNumber;
+                        employee.addressReg = employees.AddressReg;
+                        employee.addressFact = employees.AddressFact;
+                        employee.photo = employees.Photo;
+                        employee.login = employees.Login;
+                        employee.password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
+                        employee.salary = employees.Salary;
+                        employee.addSalary = employees.AddSalary;
+                        employee.status = await GetEmployeeStatus(employees.Status);
 
-                    employee.birthDate = employees.BirthDate;
-                    employee.workStartDate = employees.WorkStartDate;
-                    employee.workEndDate = employees.WorkEndDate;
-                    employee.rol = await new SQLRead().GetRoleById(employees.Rol);
-                    employee.position = await GetPositionEmployee(employees.Position);
-                };
+                        employee.birthDate = employees.BirthDate;
+                        employee.workStartDate = employees.WorkStartDate;
+                        employee.workEndDate = employees.WorkEndDate;
+                        employee.rol = await new SQLRead().GetRoleById(employees.Rol);
+                        
+                    };
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
+                
             }
             return employee;
+        }
+
+        
+
+        public async Task<List<EmployeeModel>> GetEmployeesInfo(Guid idCu, Guid idCo)
+        {
+            List<EmployeeModel>? employees = [];
+
+            if (idCu.Equals(Guid.Empty) || idCo.Equals(Guid.Empty))
+            {
+                return employees;
+            }
+            using (var database = Context.ConnectToSQL)
+            {
+
+                var TableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo";
+
+                var para = new
+                {
+                    IdCu = idCu,
+                    IdCo = idCo,
+                };
+                var resultEmployees = await database.QueryAsync<Guid>(TableQuery, para);
+
+                if (resultEmployees.Any())
+                {
+                    var x = resultEmployees;
+                    foreach (var emp in resultEmployees)
+                    {
+                        EmployeeModel employee = await GetEmployeeCustomer(emp);
+                        employees.Add(employee);
+                    }
+                    return employees;
+                }
+            }
+            return employees;
         }
 
         public async Task<List<EmployeeModel>> GetEmployees(Guid idCu, Guid idCo)
@@ -602,7 +658,8 @@ namespace ReportingSystem.Data.SQL
                     var x = resultEmployees;
                     foreach (var emp in resultEmployees)
                     {
-                        EmployeeModel employee = await GetEmployeeCustomer(emp);
+                        //EmployeeModel employee = await GetEmployeeCustomer(emp);
+                        EmployeeModel employee = await GetEmployeeData(emp);
                         employees.Add(employee);
                     }
                     return employees;
@@ -736,19 +793,30 @@ namespace ReportingSystem.Data.SQL
             List<EmployeeRolModel> rolls = [];
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT * FROM[ReportingSystem].[dbo].[CompanyRolls] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
+                var query = "SELECT [RolId] FROM [ReportingSystem].[dbo].[CompanyRolls] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
                 var para = new
                 {
                     CustomerId = idCu,
                     CompanyId = idCo,
                 };
                 var result = await database.QueryAsync<Guid>(query, para);
-                
                 foreach (var rollsIds in result)
                 {
-                    var rol = await GetRoleById(rollsIds);
-                    rolls.Add(rol); 
+                    
+                    try
+                    {
+                        var rol = await GetRoleById(rollsIds);
+                        rolls.Add(rol);
+                    }
+                    catch (Exception ex)
+                    {
+                        await Console.Out.WriteLineAsync(ex.ToString());
+                        throw;
+                    }
+                    
                 }
+                
+                
             }
             return rolls;
         }
