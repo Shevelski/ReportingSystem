@@ -5,13 +5,13 @@ namespace ReportingSystem.Models.Project.Step
 {
     public class ProjectStepModel
     {
-        public string? name { get; set; }
-        public string? description { get; set; }
-        public DateTime startDate { get; set; }
-        public DateTime planDate { get; set; }
-        public DateTime endDate { get; set; }
-        public ProjectStatusModel? status { get; set; }
-        public List<EmployeePositionModel>? positions { get; set; }
-        public List<EmployeeModel>? members { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime PlanDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public ProjectStatusModel? Status { get; set; }
+        public List<EmployeePositionModel>? Positions { get; set; }
+        public List<EmployeeModel>? Members { get; set; }
     }
 }

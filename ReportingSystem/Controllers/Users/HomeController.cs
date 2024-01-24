@@ -74,13 +74,13 @@ namespace ReportingSystem.Controllers.Users
                     {
                         if (result.Employee != null)
                         {
-                            var custId = result.Employee.customerId;
-                            var compId = result.Employee.companyId;
-                            var emplId = result.Employee.id;
+                            var custId = result.Employee.CustomerId;
+                            var compId = result.Employee.CompanyId;
+                            var emplId = result.Employee.Id;
                             var rol = "";
-                            if (result.Employee.rol != null && result.Employee.rol.rolName != null)
+                            if (result.Employee.Rol != null && result.Employee.Rol.RolName != null)
                             {
-                                rol = result.Employee.rol.rolType.ToString();
+                                rol = result.Employee.Rol.RolType.ToString();
                             }
                             string[] ids = [custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()];
                             HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));

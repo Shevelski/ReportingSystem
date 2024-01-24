@@ -27,7 +27,7 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = administrators.FirstOrDefault(em => em.Id.Equals(employeeId));
 
             if (employee != null)
             {
@@ -60,7 +60,7 @@ namespace ReportingSystem.Data.JSON
             }
 
             var employees = company.Employees;
-            var employee = employees.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = employees.FirstOrDefault(em => em.Id.Equals(employeeId));
 
             if (employee != null)
             {
@@ -78,14 +78,14 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var employee = administrators.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = administrators.FirstOrDefault(em => em.Id.Equals(employeeId));
 
             if (employee != null)
             {
-                employee.status = new EmployeeStatusModel
+                employee.Status = new EmployeeStatusModel
                 {
-                    employeeStatusType = EmployeeStatus.Actual,
-                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                    EmployeeStatusType = EmployeeStatus.Actual,
+                    EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                 };
                 UpdateJsonAdministrators(administrators);
             }
@@ -114,14 +114,14 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var employee = company.Employees.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = company.Employees.FirstOrDefault(em => em.Id.Equals(employeeId));
 
             if (employee != null)
             {
-                employee.status = new EmployeeStatusModel
+                employee.Status = new EmployeeStatusModel
                 {
-                    employeeStatusType = Enums.EmployeeStatus.Actual,
-                    employeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
+                    EmployeeStatusType = Enums.EmployeeStatus.Actual,
+                    EmployeeStatusName = Enums.EmployeeStatus.Actual.GetDisplayName()
                 };
                 UpdateJsonCustomers(customers);
             }
@@ -143,26 +143,26 @@ namespace ReportingSystem.Data.JSON
 
             var employee = new EmployeeModel
             {
-                id = Guid.NewGuid(),
-                customerId = Guid.Empty,
-                companyId = Guid.Empty,
-                firstName = ar[0],
-                secondName = ar[1],
-                thirdName = ar[2],
-                birthDate = DateTime.Parse(ar[3]),
-                login = ar[4],
-                rol = new Models.EmployeeRolModel
+                Id = Guid.NewGuid(),
+                CustomerId = Guid.Empty,
+                CompanyId = Guid.Empty,
+                FirstName = ar[0],
+                SecondName = ar[1],
+                ThirdName = ar[2],
+                BirthDate = DateTime.Parse(ar[3]),
+                Login = ar[4],
+                Rol = new Models.EmployeeRolModel
                 {
-                    rolName = ar[5],
-                    rolType = rolType,
+                    RolName = ar[5],
+                    RolType = rolType,
                 },
-                password = ar[7],
-                phoneWork = ar[8],
-                emailWork = ar[9],
-                status = new EmployeeStatusModel
+                Password = ar[7],
+                PhoneWork = ar[8],
+                EmailWork = ar[9],
+                Status = new EmployeeStatusModel
                 {
-                    employeeStatusType = EmployeeStatus.Actual,
-                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                    EmployeeStatusType = EmployeeStatus.Actual,
+                    EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                 },
             };
 
@@ -200,38 +200,38 @@ namespace ReportingSystem.Data.JSON
 
             var employee = new EmployeeModel
             {
-                id = Guid.NewGuid(),
-                customerId = customerId,
-                companyId = companyId,
-                firstName = ar[2],
-                secondName = ar[3],
-                thirdName = ar[4],
-                birthDate = DateTime.Parse(ar[5]),
-                workStartDate = DateTime.Parse(ar[6]),
-                position = new EmployeePositionModel
+                Id = Guid.NewGuid(),
+                CustomerId = customerId,
+                CompanyId = companyId,
+                FirstName = ar[2],
+                SecondName = ar[3],
+                ThirdName = ar[4],
+                BirthDate = DateTime.Parse(ar[5]),
+                WorkStartDate = DateTime.Parse(ar[6]),
+                Position = new EmployeePositionModel
                 {
                     NamePosition = ar[7]
                 },
-                login = ar[8],
-                rol = new Models.EmployeeRolModel
+                Login = ar[8],
+                Rol = new Models.EmployeeRolModel
                 {
-                    rolName = ar[9],
-                    rolType = rolType,
+                    RolName = ar[9],
+                    RolType = rolType,
                 },
-                password = ar[11],
-                phoneWork = ar[12],
-                phoneSelf = ar[13],
-                emailWork = ar[14],
-                emailSelf = ar[15],
-                addressReg = ar[16],
-                addressFact = ar[17],
-                salary = double.TryParse(ar[18], out double parsedSalary) ? parsedSalary : 0.0,
-                taxNumber = ar[19],
-                addSalary = double.TryParse(ar[20], out double parsedAddSalary) ? parsedAddSalary : 0.0,
-                status = new EmployeeStatusModel
+                Password = ar[11],
+                PhoneWork = ar[12],
+                PhoneSelf = ar[13],
+                EmailWork = ar[14],
+                EmailSelf = ar[15],
+                AddressReg = ar[16],
+                AddressFact = ar[17],
+                Salary = double.TryParse(ar[18], out double parsedSalary) ? parsedSalary : 0.0,
+                TaxNumber = ar[19],
+                AddSalary = double.TryParse(ar[20], out double parsedAddSalary) ? parsedAddSalary : 0.0,
+                Status = new EmployeeStatusModel
                 {
-                    employeeStatusType = EmployeeStatus.Actual,
-                    employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                    EmployeeStatusType = EmployeeStatus.Actual,
+                    EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                 },
             };
 
@@ -263,14 +263,14 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var employee = company.Employees.FirstOrDefault(em => em.id.Equals(employeeId));
+            var employee = company.Employees.FirstOrDefault(em => em.Id.Equals(employeeId));
 
             if (employee != null)
             {
-                employee.status = new EmployeeStatusModel
+                employee.Status = new EmployeeStatusModel
                 {
-                    employeeStatusType = EmployeeStatus.Archive,
-                    employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
+                    EmployeeStatusType = EmployeeStatus.Archive,
+                    EmployeeStatusName = EmployeeStatus.Archive.GetDisplayName()
                 };
                 UpdateJsonCustomers(customers);
             }
@@ -285,14 +285,14 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var administrator = administrators.FirstOrDefault(ad => ad.id.Equals(administratorId));
+            var administrator = administrators.FirstOrDefault(ad => ad.Id.Equals(administratorId));
 
             if (administrator != null)
             {
-                administrator.status = new EmployeeStatusModel
+                administrator.Status = new EmployeeStatusModel
                 {
-                    employeeStatusType = EmployeeStatus.Archive,
-                    employeeStatusName = EmployeeStatus.Archive.GetDisplayName()
+                    EmployeeStatusType = EmployeeStatus.Archive,
+                    EmployeeStatusName = EmployeeStatus.Archive.GetDisplayName()
                 };
                 UpdateJsonAdministrators(administrators);
             }
@@ -318,26 +318,26 @@ namespace ReportingSystem.Data.JSON
 
                 List<CustomerModel>? customers = await new JsonRead().LoadCustomersFromJson();
 
-                if (customers == null || !Guid.TryParse(editedEmployee.customerId.ToString(), out Guid customerId))
+                if (customers == null || !Guid.TryParse(editedEmployee.CustomerId.ToString(), out Guid customerId))
                 {
                     return;
                 }
 
                 var customer = customers.FirstOrDefault(c => c.Id.Equals(customerId));
 
-                if (customer == null || customer.Companies == null || !Guid.TryParse(editedEmployee.companyId.ToString(), out Guid companyId))
+                if (customer == null || customer.Companies == null || !Guid.TryParse(editedEmployee.CompanyId.ToString(), out Guid companyId))
                 {
                     return;
                 }
 
                 var company = customer.Companies.FirstOrDefault(c => c.Id.Equals(companyId));
 
-                if (company == null || company.Employees == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid employeeId))
+                if (company == null || company.Employees == null || !Guid.TryParse(editedEmployee.Id.ToString(), out Guid employeeId))
                 {
                     return;
                 }
 
-                var employee = company.Employees.FirstOrDefault(e => e.id.Equals(employeeId));
+                var employee = company.Employees.FirstOrDefault(e => e.Id.Equals(employeeId));
 
                 if (employee != null)
                 {
@@ -376,12 +376,12 @@ namespace ReportingSystem.Data.JSON
 
                 List<EmployeeModel>? administrators = await new JsonRead().LoadAdministratorsFromJson();
 
-                if (administrators == null || !Guid.TryParse(editedEmployee.id.ToString(), out Guid id))
+                if (administrators == null || !Guid.TryParse(editedEmployee.Id.ToString(), out Guid id))
                 {
                     return;
                 }
 
-                var administrator = administrators.FirstOrDefault(c => c.id.Equals(id));
+                var administrator = administrators.FirstOrDefault(c => c.Id.Equals(id));
 
                 if (administrator != null)
                 {
@@ -733,8 +733,8 @@ namespace ReportingSystem.Data.JSON
                 {
                     company.Status = new CompanyStatusModel
                     {
-                        companyStatusType = CompanyStatus.Archive,
-                        companyStatusName = CompanyStatus.Archive.GetDisplayName()
+                        CompanyStatusType = CompanyStatus.Archive,
+                        CompanyStatusName = CompanyStatus.Archive.GetDisplayName()
                     };
                     UpdateJsonCustomers(customers);
                 }
@@ -784,8 +784,8 @@ namespace ReportingSystem.Data.JSON
                 Employees = [],
                 Status = new CompanyStatusModel
                 {
-                    companyStatusType = CompanyStatus.Project,
-                    companyStatusName = CompanyStatus.Project.GetDisplayName()
+                    CompanyStatusType = CompanyStatus.Project,
+                    CompanyStatusName = CompanyStatus.Project.GetDisplayName()
                 }
             };
 
@@ -797,10 +797,10 @@ namespace ReportingSystem.Data.JSON
                 {
                     var chief = new EmployeeModel
                     {
-                        firstName = customer.FirstName,
-                        secondName = customer.SecondName,
-                        thirdName = customer.ThirdName,
-                        emailWork = customer.Email
+                        FirstName = customer.FirstName,
+                        SecondName = customer.SecondName,
+                        ThirdName = customer.ThirdName,
+                        EmailWork = customer.Email
                     };
 
                     company.Chief = chief;

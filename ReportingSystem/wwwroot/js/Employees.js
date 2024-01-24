@@ -261,7 +261,11 @@ new Vue({
             this.selectedPosition = event.target.value;
         },
        
-        ToogleMode(mode) {
+        ToogleMode(mode, index) {
+            if (index != undefined) {
+                this.indexEmployee = index;
+            }
+                
             if (this.mode == 'edit') {
                 this.toggleModal(2, this.indexEmployee);
             } else {
@@ -272,6 +276,7 @@ new Vue({
                 this.mode = mode;
             }
         },
+       
         async editEmployee() {
             this.ToogleMode('standart');
             try {

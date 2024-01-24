@@ -2,13 +2,13 @@
 {
     public class ProjectChCategoryModel
     {
-        public Guid level0CatId { get; set; }
-        public string? level0CatName { get; set; }
-        public Guid level1CatId { get; set; }
-        public string? level1CatName { get; set; }
-        public Guid level2CatId { get; set; }
-        public string? level2CatName { get; set; }
-        public Guid level3CatId { get; set; }
-        public string? level3CatName { get; set; }
+        public Guid Level0CatId { get; set; }
+        public string? Level0CatName { get; set; }
+        public Guid Level1CatId { get; set; }
+        public string? Level1CatName { get; set; }
+        public Guid Level2CatId { get; set; }
+        public string? Level2CatName { get; set; }
+        public Guid Level3CatId { get; set; }
+        public string? Level3CatName { get; set; }
     }
 }

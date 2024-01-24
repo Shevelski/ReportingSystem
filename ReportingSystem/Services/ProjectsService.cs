@@ -68,10 +68,10 @@ namespace ReportingSystem.Services
             {
                 ProjectCategoryModel categoryModel = new()
                 {
-                    id = Guid.NewGuid(),
-                    name = ar[6],
-                    projects = [],
-                    categoriesLevel1 = []
+                    Id = Guid.NewGuid(),
+                    Name = ar[6],
+                    Projects = [],
+                    CategoriesLevel1 = []
                 };
                 company.Categories.Add(categoryModel);
                 DatabaseMoq.UpdateJson();
@@ -88,20 +88,20 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
                 ProjectCategoryModel1 categoryModel1 = new()
                 {
-                    id = Guid.NewGuid(),
-                    name = ar[6],
-                    projects = [],
-                    categoriesLevel2 = []
+                    Id = Guid.NewGuid(),
+                    Name = ar[6],
+                    Projects = [],
+                    CategoriesLevel2 = []
                 };
-                cat0.categoriesLevel1.Add(categoryModel1);
+                cat0.CategoriesLevel1.Add(categoryModel1);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
             }
@@ -115,26 +115,26 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                if (cat1.categoriesLevel2 == null)
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
                 ProjectCategoryModel2 categoryModel2 = new()
                 {
-                    id = Guid.NewGuid(),
-                    name = ar[6],
-                    projects = [],
-                    categoriesLevel3 = []
+                    Id = Guid.NewGuid(),
+                    Name = ar[6],
+                    Projects = [],
+                    CategoriesLevel3 = []
                 };
-                cat1.categoriesLevel2.Add(categoryModel2);
+                cat1.CategoriesLevel2.Add(categoryModel2);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -149,31 +149,31 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
-                if (cat1.categoriesLevel2 == null)
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                if (cat2.categoriesLevel3 == null)
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                if (cat2.CategoriesLevel3 == null)
                 {
                     return [];
                 }
 
                 ProjectCategoryModel3 categoryModel3 = new()
                 {
-                    id = Guid.NewGuid(),
-                    name = ar[6],
-                    projects = []
+                    Id = Guid.NewGuid(),
+                    Name = ar[6],
+                    Projects = []
                 };
-                cat2.categoriesLevel3.Add(categoryModel3);
+                cat2.CategoriesLevel3.Add(categoryModel3);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -209,15 +209,15 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                cat0.name = ar[6];
+                cat0.Name = ar[6];
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
             }
@@ -232,17 +232,17 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                cat1.name = ar[6];
+                cat1.Name = ar[6];
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
             }
@@ -256,21 +256,21 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                if (cat1.categoriesLevel2 == null)
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                cat2.name = ar[6];
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                cat2.Name = ar[6];
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -285,30 +285,30 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
-                if (cat1.categoriesLevel2 == null)
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                if (cat2.categoriesLevel3 == null)
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                if (cat2.CategoriesLevel3 == null)
                 {
                     return [];
                 }
 
-                var cat3 = cat2.categoriesLevel3.First(ca1 => ca1.id.Equals(idCatLevel4));
+                var cat3 = cat2.CategoriesLevel3.First(ca1 => ca1.Id.Equals(idCatLevel4));
                 if (cat3 == null)
                 {
                     return [];
                 }
-                cat3.name = ar[6];
+                cat3.Name = ar[6];
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -343,10 +343,10 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
@@ -366,17 +366,17 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                cat0.categoriesLevel1.Remove(cat1);
+                cat0.CategoriesLevel1.Remove(cat1);
 
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
@@ -391,21 +391,21 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                if (cat1.categoriesLevel2 == null)
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                cat1.categoriesLevel2.Remove(cat2);
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                cat1.CategoriesLevel2.Remove(cat2);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -420,30 +420,30 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
-                if (cat1.categoriesLevel2 == null)
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                if (cat2.categoriesLevel3 == null)
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                if (cat2.CategoriesLevel3 == null)
                 {
                     return [];
                 }
 
-                var cat3 = cat2.categoriesLevel3.First(ca1 => ca1.id.Equals(idCatLevel4));
+                var cat3 = cat2.CategoriesLevel3.First(ca1 => ca1.Id.Equals(idCatLevel4));
                 if (cat3 == null)
                 {
                     return [];
                 }
-                cat2.categoriesLevel3.Remove(cat3);
+                cat2.CategoriesLevel3.Remove(cat3);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -478,10 +478,10 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
@@ -501,17 +501,17 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
 
 
-                if (cat0.categoriesLevel1 == null)
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                cat0.categoriesLevel1.Remove(cat1);
+                cat0.CategoriesLevel1.Remove(cat1);
 
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
@@ -526,21 +526,21 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
 
-                if (cat1.categoriesLevel2 == null)
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                cat1.categoriesLevel2.Remove(cat2);
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                cat1.CategoriesLevel2.Remove(cat2);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 
@@ -555,30 +555,30 @@ namespace ReportingSystem.Services
                     return [];
                 }
 
-                var cat0 = company.Categories.First(ca1 => ca1.id.Equals(idCatLevel1));
-                if (cat0.categoriesLevel1 == null)
+                var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+                if (cat0.CategoriesLevel1 == null)
                 {
                     return [];
                 }
 
-                var cat1 = cat0.categoriesLevel1.First(ca1 => ca1.id.Equals(idCatLevel2));
-                if (cat1.categoriesLevel2 == null)
+                var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
+                if (cat1.CategoriesLevel2 == null)
                 {
                     return [];
                 }
 
-                var cat2 = cat1.categoriesLevel2.First(ca1 => ca1.id.Equals(idCatLevel3));
-                if (cat2.categoriesLevel3 == null)
+                var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+                if (cat2.CategoriesLevel3 == null)
                 {
                     return [];
                 }
 
-                var cat3 = cat2.categoriesLevel3.First(ca1 => ca1.id.Equals(idCatLevel4));
+                var cat3 = cat2.CategoriesLevel3.First(ca1 => ca1.Id.Equals(idCatLevel4));
                 if (cat3 == null)
                 {
                     return [];
                 }
-                cat2.categoriesLevel3.Remove(cat3);
+                cat2.CategoriesLevel3.Remove(cat3);
                 DatabaseMoq.UpdateJson();
                 return company.Categories;
 

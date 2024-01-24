@@ -5,8 +5,8 @@ namespace ReportingSystem.Models
 {
     public class EmployeeRolModel
     {
-        public EmployeeRolStatus rolType { get; set; }
-        public string? rolName { get; set; }
+        public EmployeeRolStatus RolType { get; set; }
+        public string? RolName { get; set; }
 
     }
 }

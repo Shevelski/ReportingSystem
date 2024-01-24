@@ -207,9 +207,9 @@ namespace ReportingSystem.Data.SQL
                 int typeRol = resultRol.First();
                 EmployeeRolModel model = new()
                 {
-                    rolType = (EmployeeRolStatus)typeRol
+                    RolType = (EmployeeRolStatus)typeRol
                 };
-                model.rolName = model.rolType.GetDisplayName();
+                model.RolName = model.RolType.GetDisplayName();
 
                 return model;
             }
@@ -226,7 +226,7 @@ namespace ReportingSystem.Data.SQL
             var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Type = @Type";
             var para = new
             {
-                Type = (int)rol.rolType,
+                Type = (int)rol.RolType,
             };
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
@@ -290,8 +290,8 @@ namespace ReportingSystem.Data.SQL
             };
             var result = await database.QueryAsync<int>(query, para);
 
-            status.employeeStatusType = (EmployeeStatus)result.First();
-            status.employeeStatusName = status.employeeStatusType.GetDisplayName();
+            status.EmployeeStatusType = (EmployeeStatus)result.First();
+            status.EmployeeStatusName = status.EmployeeStatusType.GetDisplayName();
 
             return status;
         }
@@ -302,7 +302,7 @@ namespace ReportingSystem.Data.SQL
             var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
             var para = new
             {
-                Type = statusInput.employeeStatusType,
+                Type = statusInput.EmployeeStatusType,
             };
             var result = await database.QueryAsync<Guid>(query, para);
 
@@ -392,19 +392,19 @@ namespace ReportingSystem.Data.SQL
             var results = await database.QueryAsync<TableTypeSQL.Administrator>(query, para);
             foreach (var administrator in results)
             {
-                employee.id = administrator.Id;
-                employee.companyId = Guid.Empty;
-                employee.customerId = Guid.Empty;
-                employee.firstName = administrator.FirstName;
-                employee.secondName = administrator.SecondName;
-                employee.thirdName = administrator.ThirdName;
-                employee.phoneWork = administrator.PhoneWork;
-                employee.emailWork = administrator.EmailWork;
-                employee.login = administrator.Login;
-                employee.password = administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
-                employee.status = await GetEmployeeStatus(administrator.Status); ;
-                employee.birthDate = administrator.BirthDate;
-                employee.rol = await new SQLRead().GetRoleById(administrator.Rol);
+                employee.Id = administrator.Id;
+                employee.CompanyId = Guid.Empty;
+                employee.CustomerId = Guid.Empty;
+                employee.FirstName = administrator.FirstName;
+                employee.SecondName = administrator.SecondName;
+                employee.ThirdName = administrator.ThirdName;
+                employee.PhoneWork = administrator.PhoneWork;
+                employee.EmailWork = administrator.EmailWork;
+                employee.Login = administrator.Login;
+                employee.Password = administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
+                employee.Status = await GetEmployeeStatus(administrator.Status); ;
+                employee.BirthDate = administrator.BirthDate;
+                employee.Rol = await new SQLRead().GetRoleById(administrator.Rol);
             };
 
             return employee;
@@ -422,22 +422,22 @@ namespace ReportingSystem.Data.SQL
             var results = await database.QueryAsync<TableTypeSQL.Customer>(query, para);
             foreach (var customer in results)
             {
-                employee.id = customer.Id;
-                employee.companyId = Guid.Empty;
-                employee.customerId = Guid.Empty;
-                employee.firstName = customer.FirstName;
-                employee.secondName = customer.SecondName;
-                employee.thirdName = customer.ThirdName;
+                employee.Id = customer.Id;
+                employee.CompanyId = Guid.Empty;
+                employee.CustomerId = Guid.Empty;
+                employee.FirstName = customer.FirstName;
+                employee.SecondName = customer.SecondName;
+                employee.ThirdName = customer.ThirdName;
 
-                employee.phoneWork = customer.Phone;
-                employee.emailWork = customer.Email;
-                employee.login = customer.Login;
-                employee.password = customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
-                employee.rol = new EmployeeRolModel
+                employee.PhoneWork = customer.Phone;
+                employee.EmailWork = customer.Email;
+                employee.Login = customer.Login;
+                employee.Password = customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
+                employee.Rol = new EmployeeRolModel
                 {
-                    rolType = EmployeeRolStatus.Customer
+                    RolType = EmployeeRolStatus.Customer
                 };
-                employee.rol.rolName = employee.rol.rolType.GetDisplayName();
+                employee.Rol.RolName = employee.Rol.RolType.GetDisplayName();
             }
             return employee;
         }
@@ -454,30 +454,30 @@ namespace ReportingSystem.Data.SQL
             var results = await database.QueryAsync<TableTypeSQL.Employee>(query, para);
             foreach (var employees in results)
             {
-                employee.id = employees.Id;
-                employee.companyId = employees.CompanyId;
-                employee.customerId = employees.CustomerId;
-                employee.firstName = employees.FirstName;
-                employee.secondName = employees.SecondName;
-                employee.thirdName = employees.ThirdName;
-                employee.phoneWork = employees.PhoneWork;
-                employee.phoneSelf = employees.PhoneSelf;
-                employee.emailWork = employees.EmailWork;
-                employee.emailSelf = employees.EmailSelf;
-                employee.taxNumber = employees.TaxNumber;
-                employee.addressReg = employees.AddressReg;
-                employee.addressFact = employees.AddressFact;
-                employee.photo = employees.Photo;
-                employee.login = employees.Login;
-                employee.password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
-                employee.salary = employees.Salary;
-                employee.addSalary = employees.AddSalary;
-                employee.status = await GetEmployeeStatus(employees.Status);
-                employee.birthDate = employees.BirthDate;
-                employee.workStartDate = employees.WorkStartDate;
-                employee.workEndDate = employees.WorkEndDate;
-                employee.rol = await new SQLRead().GetRoleById(employees.Rol);
-                employee.position = await GetPositionEmployee(employees.Position);
+                employee.Id = employees.Id;
+                employee.CompanyId = employees.CompanyId;
+                employee.CustomerId = employees.CustomerId;
+                employee.FirstName = employees.FirstName;
+                employee.SecondName = employees.SecondName;
+                employee.ThirdName = employees.ThirdName;
+                employee.PhoneWork = employees.PhoneWork;
+                employee.PhoneSelf = employees.PhoneSelf;
+                employee.EmailWork = employees.EmailWork;
+                employee.EmailSelf = employees.EmailSelf;
+                employee.TaxNumber = employees.TaxNumber;
+                employee.AddressReg = employees.AddressReg;
+                employee.AddressFact = employees.AddressFact;
+                employee.Photo = employees.Photo;
+                employee.Login = employees.Login;
+                employee.Password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
+                employee.Salary = employees.Salary;
+                employee.AddSalary = employees.AddSalary;
+                employee.Status = await GetEmployeeStatus(employees.Status);
+                employee.BirthDate = employees.BirthDate;
+                employee.WorkStartDate = employees.WorkStartDate;
+                employee.WorkEndDate = employees.WorkEndDate;
+                employee.Rol = await new SQLRead().GetRoleById(employees.Rol);
+                employee.Position = await GetPositionEmployee(employees.Position);
             };
 
             return employee;
@@ -559,30 +559,30 @@ namespace ReportingSystem.Data.SQL
                     var results = await database.QueryAsync<TableTypeSQL.Employee>(query, para);
                     foreach (var employees in results)
                     {
-                        employee.id = employees.Id;
-                        employee.companyId = employees.CompanyId;
-                        employee.customerId = employees.CustomerId;
-                        employee.firstName = employees.FirstName;
-                        employee.secondName = employees.SecondName;
-                        employee.thirdName = employees.ThirdName;
-                        employee.phoneWork = employees.PhoneWork;
-                        employee.phoneSelf = employees.PhoneSelf;
-                        employee.emailWork = employees.EmailWork;
-                        employee.emailSelf = employees.EmailSelf;
-                        employee.taxNumber = employees.TaxNumber;
-                        employee.addressReg = employees.AddressReg;
-                        employee.addressFact = employees.AddressFact;
-                        employee.photo = employees.Photo;
-                        employee.login = employees.Login;
-                        employee.password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
-                        employee.salary = employees.Salary;
-                        employee.addSalary = employees.AddSalary;
-                        employee.status = await GetEmployeeStatus(employees.Status);
+                        employee.Id = employees.Id;
+                        employee.CompanyId = employees.CompanyId;
+                        employee.CustomerId = employees.CustomerId;
+                        employee.FirstName = employees.FirstName;
+                        employee.SecondName = employees.SecondName;
+                        employee.ThirdName = employees.ThirdName;
+                        employee.PhoneWork = employees.PhoneWork;
+                        employee.PhoneSelf = employees.PhoneSelf;
+                        employee.EmailWork = employees.EmailWork;
+                        employee.EmailSelf = employees.EmailSelf;
+                        employee.TaxNumber = employees.TaxNumber;
+                        employee.AddressReg = employees.AddressReg;
+                        employee.AddressFact = employees.AddressFact;
+                        employee.Photo = employees.Photo;
+                        employee.Login = employees.Login;
+                        employee.Password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
+                        employee.Salary = employees.Salary;
+                        employee.AddSalary = employees.AddSalary;
+                        employee.Status = await GetEmployeeStatus(employees.Status);
 
-                        employee.birthDate = employees.BirthDate;
-                        employee.workStartDate = employees.WorkStartDate;
-                        employee.workEndDate = employees.WorkEndDate;
-                        employee.rol = await new SQLRead().GetRoleById(employees.Rol);
+                        employee.BirthDate = employees.BirthDate;
+                        employee.WorkStartDate = employees.WorkStartDate;
+                        employee.WorkEndDate = employees.WorkEndDate;
+                        employee.Rol = await new SQLRead().GetRoleById(employees.Rol);
                         
                     };
                 }
@@ -679,8 +679,8 @@ namespace ReportingSystem.Data.SQL
             };
             var result = await database.QueryAsync<int>(query, para);
 
-            companyStatusModel.companyStatusType = (CompanyStatus)result.First();
-            companyStatusModel.companyStatusName = companyStatusModel.companyStatusType.GetDisplayName();
+            companyStatusModel.CompanyStatusType = (CompanyStatus)result.First();
+            companyStatusModel.CompanyStatusName = companyStatusModel.CompanyStatusType.GetDisplayName();
 
             return companyStatusModel;
         }
@@ -724,7 +724,7 @@ namespace ReportingSystem.Data.SQL
             var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[CompanyStatus] WHERE Type = @Type";
             var para = new
             {
-                Type = (int)companyStatus.companyStatusType,
+                Type = (int)companyStatus.CompanyStatusType,
             };
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
@@ -750,9 +750,9 @@ namespace ReportingSystem.Data.SQL
 
             CompanyStatusModel companyStatus = new()
             {
-                companyStatusType = CompanyStatus.Actual
+                CompanyStatusType = CompanyStatus.Actual
             };
-            companyStatus.companyStatusName = companyStatus.companyStatusType.GetDisplayName();
+            companyStatus.CompanyStatusName = companyStatus.CompanyStatusType.GetDisplayName();
             Guid statusCompanyId = await GetCompanyStatusId(companyStatus);
 
 
@@ -826,14 +826,14 @@ namespace ReportingSystem.Data.SQL
             List<EmployeeRolModel> devRols = [];
             EmployeeRolModel devRol = new()
             {
-                rolType = EmployeeRolStatus.Developer,
-                rolName = EmployeeRolStatus.Developer.GetDisplayName()
+                RolType = EmployeeRolStatus.Developer,
+                RolName = EmployeeRolStatus.Developer.GetDisplayName()
             };
             devRols.Add(devRol);
             devRol = new EmployeeRolModel()
             {
-                rolType = EmployeeRolStatus.DevAdministrator,
-                rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+                RolType = EmployeeRolStatus.DevAdministrator,
+                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
             };
             devRols.Add(devRol);
             return devRols;

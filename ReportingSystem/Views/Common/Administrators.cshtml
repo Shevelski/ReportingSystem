@@ -261,7 +261,7 @@
                                     <button class="btn btn-default mt-3"
                                             v-if="mode=='standart'"
                                             v-bind:class="{active: mode == 'standart'}"
-                                            v-on:click="ToogleMode('edit')">
+                                            v-on:click="ToogleMode('edit', index)">
                                         Редагувати
                                     </button>
 
@@ -269,7 +269,7 @@
                                             data-bs-toggle="modal" data-bs-target="#staticBackdrop"
                                             v-if="mode=='edit'"
                                             v-bind:class="{active: mode == 'edit'}"
-                                            v-on:click="ToogleMode('standart')">
+                                            v-on:click="ToogleMode('standart', index)">
                                         Підтвердити
                                     </button>
 

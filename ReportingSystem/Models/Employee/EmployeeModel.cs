@@ -4,34 +4,34 @@ namespace ReportingSystem.Models.User
 {
     public class EmployeeModel
     {
-        public Guid id { get; set; }
-        public Guid companyId { get; set; }
-        public Guid customerId { get; set; }
-        public string? firstName { get; set; }
-        public string? secondName { get; set; }
-        public string? thirdName { get; set; }
-        public string? phoneWork { get; set; }
-        public string? phoneSelf { get; set; }
-        public string? emailWork { get; set; }
-        public string? emailSelf { get; set; }
-        public string? taxNumber { get; set; }
-        public string? addressReg { get; set; }
-        public string? addressFact { get; set; }
-        public string? photo { get; set; }
-        public string? login { get; set; }
-        public string? password { get; set; }
-        public double salary { get; set; }
-        public double addSalary { get; set; }
-        public EmployeeStatusModel? status { get; set; }
-        public DateTime birthDate { get; set; }
-        public DateTime workStartDate { get; set; }
-        public DateTime workEndDate { get; set; }
-        public List<DateTime>? holidayDate { get; set; }
-        public List<DateTime>? hospitalDate { get; set; }
-        public List<DateTime>? assignmentDate { get; set; }
-        public List<DateTime>? taketimeoffDate { get; set; }
-        public EmployeePositionModel? position { get; set; }
-        public EmployeeRolModel? rol { get; set; }
+        public Guid Id { get; set; }
+        public Guid CompanyId { get; set; }
+        public Guid CustomerId { get; set; }
+        public string? FirstName { get; set; }
+        public string? SecondName { get; set; }
+        public string? ThirdName { get; set; }
+        public string? PhoneWork { get; set; }
+        public string? PhoneSelf { get; set; }
+        public string? EmailWork { get; set; }
+        public string? EmailSelf { get; set; }
+        public string? TaxNumber { get; set; }
+        public string? AddressReg { get; set; }
+        public string? AddressFact { get; set; }
+        public string? Photo { get; set; }
+        public string? Login { get; set; }
+        public string? Password { get; set; }
+        public double Salary { get; set; }
+        public double AddSalary { get; set; }
+        public EmployeeStatusModel? Status { get; set; }
+        public DateTime BirthDate { get; set; }
+        public DateTime WorkStartDate { get; set; }
+        public DateTime WorkEndDate { get; set; }
+        public List<DateTime>? HolidayDate { get; set; }
+        public List<DateTime>? HospitalDate { get; set; }
+        public List<DateTime>? AssignmentDate { get; set; }
+        public List<DateTime>? TaketimeoffDate { get; set; }
+        public EmployeePositionModel? Position { get; set; }
+        public EmployeeRolModel? Rol { get; set; }
 
     }
 }

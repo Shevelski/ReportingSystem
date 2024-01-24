@@ -52,8 +52,8 @@ namespace ReportingSystem.Data.Generate
                 CompanyStatusModel resultStatus = new();
                 CompanyStatus[] values = [CompanyStatus.Project, CompanyStatus.Actual, CompanyStatus.Archive];
                 CompanyStatus status = values[random.Next(values.Length)];
-                resultStatus.companyStatusType = status;
-                resultStatus.companyStatusName = status.GetDisplayName();
+                resultStatus.CompanyStatusType = status;
+                resultStatus.CompanyStatusName = status.GetDisplayName();
                 company.Status = resultStatus;
 
                 company.Phone = GenerateInfo.PhoneNumber();
@@ -65,7 +65,7 @@ namespace ReportingSystem.Data.Generate
                 company.Rolls = DefaultEmployeeRolls.GetForEmployee();
 
                 company.Employees = new GenerateEmployees().Employees(company, customer.Id);
-                company.Chief = company.Employees.First(u => u.position != null && u.position.NamePosition != null && u.position.NamePosition.Equals("Директор"));
+                company.Chief = company.Employees.First(u => u.Position != null && u.Position.NamePosition != null && u.Position.NamePosition.Equals("Директор"));
 
                 company.Categories = new GenerateCategories().Categories();
                 company.Projects = new GenerateProjects().RandomProjects(company);

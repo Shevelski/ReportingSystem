@@ -23,8 +23,8 @@ namespace ReportingSystem.Data.Generate
 
                     EmployeeModel user = new();
                     user = GenerateEmployee(company, customerId);
-                    user.position = userPosition;
-                    user.rol = new GenerateRolls().GenerateRol(user.position);
+                    user.Position = userPosition;
+                    user.Rol = new GenerateRolls().GenerateRol(user.Position);
                     //userPosition.employees.Add(user);
                     results.Add(user);
                     Debug.WriteLine($"User {i} added from {company.Positions.Count}");
@@ -41,44 +41,44 @@ namespace ReportingSystem.Data.Generate
             Random rnd = new();
             var faker = new Faker();
 
-            employee.id = Guid.NewGuid();
-            employee.companyId = company.Id;
-            employee.customerId = customerId;
-            employee.firstName = faker.Name.FirstName();
-            employee.secondName = faker.Name.LastName();
+            employee.Id = Guid.NewGuid();
+            employee.CompanyId = company.Id;
+            employee.CustomerId = customerId;
+            employee.FirstName = faker.Name.FirstName();
+            employee.SecondName = faker.Name.LastName();
 
-            employee.thirdName = faker.Name.JobType();
-            employee.taxNumber = GenerateInfo.Code();
-            employee.phoneSelf = GenerateInfo.MobilePhoneNumber();
-            employee.phoneWork = GenerateInfo.PhoneNumber();
-            employee.emailWork = (employee.secondName.ToLower() + "@gmail.ua").Replace(" ", "");
+            employee.ThirdName = faker.Name.JobType();
+            employee.TaxNumber = GenerateInfo.Code();
+            employee.PhoneSelf = GenerateInfo.MobilePhoneNumber();
+            employee.PhoneWork = GenerateInfo.PhoneNumber();
+            employee.EmailWork = (employee.SecondName.ToLower() + "@gmail.ua").Replace(" ", "");
 
-            while (listEm.Exists(e => e.Equals(employee.emailWork)))
+            while (listEm.Exists(e => e.Equals(employee.EmailWork)))
             {
-                employee.emailWork = (employee.secondName.ToLower() + rnd.Next(0, 300) + "@gmail.ua").Replace(" ", "");
+                employee.EmailWork = (employee.SecondName.ToLower() + rnd.Next(0, 300) + "@gmail.ua").Replace(" ", "");
                 Debug.WriteLine($"this data is exist");
             }
-            listEm.Add(employee.emailWork);
+            listEm.Add(employee.EmailWork);
 
-            employee.emailSelf = (employee.firstName.ToLower() + "@gmail.ua").Replace(" ", "");
-            employee.login = employee.secondName;
-            employee.status = new EmployeeStatusModel()
+            employee.EmailSelf = (employee.FirstName.ToLower() + "@gmail.ua").Replace(" ", "");
+            employee.Login = employee.SecondName;
+            employee.Status = new EmployeeStatusModel()
             {
-                employeeStatusType = EmployeeStatus.Actual,
-                employeeStatusName = EmployeeStatus.Actual.GetDisplayName(),
+                EmployeeStatusType = EmployeeStatus.Actual,
+                EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName(),
             };
-            employee.password = EncryptionHelper.Encrypt(GenerateInfo.Password());
-            employee.addressFact = faker.Address.FullAddress();
-            employee.addressReg = faker.Address.FullAddress();
-            employee.photo = "/img/UserPhoto/John1.jpg";
-            employee.salary = rnd.Next(20000, 100000);
-            employee.addSalary = employee.salary * rnd.Next(10, 60) / 100.0;
-            employee.birthDate = GenerateDate.BetweenDates(DateTime.Today.AddYears(-60), DateTime.Today.AddYears(-20));
-            employee.workStartDate = GenerateDate.BetweenDates(company.RegistrationDate, DateTime.Today);
-            employee.workEndDate = employee.workStartDate.AddDays(-1);
-            employee.holidayDate = GenerateDate.RangeDates(employee.workStartDate, 3, true);
-            employee.taketimeoffDate = GenerateDate.RangeDates(employee.workStartDate, 1, false);
-            employee.assignmentDate = GenerateDate.RangeDates(employee.workStartDate, 1, false);
+            employee.Password = EncryptionHelper.Encrypt(GenerateInfo.Password());
+            employee.AddressFact = faker.Address.FullAddress();
+            employee.AddressReg = faker.Address.FullAddress();
+            employee.Photo = "/img/UserPhoto/John1.jpg";
+            employee.Salary = rnd.Next(20000, 100000);
+            employee.AddSalary = employee.Salary * rnd.Next(10, 60) / 100.0;
+            employee.BirthDate = GenerateDate.BetweenDates(DateTime.Today.AddYears(-60), DateTime.Today.AddYears(-20));
+            employee.WorkStartDate = GenerateDate.BetweenDates(company.RegistrationDate, DateTime.Today);
+            employee.WorkEndDate = employee.WorkStartDate.AddDays(-1);
+            employee.HolidayDate = GenerateDate.RangeDates(employee.WorkStartDate, 3, true);
+            employee.TaketimeoffDate = GenerateDate.RangeDates(employee.WorkStartDate, 1, false);
+            employee.AssignmentDate = GenerateDate.RangeDates(employee.WorkStartDate, 1, false);
 
 
             return employee;

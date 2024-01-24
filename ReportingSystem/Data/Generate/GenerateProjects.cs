@@ -19,16 +19,16 @@ namespace ReportingSystem.Data.Generate
             List<EmployeeModel> teamE = company.Employees ?? ([]);
 
             List<EmployeePositionModel> managersP = teamP.Where(e => e.NamePosition == "Проект-менеджер").ToList();
-            List<EmployeeModel> managersE = teamE.Where(e => e.position != null && e.position.NamePosition == "Проект-менеджер").ToList();
+            List<EmployeeModel> managersE = teamE.Where(e => e.Position != null && e.Position.NamePosition == "Проект-менеджер").ToList();
 
             List<EmployeePositionModel> developersP = teamP.Where(e => e.NamePosition == "Розробник").ToList();
-            List<EmployeeModel> developersE = teamE.Where(e => e.position!= null && e.position.NamePosition == "Розробник").ToList();
+            List<EmployeeModel> developersE = teamE.Where(e => e.Position!= null && e.Position.NamePosition == "Розробник").ToList();
 
             List<EmployeePositionModel> designersP = teamP.Where(e => e.NamePosition == "Графічний дизайнер").ToList();
-            List<EmployeeModel> designersE = teamE.Where(e => e.position != null && e.position.NamePosition == "Графічний дизайнер").ToList();
+            List<EmployeeModel> designersE = teamE.Where(e => e.Position != null && e.Position.NamePosition == "Графічний дизайнер").ToList();
 
             List<EmployeePositionModel> testersP = teamP.Where(e => e.NamePosition == "Тестувальник").ToList();
-            List<EmployeeModel> testersE = teamE.Where(e => e.position != null &&  e.position.NamePosition == "Тестувальник").ToList();
+            List<EmployeeModel> testersE = teamE.Where(e => e.Position != null &&  e.Position.NamePosition == "Тестувальник").ToList();
 
             int numberPosOfManagers = managersP.Count;
             int numberPosOfDevelopers = developersP.Count / numberPosOfManagers;
@@ -49,76 +49,76 @@ namespace ReportingSystem.Data.Generate
                 Faker faker = new();
                 ProjectModel project = new()
                 {
-                    companyId = company.Id,
-                    id = Guid.NewGuid(),
-                    head = managersE[m],
-                    name = faker.Commerce.ProductMaterial(),
-                    description = faker.Commerce.ProductDescription(),
-                    startDate = DateTime.Now.AddDays(random.Next(-180, -5)),
-                    planDate = DateTime.Now.AddDays(random.Next(20, 35)),
-                    endDate = DateTime.Now.AddDays(random.Next(30, 35)),
-                    positions = []
+                    CompanyId = company.Id,
+                    Id = Guid.NewGuid(),
+                    Head = managersE[m],
+                    Name = faker.Commerce.ProductMaterial(),
+                    Description = faker.Commerce.ProductDescription(),
+                    StartDate = DateTime.Now.AddDays(random.Next(-180, -5)),
+                    PlanDate = DateTime.Now.AddDays(random.Next(20, 35)),
+                    EndDate = DateTime.Now.AddDays(random.Next(30, 35)),
+                    Positions = []
                 };
-                project.positions.Add(managersP[m]);
-                project.members = [managersE[m]];
+                project.Positions.Add(managersP[m]);
+                project.Members = [managersE[m]];
                 ProjectStatus[] values = [ProjectStatus.Project, ProjectStatus.InProcess, ProjectStatus.Support, ProjectStatus.InImprove, ProjectStatus.Archive];
-                project.status = new ProjectStatusModel
+                project.Status = new ProjectStatusModel
                 {
-                    type = values[random.Next(values.Length)]
+                    Type = values[random.Next(values.Length)]
                 };
-                project.status.name = project.status.type.GetDisplayName();
+                project.Status.Name = project.Status.Type.GetDisplayName();
 
                 if (company.Categories != null)
                 {
-                    project.category = new ProjectChCategoryModel
+                    project.Category = new ProjectChCategoryModel
                     {
-                        level0CatId = company.Categories[0].id,
-                        level0CatName = company.Categories[0].name,
-                        level1CatId = company.Categories[0].categoriesLevel1[0].id,
-                        level1CatName = company.Categories[0].categoriesLevel1[0].name
+                        Level0CatId = company.Categories[0].Id,
+                        Level0CatName = company.Categories[0].Name,
+                        Level1CatId = company.Categories[0].CategoriesLevel1[0].Id,
+                        Level1CatName = company.Categories[0].CategoriesLevel1[0].Name
                     };
                 }
 
                 for (int d = 0; d < numberPosOfDevelopers; d++)
                 {
-                    project.positions.Add(developersP[d]);
-                    project.members.Add(developersE[d]);
+                    project.Positions.Add(developersP[d]);
+                    project.Members.Add(developersE[d]);
                 }
                 for (int de = 0; de < numberPosOfDesigners; de++)
                 {
-                    project.positions.Add(designersP[de]);
-                    project.members.Add(designersE[de]);
+                    project.Positions.Add(designersP[de]);
+                    project.Members.Add(designersE[de]);
                 }
                 for (int t = 0; t < numberPosOfTesters; t++)
                 {
-                    project.positions.Add(testersP[t]);
-                    project.members.Add(testersE[t]);
+                    project.Positions.Add(testersP[t]);
+                    project.Members.Add(testersE[t]);
                 }
 
-                project.steps = [];
+                project.Steps = [];
                 ProjectStepModel stepModel = new()
                 {
-                    name = "Step 1",
-                    description = "Description 1",
-                    positions = project.positions,
-                    members = project.members,
-                    status = project.status,
-                    startDate = project.startDate,
-                    endDate = project.endDate
+                    Name = "Step 1",
+                    Description = "Description 1",
+                    Positions = project.Positions,
+                    Members = project.Members,
+                    Status = project.Status,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate
                 };
-                project.steps.Add(stepModel);
+                project.Steps.Add(stepModel);
 
                 stepModel = new ProjectStepModel
                 {
-                    name = "Step 2",
-                    description = "Description 1",
-                    positions = project.positions,
-                    members = project.members,
-                    status = project.status,
-                    startDate = project.startDate,
-                    endDate = project.endDate
+                    Name = "Step 2",
+                    Description = "Description 1",
+                    Positions = project.Positions,
+                    Members = project.Members,
+                    Status = project.Status,
+                    StartDate = project.StartDate,
+                    EndDate = project.EndDate
                 };
-                project.steps.Add(stepModel);
+                project.Steps.Add(stepModel);
 
                 projects.Add(project);
             }

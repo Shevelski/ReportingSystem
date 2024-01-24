@@ -4,8 +4,8 @@ namespace ReportingSystem.Models.Project.Step
 {
     public class ProjectStepStatusModel
     {
-        public ProjectStepStatus type { get; set; }
-        public string? name { get; set; }
+        public ProjectStepStatus Type { get; set; }
+        public string? Name { get; set; }
 
     }
 }

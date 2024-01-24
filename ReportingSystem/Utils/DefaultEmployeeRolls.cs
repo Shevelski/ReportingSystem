@@ -13,44 +13,44 @@ namespace ReportingSystem.Utils
             EmployeeRolModel userRolModel = new();
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.Developer,
-                rolName = EmployeeRolStatus.Developer.GetDisplayName()
+                RolType = EmployeeRolStatus.Developer,
+                RolName = EmployeeRolStatus.Developer.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.DevAdministrator,
-                rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+                RolType = EmployeeRolStatus.DevAdministrator,
+                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.Administrator,
-                rolName = EmployeeRolStatus.Administrator.GetDisplayName()
+                RolType = EmployeeRolStatus.Administrator,
+                RolName = EmployeeRolStatus.Administrator.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.ProjectManager,
-                rolName = EmployeeRolStatus.ProjectManager.GetDisplayName()
+                RolType = EmployeeRolStatus.ProjectManager,
+                RolName = EmployeeRolStatus.ProjectManager.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.Customer,
-                rolName = EmployeeRolStatus.Customer.GetDisplayName()
+                RolType = EmployeeRolStatus.Customer,
+                RolName = EmployeeRolStatus.Customer.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.CEO,
-                rolName = EmployeeRolStatus.CEO.GetDisplayName()
+                RolType = EmployeeRolStatus.CEO,
+                RolName = EmployeeRolStatus.CEO.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.User,
-                rolName = EmployeeRolStatus.User.GetDisplayName()
+                RolType = EmployeeRolStatus.User,
+                RolName = EmployeeRolStatus.User.GetDisplayName()
             };
             rolls.Add(userRolModel);
 
@@ -63,26 +63,26 @@ namespace ReportingSystem.Utils
 
             EmployeeRolModel userRolModel = new()
             {
-                rolType = EmployeeRolStatus.Administrator,
-                rolName = EmployeeRolStatus.Administrator.GetDisplayName()
+                RolType = EmployeeRolStatus.Administrator,
+                RolName = EmployeeRolStatus.Administrator.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.ProjectManager,
-                rolName = EmployeeRolStatus.ProjectManager.GetDisplayName()
+                RolType = EmployeeRolStatus.ProjectManager,
+                RolName = EmployeeRolStatus.ProjectManager.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.CEO,
-                rolName = EmployeeRolStatus.CEO.GetDisplayName()
+                RolType = EmployeeRolStatus.CEO,
+                RolName = EmployeeRolStatus.CEO.GetDisplayName()
             };
             rolls.Add(userRolModel);
             userRolModel = new EmployeeRolModel
             {
-                rolType = EmployeeRolStatus.User,
-                rolName = EmployeeRolStatus.User.GetDisplayName()
+                RolType = EmployeeRolStatus.User,
+                RolName = EmployeeRolStatus.User.GetDisplayName()
             };
             rolls.Add(userRolModel);
 

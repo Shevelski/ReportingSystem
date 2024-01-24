@@ -67,8 +67,8 @@ namespace ReportingSystem.Services
                 {
                     
                     EmployeePositionEmpModel employeePositionEmpModel = new EmployeePositionEmpModel();
-                    employeePositionEmpModel.namePosition = item.NamePosition;
-                    employeePositionEmpModel.employee = company.Employees[i];
+                    employeePositionEmpModel.NamePosition = item.NamePosition;
+                    employeePositionEmpModel.Employee = company.Employees[i];
                     positions.Add(employeePositionEmpModel);
                     i++;
                 }
@@ -146,7 +146,7 @@ namespace ReportingSystem.Services
                 {
                     var employees = company.Employees;
                     employeesByPosition = employees
-                        .Where(employee => employee.position != null && !string.IsNullOrEmpty(employee.position.NamePosition) && employee.position.NamePosition.Equals(pos))
+                        .Where(employee => employee.Position != null && !string.IsNullOrEmpty(employee.Position.NamePosition) && employee.Position.NamePosition.Equals(pos))
                         .ToList();
 
                     if (employeesByPosition.Any())
@@ -230,11 +230,11 @@ namespace ReportingSystem.Services
 
                         if (company.Employees != null)
                         {
-                            foreach (var emp in company.Employees.Where(emp => emp.position != null && emp.position.NamePosition != null && emp.position.NamePosition.Equals(oldPositionName)))
+                            foreach (var emp in company.Employees.Where(emp => emp.Position != null && emp.Position.NamePosition != null && emp.Position.NamePosition.Equals(oldPositionName)))
                             {
-                                if (emp.position != null)
+                                if (emp.Position != null)
                                 {
-                                    emp.position.NamePosition = newPositionName;
+                                    emp.Position.NamePosition = newPositionName;
                                 }
                                 
                             }
@@ -308,11 +308,11 @@ namespace ReportingSystem.Services
                 {
                     if (Guid.TryParse(ar[2], out Guid idEmployee))
                     {
-                        var employee = company.Employees.FirstOrDefault(em => em.id.Equals(idEmployee));
+                        var employee = company.Employees.FirstOrDefault(em => em.Id.Equals(idEmployee));
 
-                        if (employee != null && employee.position != null)
+                        if (employee != null && employee.Position != null)
                         {
-                            employee.position.NamePosition = ar[3];
+                            employee.Position.NamePosition = ar[3];
                             DatabaseMoq.UpdateJson();
                             return employee;
                         }

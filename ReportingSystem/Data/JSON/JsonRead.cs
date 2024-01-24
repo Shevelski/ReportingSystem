@@ -67,7 +67,7 @@ namespace ReportingSystem.Data.JSON
 
             foreach (var administrator in administrators)
             {
-                if (administrator.emailWork != null && administrator.emailWork.Equals(email, StringComparison.CurrentCultureIgnoreCase))
+                if (administrator.EmailWork != null && administrator.EmailWork.Equals(email, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return true;
                 }
@@ -95,7 +95,7 @@ namespace ReportingSystem.Data.JSON
                         {
                             foreach (var employee in company.Employees)
                             {
-                                if (employee.emailWork != null && employee.emailWork.Equals(email, StringComparison.CurrentCultureIgnoreCase))
+                                if (employee.EmailWork != null && employee.EmailWork.Equals(email, StringComparison.CurrentCultureIgnoreCase))
                                 {
                                     return true;
                                 }
@@ -122,13 +122,13 @@ namespace ReportingSystem.Data.JSON
 
                 
 
-                var developer = developers.First(dev => dev.id.Equals(idEm));
+                var developer = developers.First(dev => dev.Id.Equals(idEm));
 
                 var dev = developer;
 
-                if (dev != null && dev.password != null)
+                if (dev != null && dev.Password != null)
                 {
-                    dev.password = EncryptionHelper.Decrypt(dev.password);
+                    dev.Password = EncryptionHelper.Decrypt(dev.Password);
                 }
 
                 return dev;
@@ -175,13 +175,13 @@ namespace ReportingSystem.Data.JSON
             //    return null;
             //}
 
-            var employee = employees.FirstOrDefault(comp => comp.id.Equals(idEm));
+            var employee = employees.FirstOrDefault(comp => comp.Id.Equals(idEm));
 
             var empl = employee;
 
-            if (empl != null && empl.password != null)
+            if (empl != null && empl.Password != null)
             {
-                empl.password = EncryptionHelper.Decrypt(empl.password);
+                empl.Password = EncryptionHelper.Decrypt(empl.Password);
             }
 
             return empl;
@@ -201,9 +201,9 @@ namespace ReportingSystem.Data.JSON
 
             foreach (var employee in list)
             {
-                if (employee.password != null)
+                if (employee.Password != null)
                 {
-                    employee.password = EncryptionHelper.Decrypt(employee.password);
+                    employee.Password = EncryptionHelper.Decrypt(employee.Password);
                 }
             }
 
@@ -248,9 +248,9 @@ namespace ReportingSystem.Data.JSON
 
             foreach (var employee in list)
             {
-                if (employee.password != null)
+                if (employee.Password != null)
                 {
-                    employee.password = EncryptionHelper.Decrypt(employee.password);
+                    employee.Password = EncryptionHelper.Decrypt(employee.Password);
                 }
             }
 
@@ -346,7 +346,7 @@ namespace ReportingSystem.Data.JSON
             if (customer != null && customer.Companies != null)
             {
                 return customer.Companies
-                    .Where(item => item.Status != null && item.Status.companyStatusType.Equals(CompanyStatus.Actual))
+                    .Where(item => item.Status != null && item.Status.CompanyStatusType.Equals(CompanyStatus.Actual))
                     .ToList();
             }
 
@@ -383,14 +383,14 @@ namespace ReportingSystem.Data.JSON
             List<EmployeeRolModel> devRols = [];
             EmployeeRolModel devRol = new ()
             {
-                rolType = EmployeeRolStatus.Developer,
-                rolName = EmployeeRolStatus.Developer.GetDisplayName()
+                RolType = EmployeeRolStatus.Developer,
+                RolName = EmployeeRolStatus.Developer.GetDisplayName()
             };
             devRols.Add(devRol);
             devRol = new EmployeeRolModel()
             {
-                rolType = EmployeeRolStatus.DevAdministrator,
-                rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+                RolType = EmployeeRolStatus.DevAdministrator,
+                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
             };
             devRols.Add(devRol);
             return devRols;

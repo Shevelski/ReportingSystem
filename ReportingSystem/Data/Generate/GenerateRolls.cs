@@ -26,24 +26,24 @@ namespace ReportingSystem.Data.Generate
 
             if (position.NamePosition == positions[0] || position.NamePosition == positions[2])
             {
-                rol.rolType = EmployeeRolStatus.CEO;
-                rol.rolName = EmployeeRolStatus.CEO.GetDisplayName();
+                rol.RolType = EmployeeRolStatus.CEO;
+                rol.RolName = EmployeeRolStatus.CEO.GetDisplayName();
                 return rol;
             }
             if (position.NamePosition == positions[1])
             {
-                rol.rolType = EmployeeRolStatus.Administrator;
-                rol.rolName = EmployeeRolStatus.Administrator.GetDisplayName();
+                rol.RolType = EmployeeRolStatus.Administrator;
+                rol.RolName = EmployeeRolStatus.Administrator.GetDisplayName();
             }
             if (position.NamePosition == positions[3] || position.NamePosition == positions[4] || position.NamePosition == positions[5] || position.NamePosition == positions[6])
             {
-                rol.rolType = EmployeeRolStatus.ProjectManager;
-                rol.rolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
+                rol.RolType = EmployeeRolStatus.ProjectManager;
+                rol.RolName = EmployeeRolStatus.ProjectManager.GetDisplayName();
             }
             if (position.NamePosition == positions[7] || position.NamePosition == positions[8] || position.NamePosition == positions[9])
             {
-                rol.rolType = EmployeeRolStatus.User;
-                rol.rolName = EmployeeRolStatus.User.GetDisplayName();
+                rol.RolType = EmployeeRolStatus.User;
+                rol.RolName = EmployeeRolStatus.User.GetDisplayName();
             }
             return rol;
         }

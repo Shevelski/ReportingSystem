@@ -87,7 +87,7 @@ namespace ReportingSystem.Services
                     return null;
                 }
 
-                return company.Employees.Where(employee => employee.rol != null && employee.rol.rolName != null && employee.rol.rolName.Equals(rol)).ToList();
+                return company.Employees.Where(employee => employee.Rol != null && employee.Rol.RolName != null && employee.Rol.RolName.Equals(rol)).ToList();
             }
 
             return null;
@@ -122,15 +122,15 @@ namespace ReportingSystem.Services
 
                 if (Guid.TryParse(ar[2], out Guid idEmployee))
                 {
-                    var employee = company.Employees.FirstOrDefault(emp => emp.id.Equals(idEmployee));
+                    var employee = company.Employees.FirstOrDefault(emp => emp.Id.Equals(idEmployee));
 
-                    if (employee != null && employee.rol != null && company.Rolls != null)
+                    if (employee != null && employee.Rol != null && company.Rolls != null)
                     {
-                        var newRol = company.Rolls.FirstOrDefault(rol => rol.rolName != null && rol.rolName.Equals(ar[3]));
+                        var newRol = company.Rolls.FirstOrDefault(rol => rol.RolName != null && rol.RolName.Equals(ar[3]));
 
                         if (newRol != null)
                         {
-                            employee.rol = newRol;
+                            employee.Rol = newRol;
                             DatabaseMoq.UpdateJson();
                             return employee;
                         }

@@ -61,9 +61,9 @@ namespace ReportingSystem.Utils
 
                     company.Chief = new Models.User.EmployeeModel()
                     {
-                        firstName = firstName,
-                        secondName = secondName,
-                        thirdName = thirdName,
+                        FirstName = firstName,
+                        SecondName = secondName,
+                        ThirdName = thirdName,
                     };
                         
                 }

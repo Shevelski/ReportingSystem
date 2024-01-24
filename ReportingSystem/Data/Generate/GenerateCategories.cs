@@ -20,10 +20,10 @@ namespace ReportingSystem.Data.Generate
             {
                 ProjectCategoryModel model = new ProjectCategoryModel
                 {
-                    id = Guid.NewGuid(),
-                    name = category,
-                    projects = new List<Guid>(),
-                    categoriesLevel1 = new List<ProjectCategoryModel1>()
+                    Id = Guid.NewGuid(),
+                    Name = category,
+                    Projects = new List<Guid>(),
+                    CategoriesLevel1 = new List<ProjectCategoryModel1>()
                 };
                 models.Add(model);
 
@@ -33,11 +33,11 @@ namespace ReportingSystem.Data.Generate
                     {
                         ProjectCategoryModel1 model1 = new ProjectCategoryModel1
                         {
-                            id = Guid.NewGuid(),
-                            name = subCategory,
-                            categoriesLevel2 = new List<ProjectCategoryModel2>()
+                            Id = Guid.NewGuid(),
+                            Name = subCategory,
+                            CategoriesLevel2 = new List<ProjectCategoryModel2>()
                         };
-                        model.categoriesLevel1.Add(model1);
+                        model.CategoriesLevel1.Add(model1);
                     }
                 }
                 else if (category == "Допоміжні")
@@ -46,11 +46,11 @@ namespace ReportingSystem.Data.Generate
                     {
                         ProjectCategoryModel1 model1 = new ProjectCategoryModel1
                         {
-                            id = Guid.NewGuid(),
-                            name = subCategory,
-                            categoriesLevel2 = new List<ProjectCategoryModel2>()
+                            Id = Guid.NewGuid(),
+                            Name = subCategory,
+                            CategoriesLevel2 = new List<ProjectCategoryModel2>()
                         };
-                        model.categoriesLevel1.Add(model1);
+                        model.CategoriesLevel1.Add(model1);
                     }
                 }
                 else if (category == "Адміністративні")
@@ -59,11 +59,11 @@ namespace ReportingSystem.Data.Generate
                     {
                         ProjectCategoryModel1 model1 = new ProjectCategoryModel1
                         {
-                            id = Guid.NewGuid(),
-                            name = subCategory,
-                            categoriesLevel2 = new List<ProjectCategoryModel2>()
+                            Id = Guid.NewGuid(),
+                            Name = subCategory,
+                            CategoriesLevel2 = new List<ProjectCategoryModel2>()
                         };
-                        model.categoriesLevel1.Add(model1);
+                        model.CategoriesLevel1.Add(model1);
                     }
                 }
                 else if (category == "Соціальні")
@@ -72,11 +72,11 @@ namespace ReportingSystem.Data.Generate
                     {
                         ProjectCategoryModel1 model1 = new ProjectCategoryModel1
                         {
-                            id = Guid.NewGuid(),
-                            name = subCategory,
-                            categoriesLevel2 = new List<ProjectCategoryModel2>()
+                            Id = Guid.NewGuid(),
+                            Name = subCategory,
+                            CategoriesLevel2 = new List<ProjectCategoryModel2>()
                         };
-                        model.categoriesLevel1.Add(model1);
+                        model.CategoriesLevel1.Add(model1);
                     }
                 }
             }
@@ -85,14 +85,14 @@ namespace ReportingSystem.Data.Generate
             {
                 ProjectCategoryModel2 model2 = new ProjectCategoryModel2
                 {
-                    id = Guid.NewGuid(),
-                    name = category,
-                    categoriesLevel3 = new List<ProjectCategoryModel3>()
+                    Id = Guid.NewGuid(),
+                    Name = category,
+                    CategoriesLevel3 = new List<ProjectCategoryModel3>()
                 };
                 var model0 = models[0];
-                var model01 = model0.categoriesLevel1;
+                var model01 = model0.CategoriesLevel1;
                 var model02 = model01 != null ? model01[0] : null;
-                var model03 = model02 != null ? model02.categoriesLevel2 : null;
+                var model03 = model02 != null ? model02.CategoriesLevel2 : null;
                 if (model03 != null)
                 {
                     model03.Add(model2);
@@ -106,14 +106,14 @@ namespace ReportingSystem.Data.Generate
             {
                 ProjectCategoryModel2 model2 = new ProjectCategoryModel2
                 {
-                    id = Guid.NewGuid(),
-                    name = category,
-                    categoriesLevel3 = new List<ProjectCategoryModel3>()
+                    Id = Guid.NewGuid(),
+                    Name = category,
+                    CategoriesLevel3 = new List<ProjectCategoryModel3>()
                 };
                 var model0 = models[0];
-                var model01 = model0.categoriesLevel1;
+                var model01 = model0.CategoriesLevel1;
                 var model02 = model01 != null ? model01[1] : null;
-                var model03 = model02 != null ? model02.categoriesLevel2 : null;
+                var model03 = model02 != null ? model02.CategoriesLevel2 : null;
                 if (model03 != null)
                 {
                     model03.Add(model2);

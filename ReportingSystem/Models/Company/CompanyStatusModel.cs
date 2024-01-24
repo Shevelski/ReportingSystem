@@ -4,8 +4,8 @@ namespace ReportingSystem.Models.Customer
 {
     public class CompanyStatusModel
     {
-        public CompanyStatus companyStatusType { get; set; }
-        public string? companyStatusName { get; set; }
+        public CompanyStatus CompanyStatusType { get; set; }
+        public string? CompanyStatusName { get; set; }
 
     }
 }

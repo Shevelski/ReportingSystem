@@ -14,117 +14,117 @@ namespace ReportingSystem.Data.Generate
             var x = new List<EmployeeModel>
             {
                 new() {
-                    id = Guid.NewGuid(),
-                    birthDate = DateTime.Parse("10.04.1991"),
-                    firstName = "Сергій",
-                    secondName = "Наку",
-                    thirdName = "------",
-                    phoneWork = "+380666666666",
-                    emailWork = "serhii@gmail.ua",
-                    photo = "",
-                    login = "serhii",
-                    password = EncryptionHelper.Encrypt("12345"),
-                    rol = new EmployeeRolModel()
+                    Id = Guid.NewGuid(),
+                    BirthDate = DateTime.Parse("10.04.1991"),
+                    FirstName = "Сергій",
+                    SecondName = "Наку",
+                    ThirdName = "------",
+                    PhoneWork = "+380666666666",
+                    EmailWork = "serhii@gmail.ua",
+                    Photo = "",
+                    Login = "serhii",
+                    Password = EncryptionHelper.Encrypt("12345"),
+                    Rol = new EmployeeRolModel()
                     {
-                        rolType = EmployeeRolStatus.Developer,
-                        rolName = EmployeeRolStatus.Developer.GetDisplayName()
+                        RolType = EmployeeRolStatus.Developer,
+                        RolName = EmployeeRolStatus.Developer.GetDisplayName()
                     },
-                    status = new EmployeeStatusModel()
+                    Status = new EmployeeStatusModel()
                     {
-                        employeeStatusType = EmployeeStatus.Actual,
-                        employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                        EmployeeStatusType = EmployeeStatus.Actual,
+                        EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                     },
-                    position = new EmployeePositionModel()
+                    Position = new EmployeePositionModel()
                     {
                         NamePosition = EmployeeRolStatus.Developer.GetDisplayName(),
                     },
-                    workStartDate = DateTime.Now, 
-                    workEndDate = DateTime.Now,
+                    WorkStartDate = DateTime.Now, 
+                    WorkEndDate = DateTime.Now,
                     
                 },
                 new() {
-                    id = Guid.NewGuid(),
-                    birthDate = DateTime.Parse("01.01.1990"),
-                    firstName = "Олександр",
-                    secondName = "Шевельський",
-                    thirdName = "------------",
-                    phoneWork = "+380666666666",
-                    emailWork = "alex@gmail.ua",
-                    photo = "",
-                    login = "alex",
-                    password = EncryptionHelper.Encrypt("12345"),
-                    rol = new EmployeeRolModel()
+                    Id = Guid.NewGuid(),
+                    BirthDate = DateTime.Parse("01.01.1990"),
+                    FirstName = "Олександр",
+                    SecondName = "Шевельський",
+                    ThirdName = "------------",
+                    PhoneWork = "+380666666666",
+                    EmailWork = "alex@gmail.ua",
+                    Photo = "",
+                    Login = "alex",
+                    Password = EncryptionHelper.Encrypt("12345"),
+                    Rol = new EmployeeRolModel()
                     {
-                        rolType = EmployeeRolStatus.Developer,
-                        rolName = EmployeeRolStatus.Developer.GetDisplayName()
+                        RolType = EmployeeRolStatus.Developer,
+                        RolName = EmployeeRolStatus.Developer.GetDisplayName()
                     },
-                    status = new EmployeeStatusModel()
+                    Status = new EmployeeStatusModel()
                     {
-                        employeeStatusType = EmployeeStatus.Actual,
-                        employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                        EmployeeStatusType = EmployeeStatus.Actual,
+                        EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                     },
-                    position = new EmployeePositionModel()
+                    Position = new EmployeePositionModel()
                     {
                         NamePosition = EmployeeRolStatus.Developer.GetDisplayName(),
                     },
-                    workStartDate = DateTime.Now,
-                    workEndDate = DateTime.Now,
+                    WorkStartDate = DateTime.Now,
+                    WorkEndDate = DateTime.Now,
                 },
                 new() {
-                    id = Guid.NewGuid(),
-                    birthDate = DateTime.Parse("01.01.1990"),
-                    firstName = "Голопупненко",
-                    secondName = "Іван",
-                    thirdName = "Петрович",
-                    phoneWork = "+380666666666",
-                    emailWork = "golo@gmail.ua",
-                    photo = "",
-                    login = "golo",
-                    password = EncryptionHelper.Encrypt("12345"),
-                    rol = new EmployeeRolModel()
+                    Id = Guid.NewGuid(),
+                    BirthDate = DateTime.Parse("01.01.1990"),
+                    FirstName = "Голопупненко",
+                    SecondName = "Іван",
+                    ThirdName = "Петрович",
+                    PhoneWork = "+380666666666",
+                    EmailWork = "golo@gmail.ua",
+                    Photo = "",
+                    Login = "golo",
+                    Password = EncryptionHelper.Encrypt("12345"),
+                    Rol = new EmployeeRolModel()
                     {
-                        rolType = EmployeeRolStatus.DevAdministrator,
-                        rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+                        RolType = EmployeeRolStatus.DevAdministrator,
+                        RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
                     },
-                    status = new EmployeeStatusModel()
+                    Status = new EmployeeStatusModel()
                     {
-                        employeeStatusType = EmployeeStatus.Actual,
-                        employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                        EmployeeStatusType = EmployeeStatus.Actual,
+                        EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                     },
-                    position = new EmployeePositionModel()
+                    Position = new EmployeePositionModel()
                     {
                         NamePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
                     },
-                    workStartDate = DateTime.Now,
-                    workEndDate = DateTime.Now,
+                    WorkStartDate = DateTime.Now,
+                    WorkEndDate = DateTime.Now,
                 },
                 new() {
-                    id = Guid.NewGuid(),
-                    birthDate = DateTime.Parse("01.01.1990"),
-                    firstName = "Стерненко",
-                    secondName = "Сергій",
-                    thirdName = "Іванович",
-                    phoneWork = "+380666666666",
-                    emailWork = "ster@gmail.ua",
-                    photo = "",
-                    login = "ster",
-                    password = EncryptionHelper.Encrypt("12345"),
-                    rol = new EmployeeRolModel()
+                    Id = Guid.NewGuid(),
+                    BirthDate = DateTime.Parse("01.01.1990"),
+                    FirstName = "Стерненко",
+                    SecondName = "Сергій",
+                    ThirdName = "Іванович",
+                    PhoneWork = "+380666666666",
+                    EmailWork = "ster@gmail.ua",
+                    Photo = "",
+                    Login = "ster",
+                    Password = EncryptionHelper.Encrypt("12345"),
+                    Rol = new EmployeeRolModel()
                     {
-                        rolType = EmployeeRolStatus.DevAdministrator,
-                        rolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+                        RolType = EmployeeRolStatus.DevAdministrator,
+                        RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
                     },
-                    status = new EmployeeStatusModel()
+                    Status = new EmployeeStatusModel()
                     {
-                        employeeStatusType = EmployeeStatus.Actual,
-                        employeeStatusName = EmployeeStatus.Actual.GetDisplayName()
+                        EmployeeStatusType = EmployeeStatus.Actual,
+                        EmployeeStatusName = EmployeeStatus.Actual.GetDisplayName()
                     },
-                    position = new EmployeePositionModel()
+                    Position = new EmployeePositionModel()
                     {
                         NamePosition = EmployeeRolStatus.DevAdministrator.GetDisplayName(),
                     },
-                    workStartDate = DateTime.Now,
-                    workEndDate = DateTime.Now,
+                    WorkStartDate = DateTime.Now,
+                    WorkEndDate = DateTime.Now,
                 }
             };
 

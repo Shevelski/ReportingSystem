@@ -90,7 +90,7 @@ namespace ReportingSystem.Data.SQL
                              "Where EmailWork = @EmailWork";
             var paraCheck = new
             {
-                EmailWork = employee.emailWork,
+                EmailWork = employee.EmailWork,
             };
 
             var checkResult1 = await _database.QueryAsync<int>(checkQuery1, paraCheck);
@@ -98,13 +98,13 @@ namespace ReportingSystem.Data.SQL
 
             if (checkResult1.First().Equals(0) && checkResult2.First().Equals(0))
             {
-                if (employee.status == null || employee.rol == null || employee.password == null || employee.position == null)
+                if (employee.Status == null || employee.Rol == null || employee.Password == null || employee.Position == null)
                 {
                     return;
                 }
                 var paraStatus = new
                 {
-                    Type = employee.status.employeeStatusType,
+                    Type = employee.Status.EmployeeStatusType,
                 };
                 var statusQuery = "SELECT [id]" +
                               "FROM [ReportingSystem].[dbo].[EmployeeStatus]" +
@@ -120,7 +120,7 @@ namespace ReportingSystem.Data.SQL
 
                 var paraStatus1 = new
                 {
-                    Type = employee.rol.rolType,
+                    Type = employee.Rol.RolType,
                 };
                 var rolQuery = "SELECT [id]" +
                           "FROM [ReportingSystem].[dbo].[EmployeeRolStatus]" +
@@ -136,7 +136,7 @@ namespace ReportingSystem.Data.SQL
 
                 var paraPosition = new
                 {
-                    Name = employee.position.NamePosition,
+                    Name = employee.Position.NamePosition,
                 };
                 var statusPosition = "SELECT [id]" +
                               "FROM [ReportingSystem].[dbo].[EmployeePosition]" +
@@ -156,28 +156,28 @@ namespace ReportingSystem.Data.SQL
 
                 var parameters = new
                 {
-                    Id = employee.id,
-                    CompanyId = employee.companyId,
-                    CustomerId = employee.customerId,
-                    FirstName = employee.firstName,
-                    SecondName = employee.secondName,
-                    ThirdName = employee.thirdName,
-                    PhoneWork = employee.phoneWork,
-                    PhoneSelf = employee.phoneSelf,
-                    EmailWork = employee.emailWork,
-                    EmailSelf = employee.emailSelf,
-                    TaxNumber = employee.taxNumber,
-                    AddressReg = employee.addressReg,
-                    AddressFact = employee.addressFact,
-                    Photo = employee.photo,
-                    Login = employee.login,
-                    Password = employee.password,//EncryptionHelper.Encrypt(employee.password),
-                    Salary = employee.salary,
-                    AddSalary = employee.addSalary,
+                    Id = employee.Id,
+                    CompanyId = employee.CompanyId,
+                    CustomerId = employee.CustomerId,
+                    FirstName = employee.FirstName,
+                    SecondName = employee.SecondName,
+                    ThirdName = employee.ThirdName,
+                    PhoneWork = employee.PhoneWork,
+                    PhoneSelf = employee.PhoneSelf,
+                    EmailWork = employee.EmailWork,
+                    EmailSelf = employee.EmailSelf,
+                    TaxNumber = employee.TaxNumber,
+                    AddressReg = employee.AddressReg,
+                    AddressFact = employee.AddressFact,
+                    Photo = employee.Photo,
+                    Login = employee.Login,
+                    Password = employee.Password,//EncryptionHelper.Encrypt(employee.password),
+                    Salary = employee.Salary,
+                    AddSalary = employee.AddSalary,
                     Status = status,
-                    BirthDate = employee.birthDate,
-                    WorkStartDate = employee.workStartDate,
-                    WorkEndDate = employee.workEndDate,
+                    BirthDate = employee.BirthDate,
+                    WorkStartDate = employee.WorkStartDate,
+                    WorkEndDate = employee.WorkEndDate,
                     Position = statusPos,
                     Rol = rol
                 };
@@ -212,7 +212,7 @@ namespace ReportingSystem.Data.SQL
                              "Where EmailWork = @EmailWork";
             var paraCheck = new
             {
-                EmailWork = employee.emailWork,
+                EmailWork = employee.EmailWork,
             };
 
             var checkResult1 = await _database.QueryAsync<int>(checkQuery1, paraCheck);
@@ -232,11 +232,11 @@ namespace ReportingSystem.Data.SQL
                     status = statusResult.First();
                 }
 
-                var rol0 = employee.rol;
+                var rol0 = employee.Rol;
 
                 var paraStatus1 = new
                 {
-                    Type = rol0 != null ? rol0.rolType : Enums.EmployeeRolStatus.Developer,
+                    Type = rol0 != null ? rol0.RolType : Enums.EmployeeRolStatus.Developer,
                 };
 
                 var rolQuery = "SELECT [id]" +
@@ -251,7 +251,7 @@ namespace ReportingSystem.Data.SQL
                     rol = rolResult.First();
                 }
 
-                if (employee.password == null)
+                if (employee.Password == null)
                 {
                     return;
                 }
@@ -262,16 +262,16 @@ namespace ReportingSystem.Data.SQL
 
                 var parameters = new
                 {
-                    Id = employee.id,
-                    FirstName = employee.firstName,
-                    SecondName = employee.secondName,
-                    ThirdName = employee.thirdName,
-                    PhoneWork = employee.phoneWork,
-                    EmailWork = employee.emailWork,
-                    Login = employee.login,
-                    Password = employee.password,//EncryptionHelper.Encrypt(employee.password),
+                    Id = employee.Id,
+                    FirstName = employee.FirstName,
+                    SecondName = employee.SecondName,
+                    ThirdName = employee.ThirdName,
+                    PhoneWork = employee.PhoneWork,
+                    EmailWork = employee.EmailWork,
+                    Login = employee.Login,
+                    Password = employee.Password,//EncryptionHelper.Encrypt(employee.password),
                     Status = status,
-                    BirthDate = employee.birthDate,
+                    BirthDate = employee.BirthDate,
                     Rol = rol
                 };
                 try
@@ -376,9 +376,9 @@ namespace ReportingSystem.Data.SQL
             int type = -1;
             if (company != null && company.Status != null && company.Status != null)
             {
-                company.Status.companyStatusName = Enums.CompanyStatus.Actual.GetDisplayName();
-                company.Status.companyStatusType = Enums.CompanyStatus.Actual;
-                type = (int)company.Status.companyStatusType;
+                company.Status.CompanyStatusName = Enums.CompanyStatus.Actual.GetDisplayName();
+                company.Status.CompanyStatusType = Enums.CompanyStatus.Actual;
+                type = (int)company.Status.CompanyStatusType;
             }
 
             var parametersStatus = new
@@ -403,7 +403,7 @@ namespace ReportingSystem.Data.SQL
                 Guid? chief = Guid.Empty;
                 if (company.Chief != null)
                 {
-                    chief = company.Chief.id;
+                    chief = company.Chief.Id;
                 }
                 var parameters = new
                 {

@@ -202,44 +202,45 @@ namespace ReportingSystem.Data.SQL
                     return;
                 }
 
-                Guid idCu = editedEmployee.customerId;
-                Guid idCo = editedEmployee.companyId;
-                Guid idEm = editedEmployee.id;
+                Guid idCu = editedEmployee.CustomerId;
+                Guid idCo = editedEmployee.CompanyId;
+                Guid idEm = editedEmployee.Id;
 
                 EmployeeModel employee = await new SQLRead().GetEmployee(idCu, idCo, idEm);
 
-                if (employee.status == null || employee.position == null || employee.rol == null)
+                if (employee.Status == null || employee.Position == null || employee.Rol == null)
                 {
                     return;
                 }
-                Guid statusId = await new SQLRead().GetEmployeeStatusIdByType(employee.status);
-                Guid positionId = await new SQLRead().GetPositionIdByType(employee.position, employee.customerId, employee.companyId);
-                Guid rolId = await new SQLRead().GetRolIdByType(employee.rol);
+                Guid statusId = await new SQLRead().GetEmployeeStatusIdByType(employee.Status);
+                Guid positionId = await new SQLRead().GetPositionIdByType(employee.Position, employee.CustomerId, employee.CompanyId);
+                Guid rolId = await new SQLRead().GetRolIdByType(employee.Rol);
+
 
                 StringBuilder sqlBuilder = new();
                 sqlBuilder.Append("UPDATE [dbo].[Employees] SET ");
 
-                sqlBuilder.Append(UpdateField("FirstName", editedEmployee.firstName, employee.firstName));
-                sqlBuilder.Append(UpdateField("SecondName", editedEmployee.secondName, employee.secondName));
-                sqlBuilder.Append(UpdateField("ThirdName", editedEmployee.thirdName, employee.thirdName));
-                sqlBuilder.Append(UpdateField("PhoneWork", editedEmployee.phoneWork, employee.phoneWork));
-                sqlBuilder.Append(UpdateField("PhoneSelf", editedEmployee.phoneSelf, employee.phoneSelf));
-                sqlBuilder.Append(UpdateField("EmailWork", editedEmployee.emailWork, employee.emailWork));
-                sqlBuilder.Append(UpdateField("EmailSelf", editedEmployee.emailSelf, employee.emailSelf));
-                sqlBuilder.Append(UpdateField("TaxNumber", editedEmployee.taxNumber, employee.taxNumber));
-                sqlBuilder.Append(UpdateField("AddressReg", editedEmployee.addressReg, employee.addressReg));
-                sqlBuilder.Append(UpdateField("AddressFact", editedEmployee.addressFact, employee.addressFact));
-                sqlBuilder.Append(UpdateField("Photo", editedEmployee.photo, employee.photo));
-                sqlBuilder.Append(UpdateField("Login", editedEmployee.login, employee.login));
-                sqlBuilder.Append(UpdateField("Password", EncryptionHelper.Encrypt(editedEmployee.password), EncryptionHelper.Encrypt(employee.password)));
-                sqlBuilder.Append(UpdateField("Salary", editedEmployee?.salary, employee?.salary));
-                sqlBuilder.Append(UpdateField("AddSalary", editedEmployee?.addSalary, employee?.addSalary));
-                sqlBuilder.Append(UpdateField("Status", editedEmployee?.status, employee?.status));
-                sqlBuilder.Append(UpdateField("BirthDate", editedEmployee?.birthDate, employee?.birthDate));
-                sqlBuilder.Append(UpdateField("WorkStartDate", editedEmployee?.workStartDate, employee?.workStartDate));
-                sqlBuilder.Append(UpdateField("WorkEndDate", editedEmployee?.workEndDate, employee?.workEndDate));
-                sqlBuilder.Append(UpdateField("Position", editedEmployee?.position, employee?.position));
-                sqlBuilder.Append(UpdateField("Rol", editedEmployee?.rol, employee?.rol));
+                sqlBuilder.Append(UpdateField("FirstName", editedEmployee.FirstName, employee.FirstName));
+                sqlBuilder.Append(UpdateField("SecondName", editedEmployee.SecondName, employee.SecondName));
+                sqlBuilder.Append(UpdateField("ThirdName", editedEmployee.ThirdName, employee.ThirdName));
+                sqlBuilder.Append(UpdateField("PhoneWork", editedEmployee.PhoneWork, employee.PhoneWork));
+                sqlBuilder.Append(UpdateField("PhoneSelf", editedEmployee.PhoneSelf, employee.PhoneSelf));
+                sqlBuilder.Append(UpdateField("EmailWork", editedEmployee.EmailWork, employee.EmailWork));
+                sqlBuilder.Append(UpdateField("EmailSelf", editedEmployee.EmailSelf, employee.EmailSelf));
+                sqlBuilder.Append(UpdateField("TaxNumber", editedEmployee.TaxNumber, employee.TaxNumber));
+                sqlBuilder.Append(UpdateField("AddressReg", editedEmployee.AddressReg, employee.AddressReg));
+                sqlBuilder.Append(UpdateField("AddressFact", editedEmployee.AddressFact, employee.AddressFact));
+                sqlBuilder.Append(UpdateField("Photo", editedEmployee.Photo, employee.Photo));
+                sqlBuilder.Append(UpdateField("Login", editedEmployee.Login, employee.Login));
+                sqlBuilder.Append(UpdateField("Password", editedEmployee.Password, employee.Password));
+                sqlBuilder.Append(UpdateField("Salary", editedEmployee?.Salary, employee?.Salary));
+                sqlBuilder.Append(UpdateField("AddSalary", editedEmployee?.AddSalary, employee?.AddSalary));
+                sqlBuilder.Append(UpdateField("Status", editedEmployee?.Status?.EmployeeStatusType, employee?.Status.EmployeeStatusType));
+                sqlBuilder.Append(UpdateField("BirthDate", editedEmployee?.BirthDate, employee?.BirthDate));
+                sqlBuilder.Append(UpdateField("WorkStartDate", editedEmployee?.WorkStartDate, employee?.WorkStartDate));
+                sqlBuilder.Append(UpdateField("WorkEndDate", editedEmployee?.WorkEndDate, employee?.WorkEndDate));
+                sqlBuilder.Append(UpdateField("Position", editedEmployee?.Position?.NamePosition, employee?.Position.NamePosition));
+                sqlBuilder.Append(UpdateField("Rol", editedEmployee?.Rol?.RolName, employee?.Rol.RolName));
 
 
                 if (editedEmployee != null)
@@ -247,86 +248,35 @@ namespace ReportingSystem.Data.SQL
                     employee = editedEmployee;
                 }
 
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.firstName) && editedEmployee.firstName != employee.firstName ? "[FirstName] = @firstName, "  : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.firstName) ? "[FirstName] = @firstName, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.secondName) ? "[SecondName] = @secondName, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.thirdName) ? "[ThirdName] = @thirdName, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.phoneWork) ? "[PhoneWork] = @phoneWork, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.phoneSelf) ? "[PhoneSelf] = @phoneSelf, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.emailWork) ? "[EmailWork] = @emailWork, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.emailSelf) ? "[EmailSelf] = @emailSelf, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.taxNumber) ? "[TaxNumber] = @taxNumber, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.addressReg) ? "[AddressReg] = @addressReg, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.addressFact) ? "[AddressFact] = @addressFact, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.photo) ? "[Photo] = @photo, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(editedEmployee.login) ? "[Login] = @login, " : "");
-                //sqlBuilder.Append(!string.IsNullOrEmpty(EncryptionHelper.Encrypt(editedEmployee.password)) ? "[Password] = @password, " : "");
-                //sqlBuilder.Append(editedEmployee?.salary != null ? "[Salary] = @salary, " : "");
-                //sqlBuilder.Append(editedEmployee?.addSalary != null ? "[AddSalary] = @addSalary, " : "");
-                //sqlBuilder.Append(editedEmployee?.status != null ? "[Status] = @status, " : "");
-                //sqlBuilder.Append(editedEmployee?.birthDate != null ? "[BirthDate] = @birthDate, " : "");
-                //sqlBuilder.Append(editedEmployee?.workStartDate != null ? "[WorkStartDate] = @workStartDate, " : "");
-                //sqlBuilder.Append(editedEmployee?.workEndDate != null ? "[WorkEndDate] = @workEndDate, " : "");
-                //sqlBuilder.Append(editedEmployee?.position != null ? "[Position] = @position, " : "");
-                //sqlBuilder.Append(editedEmployee?.rol != null ? "[Rol] = @rol, " : "");
-
                 sqlBuilder.Length -= 2;
 
                 sqlBuilder.Append(" WHERE [Id] = @Id AND [CompanyId] = @CompanyId AND [CustomerId] = @CustomerId");
 
                 string query = sqlBuilder.ToString();
-
-                //var para = new
-                //{
-                //    Id = idEm,
-                //    CompanyId = idCo,
-                //    CustomerId = idCu,
-                //    FirstName = employee?.firstName,
-                //    SecondName = employee?.secondName,
-                //    ThirdName = employee?.thirdName,
-                //    PhoneWork = employee?.phoneWork,
-                //    PhoneSelf = employee?.phoneSelf,
-                //    EmailWork = employee?.emailWork,
-                //    EmailSelf = employee?.emailSelf,
-                //    TaxNumber = employee?.taxNumber,
-                //    AddressReg = employee?.addressFact,
-                //    AddressFact = employee?.addressFact,
-                //    Photo = employee?.photo,
-                //    Login = employee?.login,
-                //    Password = employee?.password,
-                //    Salary = employee?.salary,
-                //    AddSalary = employee?.addSalary,
-                //    Status = statusId,
-                //    BirthDate = employee?.birthDate,
-                //    WorkStartDate = employee?.workStartDate,
-                //    WorkEndDate = employee?.workEndDate,
-                //    Position = positionId,
-                //    Rol = rolId
-                //};
                 var para = new
                 {
                     Id = idEm,
                     CompanyId = idCo,
                     CustomerId = idCu,
-                    FirstName = employee?.firstName,
-                    SecondName = employee?.secondName,
-                    ThirdName = employee?.thirdName,
-                    PhoneWork = employee?.phoneWork,
-                    PhoneSelf = employee?.phoneSelf,
-                    EmailWork = employee?.emailWork,
-                    EmailSelf = employee?.emailSelf,
-                    TaxNumber = employee?.taxNumber,
-                    AddressReg = employee?.addressFact,
-                    AddressFact = employee?.addressFact,
-                    Photo = employee?.photo,
-                    Login = employee?.login,
-                    Password = employee?.password,
-                    Salary = employee?.salary,
-                    AddSalary = employee?.addSalary,
+                    FirstName = employee?.FirstName,
+                    SecondName = employee?.SecondName,
+                    ThirdName = employee?.ThirdName,
+                    PhoneWork = employee?.PhoneWork,
+                    PhoneSelf = employee?.PhoneSelf,
+                    EmailWork = employee?.EmailWork,
+                    EmailSelf = employee?.EmailSelf,
+                    TaxNumber = employee?.TaxNumber,
+                    AddressReg = employee?.AddressFact,
+                    AddressFact = employee?.AddressFact,
+                    Photo = employee?.Photo,
+                    Login = employee?.Login,
+                    Password = employee?.Password,
+                    Salary = employee?.Salary,
+                    AddSalary = employee?.AddSalary,
                     Status = statusId,
-                    BirthDate = employee?.birthDate,
-                    WorkStartDate = employee?.workStartDate,
-                    WorkEndDate = employee?.workEndDate,
+                    BirthDate = employee?.BirthDate,
+                    WorkStartDate = employee?.WorkStartDate,
+                    WorkEndDate = employee?.WorkEndDate,
                     Position = positionId,
                     Rol = rolId
                 };
@@ -340,7 +290,7 @@ namespace ReportingSystem.Data.SQL
 
                     throw;
                 }
-                
+
             }
         }
 
@@ -380,44 +330,41 @@ namespace ReportingSystem.Data.SQL
                     return;
                 }
 
-                Guid idCu = editedEmployee.customerId;
-                Guid idCo = editedEmployee.companyId;
-                Guid idEm = editedEmployee.id;
+                Guid idCu = editedEmployee.CustomerId;
+                Guid idCo = editedEmployee.CompanyId;
+                Guid idEm = editedEmployee.Id;
 
                 EmployeeModel employee = await new SQLRead().GetEmployee(idCu, idCo, idEm);
 
-                if (employee.status == null || employee.position == null || employee.rol == null)
+                if (employee.Status == null || employee.Rol == null)
                 {
                     return;
                 }
-                Guid statusId = await new SQLRead().GetEmployeeStatusIdByType(employee.status);
-                Guid positionId = await new SQLRead().GetPositionIdByType(employee.position, employee.customerId, employee.companyId);
-                Guid rolId = await new SQLRead().GetRolIdByType(employee.rol);
+                Guid statusId = await new SQLRead().GetEmployeeStatusIdByType(employee.Status);
+                Guid rolId = await new SQLRead().GetRolIdByType(employee.Rol);
 
                 StringBuilder sqlBuilder = new();
                 sqlBuilder.Append("UPDATE [dbo].[Administrators] SET ");
 
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.firstName) ? "[FirstName] = @firstName, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.secondName) ? "[SecondName] = @secondName, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.thirdName) ? "[ThirdName] = @thirdName, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.phoneWork) ? "[PhoneWork] = @phoneWork, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.phoneSelf) ? "[PhoneSelf] = @phoneSelf, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.emailWork) ? "[EmailWork] = @emailWork, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.emailSelf) ? "[EmailSelf] = @emailSelf, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.taxNumber) ? "[TaxNumber] = @taxNumber, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.addressReg) ? "[AddressReg] = @addressReg, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.addressFact) ? "[AddressFact] = @addressFact, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.photo) ? "[Photo] = @photo, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.login) ? "[Login] = @login, " : "");
-                sqlBuilder.Append(!string.IsNullOrEmpty(employee.password) ? "[Password] = @password, " : "");
-                sqlBuilder.Append(employee?.salary != null ? "[Salary] = @salary, " : "");
-                sqlBuilder.Append(employee?.addSalary != null ? "[AddSalary] = @addSalary, " : "");
-                sqlBuilder.Append(employee?.status != null ? "[Status] = @status, " : "");
-                sqlBuilder.Append(employee?.birthDate != null ? "[BirthDate] = @birthDate, " : "");
-                sqlBuilder.Append(employee?.workStartDate != null ? "[WorkStartDate] = @workStartDate, " : "");
-                sqlBuilder.Append(employee?.workEndDate != null ? "[WorkEndDate] = @workEndDate, " : "");
-                sqlBuilder.Append(employee?.position != null ? "[Position] = @position, " : "");
-                sqlBuilder.Append(employee?.rol != null ? "[Rol] = @rol, " : "");
+                sqlBuilder.Append(UpdateField("FirstName", editedEmployee.FirstName, employee.FirstName));
+                sqlBuilder.Append(UpdateField("SecondName", editedEmployee.SecondName, employee.SecondName));
+                sqlBuilder.Append(UpdateField("ThirdName", editedEmployee.ThirdName, employee.ThirdName));
+                sqlBuilder.Append(UpdateField("PhoneWork", editedEmployee.PhoneWork, employee.PhoneWork));
+                sqlBuilder.Append(UpdateField("EmailWork", editedEmployee.EmailWork, employee.EmailWork));
+                sqlBuilder.Append(UpdateField("TaxNumber", editedEmployee.TaxNumber, employee.TaxNumber));
+                sqlBuilder.Append(UpdateField("AddressReg", editedEmployee.AddressReg, employee.AddressReg));
+                sqlBuilder.Append(UpdateField("AddressFact", editedEmployee.AddressFact, employee.AddressFact));
+                sqlBuilder.Append(UpdateField("Photo", editedEmployee.Photo, employee.Photo));
+                sqlBuilder.Append(UpdateField("Login", editedEmployee.Login, employee.Login));
+                sqlBuilder.Append(UpdateField("Password", editedEmployee.Password, employee.Password));
+                sqlBuilder.Append(UpdateField("Status", editedEmployee?.Status?.EmployeeStatusType, employee?.Status?.EmployeeStatusType));
+                sqlBuilder.Append(UpdateField("BirthDate", editedEmployee?.BirthDate, employee?.BirthDate));
+                sqlBuilder.Append(UpdateField("Rol", editedEmployee?.Rol?.RolName, employee?.Rol?.RolName));
+
+                if (editedEmployee != null)
+                {
+                    employee = editedEmployee;
+                }
 
                 sqlBuilder.Length -= 2;
 
@@ -427,30 +374,33 @@ namespace ReportingSystem.Data.SQL
 
                 var para = new
                 {
-                    FirstName = employee?.firstName,
-                    SecondName = employee?.secondName,
-                    ThirdName = employee?.thirdName,
-                    PhoneWork = employee?.phoneWork,
-                    PhoneSelf = employee?.phoneSelf,
-                    EmailWork = employee?.emailWork,
-                    EmailSelf = employee?.emailSelf,
-                    TaxNumber = employee?.taxNumber,
-                    AddressReg = employee?.addressFact,
-                    AddressFact = employee?.addressFact,
-                    Photo = employee?.photo,
-                    Login = employee?.login,
-                    Password = employee?.password,
-                    Salary = employee?.salary,
-                    AddSalary = employee?.addSalary,
+                    Id = idEm,
+                    FirstName = employee?.FirstName,
+                    SecondName = employee?.SecondName,
+                    ThirdName = employee?.ThirdName,
+                    PhoneWork = employee?.PhoneWork,
+                    EmailWork = employee?.EmailWork,
+                    TaxNumber = employee?.TaxNumber,
+                    AddressReg = employee?.AddressFact,
+                    AddressFact = employee?.AddressFact,
+                    Photo = employee?.Photo,
+                    Login = employee?.Login,
+                    Password = employee?.Password,
                     Status = statusId,
-                    BirthDate = employee?.birthDate,
-                    WorkStartDate = employee?.workStartDate,
-                    WorkEndDate = employee?.workEndDate,
-                    Position = positionId,
+                    BirthDate = employee?.BirthDate,
                     Rol = rolId
                 };
                 using var database = Context.ConnectToSQL;
-                await database.QueryAsync(query, para);
+                try
+                {
+                    await database.QueryAsync(query, para);
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+                
             }
         }
 
@@ -718,9 +668,9 @@ namespace ReportingSystem.Data.SQL
         {
             CompanyStatusModel companyStatusModel = new()
             {
-                companyStatusType = CompanyStatus.Archive
+                CompanyStatusType = CompanyStatus.Archive
             };
-            companyStatusModel.companyStatusName = companyStatusModel.companyStatusType.GetDisplayName();
+            companyStatusModel.CompanyStatusName = companyStatusModel.CompanyStatusType.GetDisplayName();
             var companyStatusId = await new SQLRead().GetCompanyStatusId(companyStatusModel);
 
             using var database = Context.ConnectToSQL;

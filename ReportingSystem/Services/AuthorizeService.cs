@@ -63,8 +63,8 @@ namespace ReportingSystem.Services
                 count++;
                 authorize.Role = new EmployeeRolModel()
                 {
-                    rolType = EmployeeRolStatus.Customer,
-                    rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                    RolType = EmployeeRolStatus.Customer,
+                    RolName = EmployeeRolStatus.Customer.GetDisplayName(),
                 };
             }
             if (resultEmployee.Any())
@@ -105,15 +105,15 @@ namespace ReportingSystem.Services
             {
                 foreach (var administrator in Administrators)
                 {
-                    if (administrator.emailWork != null && administrator.emailWork.ToLower().Equals(email.ToLower()))
+                    if (administrator.EmailWork != null && administrator.EmailWork.ToLower().Equals(email.ToLower()))
                     {
-                        authorize.Email = administrator.emailWork;
+                        authorize.Email = administrator.EmailWork;
                         authorize.AuthorizeStatusModel = new AuthorizeStatusModel
                         {
                             AuthorizeStatusType = AuthorizeStatus.EmailOk,
                             AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
                         };
-                        authorize.Role = administrator.rol;
+                        authorize.Role = administrator.Rol;
                         return authorize;
                     }
                 }
@@ -133,8 +133,8 @@ namespace ReportingSystem.Services
                         };
                         authorize.Role = new EmployeeRolModel()
                         {
-                            rolType = EmployeeRolStatus.Customer,
-                            rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                            RolType = EmployeeRolStatus.Customer,
+                            RolName = EmployeeRolStatus.Customer.GetDisplayName(),
                         };
                         return authorize;
                     }
@@ -147,16 +147,16 @@ namespace ReportingSystem.Services
                             {
                                 foreach (var employee in company.Employees)
                                 {
-                                    if (employee.emailWork != null && employee.emailWork.ToLower().Equals(email.ToLower()))
+                                    if (employee.EmailWork != null && employee.EmailWork.ToLower().Equals(email.ToLower()))
                                     {
-                                        authorize.Email = employee.emailWork;
+                                        authorize.Email = employee.EmailWork;
                                         authorize.AuthorizeStatusModel = new AuthorizeStatusModel
                                         {
                                             AuthorizeStatusType = AuthorizeStatus.EmailOk,
                                             AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
                                         };
                                         authorize.Role = new EmployeeRolModel();
-                                        authorize.Role = employee.rol;
+                                        authorize.Role = employee.Rol;
                                         return authorize;
                                     }
                                 }
@@ -210,8 +210,8 @@ namespace ReportingSystem.Services
                 id = resultCustomer.First();
                 authorize.Role = new EmployeeRolModel()
                 {
-                    rolType = EmployeeRolStatus.Customer,
-                    rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                    RolType = EmployeeRolStatus.Customer,
+                    RolName = EmployeeRolStatus.Customer.GetDisplayName(),
                 };
                 if (await new SQLRead().IsPasswordCustomerOk(id, password))
                 {
@@ -264,17 +264,17 @@ namespace ReportingSystem.Services
                 administrators = Administrators;
                 foreach (var administrator in administrators)
                 {
-                    if (administrator.emailWork == email)
+                    if (administrator.EmailWork == email)
                     {
-                        if (administrator.password != null && EncryptionHelper.Decrypt(administrator.password).Equals(password))
+                        if (administrator.Password != null && EncryptionHelper.Decrypt(administrator.Password).Equals(password))
                         {
-                            authorize.Email = administrator.emailWork;
+                            authorize.Email = administrator.EmailWork;
                             authorize.AuthorizeStatusModel = new AuthorizeStatusModel
                             {
                                 AuthorizeStatusType = AuthorizeStatus.PasswordOk,
                                 AuthorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName()
                             };
-                            authorize.Role = administrator.rol;
+                            authorize.Role = administrator.Rol;
                             authorize.Employee = administrator;
                             return authorize;
                         }
@@ -299,19 +299,19 @@ namespace ReportingSystem.Services
                             };
                             authorize.Role = new EmployeeRolModel()
                             {
-                                rolType = EmployeeRolStatus.Customer,
-                                rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                                RolType = EmployeeRolStatus.Customer,
+                                RolName = EmployeeRolStatus.Customer.GetDisplayName(),
                             };
                             authorize.Employee = new EmployeeModel()
                             {
-                                customerId = customer.Id,
-                                firstName = customer.FirstName,
-                                secondName = customer.SecondName,
-                                thirdName = customer.ThirdName,
-                                rol = new EmployeeRolModel()
+                                CustomerId = customer.Id,
+                                FirstName = customer.FirstName,
+                                SecondName = customer.SecondName,
+                                ThirdName = customer.ThirdName,
+                                Rol = new EmployeeRolModel()
                                 {
-                                    rolType = EmployeeRolStatus.Customer,
-                                    rolName = EmployeeRolStatus.Customer.GetDisplayName(),
+                                    RolType = EmployeeRolStatus.Customer,
+                                    RolName = EmployeeRolStatus.Customer.GetDisplayName(),
                                 }
                             };
                             return authorize;
@@ -327,18 +327,18 @@ namespace ReportingSystem.Services
                             {
                                 foreach (var employee in company.Employees)
                                 {
-                                    if (employee.emailWork != null && employee.emailWork.ToLower().Equals(email.ToLower()))
+                                    if (employee.EmailWork != null && employee.EmailWork.ToLower().Equals(email.ToLower()))
                                     {
-                                        authorize.Email = employee.emailWork;
+                                        authorize.Email = employee.EmailWork;
                                         authorize.AuthorizeStatusModel = new AuthorizeStatusModel
                                         {
                                             AuthorizeStatusType = AuthorizeStatus.EmailOk,
                                             AuthorizeStatusName = AuthorizeStatus.EmailOk.GetDisplayName()
                                         };
                                         authorize.Role = new EmployeeRolModel();
-                                        authorize.Role = employee.rol;
+                                        authorize.Role = employee.Rol;
 
-                                        if (employee.password != null && EncryptionHelper.Decrypt(employee.password).Equals(password))
+                                        if (employee.Password != null && EncryptionHelper.Decrypt(employee.Password).Equals(password))
                                         {
                                             authorize.AuthorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
                                             authorize.AuthorizeStatusModel.AuthorizeStatusName = AuthorizeStatus.PasswordOk.GetDisplayName();
@@ -366,9 +366,9 @@ namespace ReportingSystem.Services
             foreach (var item in employeeRolModels)
             {
        
-                if (authorize.Role != null && authorize.Role.rolType.Equals(item.rolType))
+                if (authorize.Role != null && authorize.Role.RolType.Equals(item.RolType))
                 {
-                    switch (item.rolType)
+                    switch (item.RolType)
                     {
                         case EmployeeRolStatus.Administrator:
                             return "EUAdministrator";
