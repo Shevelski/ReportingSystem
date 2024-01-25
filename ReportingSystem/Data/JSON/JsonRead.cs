@@ -18,6 +18,7 @@ namespace ReportingSystem.Data.JSON
             public List<EmployeeModel>? Administrators { get; set; }
             public ConfigurationModel? Configuration { get; set; }
         }
+        #region Load
         public async Task<List<CustomerModel>> LoadCustomersFromJson()
         {
             //await Task.Delay(10); // Simulate async delay
@@ -55,10 +56,222 @@ namespace ReportingSystem.Data.JSON
             }
             return [];
         }
+        #endregion
+        #region Administrators
+        public async Task<List<EmployeeModel>?> GetAdministrators()
+        {
+            List<EmployeeModel>? administrators = await LoadAdministratorsFromJson();
 
+            if (administrators == null)
+            {
+                return null;
+            }
+
+            List<EmployeeModel> list = administrators;
+
+            foreach (var employee in list)
+            {
+                if (employee.Password != null)
+                {
+                    employee.Password = EncryptionHelper.Decrypt(employee.Password);
+                }
+            }
+
+            return list;
+        }
+        #endregion
+        #region Positions
+        public async Task<List<EmployeePositionModel>?> GetAllPositions(string idCu, string idCo)
+        {
+            var customers = await GetCustomers();
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (Guid.TryParse(idCo, out Guid idCompany))
+            {
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+
+                if (company != null)
+                {
+                    return company.Positions;
+                }
+            }
+
+            return null;
+        }
+        public async Task<List<EmployeePositionEmpModel>?> GetAllPositionsWithEmployee(string idCu, string idCo)
+        {
+
+            List<EmployeePositionEmpModel>? positions = [];
+
+            var customers = await GetCustomers();
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (Guid.TryParse(idCo, out Guid idCompany))
+            {
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+
+                if (company == null || company.Positions == null || company.Employees == null)
+                {
+                    return null;
+                }
+                int i = 0;
+                foreach (var item in company.Positions)
+                {
+
+                    EmployeePositionEmpModel employeePositionEmpModel = new()
+                    {
+                        NamePosition = item.NamePosition,
+                        Employee = company.Employees[i]
+                    };
+                    positions.Add(employeePositionEmpModel);
+                    i++;
+                }
+                i = 0;
+                return positions;
+
+            }
+
+            return null;
+        }
+
+        #endregion
+        #region Rolls
+        public async Task<List<EmployeeRolModel>?> GetRolls(string idCu, string idCo)
+        {
+            List<CustomerModel>? Customers = await GetCustomers();
+
+            if (Customers == null || string.IsNullOrEmpty(idCu) || string.IsNullOrEmpty(idCo) || !Guid.TryParse(idCu, out Guid idCustomer) || !Guid.TryParse(idCo, out Guid idCompany))
+            {
+                return null;
+            }
+
+            var customer = Customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return null;
+            }
+
+            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+
+            if (company != null && company.Rolls != null)
+            {
+                return company.Rolls;
+            }
+
+            return null;
+        }
+        public async Task<List<EmployeeRolModel>?> GetDevRolls()
+        {
+            await Task.Delay(10);
+            List<EmployeeRolModel> devRols = [];
+            EmployeeRolModel devRol = new()
+            {
+                RolType = EmployeeRolStatus.Developer,
+                RolName = EmployeeRolStatus.Developer.GetDisplayName()
+            };
+            devRols.Add(devRol);
+            devRol = new EmployeeRolModel()
+            {
+                RolType = EmployeeRolStatus.DevAdministrator,
+                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+            };
+            devRols.Add(devRol);
+            return devRols;
+        }
+        #endregion
+        #region Customers
+        public async Task<List<EmployeePositionModel>?> GetUniqPositions(string idCu, string idCo)
+        {
+            var customers = await GetCustomers();
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (Guid.TryParse(idCo, out Guid idCompany))
+            {
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+
+                if (company != null && company.Positions != null)
+                {
+                    var uniquePositions = company.Positions
+                        .Where(position => !string.IsNullOrEmpty(position.NamePosition))
+                        .GroupBy(position => position.NamePosition)
+                        .Select(group => group.First())
+                        .ToList();
+
+                    return uniquePositions;
+                }
+            }
+            return null;
+        }
+        public async Task<List<CustomerModel>?> GetCustomers()
+        {
+            List<CustomerModel>? Customers = await LoadCustomersFromJson();
+            return Customers;
+        }
+        public async Task<CustomerModel?> GetCustomer(string idCu)
+        {
+            List<CustomerModel>? customers = await GetCustomers();
+            CustomerModel? customer = customers?.FirstOrDefault(id => id.Equals(idCu));
+            return customer;
+        }
+        public async Task<List<CompanyModel>?> GetActualCompanies(string idCu)
+        {
+            List<CustomerModel>? Customers = await GetCustomers();
+
+            if (Customers == null || !Guid.TryParse(idCu, out Guid id))
+            {
+                return null;
+            }
+
+            var customer = Customers.FirstOrDefault(co => co.Id.Equals(id));
+
+            if (customer != null && customer.Companies != null)
+            {
+                return customer.Companies
+                    .Where(item => item.Status != null && item.Status.CompanyStatusType.Equals(CompanyStatus.Actual))
+                    .ToList();
+            }
+
+            return null;
+        }
+        #endregion
+        #region Authorization
         public async Task<bool> IsBusyEmail(string email)
         {
-            var administrators = await LoadAdministratorsFromJson();
+            var administrators = await GetAdministrators();
 
             if (administrators == null)
             {
@@ -73,7 +286,7 @@ namespace ReportingSystem.Data.JSON
                 }
             }
 
-            var customers = await LoadCustomersFromJson();
+            var customers = await GetCustomers();
 
             if (customers == null)
             {
@@ -107,9 +320,46 @@ namespace ReportingSystem.Data.JSON
 
             return false;
         }
+        #endregion
+        #region Employees
+        public async Task<List<EmployeeModel>?> GetEmployeesByPosition(string idCu, string idCo, string pos)
+        {
+            List<EmployeeModel> employeesByPosition = new List<EmployeeModel>();
+            var customers = await GetCustomers();
 
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
 
-        public async Task<EmployeeModel?> GetEmployee(Guid idCu, Guid idCo, Guid idEm) 
+            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (Guid.TryParse(idCo, out Guid idCompany))
+            {
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+
+                if (company != null && company.Employees != null)
+                {
+                    var employees = company.Employees;
+                    employeesByPosition = employees
+                        .Where(employee => employee.Position != null && !string.IsNullOrEmpty(employee.Position.NamePosition) && employee.Position.NamePosition.Equals(pos))
+                        .ToList();
+
+                    if (employeesByPosition.Any())
+                    {
+                        return employeesByPosition;
+                    }
+                }
+            }
+
+            return null;
+        }
+        public async Task<EmployeeModel?> GetEmployee(Guid idCu, Guid idCo, Guid idEm)
         {
             //if (!Guid.TryParse(ar[0], out Guid idCu) || !Guid.TryParse(ar[1], out Guid idCo) || !Guid.TryParse(ar[2], out Guid idEm))
             //{
@@ -118,11 +368,9 @@ namespace ReportingSystem.Data.JSON
 
             if (idCu == Guid.Empty && idCo == Guid.Empty && idEm != Guid.Empty)
             {
-                List<EmployeeModel>? developers = await LoadAdministratorsFromJson();
+                List<EmployeeModel>? developers = await GetAdministrators();
 
-                
-
-                var developer = developers.First(dev => dev.Id.Equals(idEm));
+                var developer = developers?.First(dev => dev.Id.Equals(idEm));
 
                 var dev = developer;
 
@@ -141,7 +389,7 @@ namespace ReportingSystem.Data.JSON
             //    return null;
             //}
 
-            List<CustomerModel>? customers = await LoadCustomersFromJson();
+            List<CustomerModel>? customers = await GetCustomers();
 
             var customer = customers.FirstOrDefault(cu => cu.Id.Equals(idCu));
 
@@ -186,33 +434,9 @@ namespace ReportingSystem.Data.JSON
 
             return empl;
         }
-
-        public async Task<List<EmployeeModel>?> GetAdministrators()
-        {
-
-            List<EmployeeModel>? administrators = await LoadAdministratorsFromJson();
-
-            if (administrators == null)
-            {
-                return null;
-            }
-
-            List<EmployeeModel> list = administrators;
-
-            foreach (var employee in list)
-            {
-                if (employee.Password != null)
-                {
-                    employee.Password = EncryptionHelper.Decrypt(employee.Password);
-                }
-            }
-
-            return list;
-        }
-
         public async Task<List<EmployeeModel>?> GetEmployees(Guid idCu, Guid idCo)
         {
-            List<CustomerModel>? customers = await LoadCustomersFromJson();
+            List<CustomerModel>? customers = await GetCustomers();
 
             //if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
             //{
@@ -256,32 +480,11 @@ namespace ReportingSystem.Data.JSON
 
             return list;
         }
-
-        //public async Task<List<CustomerModel>?> GetCheckCompany(string id)
-        //{
-        //    if (Guid.TryParse(id, out Guid guid) && companiesData.TryGetValue(guid, out var companyDetails))
-        //    {
-        //        companiesData.Remove(guid);
-        //        DatabaseMoq.UpdateJson();
-        //        return companyDetails;
-        //    }
-        //    return null;
-        //}
-
-        public async Task<List<CustomerModel>?> GetCustomers()
-        {
-            List<CustomerModel>? Customers = await LoadCustomersFromJson();
-            return Customers;
-        }
-        public async Task<CustomerModel?> GetCustomer(string idCu)
-        {
-            List<CustomerModel>? customers = await LoadCustomersFromJson();
-            CustomerModel? customer = customers.FirstOrDefault(id=>id.Equals(idCu));
-            return customer;
-        }
+        #endregion
+        #region Companies
         public async Task<List<CompanyModel>?> GetCompanies(string idCu)
         {
-            List<CustomerModel>? Customers = await LoadCustomersFromJson();
+            List<CustomerModel>? Customers = await GetCustomers();
 
             if (Customers == null || string.IsNullOrEmpty(idCu))
             {
@@ -304,7 +507,7 @@ namespace ReportingSystem.Data.JSON
         }
         public async Task<CompanyModel?> GetCompany(string idCu, string idCo)
         {
-            List<CustomerModel>? Customers = await LoadCustomersFromJson();
+            List<CustomerModel>? Customers = await GetCustomers();
 
             if (Customers == null || string.IsNullOrEmpty(idCu))
             {
@@ -332,68 +535,6 @@ namespace ReportingSystem.Data.JSON
 
             return null;
         }
-        public async Task<List<CompanyModel>?> GetActualCompanies(string idCu)
-        {
-            List<CustomerModel>? Customers = await LoadCustomersFromJson();
-
-            if (Customers == null || !Guid.TryParse(idCu, out Guid id))
-            {
-                return null;
-            }
-
-            var customer = Customers.FirstOrDefault(co => co.Id.Equals(id));
-
-            if (customer != null && customer.Companies != null)
-            {
-                return customer.Companies
-                    .Where(item => item.Status != null && item.Status.CompanyStatusType.Equals(CompanyStatus.Actual))
-                    .ToList();
-            }
-
-            return null;
-        }
-        public async Task<List<EmployeeRolModel>?> GetRolls(string idCu, string idCo)
-        {
-            List<CustomerModel>? Customers = await LoadCustomersFromJson();
-
-            if (Customers == null || string.IsNullOrEmpty(idCu) || string.IsNullOrEmpty(idCo) || !Guid.TryParse(idCu, out Guid idCustomer) || !Guid.TryParse(idCo, out Guid idCompany))
-            {
-                return null;
-            }
-
-            var customer = Customers.FirstOrDefault(c => c.Id.Equals(idCustomer));
-
-            if (customer == null || customer.Companies == null)
-            {
-                return null;
-            }
-
-            var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
-
-            if (company != null && company.Rolls != null)
-            {
-                return company.Rolls;
-            }
-
-            return null;
-        }
-        public async Task<List<EmployeeRolModel>?> GetDevRolls()
-        {
-            await Task.Delay(10);
-            List<EmployeeRolModel> devRols = [];
-            EmployeeRolModel devRol = new ()
-            {
-                RolType = EmployeeRolStatus.Developer,
-                RolName = EmployeeRolStatus.Developer.GetDisplayName()
-            };
-            devRols.Add(devRol);
-            devRol = new EmployeeRolModel()
-            {
-                RolType = EmployeeRolStatus.DevAdministrator,
-                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
-            };
-            devRols.Add(devRol);
-            return devRols;
-        }
+        #endregion
     }
 }

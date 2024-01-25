@@ -11,7 +11,7 @@ namespace ReportingSystem.Data.SQL
                 var tableExistsQuery = $"SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}'";
                 var tableExists = await database.QueryFirstOrDefaultAsync<int>(tableExistsQuery);
 
-                return tableExists == 1;
+                return tableExists > 0;
             }
         }
 

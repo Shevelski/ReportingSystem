@@ -11,6 +11,11 @@ using System.Text;
 using ReportingSystem.Data.SQL;
 using Microsoft.AspNetCore.SignalR;
 using ReportingSystem.Hubs;
+using ReportingSystem.Utils;
+using static ReportingSystem.Data.SQL.TableTypeSQL;
+using ReportingSystem.Models.Settings;
+using ReportingSystem.Data.JSON;
+using HtmlAgilityPack;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -22,24 +27,19 @@ namespace ReportingSystem.Controllers.Users
 
         public IActionResult Authorize()
         {
-            //генерація даних, залежить від режиму в Settings
             return View();
         }
 
         public void GenerateData()
         {
-            //if (Utils.Settings.Mode().Equals("write"))
-            //{
-                try
-                {
-                    var a = new GenerateMain(_hubContext).Data();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
-                }
-            //}
-
+            try
+            {
+                var a = new GenerateMain(_hubContext).Data();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+            }
         }
 
         [HttpGet]
@@ -95,17 +95,19 @@ namespace ReportingSystem.Controllers.Users
             }
             return Json(result);
         }
+       
+
         public async Task<IActionResult>  Registration()
         {   
             await Task.Delay(10);
             return View();
         }
-         public async Task<IActionResult> LogIn()
+        public async Task<IActionResult> LogIn()
         {
             await Task.Delay(10);
             return View();
         }
-         public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             await Task.Delay(10);
             return View();
@@ -127,10 +129,68 @@ namespace ReportingSystem.Controllers.Users
         public async Task<bool> HasDatabase()
         {
             await Task.Delay(10);
-            bool result = Database.IsExist(Context.connectionDB, Context.dbName);
+            bool result = Database.IsExist(Context.serverName, Context.dbName);
+            return result;
+        }
+        
+        [HttpGet]
+        public async Task<bool> IsDatabaseAvailable1(string serverName, string databaseName)
+        {
+            await Task.Delay(10);
+            bool result = Database.IsDatabaseAvailable(serverName, databaseName);
+            return result;
+        }
+        
+        [HttpGet]
+        public async Task<bool> IsDatabaseAvailable2(string serverName, string databaseName, string login, string password)
+        {
+            await Task.Delay(10);
+            bool result = Database.IsDatabaseAvailable(serverName, databaseName, login, password);
+            return result;
+        }
+        
+        [HttpGet]
+        public async Task<bool> IsTablesAvailable1(string serverName, string databaseName)
+        {
+            bool result = await new Database().IsTablesAvailable(serverName, databaseName);
+            return result;
+        }
+        
+        [HttpGet]
+        public async Task<bool> IsTablesAvailable2(string serverName, string databaseName, string login, string password)
+        {
+            return await new Database().IsTablesAvailable(serverName, databaseName, login, password);
+        }
+
+        [HttpGet]
+        public async Task<bool> IsServerAvailable1(string serverName)
+        {
+            await Task.Delay(10);
+            var result = Database.IsServerAvailable(serverName);
             return result;
         }
 
+        [HttpGet]
+        public async Task<bool> IsServerAvailable2(string serverName, string login, string password)
+        {
+            await Task.Delay(10);
+            return Database.IsServerAvailable(serverName, login, password);
+        }
+
+        [HttpGet]
+        public async Task<string[]> GetConnectionString()
+        {
+            await Task.Delay(10);
+            string[] result = [Context.serverName.Replace("\\\\", "\\"), Context.dbName];
+            return result;
+        }
+
+        [HttpPost]
+        public async Task SetConnectionString([FromBody] string[] ar)
+        {
+            await Task.Delay(10);
+            new JsonWrite().UpdateJsonAppsettings(ar);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

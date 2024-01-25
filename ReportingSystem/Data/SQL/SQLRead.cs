@@ -1,4 +1,7 @@
-﻿using Dapper;
+﻿using Azure.Core.GeoJson;
+using Bogus.DataSets;
+using Dapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
@@ -8,6 +11,7 @@ using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.ComponentModel.Design;
 using System.Data.Entity.Migrations.Model;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
@@ -25,14 +29,248 @@ namespace ReportingSystem.Data.SQL
         #region Administrators
         public async Task<Guid> GetAdministratorRoleId(Guid id)
         {
-            var query = "SELECT [Rol] FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
+            var query = $"SELECT [Rol] FROM [{Context.dbName}].[dbo].[Administrators] Where Id = @Id";
             return await GetRoleId(id, query);
         }
-        #endregion
+        public async Task<EmployeeModel> GetEmployeeAdministrator(Guid id)
+        {
+            EmployeeModel employee = new();
+            using var database = Context.ConnectToSQL;
+            var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Administrators] Where Id = @Id";
+            var para = new
+            {
+                Id = id,
+            };
 
+            var results = await database.QueryAsync<TableTypeSQL.Administrator>(query, para);
+            foreach (var administrator in results)
+            {
+                employee.Id = administrator.Id;
+                employee.CompanyId = Guid.Empty;
+                employee.CustomerId = Guid.Empty;
+                employee.FirstName = administrator.FirstName;
+                employee.SecondName = administrator.SecondName;
+                employee.ThirdName = administrator.ThirdName;
+                employee.PhoneWork = administrator.PhoneWork;
+                employee.EmailWork = administrator.EmailWork;
+                employee.Login = administrator.Login;
+                employee.Password = administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
+                employee.Status = await GetEmployeeStatus(administrator.Status); ;
+                employee.BirthDate = administrator.BirthDate;
+                employee.Rol = await new SQLRead().GetRoleById(administrator.Rol);
+            };
+
+            return employee;
+        }
+        public async Task<List<EmployeeModel>> GetAdministrators()
+        {
+            List<EmployeeModel>? employees = [];
+
+            using (var database = Context.ConnectToSQL)
+            {
+
+                var TableQuery = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Administrators]";
+                var resultEmployees = await database.QueryAsync<Guid>(TableQuery);
+
+                if (resultEmployees.Any())
+                {
+                    var x = resultEmployees;
+                    foreach (var emp in resultEmployees)
+                    {
+                        EmployeeModel employee = await GetAdministrator(emp);
+                        employees.Add(employee);
+                    }
+                    return employees;
+                }
+            }
+            return employees;
+        }
+        public async Task<EmployeeModel> GetAdministrator(Guid id)
+        {
+            EmployeeModel employee = new();
+            using (var database = Context.ConnectToSQL)
+            {
+                var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Administrators] Where Id = @Id";
+                var para = new
+                {
+                    Id = id,
+                };
+
+                try
+                {
+                    var results = await database.QueryAsync<TableTypeSQL.Employee>(query, para);
+                    foreach (var employees in results)
+                    {
+                        employee.Id = employees.Id;
+                        employee.CompanyId = employees.CompanyId;
+                        employee.CustomerId = employees.CustomerId;
+                        employee.FirstName = employees.FirstName;
+                        employee.SecondName = employees.SecondName;
+                        employee.ThirdName = employees.ThirdName;
+                        employee.PhoneWork = employees.PhoneWork;
+                        employee.PhoneSelf = employees.PhoneSelf;
+                        employee.EmailWork = employees.EmailWork;
+                        employee.EmailSelf = employees.EmailSelf;
+                        employee.TaxNumber = employees.TaxNumber;
+                        employee.AddressReg = employees.AddressReg;
+                        employee.AddressFact = employees.AddressFact;
+                        employee.Photo = employees.Photo;
+                        employee.Login = employees.Login;
+                        employee.Password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
+                        employee.Salary = employees.Salary;
+                        employee.AddSalary = employees.AddSalary;
+                        employee.Status = await GetEmployeeStatus(employees.Status);
+
+                        employee.BirthDate = employees.BirthDate;
+                        employee.WorkStartDate = employees.WorkStartDate;
+                        employee.WorkEndDate = employees.WorkEndDate;
+                        employee.Rol = await new SQLRead().GetRoleById(employees.Rol);
+
+                    };
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+
+            }
+            return employee;
+        }
+        #endregion
+        #region Positions
+        public async Task<EmployeePositionModel> GetPositionEmployee(Guid idPos)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = $"SELECT [Name] FROM [{Context.dbName}].[dbo].[EmployeePosition] Where Id = @IdPos";
+            var para = new
+            {
+                IdPos = idPos
+            };
+            var result = await database.QueryAsync<string>(query, para);
+            var position = result.First();
+            EmployeePositionModel model = new()
+            {
+                NamePosition = position
+            };
+            return model;
+        }
+        public async Task<Guid> GetPositionIdByType(EmployeePositionModel positionInput, Guid idCu, Guid idCo)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = $"SELECT[Id] FROM [{Context.dbName}].[dbo].[EmployeePosition] Where Name = @Name AND CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                Name = positionInput.NamePosition,
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            return result.First();
+        }
+        public async Task<Guid> GetPositionIdByName(string name, Guid idCu, Guid idCo)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = $"SELECT[Id] FROM [{Context.dbName}].[dbo].[EmployeePosition] Where Name = @Name AND CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                Name = name,
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            return result.First();
+        }
+        public async Task<List<EmployeePositionModel>?> GetAllPositions(string idCu, string idCo)
+        {
+            List<EmployeePositionModel> list = [];
+            var query = $"SELECT * FROM [{Context.dbName}].[dbo].[EmployeePosition] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+            foreach (var ids in result)
+            {
+                EmployeePositionModel position = await GetPosition(ids);
+                list.Add(position);
+            }
+            return list;
+        }
+        public async Task<EmployeePositionModel> GetPosition(Guid idPo)
+        {
+            EmployeePositionModel employeePositionModel = new();
+            var query = $"SELECT * FROM [{Context.dbName}].[dbo].[EmployeePosition] Where Id = @Id";
+            var para = new
+            {
+                Id = idPo
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<EmployeePosition>(query, para);
+            foreach (var position in result)
+            {
+                employeePositionModel.NamePosition = position.Name;
+            };
+            return employeePositionModel;
+        }
+        public async Task<List<EmployeePositionEmpModel>?> GetAllPositionsWithEmployee(string idCu, string idCo)
+        {
+            List<EmployeePositionEmpModel>? positions = [];
+
+            if (!Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            if (!Guid.TryParse(idCo, out Guid idCompany))
+            {
+                return null;
+            }
+
+            List<EmployeeModel>? employees = await new SQLRead().GetEmployees(idCustomer, idCompany);
+
+            foreach (var item in employees)
+            {
+                EmployeePositionEmpModel employeePositionEmpModel = new()
+                {
+                    NamePosition = item.Position?.NamePosition,
+                    Employee = item
+                };
+                positions.Add(employeePositionEmpModel);
+            }
+            return positions;
+        }
+        public async Task<List<EmployeePositionModel>?> GetUniqPositions(string idCu, string idCo)
+        {
+            var query = $"SELECT DISTINCT [Name] FROM [{Context.dbName}].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId;";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<string>(query, para);
+            List<EmployeePositionModel> list = [];
+            foreach (var position in result)
+            {
+                EmployeePositionModel employeePositionModel = new()
+                {
+                    NamePosition = position
+                };
+                list.Add(employeePositionModel);
+            };
+            return list;
+        }
+        #endregion
+        #region Rolls
         public async Task<Guid> GetEmployeeRoleId(Guid id)
         {
-            var query = "SELECT [Rol] FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
+            var query = $"SELECT [Rol] FROM [{Context.dbName}].[dbo].[Employees] Where Id = @Id";
             return await GetRoleId(id, query);
         }
         public async Task<Guid> GetEmployeeRoleIdByName(string name)
@@ -68,6 +306,92 @@ namespace ReportingSystem.Data.SQL
 
             return result.First();
         }
+        public async Task<EmployeeRolModel> GetRoleById(Guid id)
+        {
+            try
+            {
+                using var database = Context.ConnectToSQL;
+                var query = "SELECT [Type] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Id = @Id";
+                var paraRol = new
+                {
+                    Id = id,
+                };
+                var resultRol = await database.QueryAsync<int>(query, paraRol);
+                int typeRol = resultRol.First();
+                EmployeeRolModel model = new()
+                {
+                    RolType = (EmployeeRolStatus)typeRol
+                };
+                model.RolName = model.RolType.GetDisplayName();
+
+                return model;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+        public async Task<Guid> GetRolIdByType(EmployeeRolModel rol)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Type = @Type";
+            var para = new
+            {
+                Type = (int)rol.RolType,
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+            return result.First();
+        }
+        public async Task<List<EmployeeRolModel>?> GetRolls(string idCu, string idCo)
+        {
+            List<EmployeeRolModel> rolls = [];
+            using (var database = Context.ConnectToSQL)
+            {
+                var query = "SELECT [RolId] FROM [ReportingSystem].[dbo].[CompanyRolls] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
+                var para = new
+                {
+                    CustomerId = idCu,
+                    CompanyId = idCo,
+                };
+                var result = await database.QueryAsync<Guid>(query, para);
+                foreach (var rollsIds in result)
+                {
+                    try
+                    {
+                        var rol = await GetRoleById(rollsIds);
+                        rolls.Add(rol);
+                    }
+                    catch (Exception ex)
+                    {
+                        await Console.Out.WriteLineAsync(ex.ToString());
+                        throw;
+                    }
+                }
+            }
+            return rolls;
+        }
+        public async Task<List<EmployeeRolModel>?> GetDevRolls()
+        {
+            await Task.Delay(10);
+            List<EmployeeRolModel> devRols = [];
+            EmployeeRolModel devRol = new()
+            {
+                RolType = EmployeeRolStatus.Developer,
+                RolName = EmployeeRolStatus.Developer.GetDisplayName()
+            };
+            devRols.Add(devRol);
+            devRol = new EmployeeRolModel()
+            {
+                RolType = EmployeeRolStatus.DevAdministrator,
+                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
+            };
+            devRols.Add(devRol);
+            return devRols;
+        }
+        #endregion
+        #region Customers
         public async Task<CustomerLicenceStatusModel> GetLicenceStatus(Guid id)
         {
             CustomerLicenceStatusModel status = new();
@@ -127,7 +451,6 @@ namespace ReportingSystem.Data.SQL
             }
             return customers;
         }
-
         public async Task<List<CustomerLicenseOperationModel>> GetHistoryOperations(Guid idCu)
         {
             using var database = Context.ConnectToSQL;
@@ -159,7 +482,6 @@ namespace ReportingSystem.Data.SQL
             }
             return list; ;
         }
-
         public async Task<CustomerModel> GetCustomer(Guid id)
         {
             CustomerModel customer = new();
@@ -193,60 +515,40 @@ namespace ReportingSystem.Data.SQL
             }
             return customer;
         }
-        public async Task<EmployeeRolModel> GetRoleById(Guid id)
+        public async Task<EmployeeModel> GetEmployeeCustomer(Guid id)
         {
-            try
-            {
-                using var database = Context.ConnectToSQL;
-                var query = "SELECT [Type] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Id = @Id";
-                var paraRol = new
-                {
-                    Id = id,
-                };
-                var resultRol = await database.QueryAsync<int>(query, paraRol);
-                int typeRol = resultRol.First();
-                EmployeeRolModel model = new()
-                {
-                    RolType = (EmployeeRolStatus)typeRol
-                };
-                model.RolName = model.RolType.GetDisplayName();
-
-                return model;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-            
-        }
-        public async Task<Guid> GetRolIdByType(EmployeeRolModel rol)
-        {
+            EmployeeModel employee = new();
             using var database = Context.ConnectToSQL;
-            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Type = @Type";
+            var query = "SELECT * FROM [ReportingSystem].[dbo].[Customers] Where Id = @Id";
             var para = new
             {
-                Type = (int)rol.RolType,
+                Id = id,
             };
-            var result = await database.QueryAsync<Guid>(query, para);
-            return result.First();
-        }
-        public async Task<EmployeePositionModel> GetPositionEmployee(Guid idPos)
-        {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT [Name] FROM [ReportingSystem].[dbo].[EmployeePosition] Where Id = @IdPos";
-            var para = new
+
+            var results = await database.QueryAsync<TableTypeSQL.Customer>(query, para);
+            foreach (var customer in results)
             {
-                IdPos = idPos
-            };
-            var result = await database.QueryAsync<string>(query, para);
-            var position = result.First();
-            EmployeePositionModel model = new()
-            {
-                NamePosition = position
-            };
-            return model;
+                employee.Id = customer.Id;
+                employee.CompanyId = Guid.Empty;
+                employee.CustomerId = Guid.Empty;
+                employee.FirstName = customer.FirstName;
+                employee.SecondName = customer.SecondName;
+                employee.ThirdName = customer.ThirdName;
+
+                employee.PhoneWork = customer.Phone;
+                employee.EmailWork = customer.Email;
+                employee.Login = customer.Login;
+                employee.Password = customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
+                employee.Rol = new EmployeeRolModel
+                {
+                    RolType = EmployeeRolStatus.Customer
+                };
+                employee.Rol.RolName = employee.Rol.RolType.GetDisplayName();
+            }
+            return employee;
         }
+        #endregion
+        #region  Authorization
         public async Task<bool> IsPasswordAdminOk(Guid id, string inputPassword)
         {
             var query = "SELECT [Password] FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
@@ -279,49 +581,6 @@ namespace ReportingSystem.Data.SQL
                 return true;
             return false;
         }
-        public async Task<EmployeeStatusModel> GetEmployeeStatus(Guid id)
-        {
-            EmployeeStatusModel status = new();
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT[Type] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Id = @Id";
-            var para = new
-            {
-                Id = id,
-            };
-            var result = await database.QueryAsync<int>(query, para);
-
-            status.EmployeeStatusType = (EmployeeStatus)result.First();
-            status.EmployeeStatusName = status.EmployeeStatusType.GetDisplayName();
-
-            return status;
-        }
-
-        public async Task<Guid> GetEmployeeStatusIdByType(EmployeeStatusModel statusInput)
-        {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
-            var para = new
-            {
-                Type = statusInput.EmployeeStatusType,
-            };
-            var result = await database.QueryAsync<Guid>(query, para);
-
-            return result.First();
-        }
-
-        public async Task<Guid> GetEmployeeStatusIdByType(int statusInput)
-        {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
-            var para = new
-            {
-                Type = 1,
-            };
-            var result = await database.QueryAsync<Guid>(query, para);
-
-            return result.First();
-        }
-
         public async Task<bool> IsBusyEmail(string email)
         {
             using var database = Context.ConnectToSQL;
@@ -338,7 +597,48 @@ namespace ReportingSystem.Data.SQL
             else
                 return false;
         }
+        #endregion
+        #region Employees
+        public async Task<EmployeeStatusModel> GetEmployeeStatus(Guid id)
+        {
+            EmployeeStatusModel status = new();
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT[Type] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Id = @Id";
+            var para = new
+            {
+                Id = id,
+            };
+            var result = await database.QueryAsync<int>(query, para);
 
+            status.EmployeeStatusType = (EmployeeStatus)result.First();
+            status.EmployeeStatusName = status.EmployeeStatusType.GetDisplayName();
+
+            return status;
+        }
+        public async Task<Guid> GetEmployeeStatusIdByType(EmployeeStatusModel statusInput)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
+            var para = new
+            {
+                Type = statusInput.EmployeeStatusType,
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            return result.First();
+        }
+        public async Task<Guid> GetEmployeeStatusIdByType(int statusInput)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
+            var para = new
+            {
+                Type = 1,
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            return result.First();
+        }
         public async Task<Guid> GetEmployeeStatusIdByType(EmployeeStatus statusInput)
         {
             using var database = Context.ConnectToSQL;
@@ -350,96 +650,6 @@ namespace ReportingSystem.Data.SQL
             var result = await database.QueryAsync<Guid>(query, para);
 
             return result.First();
-        }
-        public async Task<Guid> GetPositionIdByType(EmployeePositionModel positionInput, Guid idCu, Guid idCo)
-        {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeePosition] Where Name = @Name AND CustomerId = @CustomerId AND CompanyId = @CompanyId";
-            var para = new
-            {
-                Name = positionInput.NamePosition,
-                CustomerId = idCu,
-                CompanyId = idCo
-            };
-            var result = await database.QueryAsync<Guid>(query, para);
-
-            return result.First();
-        }
-        public async Task<Guid> GetPositionIdByName(string name, Guid idCu, Guid idCo)
-        {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeePosition] Where Name = @Name AND CustomerId = @CustomerId AND CompanyId = @CompanyId";
-            var para = new
-            {
-                Name = name,
-                CustomerId = idCu,
-                CompanyId = idCo
-            };
-            var result = await database.QueryAsync<Guid>(query, para);
-
-            return result.First();
-        }
-        public async Task<EmployeeModel> GetEmployeeAdministrator(Guid id)
-        {
-            EmployeeModel employee = new();
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT * FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
-            var para = new
-            {
-                Id = id,
-            };
-
-            var results = await database.QueryAsync<TableTypeSQL.Administrator>(query, para);
-            foreach (var administrator in results)
-            {
-                employee.Id = administrator.Id;
-                employee.CompanyId = Guid.Empty;
-                employee.CustomerId = Guid.Empty;
-                employee.FirstName = administrator.FirstName;
-                employee.SecondName = administrator.SecondName;
-                employee.ThirdName = administrator.ThirdName;
-                employee.PhoneWork = administrator.PhoneWork;
-                employee.EmailWork = administrator.EmailWork;
-                employee.Login = administrator.Login;
-                employee.Password = administrator.Password != null ? EncryptionHelper.Decrypt(administrator.Password) : "";
-                employee.Status = await GetEmployeeStatus(administrator.Status); ;
-                employee.BirthDate = administrator.BirthDate;
-                employee.Rol = await new SQLRead().GetRoleById(administrator.Rol);
-            };
-
-            return employee;
-        }
-        public async Task<EmployeeModel> GetEmployeeCustomer(Guid id)
-        {
-            EmployeeModel employee = new();
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT * FROM [ReportingSystem].[dbo].[Customers] Where Id = @Id";
-            var para = new
-            {
-                Id = id,
-            };
-
-            var results = await database.QueryAsync<TableTypeSQL.Customer>(query, para);
-            foreach (var customer in results)
-            {
-                employee.Id = customer.Id;
-                employee.CompanyId = Guid.Empty;
-                employee.CustomerId = Guid.Empty;
-                employee.FirstName = customer.FirstName;
-                employee.SecondName = customer.SecondName;
-                employee.ThirdName = customer.ThirdName;
-
-                employee.PhoneWork = customer.Phone;
-                employee.EmailWork = customer.Email;
-                employee.Login = customer.Login;
-                employee.Password = customer.Password != null ? EncryptionHelper.Decrypt(customer.Password) : "";
-                employee.Rol = new EmployeeRolModel
-                {
-                    RolType = EmployeeRolStatus.Customer
-                };
-                employee.Rol.RolName = employee.Rol.RolType.GetDisplayName();
-            }
-            return employee;
         }
         public async Task<EmployeeModel> GetEmployeeData(Guid id)
         {
@@ -482,7 +692,6 @@ namespace ReportingSystem.Data.SQL
 
             return employee;
         }
-
         public async Task<EmployeeModel> GetEmployee(Guid idCu, Guid idCo, Guid idEm)
         {
             EmployeeModel employee = new();
@@ -518,87 +727,6 @@ namespace ReportingSystem.Data.SQL
             }
             return employee;
         }
-        
-        public async Task<List<EmployeeModel>> GetAdministrators()
-        {
-            List<EmployeeModel>? employees = [];
-
-            using (var database = Context.ConnectToSQL)
-            {
-
-                var TableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators]";
-                var resultEmployees = await database.QueryAsync<Guid>(TableQuery);
-
-                if (resultEmployees.Any())
-                {
-                    var x = resultEmployees;
-                    foreach (var emp in resultEmployees)
-                    {
-                        EmployeeModel employee = await GetAdministrator(emp);
-                        employees.Add(employee);
-                    }
-                    return employees;
-                }
-            }
-            return employees;
-        }
-
-        public async Task<EmployeeModel> GetAdministrator(Guid id)
-        {
-            EmployeeModel employee = new();
-            using (var database = Context.ConnectToSQL)
-            {
-                var query = "SELECT * FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
-                var para = new
-                {
-                    Id = id,
-                };
-                
-                try
-                {
-                    var results = await database.QueryAsync<TableTypeSQL.Employee>(query, para);
-                    foreach (var employees in results)
-                    {
-                        employee.Id = employees.Id;
-                        employee.CompanyId = employees.CompanyId;
-                        employee.CustomerId = employees.CustomerId;
-                        employee.FirstName = employees.FirstName;
-                        employee.SecondName = employees.SecondName;
-                        employee.ThirdName = employees.ThirdName;
-                        employee.PhoneWork = employees.PhoneWork;
-                        employee.PhoneSelf = employees.PhoneSelf;
-                        employee.EmailWork = employees.EmailWork;
-                        employee.EmailSelf = employees.EmailSelf;
-                        employee.TaxNumber = employees.TaxNumber;
-                        employee.AddressReg = employees.AddressReg;
-                        employee.AddressFact = employees.AddressFact;
-                        employee.Photo = employees.Photo;
-                        employee.Login = employees.Login;
-                        employee.Password = employees.Password != null ? EncryptionHelper.Decrypt(employees.Password) : "";
-                        employee.Salary = employees.Salary;
-                        employee.AddSalary = employees.AddSalary;
-                        employee.Status = await GetEmployeeStatus(employees.Status);
-
-                        employee.BirthDate = employees.BirthDate;
-                        employee.WorkStartDate = employees.WorkStartDate;
-                        employee.WorkEndDate = employees.WorkEndDate;
-                        employee.Rol = await new SQLRead().GetRoleById(employees.Rol);
-                        
-                    };
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-                
-                
-            }
-            return employee;
-        }
-
-        
-
         public async Task<List<EmployeeModel>> GetEmployeesInfo(Guid idCu, Guid idCo)
         {
             List<EmployeeModel>? employees = [];
@@ -632,7 +760,6 @@ namespace ReportingSystem.Data.SQL
             }
             return employees;
         }
-
         public async Task<List<EmployeeModel>> GetEmployees(Guid idCu, Guid idCo)
         {
             List<EmployeeModel>? employees = [];
@@ -667,8 +794,55 @@ namespace ReportingSystem.Data.SQL
             }
             return employees;
         }
+        public async Task<int> GetEmployeePositionCount(Guid idCu, Guid idCo)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = "SELECT COUNT(*) FROM[ReportingSystem].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            var result = await database.QueryAsync<int>(query, para);
+            return result.First();
+        }
+        public async Task<List<EmployeeModel>?> GetEmployeesByPosition(string idCu, string idCo, string pos)
+        {
+            List<EmployeeModel>? employees = [];
 
-        public async Task<CompanyStatusModel?> GetCompanyStatus(Guid id)
+            if (idCu.Equals(Guid.Empty) || idCo.Equals(Guid.Empty))
+            {
+                return employees;
+            }
+            using (var database = Context.ConnectToSQL)
+            {
+                var positionId = await new SQLRead().GetPositionIdByName(pos, Guid.Parse(idCu), Guid.Parse(idCo));
+                var TableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo AND Position = @Position";
+
+                var para = new
+                {
+                    IdCu = idCu,
+                    IdCo = idCo,
+                    position = positionId
+                };
+                var resultEmployees = await database.QueryAsync<Guid>(TableQuery, para);
+
+                if (resultEmployees.Any())
+                {
+                    var x = resultEmployees;
+                    foreach (var emp in resultEmployees)
+                    {
+                        EmployeeModel employee = await GetEmployeeData(emp);
+                        employees.Add(employee);
+                    }
+                    return employees;
+                }
+            }
+            return employees;
+        }
+        #endregion
+        #region Companies
+            public async Task<CompanyStatusModel?> GetCompanyStatus(Guid id)
         {
             CompanyStatusModel companyStatusModel = new();
             using var database = Context.ConnectToSQL;
@@ -729,7 +903,6 @@ namespace ReportingSystem.Data.SQL
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
         }
-
         public async Task<Guid> GetCompanyStatusId(CompanyStatus status)
         {
             using var database = Context.ConnectToSQL;
@@ -741,8 +914,6 @@ namespace ReportingSystem.Data.SQL
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
         }
-
-
         public async Task<List<CompanyModel>?> GetActualCompanies(string idCu)
         {
             await Task.Delay(10);
@@ -788,68 +959,6 @@ namespace ReportingSystem.Data.SQL
             }
             return companies;
         }
-        public async Task<List<EmployeeRolModel>?> GetRolls(string idCu, string idCo)
-        {
-            List<EmployeeRolModel> rolls = [];
-            using (var database = Context.ConnectToSQL)
-            {
-                var query = "SELECT [RolId] FROM [ReportingSystem].[dbo].[CompanyRolls] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
-                var para = new
-                {
-                    CustomerId = idCu,
-                    CompanyId = idCo,
-                };
-                var result = await database.QueryAsync<Guid>(query, para);
-                foreach (var rollsIds in result)
-                {
-                    
-                    try
-                    {
-                        var rol = await GetRoleById(rollsIds);
-                        rolls.Add(rol);
-                    }
-                    catch (Exception ex)
-                    {
-                        await Console.Out.WriteLineAsync(ex.ToString());
-                        throw;
-                    }
-                    
-                }
-                
-                
-            }
-            return rolls;
-        }
-        public async Task<List<EmployeeRolModel>?> GetDevRolls()
-        {
-            await Task.Delay(10);
-            List<EmployeeRolModel> devRols = [];
-            EmployeeRolModel devRol = new()
-            {
-                RolType = EmployeeRolStatus.Developer,
-                RolName = EmployeeRolStatus.Developer.GetDisplayName()
-            };
-            devRols.Add(devRol);
-            devRol = new EmployeeRolModel()
-            {
-                RolType = EmployeeRolStatus.DevAdministrator,
-                RolName = EmployeeRolStatus.DevAdministrator.GetDisplayName()
-            };
-            devRols.Add(devRol);
-            return devRols;
-        }
-
-        public async Task<int> GetEmployeePositionCount(Guid idCu, Guid idCo)
-        {
-            using var database = Context.ConnectToSQL;
-            var query = "SELECT COUNT(*) FROM[ReportingSystem].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
-            var para = new
-            {
-                CustomerId = idCu,
-                CompanyId = idCo
-            };
-            var result = await database.QueryAsync<int>(query, para);
-            return result.First();
-        }
+        #endregion
     }
 }

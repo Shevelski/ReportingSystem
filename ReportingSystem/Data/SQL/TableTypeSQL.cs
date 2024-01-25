@@ -96,5 +96,14 @@ namespace ReportingSystem.Data.SQL
             public string? Period;
             public string? NameOperation;
         }
+
+        public class EmployeePosition
+        {
+            public Guid Id;
+            public Guid IdCustomer;
+            public Guid IdCompany;
+            public int Type;
+            public string? Name;
+        }
     }
 }

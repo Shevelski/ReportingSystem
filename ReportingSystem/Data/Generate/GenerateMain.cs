@@ -40,12 +40,15 @@ namespace ReportingSystem.Data.Generate
                 await UpdateStatusOnClient("Запис в SQL", 20);
                 //write SQL
                 Debug.WriteLine($"SQL write Start " + DateTime.Now);
-                Database.Create(Context.connectionDB, Context.dbName);
+                Database.Create(Context.serverName, Context.dbName);
                 await UpdateStatusOnClient("База даних створена", 25);
+                Debug.WriteLine($"База даних створена " + DateTime.Now);
                 await new CreateTables().Enums();
                 await UpdateStatusOnClient("Таблиці з статичними даними створені", 30);
+                Debug.WriteLine($"Таблиці з статичними даними створені " + DateTime.Now);
                 await new CreateTables().Customers();
                 await UpdateStatusOnClient("Таблиця замовників створена", 35);
+                Debug.WriteLine($"Таблиця замовників створена " + DateTime.Now);
                 await new CreateTables().Administrators();
                 await UpdateStatusOnClient("Таблиця адміністраторів створена", 40);
                 await UpdateStatusOnClient("Основні таблиці створені", 45);

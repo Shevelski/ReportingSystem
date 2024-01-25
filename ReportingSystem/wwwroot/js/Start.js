@@ -6,7 +6,15 @@
         databaseStatus: '',
         showButtons: false,
         percentOperation: 0,
-        isPageLoaded: false
+        isPageLoaded: false,
+        serverName: '',
+        databaseName: '',
+        newServer: '',
+        newDatabase: '',
+        status: 0,
+        login: '',
+        password: '',
+        useCred: false,
     },
     mounted() {
         this.Init();
@@ -17,22 +25,162 @@
     },
     methods: {
         async Init() {
-            this.showButtons = true;
-            let response = await axios.get("/Home/HasDatabase");
-            this.hasDatabase = response.data;
+            this.hasDatabase = await axios.get("/Home/HasDatabase").data;
+            let response = await axios.get("/Home/GetConnectionString");
+            this.serverName = response.data[0];
+            this.databaseName = response.data[1];
             console.log("Test");
         },
+        async IsServerAvailable() {
+            if (!this.useCred) {
+                let result = await axios.get("/Home/IsServerAvailable1", {
+                    params: {
+                        serverName: this.newServer
+                    }
+                });
+                if (result.data) {
+                    this.SetStatus(4);
+                } else {
+                    this.SetStatus(3);
+                }
+            } else {
+                let result = await axios.get("/Home/IsServerAvailable1", {
+                    params: {
+                        serverName: this.newServer,
+                        login: this.login,
+                        password: this.password
+                    }
+                });
+                if (result.data) {
+                    this.SetStatus(4);
+                } else {
+                    this.SetStatus(3);
+                }
+            }
+        },
+        async IsDatabaseAvailable() {
+            if (!this.useCred) {
+                let result = await axios.get("/Home/IsDatabaseAvailable1", {
+                    params: {
+                        serverName: this.newServer,
+                        databaseName: this.newDatabase
+                    }
+                });
+                if (result.data) {
+                    this.SetStatus(6);
+                } else {
+                    this.SetStatus(5);
+                }
+            } else {
+                let result = await axios.get("/Home/IsDatabaseAvailable2", {
+                    params: {
+                        serverName: this.newServer,
+                        databaseName: this.newDatabase,
+                        login: this.login,
+                        password: this.password
+                    }
+                });
+                if (result.data) {
+                    this.SetStatus(6);
+                } else {
+                    this.SetStatus(5);
+                }
+            }
+            
+        },
+        async IsTablesAvailable() {
+            if (!this.useCred) {
+                let result = await axios.get("/Home/IsTablesAvailable1", {
+                    params: {
+                        serverName: this.newServer,
+                        databaseName: this.newDatabase
+                    }
+                });
+                if (result.data) {
+                    this.SetStatus(8);
+                } else {
+                    this.SetStatus(7);
+                }
+            } else {
+                let result = await axios.get("/Home/IsTablesAvailable2", {
+                    params: {
+                        serverName: this.newServer,
+                        databaseName: this.newDatabase,
+                        login: this.login,
+                        password: this.password
+                    }
+                });
+                if (result.data) {
+                    this.SetStatus(8);
+                } else {
+                    this.SetStatus(7);
+                }
+            }
+            
+        },
+        async SetStatus(status) {
+            if (status == 1) {
+                this.newServer = this.serverName;
+                this.newDatabase = this.databaseName;
+            };
+            this.status = status;
+            console.log("status " + status);
+        },
+        async useData(typeOfData) {
+            this.isDataChosen = true;
+            if (typeOfData) {
+                this.newServer = this.serverName;
+                this.newDatabase = this.databaseName;
+
+                console.log("Власні дані");
+            } else {
+                this.ownData = false;
+                console.log("Нові дані");
+            }
+
+            console.log(typeOfData);
+        },
+        async SetConnectionString() {
+         
+            if (!this.useCred) {
+                var ar = [this.newServer, this.newDatabase, "", ""];
+                try {
+                    await axios.post('/Home/SetConnectionString', ar);
+                } catch (error) {
+                    console.error('Помилка під час виклику методу EditCompany:', error);
+                }
+                
+            } else {
+                var ar = [this.newServer, this.newDatabase, this.login, this.password];
+                try {
+                    await axios.post('/Home/SetConnectionString', ar);
+                } catch (error) {
+                    console.error('Помилка під час виклику методу EditCompany:', error);
+                }
+            }
+        },
         async createDatabase() {
+            this.SetStatus(9);
+            await this.SetConnectionString();
             await axios.get("/Home/GenerateData");
-            this.showButtons = false;
             this.percentOperation = 0;
+            this.SetStatus(10);
+
+            //this.generationProcess = response.data;
+            console.log("Test");
+        },
+        async createTable() {
+            this.SetStatus(9);
+            await axios.get("/Home/GenerateData");
+            this.percentOperation = 0;
+            this.SetStatus(10);
 
             //this.generationProcess = response.data;
             console.log("Test");
         },
         async cancelCreation() {
-            this.showButtons = false;
             this.percentOperation = 0;
+            this.SetStatus(0);
         },
         setupSignalR() {
             // Створіть з'єднання SignalR

@@ -2,50 +2,65 @@
 {
     public static class Settings
     {
-        //режим роботи
+        private static IConfigurationRoot LoadConfiguration()
+        {
+            return new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
+        }
+
+        private static string GetValue(string source)
+        {
+            IConfigurationRoot configuration = LoadConfiguration();
+            return configuration.GetValue<string>(source);
+        }
+
+        // Режим роботи
         public static string Source()
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
-            configuration.Reload();
-            string source = configuration.GetValue<string>("Source:source");
-            if (source.Equals("0"))
-            {
-                return "json";
-            }
-
-            if (source.Equals("1"))
-            {
-                return "sql";
-            }
-
-            return "json";
+            //IConfigurationRoot configuration = LoadConfiguration();
+            //string source = configuration.GetValue<string>("Source:source");
+            //return source.Equals("1") ? "sql" : "json";
+            return GetValue("Source:source").Equals("1") ? "sql" : "json";
+            
         }
-        
-        //режим роботи
+
+        // Режим роботи
         public static string Mode()
         {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json")
-            .Build();
-            configuration.Reload();
-            string source = configuration.GetValue<string>("Source:mode");
+            //IConfigurationRoot configuration = LoadConfiguration();
+            //string mode = configuration.GetValue<string>("Source:mode");
+            //return mode.Equals("1") ? "write" : "read";
+            return GetValue("Source:mode").Equals("1") ? "write" : "read";
+        }
 
-            if (source.Equals("0"))
-            {
-                return "read";
-            }
+        public static string Server()
+        {
+            //IConfigurationRoot configuration = LoadConfiguration();
+            //return configuration.GetValue<string>("ConnectionSettings:Server");
+            return GetValue("ConnectionSettings:Server");
+        }
 
-            if (source.Equals("1"))
-            {
-                return "write";
-            }
+        public static string DB()
+        {
+            //IConfigurationRoot configuration = LoadConfiguration();
+            //return configuration.GetValue<string>("ConnectionSettings:DB");
+            return GetValue("ConnectionSettings:DB");
+        }
 
-            return "read";
+        public static string Login()
+        {
+            //IConfigurationRoot configuration = LoadConfiguration();
+            //return configuration.GetValue<string>("ConnectionSettings:Server");
+            return GetValue("ConnectionSettings:Login");
+        }
 
+        public static string Password()
+        {
+            //IConfigurationRoot configuration = LoadConfiguration();
+            //return configuration.GetValue<string>("ConnectionSettings:DB");
+            return GetValue("ConnectionSettings:Password");
         }
     }
 }

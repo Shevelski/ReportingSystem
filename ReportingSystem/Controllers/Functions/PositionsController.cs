@@ -12,8 +12,7 @@ namespace ReportingSystem.Controllers.Functions
         //Отримання списку посад компанії 
         public async Task<IActionResult> GetAllPositions(string idCu, string idCo)
         {
-            await Task.Delay(10);
-            var result = _positionsService.GetAllPositions(idCu, idCo);
+            var result = await _positionsService.GetAllPositions(idCu, idCo);
             return Json(result);
         }
 
@@ -21,8 +20,7 @@ namespace ReportingSystem.Controllers.Functions
         //Отримання списку посад компанії 
         public async Task<IActionResult> GetAllPositionsWithEmployee(string idCu, string idCo)
         {
-            await Task.Delay(10);
-            var result = _positionsService.GetAllPositionsWithEmployee(idCu, idCo);
+            var result = await _positionsService.GetAllPositionsWithEmployee(idCu, idCo);
             return Json(result);
         }
 
@@ -30,8 +28,7 @@ namespace ReportingSystem.Controllers.Functions
         //Отримання списку посад компанії 
         public async Task<IActionResult> GetUniqPositions(string idCu, string idCo)
         {
-            await Task.Delay(10);
-            var result = _positionsService.GetUniqPositions(idCu, idCo);
+            var result = await _positionsService.GetUniqPositions(idCu, idCo);
             return Json(result);
         }
 
@@ -40,40 +37,30 @@ namespace ReportingSystem.Controllers.Functions
         //Отримання списку посад компанії 
         public async Task<IActionResult> GetEmployeesByPosition(string idCu, string idCo, string pos)
         {
-            await Task.Delay(10);
-            var result = _positionsService.GetEmployeesByPosition(idCu, idCo, pos);
+            var result = await _positionsService.GetEmployeesByPosition(idCu, idCo, pos);
             return Json(result);
         }
 
 
         [HttpPost]
         // створення нової посади
-        public async Task<IActionResult> CreatePosition([FromBody] string[] ar)
+        public async Task CreatePosition([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _positionsService.CreatePosition(ar);
-            return Json(result);
+             await _positionsService.CreatePosition(ar);
         }
 
         [HttpPost]
         // видалення посади
-        public async Task<IActionResult> DeletePosition([FromBody] string[] ar)
+        public async Task DeletePosition([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _positionsService.DeletePosition(ar);
-            return Json(result);
+            await _positionsService.DeletePosition(ar);
         }
 
         [HttpPost]
-        // редагування посади у користовуча
-        public async Task<IActionResult> EditEmployeePosition([FromBody] string[] ar)
+        // редагування посади у користувача
+        public async Task EditEmployeePosition([FromBody] string[] ar)
         {
-            await Task.Delay(10);
-            var result = _positionsService.EditEmployeePosition(ar);
-            return Json(result);
+            await _positionsService.EditEmployeePosition(ar);
         }
-        
-
-
     }
 }

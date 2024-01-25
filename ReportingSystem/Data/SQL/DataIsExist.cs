@@ -25,7 +25,7 @@ namespace ReportingSystem.Data.SQL
         {
             using (var database = Context.ConnectToSQL)
             {
-                var dataExistsQuery = "SELECT COUNT(*) FROM [ReportingSystem].[dbo].[Customers]";
+                var dataExistsQuery = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Customers]";
                 var tableExists = database.QueryFirstOrDefault<int>(dataExistsQuery);
 
                 if (tableExists > 0)
