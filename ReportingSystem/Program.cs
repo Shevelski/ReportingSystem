@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using ReportingSystem.Data;
 using ReportingSystem.Hubs;
@@ -17,7 +18,10 @@ namespace ReportingSystem
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-            
+
+            //builder.Services.AddAuthentication("BasicAuthentication")
+            //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
             builder.Services.AddScoped<AuthorizeService>();
             builder.Services.AddScoped<CustomersService>();
             builder.Services.AddScoped<CompaniesService>();
@@ -61,15 +65,12 @@ namespace ReportingSystem
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseRouting();
 
             app.UseSession();
 
             app.UseAuthorization();
-
-            //app.MapControllerRoute(
-            //    name: "default",
-            //    pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.MapControllerRoute(
                 name: "default",
@@ -79,6 +80,16 @@ namespace ReportingSystem
                 name: "configuration",
                 pattern: "configuration",
                 defaults: new { controller = "Configuration", action = "Configuration" });
+
+            //app.UseAuthentication();
+
+            //app.MapControllerRoute(
+            //    name: "configuration",
+            //    pattern: "configuration",
+            //    defaults: new { controller = "Configuration", action = "Configuration" })
+            //    .RequireAuthorization(); // Додаємо вимогу автентифікації для цього маршруту
+
+
 
 
             app.MapHub<StatusHub>("/statusHub");
