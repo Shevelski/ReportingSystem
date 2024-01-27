@@ -99,7 +99,8 @@
                     this.SetStatus(6);
                 } else {
                     this.SetStatus(5);
-                }
+                };
+                this.SetConnectionString();
             } else {
                 let result = await axios.get("/Home/IsDatabaseAvailable2", {
                     params: {
