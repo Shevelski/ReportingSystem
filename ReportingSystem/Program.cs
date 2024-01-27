@@ -12,16 +12,12 @@ namespace ReportingSystem
     {
         public static void Main(string[] args)
         {
-            //SQLitePCL.Batteries.Init();
 
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
-
-            builder.Services.AddAuthentication("BasicAuthentication")
-            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             builder.Services.AddScoped<AuthorizeService>();
             builder.Services.AddScoped<CustomersService>();
@@ -45,9 +41,6 @@ namespace ReportingSystem
             });
             //builder.Services.AddScoped<ProjectsService>();
             //builder.Services.AddScoped<ReportModel>();
-
-            //var config = builder.Configuration.GetSection("TempCustomer");
-            //builder.Services.Configure<CustomerModel>(config);
 
             var app = builder.Build();
 
@@ -74,21 +67,10 @@ namespace ReportingSystem
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            //app.MapControllerRoute(
-            //    name: "configuration",
-            //    pattern: "configuration",
-            //    defaults: new { controller = "Configuration", action = "Configuration" });
-
-            app.UseAuthentication();
-
             app.MapControllerRoute(
                 name: "configuration",
                 pattern: "configuration",
                 defaults: new { controller = "Configuration", action = "Configuration" });
-                //.RequireAuthorization(); // Додаємо вимогу автентифікації для цього маршруту
-
-
-
 
             app.MapHub<StatusHub>("/statusHub");
 

@@ -12,9 +12,15 @@
         newServer: '',
         newDatabase: '',
         status: 0,
+        loginDB:'',
+        passwordDB:'',
         login: '',
         password: '',
         useCred: false,
+        pagePasswordOk: false,
+        showModal: true,
+        username: '',
+        isLoggedIn: false
     },
     mounted() {
         this.Init();
@@ -29,7 +35,23 @@
             let response = await axios.get("/Home/GetConnectionString");
             this.serverName = response.data[0];
             this.databaseName = response.data[1];
+            this.showModal = true;
             console.log("Test");
+        },
+        openModal() {
+            this.showModal = true;
+        },
+        closeModal() {
+            this.showModal = false;
+        },
+        async loginUser() {
+            let result = await axios.get("/Home/ConfigEnter", {
+                params: {
+                    username: this.username,
+                    password: this.password,
+                }
+            });
+            console.log("qwerewq");
         },
         async IsServerAvailable() {
             if (!this.useCred) {
@@ -47,8 +69,8 @@
                 let result = await axios.get("/Home/IsServerAvailable1", {
                     params: {
                         serverName: this.newServer,
-                        login: this.login,
-                        password: this.password
+                        login: this.loginDB,
+                        password: this.passwordDB
                     }
                 });
                 if (result.data) {
@@ -76,8 +98,8 @@
                     params: {
                         serverName: this.newServer,
                         databaseName: this.newDatabase,
-                        login: this.login,
-                        password: this.password
+                        login: this.loginDB,
+                        password: this.passwordDB
                     }
                 });
                 if (result.data) {

@@ -53,6 +53,8 @@ namespace ReportingSystem.Controllers.Users
             return Json(result);
         }
 
+        
+
         [HttpGet]
         public async Task<IActionResult> CheckPassword(string email, string password)
         {
