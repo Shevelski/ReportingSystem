@@ -164,10 +164,9 @@
             await this.SetConnectionString();
             await axios.get("/Home/GenerateData");
             this.percentOperation = 0;
-            this.SetStatus(10);
+            //this.SetStatus(10);
 
             //this.generationProcess = response.data;
-            console.log("Test");
         },
         async createTable() {
             this.SetStatus(9);

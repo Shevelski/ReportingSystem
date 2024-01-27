@@ -40,9 +40,12 @@ namespace ReportingSystem.Data.Generate
                 await UpdateStatusOnClient("Запис в SQL", 20);
                 //write SQL
                 Debug.WriteLine($"SQL write Start " + DateTime.Now);
+                Database.Drop(Context.serverName, Context.dbName);
                 Database.Create(Context.serverName, Context.dbName);
                 await UpdateStatusOnClient("База даних створена", 25);
                 Debug.WriteLine($"База даних створена " + DateTime.Now);
+                string[] ar = [Context.serverName, Context.dbName];
+
                 await new CreateTables().Enums();
                 await UpdateStatusOnClient("Таблиці з статичними даними створені", 30);
                 Debug.WriteLine($"Таблиці з статичними даними створені " + DateTime.Now);
@@ -103,7 +106,7 @@ namespace ReportingSystem.Data.Generate
                 string jsonData = JsonConvert.SerializeObject(databaseMoqData, Formatting.Indented);
                 File.WriteAllText(Context.Json, jsonData);
                 Debug.WriteLine($"Json write End " + DateTime.Now);
-                await UpdateStatusOnClient("Операція завершена, перехід на авторизацію", 100);
+                await UpdateStatusOnClient("Операція завершена, перейдіть до авторизації", 100);
              
             }
             catch (Exception ex)

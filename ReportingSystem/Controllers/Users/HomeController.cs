@@ -192,6 +192,12 @@ namespace ReportingSystem.Controllers.Users
             new JsonWrite().UpdateJsonAppsettings(ar);
         }
 
+        [HttpPost]
+        public async Task ClearTables([FromBody] string[] ar)
+        {
+            await ClearDatabase.ClearTables(ar);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

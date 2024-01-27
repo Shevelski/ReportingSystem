@@ -81,7 +81,14 @@
                     <button type="button" class="btn btn-secondary" v-on:click="cancelCreation">Ні</button>
                 </div>
                 <div v-if="status == 8">
-                    <label style="color: green;">Таблиці доступні. Можете переходити до системи</label>
+                    <div>
+                        <label style="color: green;">Таблиці доступні. Можете переходити до системи</label>
+                        <label style="color: orange;">Можете також перегенерувати БД</label>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" v-on:click="createDatabase">Так</button>
+                        <button type="button" class="btn btn-secondary" v-on:click="cancelCreation">Ні</button>
+                    </div>
                 </div>
 
                 <div v-if = "status == 9">
@@ -101,9 +108,6 @@
                 <div v-if = "status == 10">
                     <h2 class="text-center">Налаштування завершено</h2>
                 </div>
-
-
-                    @* <button v-on:click="SetConnectionString(newServer, newDb)">Зберегти нові дані</button> *@
 
             </div>
             <div v-else>

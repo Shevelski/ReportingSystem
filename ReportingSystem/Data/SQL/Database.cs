@@ -17,6 +17,7 @@ namespace ReportingSystem.Data.SQL
             using SqlConnection connection = new($"Server={serverName};Trusted_Connection=True;");
             connection.Open();
 
+
             // SQL-запит для створення бази даних
             string createDatabaseQuery = $"CREATE DATABASE {databaseName};";
 
@@ -24,6 +25,42 @@ namespace ReportingSystem.Data.SQL
             using SqlCommand command = new(createDatabaseQuery, connection);
             command.ExecuteNonQuery();
         }
+        public static void Drop(string serverName, string databaseName)
+        {
+            using SqlConnection connection = new($"Server={serverName};Trusted_Connection=True;");
+            connection.Open();
+
+            // Перевірка наявності бази даних
+            string checkDatabaseQuery = $"SELECT COUNT(*) FROM sys.databases WHERE name = '{databaseName}';";
+            using (SqlCommand checkDatabaseCommand = new(checkDatabaseQuery, connection))
+            {
+                int databaseCount = (int)checkDatabaseCommand.ExecuteScalar();
+                if (databaseCount == 0)
+                {
+                    Console.WriteLine($"Database '{databaseName}' does not exist.");
+                    return;
+                }
+            }
+
+            // Встановлення бази даних в режим SINGLE_USER
+            string stopConnectionsQuery = $@"USE master;
+                                            ALTER DATABASE [{databaseName}]
+                                            SET SINGLE_USER
+                                            WITH ROLLBACK IMMEDIATE;";
+
+            using (SqlCommand stopConnectionsCommand = new(stopConnectionsQuery, connection))
+            {
+                stopConnectionsCommand.ExecuteNonQuery();
+            }
+
+            // SQL-запит для видалення бази даних
+            string dropDatabaseQuery = $"USE master; DROP DATABASE {databaseName};";
+
+            // Виконання SQL-запиту
+            using SqlCommand command = new(dropDatabaseQuery, connection);
+            command.ExecuteNonQuery();
+        }
+
 
         public static bool IsExist(string serverName, string databaseName)
         {
@@ -142,7 +179,7 @@ namespace ReportingSystem.Data.SQL
 
                 var results = await Task.WhenAll(
                     tablesChecker.AdministratorsAsync(),
-                    tablesChecker.ConfigurationAsync(),
+                    //tablesChecker.ConfigurationAsync(),
                     tablesChecker.CompanyRollsAsync(),
                     tablesChecker.ConfigureAsync(),
                     tablesChecker.StatusLicenceAsync(),
@@ -155,7 +192,7 @@ namespace ReportingSystem.Data.SQL
                     tablesChecker.ProjectStatusAsync(),
                     tablesChecker.HistoryOperationsAsync(),
                     tablesChecker.EmployeePositionAsync(),
-                    tablesChecker.EmployeeRolAsync(),
+                    //tablesChecker.EmployeeRolAsync(),
                     tablesChecker.HolidayDateAsync(),
                     tablesChecker.HospitalDateAsync(),
                     tablesChecker.AssignmentDateAsync(),

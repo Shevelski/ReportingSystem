@@ -77,10 +77,10 @@ namespace ReportingSystem.Data.Generate
                     SecondName = "Іван",
                     ThirdName = "Петрович",
                     PhoneWork = "+380666666666",
-                    EmailWork = "golo@gmail.ua",
+                    EmailWork = "admin@gmail.ua",
                     Photo = "",
                     Login = "golo",
-                    Password = EncryptionHelper.Encrypt("12345"),
+                    Password = EncryptionHelper.Encrypt("admin"),
                     Rol = new EmployeeRolModel()
                     {
                         RolType = EmployeeRolStatus.DevAdministrator,
