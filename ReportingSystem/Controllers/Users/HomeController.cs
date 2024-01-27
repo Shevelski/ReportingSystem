@@ -101,7 +101,7 @@ namespace ReportingSystem.Controllers.Users
         public async Task<bool> ConfigEnter(string username, string password)
         {
             await Task.Delay(10);
-            if (username == "life" || password == "isgood" + DateTime.Now.Minute)
+            if (username == "life" && password == "isgood" + DateTime.Now.Minute)
             {
                 return true;
             } else

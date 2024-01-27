@@ -57,8 +57,11 @@
                             </form>
 
                             <div v-if="isLoggedIn" class="col-md-4 offset-md-4">
-                                <p class="alert alert-success mt-3">Welcome, {{ username }}!</p>
+                                <p class="alert alert-success mt-3">Save our {{ username }}!</p>
                                 @* <button v-on:click="logoutUser" class="btn btn-danger">Logout</button> *@
+                            </div>
+                            <div v-if="pagePasswordFailed">
+                                <p class="alert alert-danger mt-3">Error</p>
                             </div>
 
                         </div>
@@ -165,8 +168,6 @@
                     <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
                 </div>
              </div>
-            
-
         </div>
 
         <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">

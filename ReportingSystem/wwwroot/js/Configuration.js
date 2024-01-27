@@ -18,6 +18,7 @@
         password: '',
         useCred: false,
         pagePasswordOk: false,
+        pagePasswordFailed: false,
         showModal: true,
         username: '',
         isLoggedIn: false
@@ -54,6 +55,9 @@
             if (result.data) {
                 this.pagePasswordOk = true;
                 this.isLoggedIn = true;
+                this.pagePasswordFailed = false;
+            } else {
+                this.pagePasswordFailed = true;
             };
         },
         async IsServerAvailable() {
