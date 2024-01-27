@@ -54,11 +54,31 @@
                     <li class="nav-item">
                         <a class="nav-link @(path == "/EUDevAdministrator/Report" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Report">Звіт</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Info" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Info">Власні дані</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="">Вихід</a>
+                    <li class="nav-item dropdown" id="header_dropdown">
+                        <ul class="first-list" v-if="windowWidth > 992">
+                            <li class="circle border">
+                                <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ firstInitial }}{{ secondInitial }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+
+                                    <li class="nav-item">
+                                        <a class="nav-link @(path == "/EUDevAdministrator/Info" ? "active" : "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Info">Власні дані</a>
+                                    </li>
+                                    <li class="nav-item" v-if="windowWidth > 992">
+                                        <a class="nav-link @(path == "/EUDevAdministrator/Authorize" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="second-list" v-else>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Info" ? "active" : "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Info">Власні дані</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Authorize" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вихід</a>
+                            </li>
+                        </ul>
                     </li>
                     </ul>
                 </div>
@@ -81,32 +101,70 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/Header.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 
 <style>
+    .first-list {
+        list-style: none; /* Remove bullet points */
+        padding-left: 5px; /* Remove padding */
+        margin: 0; /* Remove margin */
+    }
+
+    .second-list {
+        list-style: none; /* Remove bullet points */
+        padding: 0; /* Remove padding */
+        margin: 0; /* Remove margin */
+    }
+
+    .circle {
+        width: 35px;
+        height: 35px;
+        background-color: #be1e1e; /* Change the background color as desired */
+        border-radius: 50%; /* Makes the div circular */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgb(224, 224, 224); /* Text color */
+    @* font-size: 24px; /* Font size for initials */ *@
+    }
+
+    .dropdown-menu {
+        background-color: #7B3838;
+    }
+
+    .navbar-nav .dropdown .nav-link:hover {
+        color: #000;
+    }
+
+    .navbar {
+        background-color: #7B3838;
+    }
+
     .nav-link.active {
         text-decoration: underline;
-    }
-    .navbar-custom{
-        background-color: rgb(146, 60, 163);
-    }
-    .navbar-nav li a {
         color: #fff;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #000000;
+        transition: all 0.3s ease-in;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        color: rgb(224, 224, 224);
         transition: all 0.3s ease-out;
     }
-    .navbar-brand{
+
+    .navbar .navbar-brand {
         color: #fff;
         transition: all 0.3s ease-out;
     }
 
-    .navbar-brand:hover {
-        color: #fffed6c9;
-        transition: all 0.3s ease-in;
-    }
-    .navbar-nav .nav-link:hover {
-        color: #fffed6c9;
-        transition: all 0.3s ease-in;
-    }
+        .navbar .navbar-brand:hover {
+            color: #000;
+            transition: all 0.3s ease-in;
+        }
 </style>

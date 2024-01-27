@@ -39,6 +39,7 @@ new Vue({
             this.personalInfo = await this.getEmployee();
             this.firstInitial = this.personalInfo.firstName[0];
             this.secondInitial = this.personalInfo.secondName[0];
+            console.log(this.firstInitial)
     },
   
     async getEmployee() {
