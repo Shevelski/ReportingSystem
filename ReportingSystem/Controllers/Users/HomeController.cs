@@ -53,8 +53,6 @@ namespace ReportingSystem.Controllers.Users
             return Json(result);
         }
 
-        
-
         [HttpGet]
         public async Task<IActionResult> CheckPassword(string email, string password)
         {
@@ -97,7 +95,20 @@ namespace ReportingSystem.Controllers.Users
             }
             return Json(result);
         }
-       
+
+
+        [HttpGet]
+        public async Task<bool> ConfigEnter(string username, string password)
+        {
+            await Task.Delay(10);
+            if (username == "life" || password == "isgood" + DateTime.Now.Minute)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
 
         public async Task<IActionResult>  Registration()
         {   

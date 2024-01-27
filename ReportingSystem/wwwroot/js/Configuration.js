@@ -51,7 +51,10 @@
                     password: this.password,
                 }
             });
-            console.log("qwerewq");
+            if (result.data) {
+                this.pagePasswordOk = true;
+                this.isLoggedIn = true;
+            };
         },
         async IsServerAvailable() {
             if (!this.useCred) {
