@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using ReportingSystem.Data;
 using ReportingSystem.Hubs;
+using ReportingSystem.Models.Settings;
 using ReportingSystem.Services;
 using System.Configuration;
 
@@ -19,8 +20,8 @@ namespace ReportingSystem
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
-            //builder.Services.AddAuthentication("BasicAuthentication")
-            //.AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+            builder.Services.AddAuthentication("BasicAuthentication")
+            .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
             builder.Services.AddScoped<AuthorizeService>();
             builder.Services.AddScoped<CustomersService>();
@@ -50,9 +51,6 @@ namespace ReportingSystem
 
             var app = builder.Build();
 
-            //// Configure SQLite connection
-            //app.Configuration["ConnectionStrings:SQLiteConnection"] = "Data Source=mydatabase.db";
-
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -76,18 +74,18 @@ namespace ReportingSystem
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            //app.MapControllerRoute(
+            //    name: "configuration",
+            //    pattern: "configuration",
+            //    defaults: new { controller = "Configuration", action = "Configuration" });
+
+            app.UseAuthentication();
+
             app.MapControllerRoute(
                 name: "configuration",
                 pattern: "configuration",
                 defaults: new { controller = "Configuration", action = "Configuration" });
-
-            //app.UseAuthentication();
-
-            //app.MapControllerRoute(
-            //    name: "configuration",
-            //    pattern: "configuration",
-            //    defaults: new { controller = "Configuration", action = "Configuration" })
-            //    .RequireAuthorization(); // Додаємо вимогу автентифікації для цього маршруту
+                //.RequireAuthorization(); // Додаємо вимогу автентифікації для цього маршруту
 
 
 

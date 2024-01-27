@@ -217,6 +217,7 @@ namespace ReportingSystem.Services
                 {
                     authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
                     authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                    authorize.Employee = await new SQLRead().GetEmployeeCustomer(id);
                 }
             }
             if (resultEmployee.Any())
@@ -229,6 +230,7 @@ namespace ReportingSystem.Services
                 {
                     authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
                     authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                    authorize.Employee = await new SQLRead().GetEmployeeData(id);
                 }
             }
 

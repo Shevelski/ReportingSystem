@@ -57,7 +57,7 @@ namespace ReportingSystem.Models.Settings
         {
             // Додайте код для перевірки введеного пароля
             // Наприклад, порівняння із збереженим паролем
-            return password == "меневженемає";
+            return password == "stoppanic";
         }
     }
 }
