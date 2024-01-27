@@ -67,9 +67,19 @@ namespace ReportingSystem
 
             app.UseAuthorization();
 
+            //app.MapControllerRoute(
+            //    name: "default",
+            //    pattern: "{controller=Home}/{action=Index}/{id?}");
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapControllerRoute(
+                name: "configuration",
+                pattern: "configuration",
+                defaults: new { controller = "Configuration", action = "Configuration" });
+
 
             app.MapHub<StatusHub>("/statusHub");
 

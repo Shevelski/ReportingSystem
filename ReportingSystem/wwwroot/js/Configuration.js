@@ -1,5 +1,5 @@
 ﻿new Vue({
-    el: '#Start',
+    el: '#Configuration',
     data: {
         hasDatabase: false,
         generationProcess: '',

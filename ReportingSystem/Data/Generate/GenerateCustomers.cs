@@ -18,7 +18,7 @@ namespace ReportingSystem.Data.Generate
 
             try
             {
-                int countCustomer = random.Next(5, 10);
+                int countCustomer = random.Next(2, 3);
                 for (int i = 0; i < countCustomer; i++)
                 {
                     CustomerModel Customer = RandomCustomer();
