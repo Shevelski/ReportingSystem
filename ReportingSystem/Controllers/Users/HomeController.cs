@@ -211,6 +211,13 @@ namespace ReportingSystem.Controllers.Users
             await ClearDatabase.ClearTables(ar);
         }
 
+        public async Task<IActionResult> ChangeLocalization(string culture)
+        {
+            HttpContext.Request.Cookies.TryGetValue("previous", out string? previous);
+            return Redirect(previous ?? "/");
+        }
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

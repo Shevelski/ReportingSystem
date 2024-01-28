@@ -6,6 +6,7 @@ namespace ReportingSystem.Enums
     {
 
         [EnumDisplayName("Email вірний. Введіть пароль")]
+        //[EnumDisplayName("Email вірний. Введіть пароль")]
         EmailOk = 1,
 
         [EnumDisplayName("Користувача з таким Email не існує. Бажаєте зареєструватися в системі як замовник?")]
