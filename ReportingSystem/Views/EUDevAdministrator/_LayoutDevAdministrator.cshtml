@@ -38,27 +38,43 @@
                     <li class="nav-item">
                         <a class="nav-link @(path == "/EUDevAdministrator/Companies" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Companies">Компанії</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Projects" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Projects">Проекти</a>
+                  
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Проекти
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Projects" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Projects">Проекти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Steps" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Steps">Етапи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Categories" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Categories">Категорії</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Steps" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Steps">Етапи</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Співробітники
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Employees" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Employees">Співробітники</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Administrators" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Administrators">Адміністратори</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Positions" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Positions">Посади</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link @(path == "/EUDevAdministrator/Structure" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Structure">Структура</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Categories" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Categories">Категорії</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Employees" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Employees">Співробітники</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Administrators" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Administrators">Адміністратори</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Positions" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Positions">Посади</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(path == "/EUDevAdministrator/Structure" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Structure">Структура</a>
-                    </li>
+                   
                     <li class="nav-item">
                         <a class="nav-link @(path == "/EUDevAdministrator/Report" ? "active": "")" asp-area="" asp-controller="EUDevAdministrator" asp-action="Report">Звіт</a>
                     </li>
