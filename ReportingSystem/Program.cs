@@ -1,10 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using ReportingSystem.Common;
 using ReportingSystem.Data;
 using ReportingSystem.Hubs;
+using ReportingSystem.Middlewares;
 using ReportingSystem.Models.Settings;
 using ReportingSystem.Services;
 using System.Configuration;
+using System.Globalization;
 
 namespace ReportingSystem
 {
@@ -28,6 +32,15 @@ namespace ReportingSystem
             builder.Services.AddScoped<ProjectsCategoriesService>();
             builder.Services.AddScoped<ProjectsService>();
             builder.Services.AddScoped<ReportService>();
+            builder.Services.AddScoped<LocalizationCookiesAttribute>();
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+            builder.Services.AddControllersWithViews()
+                .AddViewLocalization()
+                .AddMvcOptions(options =>
+                {
+                    options.Filters.Add<LocalizationCookiesAttribute>();
+                    options.Filters.Add<PathCookiesAttribute>();
+                });
 
             builder.Services.AddSignalR();
 
@@ -44,6 +57,20 @@ namespace ReportingSystem
 
             var app = builder.Build();
 
+            CultureInfo[] supportedCultures = new CultureInfo[]
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("uk-UA"),
+            };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions()
+            {
+                DefaultRequestCulture = new RequestCulture("uk-UA"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
+            app.UseMiddleware<CultureMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

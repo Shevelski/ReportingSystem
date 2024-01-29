@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IViewLocalizer Localizer
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,7 +19,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand main-name @(path == "/" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Index">Звітна система</a>
+                <a class="navbar-brand main-name @(path == "/" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["ReportingSystem"]</a>
                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                 </button>
@@ -36,20 +38,20 @@
                         </li>
                         } *@
                         <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
+                            <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">@Localizer["Authorize"]</a>
                         </li>
                          <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/Registration" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Registration">Реєстрація</a>
+                            <a class="nav-link @(path == "/Home/Registration" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Registration">@Localizer["Registration"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" asp-area="" asp-controller="Home" asp-action="AboutUs">Про нас</a>
+                            <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" asp-area="" asp-controller="Home" asp-action="AboutUs">@Localizer["AboutUs"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/Contacts" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Contacts">Контакти</a>
+                            <a class="nav-link @(path == "/Home/Contacts" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Contacts">@Localizer["Contacts"]</a>
                         </li>
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Мова
+                                @Localizer["Language"]
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <li>
