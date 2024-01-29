@@ -17,12 +17,27 @@
             List<DateTime> workDates = new List<DateTime>();
 
             HashSet<DayOfWeek> weekendDays = new HashSet<DayOfWeek>
-        {
+            {
             DayOfWeek.Saturday,
             DayOfWeek.Sunday
-        };
+            };
 
-            while (workDates.Count < amount)
+            //while (workDates.Count < amount)
+            //{
+            //    DateTime currentDate = startWorkDate.AddDays(random.Next(range));
+
+            //    if (!includeWeekends && weekendDays.Contains(currentDate.DayOfWeek))
+            //    {
+            //        continue;
+            //    }
+
+            //    if (!workDates.Contains(currentDate))
+            //    {
+            //        workDates.Add(currentDate);
+            //    }
+            //}
+
+            for (int i = 0; i < amount && workDates.Count < range; i++)
             {
                 DateTime currentDate = startWorkDate.AddDays(random.Next(range));
 
@@ -36,6 +51,7 @@
                     workDates.Add(currentDate);
                 }
             }
+
 
             workDates.Sort();
             return workDates;

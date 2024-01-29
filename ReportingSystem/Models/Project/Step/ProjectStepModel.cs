@@ -5,6 +5,10 @@ namespace ReportingSystem.Models.Project.Step
 {
     public class ProjectStepModel
     {
+        public Guid Id { get; set; }
+        public Guid CustomerId { get; set; }
+        public Guid CompanyId { get; set; }
+        public Guid ProjectId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public DateTime StartDate { get; set; }

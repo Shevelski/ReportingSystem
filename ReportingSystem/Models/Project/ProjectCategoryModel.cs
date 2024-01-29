@@ -6,16 +6,12 @@
         public string? Name { get; set; }
         public List<Guid>? Projects { get; set; }
         public List<ProjectCategoryModel1>? CategoriesLevel1 { get; set; }
-        //public List<ProjectCategoryModel2>? categoriesLevel2 { get; set; }
-        //public List<ProjectCategoryModel3>? categoriesLevel3 { get; set; }
 
         public ProjectCategoryModel()
         {
             Id = Guid.NewGuid();
             Projects = new List<Guid>();
             CategoriesLevel1 = new List<ProjectCategoryModel1>();
-            //categoriesLevel2 = new List<ProjectCategoryModel2>();
-            //categoriesLevel3 = new List<ProjectCategoryModel3>();
         }
     }
 

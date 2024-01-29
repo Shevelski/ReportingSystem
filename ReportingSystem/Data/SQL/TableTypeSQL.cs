@@ -2,6 +2,7 @@
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Models;
+using ReportingSystem.Models.Project.Step;
 
 namespace ReportingSystem.Data.SQL
 {
@@ -104,6 +105,25 @@ namespace ReportingSystem.Data.SQL
             public Guid IdCompany;
             public int Type;
             public string? Name;
+        }
+
+        public class Project
+        {
+            public Guid Id;
+            public Guid IdCustomer;
+            public Guid IdCompany;
+            public string? Name;
+            public string? Description;
+            public double ProjectCostsForCompany;
+            public double ProjectCostsForCustomer;
+            public DateTime StartDate;
+            public DateTime PlanDate;
+            public DateTime EndDate;
+            public Guid Status;
+            public Guid Head;
+            public Guid CategoryModel;
+            public Guid CategoryModel2;
+            public Guid CategoryModel3;
         }
     }
 }

@@ -203,6 +203,11 @@ namespace ReportingSystem.Services
                     authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
                     authorize.Employee = await new SQLRead().GetEmployeeAdministrator(id);
                 }
+                else
+                {
+                    authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordFailed;
+                    authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                }
             }
             if (resultCustomer.Any())
             {
@@ -218,6 +223,10 @@ namespace ReportingSystem.Services
                     authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordOk;
                     authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
                     authorize.Employee = await new SQLRead().GetEmployeeCustomer(id);
+                } else
+                {
+                    authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordFailed;
+                    authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
                 }
             }
             if (resultEmployee.Any())
@@ -232,10 +241,15 @@ namespace ReportingSystem.Services
                     authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
                     authorize.Employee = await new SQLRead().GetEmployeeData(id);
                 }
+                else
+                {
+                    authorizeStatusModel.AuthorizeStatusType = AuthorizeStatus.PasswordFailed;
+                    authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
+                }
             }
 
             authorize.Email = email;
-            authorizeStatusModel.AuthorizeStatusType = (count == 1) ? AuthorizeStatus.PasswordOk : AuthorizeStatus.PasswordFailed;
+            //authorizeStatusModel.AuthorizeStatusType = (count == 1) ? AuthorizeStatus.PasswordOk : AuthorizeStatus.PasswordFailed;
             authorizeStatusModel.AuthorizeStatusName = authorizeStatusModel.AuthorizeStatusType.GetDisplayName();
 
             return authorize;

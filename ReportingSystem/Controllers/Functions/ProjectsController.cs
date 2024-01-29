@@ -18,42 +18,27 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProject([FromBody] string[] ar)
+        public async Task EditProject([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsService.EditProject(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _projectsService.EditProject(ar);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProject([FromBody] string[] ar)
+        public async Task CreateProject([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsService.CreateProject(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _projectsService.CreateProject(ar);
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteProject([FromBody] string[] ar)
+        public async Task DeleteProject([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsService.DeleteProject(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _projectsService.DeleteProject(ar);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ArchiveProject([FromBody] string[] ar)
+        public async Task ArchiveProject([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsService.DeleteProject(ar);
-            return result != null ? Ok(result) : NotFound();
+            await _projectsService.DeleteProject(ar);
 
         }
 

@@ -50,6 +50,7 @@ namespace ReportingSystem.Data.Generate
                 ProjectModel project = new()
                 {
                     CompanyId = company.Id,
+                    CustomerId = company.IdCustomer,
                     Id = Guid.NewGuid(),
                     Head = managersE[m],
                     Name = faker.Commerce.ProductMaterial(),
@@ -98,24 +99,34 @@ namespace ReportingSystem.Data.Generate
                 project.Steps = [];
                 ProjectStepModel stepModel = new()
                 {
+                    Id = Guid.NewGuid(),
+                    CustomerId = project.CustomerId,
+                    CompanyId = project.CompanyId,
+                    ProjectId = project.Id,
                     Name = "Step 1",
                     Description = "Description 1",
                     Positions = project.Positions,
                     Members = project.Members,
                     Status = project.Status,
                     StartDate = project.StartDate,
+                    PlanDate = project.EndDate,
                     EndDate = project.EndDate
                 };
                 project.Steps.Add(stepModel);
 
                 stepModel = new ProjectStepModel
                 {
+                    Id = Guid.NewGuid(),
+                    CustomerId = project.CustomerId,
+                    CompanyId = project.CompanyId,
+                    ProjectId = project.Id,
                     Name = "Step 2",
                     Description = "Description 1",
                     Positions = project.Positions,
                     Members = project.Members,
                     Status = project.Status,
                     StartDate = project.StartDate,
+                    PlanDate = project.EndDate,
                     EndDate = project.EndDate
                 };
                 project.Steps.Add(stepModel);

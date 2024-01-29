@@ -1,18 +1,17 @@
-﻿using Azure.Core.GeoJson;
-using Bogus.DataSets;
+﻿using Bogus.DataSets;
 using Dapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Identity.Client;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.Project;
+using ReportingSystem.Models.Project.Step;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 using System.ComponentModel.Design;
-using System.Data.Entity.Migrations.Model;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
@@ -276,7 +275,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetEmployeeRoleIdByName(string name)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Name = @Name";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeRolStatus] Where Name = @Name";
             var para = new
             {
                 Name = name,
@@ -287,7 +286,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetEmployeeRoleIdByType(int type)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Type = @type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeRolStatus] Where Type = @type";
             var para = new
             {
                 Type = type,
@@ -311,7 +310,7 @@ namespace ReportingSystem.Data.SQL
             try
             {
                 using var database = Context.ConnectToSQL;
-                var query = "SELECT [Type] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Id = @Id";
+                var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[EmployeeRolStatus] Where Id = @Id";
                 var paraRol = new
                 {
                     Id = id,
@@ -336,7 +335,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetRolIdByType(EmployeeRolModel rol)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[EmployeeRolStatus] Where Type = @Type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeRolStatus] Where Type = @Type";
             var para = new
             {
                 Type = (int)rol.RolType,
@@ -349,7 +348,7 @@ namespace ReportingSystem.Data.SQL
             List<EmployeeRolModel> rolls = [];
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT [RolId] FROM [ReportingSystem].[dbo].[CompanyRolls] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
+                var query = $"SELECT [RolId] FROM [{Context.dbName}].[dbo].[CompanyRolls] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
                 var para = new
                 {
                     CustomerId = idCu,
@@ -396,7 +395,7 @@ namespace ReportingSystem.Data.SQL
         {
             CustomerLicenceStatusModel status = new();
             using var database = Context.ConnectToSQL;
-            var query = "SELECT[Type] FROM[ReportingSystem].[dbo].[StatusLicence] Where Id = @Id";
+            var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[StatusLicence] Where Id = @Id";
             var para = new
             {
                 Id = id,
@@ -414,7 +413,7 @@ namespace ReportingSystem.Data.SQL
 
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT * FROM [ReportingSystem].[dbo].[Customers]";
+                var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Customers]";
 
                 var results = await database.QueryAsync<TableTypeSQL.Customer>(query);
 
@@ -454,7 +453,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<List<CustomerLicenseOperationModel>> GetHistoryOperations(Guid idCu)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT * FROM[ReportingSystem].[dbo].[HistoryOperations] WHERE[CustomerId] = @Id";
+            var query = $"SELECT * FROM [{Context.dbName}].[dbo].[HistoryOperations] WHERE[CustomerId] = @Id";
             var para = new
             {
                 Id = idCu,
@@ -488,7 +487,7 @@ namespace ReportingSystem.Data.SQL
 
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT * FROM [ReportingSystem].[dbo].[Customers] WHERE Id = @Id";
+                var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Customers] WHERE Id = @Id";
                 var para = new
                 {
                     Id = id,
@@ -519,7 +518,7 @@ namespace ReportingSystem.Data.SQL
         {
             EmployeeModel employee = new();
             using var database = Context.ConnectToSQL;
-            var query = "SELECT * FROM [ReportingSystem].[dbo].[Customers] Where Id = @Id";
+            var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Customers] Where Id = @Id";
             var para = new
             {
                 Id = id,
@@ -551,17 +550,17 @@ namespace ReportingSystem.Data.SQL
         #region  Authorization
         public async Task<bool> IsPasswordAdminOk(Guid id, string inputPassword)
         {
-            var query = "SELECT [Password] FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
+            var query = $"SELECT [Password] FROM [{Context.dbName}].[dbo].[Administrators] Where Id = @Id";
             return await IsPasswordOk(id, inputPassword, query);
         }
         public async Task<bool> IsPasswordEmployeeOk(Guid id, string inputPassword)
         {
-            var query = "SELECT [Password] FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
+            var query = $"SELECT [Password] FROM [{Context.dbName}].[dbo].[Employees] Where Id = @Id";
             return await IsPasswordOk(id, inputPassword, query);
         }
         public async Task<bool> IsPasswordCustomerOk(Guid id, string inputPassword)
         {
-            var query = "SELECT [Password] FROM [ReportingSystem].[dbo].[Customers] Where Id = @Id";
+            var query = $"SELECT [Password] FROM [{Context.dbName}].[dbo].[Customers] Where Id = @Id";
             return await IsPasswordOk(id, inputPassword, query);
 
         }
@@ -584,9 +583,9 @@ namespace ReportingSystem.Data.SQL
         public async Task<bool> IsBusyEmail(string email)
         {
             using var database = Context.ConnectToSQL;
-            var query1 = "SELECT COUNT(*) FROM [ReportingSystem].[dbo].[Customers] WHERE [Email] = @email";
-            var query2 = "SELECT COUNT(*) FROM [ReportingSystem].[dbo].[Employees] WHERE [Email] = @email";
-            var query3 = "SELECT COUNT(*) FROM [ReportingSystem].[dbo].[Administrators] WHERE [Email] = @email";
+            var query1 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Customers] WHERE [Email] = @email";
+            var query2 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Employees] WHERE [Email] = @email";
+            var query3 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Administrators] WHERE [Email] = @email";
             var para = new { email };
             var result1 = await database.QueryAsync<int>(query1, para);
             var result2 = await database.QueryAsync<int>(query2, para);
@@ -603,7 +602,7 @@ namespace ReportingSystem.Data.SQL
         {
             EmployeeStatusModel status = new();
             using var database = Context.ConnectToSQL;
-            var query = "SELECT[Type] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Id = @Id";
+            var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[EmployeeStatus] Where Id = @Id";
             var para = new
             {
                 Id = id,
@@ -618,7 +617,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetEmployeeStatusIdByType(EmployeeStatusModel statusInput)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeStatus] Where Type = @Type";
             var para = new
             {
                 Type = statusInput.EmployeeStatusType,
@@ -630,7 +629,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetEmployeeStatusIdByType(int statusInput)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeStatus] Where Type = @Type";
             var para = new
             {
                 Type = 1,
@@ -642,7 +641,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetEmployeeStatusIdByType(EmployeeStatus statusInput)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT[Id] FROM[ReportingSystem].[dbo].[EmployeeStatus] Where Type = @Type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeStatus] Where Type = @Type";
             var para = new
             {
                 Type = statusInput,
@@ -655,7 +654,7 @@ namespace ReportingSystem.Data.SQL
         {
             EmployeeModel employee = new();
             using var database = Context.ConnectToSQL;
-            var query = "SELECT * FROM [ReportingSystem].[dbo].[Employees] Where Id = @Id";
+            var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Employees] Where Id = @Id";
             var para = new
             {
                 Id = id,
@@ -702,8 +701,8 @@ namespace ReportingSystem.Data.SQL
             using (var database = Context.ConnectToSQL)
             {
 
-                var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where Id = @Id";
-                var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where Id = @Id";
+                var adminTableQuery = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Administrators] Where Id = @Id";
+                var customerTableQuery = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Customers] Where Id = @Id";
 
                 var paraAdm = new
                 {
@@ -738,7 +737,7 @@ namespace ReportingSystem.Data.SQL
             using (var database = Context.ConnectToSQL)
             {
 
-                var TableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo";
+                var TableQuery = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo";
 
                 var para = new
                 {
@@ -771,7 +770,7 @@ namespace ReportingSystem.Data.SQL
             using (var database = Context.ConnectToSQL)
             {
 
-                var TableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo";
+                var TableQuery = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo";
 
                 var para = new
                 {
@@ -797,7 +796,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<int> GetEmployeePositionCount(Guid idCu, Guid idCo)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT COUNT(*) FROM[ReportingSystem].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var query = $"SELECT COUNT (*) FROM [{Context.dbName}].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
             var para = new
             {
                 CustomerId = idCu,
@@ -817,7 +816,7 @@ namespace ReportingSystem.Data.SQL
             using (var database = Context.ConnectToSQL)
             {
                 var positionId = await new SQLRead().GetPositionIdByName(pos, Guid.Parse(idCu), Guid.Parse(idCo));
-                var TableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo AND Position = @Position";
+                var TableQuery = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Employees] Where CustomerId = @IdCu AND CompanyId = @IdCo AND Position = @Position";
 
                 var para = new
                 {
@@ -842,11 +841,11 @@ namespace ReportingSystem.Data.SQL
         }
         #endregion
         #region Companies
-            public async Task<CompanyStatusModel?> GetCompanyStatus(Guid id)
+        public async Task<CompanyStatusModel?> GetCompanyStatus(Guid id)
         {
             CompanyStatusModel companyStatusModel = new();
             using var database = Context.ConnectToSQL;
-            var query = "SELECT[Type] FROM[ReportingSystem].[dbo].[CompanyStatus] Where Id = @Id";
+            var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[CompanyStatus] Where Id = @Id";
             var para = new
             {
                 Id = id,
@@ -863,7 +862,7 @@ namespace ReportingSystem.Data.SQL
             List<CompanyModel> companies = [];
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT * FROM[ReportingSystem].[dbo].[Companies] Where CustomerId = @CustomerId";
+                var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Companies] Where CustomerId = @CustomerId";
                 var para = new
                 {
                     CustomerId = idCu,
@@ -895,7 +894,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetCompanyStatusId(CompanyStatusModel companyStatus)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[CompanyStatus] WHERE Type = @Type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[CompanyStatus] WHERE Type = @Type";
             var para = new
             {
                 Type = (int)companyStatus.CompanyStatusType,
@@ -906,7 +905,7 @@ namespace ReportingSystem.Data.SQL
         public async Task<Guid> GetCompanyStatusId(CompanyStatus status)
         {
             using var database = Context.ConnectToSQL;
-            var query = "SELECT [Id] FROM [ReportingSystem].[dbo].[CompanyStatus] WHERE Type = @Type";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[CompanyStatus] WHERE Type = @Type";
             var para = new
             {
                 Type = status,
@@ -929,7 +928,7 @@ namespace ReportingSystem.Data.SQL
 
             using (var database = Context.ConnectToSQL)
             {
-                var query = "SELECT * FROM[ReportingSystem].[dbo].[Companies] Where CustomerId = @CustomerId AND Status = @Status";
+                var query = $"SELECT * FROM [{Context.dbName}].[dbo].[Companies] Where CustomerId = @CustomerId AND Status = @Status";
                 var para = new
                 {
                     CustomerId = idCu,
@@ -959,6 +958,205 @@ namespace ReportingSystem.Data.SQL
             }
             return companies;
         }
+        #endregion
+        #region Projects
+        public async Task<List<ProjectModel>?> GetProjects(string idCu, string idCo)
+        {
+            List<ProjectModel> projects = [];
+
+            var query = $"SELECT[Guid] FROM [{Context.dbName}].[dbo].[Projects] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+               CustomerId = idCu,
+               CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<string>(query, para);
+
+
+            if (result.Any())
+            {
+                var x = result;
+                foreach (var pr in result)
+                {
+                    ProjectModel project = await GetProject(idCu, idCo, pr);
+                    projects.Add(project);
+                }
+            }
+            return projects;
+        }
+
+        public async Task<ProjectModel>? GetProject(string idCu, string idCo, string idPr)
+        {
+            ProjectModel project = new();
+
+            var query = $"SELECT [*] FROM [{Context.dbName}].[dbo].[Projects] Where CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                Id = idPr
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<TableTypeSQL.Project>(query, para);
+            foreach (var readProj in result)
+            {
+                project.Id = readProj.Id;
+                project.CustomerId = readProj.IdCustomer;
+                project.CompanyId = readProj.IdCompany;
+                project.Name = readProj.Name;
+                project.Description = readProj.Description;
+                project.ProjectCostsForCompany = readProj.ProjectCostsForCompany;
+                project.ProjectCostsForCustomer = readProj.ProjectCostsForCustomer;
+                project.StartDate = readProj.StartDate;
+                project.PlanDate = readProj.PlanDate;
+                project.EndDate = readProj.EndDate;
+                project.Status = await GetProjectStatus(readProj.Status);
+                project.Head = await GetEmployeeData(readProj.Head);
+                //project.Category = await GetCategoryData(readProj.CategoryModel);
+                //project.Category = await GetCategoryData(readProj.CategoryModel2);
+                //project.Category = await GetCategoryData(readProj.CategoryModel3);
+            }
+            return project;
+        }
+
+        public async Task<ProjectStatusModel?> GetProjectStatus(Guid id)
+        {
+            var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[ProjectStatus] Where Id = @Id";
+            var para = new
+            {
+                Id = id,
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<int>(query, para);
+
+            ProjectStatusModel projectStatus = new();
+
+            projectStatus.Type = (ProjectStatus)result.First();
+            projectStatus.Name = projectStatus.Type.GetDisplayName();
+
+            return projectStatus;
+        }
+        public async Task<Guid> GetProjectStatusId(ProjectStatusModel status)
+        {
+
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[ProjectStatus] Where Type = @Type";
+            var para = new
+            {
+                Type = status.Type,
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            return result.First();
+        }
+
+        public async Task<Guid> GetProjectCategory0Id(Guid idCu,Guid idCo, Guid idPr)
+        {
+
+            var query = @$"SELECT [Id] 
+                        FROM [{Context.dbName}].[dbo].[ProjectCategory0] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            if (result.Any())
+            {
+                return result.First();
+            }
+            else
+            {
+                return Guid.Empty;
+            }
+        }
+
+        public async Task<Guid> GetProjectCategory1Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat0)
+        {
+
+            var query = @$"SELECT [Id] 
+                        FROM [{Context.dbName}].[dbo].[ProjectCategory1] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId AND ProjectCategory0 = @ProjectCategory0";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+                ProjectCategory0 = idCat0
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+
+
+            if (result.Any())
+            {
+                return result.First();
+            }
+            else
+            {
+                return Guid.Empty;
+            }
+        }
+
+        public async Task<Guid> GetProjectCategory2Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat1)
+        {
+
+            var query = @$"SELECT [Id] 
+                        FROM [{Context.dbName}].[dbo].[ProjectCategory2] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId AND ProjectCategory1 = @ProjectCategory1";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+                ProjectCategory1 = idCat1
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            if (result.Any())
+            {
+                return result.First();
+            } else
+            {
+                return Guid.Empty;
+            }
+            
+        }
+
+        public async Task<Guid> GetProjectCategory3Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat2)
+        {
+
+            var query = @$"SELECT [Id] 
+                        FROM [{Context.dbName}].[dbo].[ProjectCategory3] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId AND ProjectCategory2 = @ProjectCategory2";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+                ProjectCategory2 = idCat2
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            if (result.Any())
+            {
+                return result.First();
+            }
+            else
+            {
+                return Guid.Empty;
+            }
+        }
+
+
+        
         #endregion
     }
 }

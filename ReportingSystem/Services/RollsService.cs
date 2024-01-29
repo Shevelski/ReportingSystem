@@ -13,7 +13,7 @@ namespace ReportingSystem.Services
     {
 
         //Отримання списку посад компанії 
-        public List<EmployeeRolModel>? GetAllRolls(string idCu, string idCo, string idEm)
+        public async Task<List<EmployeeRolModel>?> GetAllRolls(string idCu, string idCo, string idEm)
         {
             var customers = DatabaseMoq.Customers;
 
@@ -62,7 +62,7 @@ namespace ReportingSystem.Services
 
 
         //отримати користувачів компанії за ролями
-        public List<EmployeeModel>? GetEmployeesByRoll(string idCu, string idCo, string rol)
+        public async Task<List<EmployeeModel>?> GetEmployeesByRoll(string idCu, string idCo, string rol)
         {
             var customers = DatabaseMoq.Customers;
 
@@ -95,50 +95,50 @@ namespace ReportingSystem.Services
 
 
         //зміна ролі
-        public EmployeeModel? EditEmployeeRol(string[] ar)
+        public async Task EditEmployeeRol(string[] ar)
         {
-            var customers = DatabaseMoq.Customers;
+            //var customers = DatabaseMoq.Customers;
 
-            if (customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
-            {
-                return null;
-            }
+            //if (customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
+            //{
+            //    return null;
+            //}
 
-            var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
+            //var customer = customers.FirstOrDefault(co => co.Id.Equals(idCustomer));
 
-            if (customer == null || customer.Companies == null)
-            {
-                return null;
-            }
+            //if (customer == null || customer.Companies == null)
+            //{
+            //    return null;
+            //}
 
-            if (Guid.TryParse(ar[1], out Guid idCompany))
-            {
-                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+            //if (Guid.TryParse(ar[1], out Guid idCompany))
+            //{
+            //    var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
 
-                if (company == null || company.Employees == null)
-                {
-                    return null;
-                }
+            //    if (company == null || company.Employees == null)
+            //    {
+            //        return null;
+            //    }
 
-                if (Guid.TryParse(ar[2], out Guid idEmployee))
-                {
-                    var employee = company.Employees.FirstOrDefault(emp => emp.Id.Equals(idEmployee));
+            //    if (Guid.TryParse(ar[2], out Guid idEmployee))
+            //    {
+            //        var employee = company.Employees.FirstOrDefault(emp => emp.Id.Equals(idEmployee));
 
-                    if (employee != null && employee.Rol != null && company.Rolls != null)
-                    {
-                        var newRol = company.Rolls.FirstOrDefault(rol => rol.RolName != null && rol.RolName.Equals(ar[3]));
+            //        if (employee != null && employee.Rol != null && company.Rolls != null)
+            //        {
+            //            var newRol = company.Rolls.FirstOrDefault(rol => rol.RolName != null && rol.RolName.Equals(ar[3]));
 
-                        if (newRol != null)
-                        {
-                            employee.Rol = newRol;
-                            DatabaseMoq.UpdateJson();
-                            return employee;
-                        }
-                    }
-                }
-            }
+            //            if (newRol != null)
+            //            {
+            //                employee.Rol = newRol;
+            //                DatabaseMoq.UpdateJson();
+            //                return employee;
+            //            }
+            //        }
+            //    }
+            //}
 
-            return null;
+            //return null;
         }
 
     }

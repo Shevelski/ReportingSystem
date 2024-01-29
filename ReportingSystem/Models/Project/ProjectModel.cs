@@ -6,6 +6,7 @@ namespace ReportingSystem.Models.Project
     public class ProjectModel
     {
         public Guid Id { get; set; }
+        public Guid CustomerId { get; set; }
         public Guid CompanyId { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }

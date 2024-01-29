@@ -23,7 +23,7 @@
 
         <div class="el1 bm-3" v-if="mode == 0">
             <label class="label">Email</label>
-            <input class="input" v-model="email" />
+            <input class="input" type="email" v-model="email" />
         </div>
 
         <div class="el1 bm-3" v-if="mode == 2">
@@ -37,7 +37,7 @@
 
         <div class="el1 bm-3" v-if="mode == 1 || mode == 4">
             <label class="label">Password</label>
-            <input class="input" name="password" v-model="password" />
+            <input class="input" type="password" name="password" v-model="password" />
         </div>
         <div class="el1 bm-3" v-if="mode == 1 || mode == 4">
             <button type="submit" class="button">Перевірити пароль</button>

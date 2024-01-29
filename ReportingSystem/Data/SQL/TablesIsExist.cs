@@ -37,5 +37,16 @@ namespace ReportingSystem.Data.SQL
         public async Task<bool> EmployeesAsync() => await TableExistsAsync("Employees");
         public async Task<bool> CompaniesAsync() => await TableExistsAsync("Companies");
         public async Task<bool> CustomersAsync() => await TableExistsAsync("Customers");
+        public async Task<bool> ProjectCategory0Async() => await TableExistsAsync("ProjectCategory0");
+        public async Task<bool> ProjectCategory1Async() => await TableExistsAsync("ProjectCategory1");
+        public async Task<bool> ProjectCategory2Async() => await TableExistsAsync("ProjectCategory2");
+        public async Task<bool> ProjectCategory3Async() => await TableExistsAsync("ProjectCategory3");
+        public async Task<bool> StepsAsync() => await TableExistsAsync("Steps");
+        public async Task<bool> ProjectPositionsAsync() => await TableExistsAsync("ProjectPositions");
+        public async Task<bool> ProjectStepsAsync() => await TableExistsAsync("ProjectSteps");
+        public async Task<bool> ProjectMembersAsync() => await TableExistsAsync("ProjectMembers");
+        public async Task<bool> StepPositionsAsync() => await TableExistsAsync("StepPositions");
+        public async Task<bool> StepStepsAsync() => await TableExistsAsync("StepSteps");
+        public async Task<bool> StepMembersAsync() => await TableExistsAsync("StepMembers");
     }
 }

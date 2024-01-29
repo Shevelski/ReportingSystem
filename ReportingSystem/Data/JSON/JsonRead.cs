@@ -5,8 +5,10 @@ using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.JSON
 {
@@ -535,6 +537,43 @@ namespace ReportingSystem.Data.JSON
 
             return null;
         }
+        #endregion
+        #region Projects
+        public async Task<List<ProjectModel>?> GetProjects(string idCu, string idCo)
+        {
+            List<ProjectModel> projects = [];
+
+            List<CustomerModel>? Customers = await GetCustomers();
+
+            if (Customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = Customers.First(cu => cu.Id.Equals(idCustomer));
+
+            if (customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (!Guid.TryParse(idCo, out Guid idCompany))
+            {
+                return null;
+            }
+
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
+
+            if (company.Projects == null)
+            {
+                return null;
+            }
+
+            projects = company.Projects;
+
+            return projects;
+        }
+
         #endregion
     }
 }

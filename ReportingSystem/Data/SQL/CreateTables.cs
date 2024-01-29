@@ -31,18 +31,42 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Customers()
         {
-            await CreateTableAndInsertIfNotExistsAsync("Configure", () => new CreateTable().Configure());
-            await CreateTableAndInsertIfNotExistsAsync("HistoryOperations", () => new CreateTable().HistoryOperations());
-            await CreateTableAndInsertIfNotExistsAsync("EmployeePosition", () => new CreateTable().EmployeePosition());
-            await CreateTableAndInsertIfNotExistsAsync("HolidayDate", () => new CreateTable().HolidayDate());
-            await CreateTableAndInsertIfNotExistsAsync("HospitalDate", () => new CreateTable().HospitalDate());
-            await CreateTableAndInsertIfNotExistsAsync("AssignmentDate", () => new CreateTable().AssignmentDate());
-            await CreateTableAndInsertIfNotExistsAsync("TaketimeoffDate", () => new CreateTable().TaketimeoffDate());
-            await CreateTableAndInsertIfNotExistsAsync("Employees", () => new CreateTable().Employees());
-            await CreateTableAndInsertIfNotExistsAsync("Projects", () => new CreateTable().Projects());
-            await CreateTableAndInsertIfNotExistsAsync("Companies", () => new CreateTable().Companies());
-            await CreateTableAndInsertIfNotExistsAsync("Customers", () => new CreateTable().Customers());
-            await CreateTableAndInsertIfNotExistsAsync("CompanyRolls", () => new CreateTable().CompanyRolls());
+            try
+            {
+                await CreateTableAndInsertIfNotExistsAsync("Configure", () => new CreateTable().Configure());
+                await CreateTableAndInsertIfNotExistsAsync("HistoryOperations", () => new CreateTable().HistoryOperations());
+                await CreateTableAndInsertIfNotExistsAsync("EmployeePosition", () => new CreateTable().EmployeePosition());
+                await CreateTableAndInsertIfNotExistsAsync("HolidayDate", () => new CreateTable().HolidayDate());
+                await CreateTableAndInsertIfNotExistsAsync("HospitalDate", () => new CreateTable().HospitalDate());
+                await CreateTableAndInsertIfNotExistsAsync("AssignmentDate", () => new CreateTable().AssignmentDate());
+                await CreateTableAndInsertIfNotExistsAsync("TaketimeoffDate", () => new CreateTable().TaketimeoffDate());
+
+
+                await CreateTableAndInsertIfNotExistsAsync("ProjectCategory3", () => new CreateTable().ProjectCategory3());
+                await CreateTableAndInsertIfNotExistsAsync("ProjectCategory2", () => new CreateTable().ProjectCategory2());
+                await CreateTableAndInsertIfNotExistsAsync("ProjectCategory1", () => new CreateTable().ProjectCategory1());
+                await CreateTableAndInsertIfNotExistsAsync("ProjectCategory0", () => new CreateTable().ProjectCategory0());
+
+                await CreateTableAndInsertIfNotExistsAsync("Steps", () => new CreateTable().Steps());
+                await CreateTableAndInsertIfNotExistsAsync("ProjectPositions", () => new CreateTable().ProjectPositions());
+                await CreateTableAndInsertIfNotExistsAsync("ProjectSteps", () => new CreateTable().ProjectSteps());
+                await CreateTableAndInsertIfNotExistsAsync("ProjectMembers", () => new CreateTable().ProjectMembers());
+                await CreateTableAndInsertIfNotExistsAsync("StepPositions", () => new CreateTable().StepPositions());
+                await CreateTableAndInsertIfNotExistsAsync("StepSteps", () => new CreateTable().StepSteps());
+                await CreateTableAndInsertIfNotExistsAsync("StepMembers", () => new CreateTable().StepMembers());
+
+                await CreateTableAndInsertIfNotExistsAsync("Employees", () => new CreateTable().Employees());
+
+                await CreateTableAndInsertIfNotExistsAsync("Projects", () => new CreateTable().Projects());
+                await CreateTableAndInsertIfNotExistsAsync("Companies", () => new CreateTable().Companies());
+                await CreateTableAndInsertIfNotExistsAsync("Customers", () => new CreateTable().Customers());
+                await CreateTableAndInsertIfNotExistsAsync("CompanyRolls", () => new CreateTable().CompanyRolls());
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public async Task Administrators()

@@ -1,17 +1,20 @@
 ﻿using Bogus;
+using Microsoft.AspNetCore.SignalR;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
+using ReportingSystem.Hubs;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 using System.Diagnostics;
+using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.Generate
 {
-    public class GenerateCustomers
+    public class GenerateCustomers(IHubContext<StatusHub> hubContext)
     {
-        public List<CustomerModel> Customers()
+        public async Task<List<CustomerModel>> Customers()
         {
             List<CustomerModel> Customers = [];
             Random random = new();
@@ -19,11 +22,13 @@ namespace ReportingSystem.Data.Generate
             try
             {
                 int countCustomer = random.Next(2, 3);
+                
                 for (int i = 0; i < countCustomer; i++)
                 {
-                    CustomerModel Customer = RandomCustomer();
+                    CustomerModel Customer = await RandomCustomerAsync();
                     Customers.Add(Customer);
                     Debug.WriteLine($"Customer {i} added. All is " + countCustomer);
+                    await new StatusSignalR(hubContext).UpdateStatusGenerateData($"Customer {i} added. All is " + countCustomer);
                 }
                 return Customers;
             }
@@ -34,25 +39,33 @@ namespace ReportingSystem.Data.Generate
             return Customers;
         }
 
-        private static CustomerModel RandomCustomer()
+        private async Task<CustomerModel> RandomCustomerAsync()
         {
-            var faker = new Faker();
-            CustomerModel customer = new()
+            try
             {
-                Id = Guid.NewGuid(),
-                FirstName = faker.Name.FirstName(),
-                SecondName = faker.Name.LastName(),
-                ThirdName = faker.Name.FirstName(),
-                StatusLicence = CustomerLicenceStatus(),
-                Phone = GenerateInfo.MobilePhoneNumber()
-            };
-            customer.Email = (customer.SecondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
-            customer.Password = EncryptionHelper.Encrypt(GenerateInfo.Password());
-            customer.EndTimeLicense = LicenseCustomer.LicenceDate(customer.StatusLicence);
-            customer.DateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
-            customer.Companies = new GenerateCompanies().GenerateRandomCompanies(customer);
-            customer.Configure = new CustomerConfigModel();
-            return customer;
+                var faker = new Faker();
+                CustomerModel customer = new()
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = faker.Name.FirstName(),
+                    SecondName = faker.Name.LastName(),
+                    ThirdName = faker.Name.FirstName(),
+                    StatusLicence = CustomerLicenceStatus(),
+                    Phone = GenerateInfo.MobilePhoneNumber()
+                };
+                customer.Email = (customer.SecondName.ToLower() + "@gmail.com.ua").Replace(" ", "");
+                customer.Password = EncryptionHelper.Encrypt(GenerateInfo.Password());
+                customer.EndTimeLicense = LicenseCustomer.LicenceDate(customer.StatusLicence);
+                customer.DateRegistration = GenerateDate.BetweenDates(new DateTime(2020, 01, 01), new DateTime(2021, 06, 01));
+                customer.Companies = await new GenerateCompanies(hubContext).GenerateRandomCompanies(customer);
+                customer.Configure = new CustomerConfigModel();
+                return customer;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         public static CustomerLicenceStatusModel CustomerLicenceStatus()

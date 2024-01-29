@@ -21,7 +21,8 @@
         pagePasswordFailed: false,
         showModal: true,
         username: '',
-        isLoggedIn: false
+        isLoggedIn: false,
+        cust: ''
     },
     mounted() {
         this.Init();
@@ -37,7 +38,7 @@
             this.serverName = response.data[0];
             this.databaseName = response.data[1];
             this.showModal = true;
-            console.log("Test");
+            /*this.openModalProgrammatically();*/
         },
         openModal() {
             this.showModal = true;
@@ -56,6 +57,7 @@
                 this.pagePasswordOk = true;
                 this.isLoggedIn = true;
                 this.pagePasswordFailed = false;
+                this.closeModalProgrammatically();
             } else {
                 this.pagePasswordFailed = true;
             };
@@ -211,6 +213,32 @@
             this.percentOperation = 0;
             this.SetStatus(0);
         },
+        closeModalProgrammatically() {
+            let modalElement = document.getElementById('exampleModal');
+            if (modalElement) {
+                modalElement.dispatchEvent(new Event('click'));
+            }
+        },
+        openModalProgrammatically() {
+            if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function') {
+                let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
+                modalElement.show();
+            } else {
+                this.waitForBootstrap(() => {
+                    let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
+                    modalElement.show();
+                });
+            }
+        },
+
+        waitForBootstrap(callback) {
+            const interval = setInterval(() => {
+                if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function') {
+                    clearInterval(interval);
+                    callback();
+                }
+            }, 100);
+        },
         setupSignalR() {
             // Створіть з'єднання SignalR
             this.connection = new signalR.HubConnectionBuilder().withUrl("/statusHub").build();
@@ -219,6 +247,12 @@
             this.connection.on("ReceiveStatus", (status, percent) => {
                 this.databaseStatus = status;  // Оновіть відображення статусу на сторінці
                 this.percentOperation = percent;  // Оновіть відображення статусу на сторінці
+                
+            });
+
+            // При отриманні повідомлення від сервера
+            this.connection.on("ReceiveStatus1", (customer) => {
+                this.cust = customer;
             });
 
             // Запуск підключення SignalR
