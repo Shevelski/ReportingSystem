@@ -1051,17 +1051,17 @@ namespace ReportingSystem.Data.SQL
             return result.First();
         }
 
-        public async Task<Guid> GetProjectCategory0Id(Guid idCu,Guid idCo, Guid idPr)
+        public async Task<Guid> GetCompanyCategory0Id(Guid idCu,Guid idCo, Guid idPr)
         {
 
             var query = @$"SELECT [Id] 
-                        FROM [{Context.dbName}].[dbo].[ProjectCategory0] 
-                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId";
+                        FROM [{Context.dbName}].[dbo].[CompanyCategory0] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id";
             var para = new
             {
                 CustomerId = idCu,
                 CompanyId = idCo,
-                ProjectId = idPr,
+                Id = idPr,
             };
             using var database = Context.ConnectToSQL;
             var result = await database.QueryAsync<Guid>(query, para);
@@ -1076,18 +1076,18 @@ namespace ReportingSystem.Data.SQL
             }
         }
 
-        public async Task<Guid> GetProjectCategory1Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat0)
+        public async Task<Guid> GetCompanyCategory1Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat0)
         {
 
             var query = @$"SELECT [Id] 
-                        FROM [{Context.dbName}].[dbo].[ProjectCategory1] 
-                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId AND ProjectCategory0 = @ProjectCategory0";
+                        FROM [{Context.dbName}].[dbo].[CompanyCategory1] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id AND CompanyCategory0 = @CompanyCategory0";
             var para = new
             {
                 CustomerId = idCu,
                 CompanyId = idCo,
-                ProjectId = idPr,
-                ProjectCategory0 = idCat0
+                Id = idPr,
+                CompanyCategory0 = idCat0
             };
             using var database = Context.ConnectToSQL;
             var result = await database.QueryAsync<Guid>(query, para);
@@ -1103,18 +1103,18 @@ namespace ReportingSystem.Data.SQL
             }
         }
 
-        public async Task<Guid> GetProjectCategory2Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat1)
+        public async Task<Guid> GetCompanyCategory2Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat1)
         {
 
             var query = @$"SELECT [Id] 
-                        FROM [{Context.dbName}].[dbo].[ProjectCategory2] 
-                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId AND ProjectCategory1 = @ProjectCategory1";
+                        FROM [{Context.dbName}].[dbo].[CompanyCategory2] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id AND CompanyCategory1 = @CompanyCategory1";
             var para = new
             {
                 CustomerId = idCu,
                 CompanyId = idCo,
-                ProjectId = idPr,
-                ProjectCategory1 = idCat1
+                Id = idPr,
+                CompanyCategory1 = idCat1
             };
             using var database = Context.ConnectToSQL;
             var result = await database.QueryAsync<Guid>(query, para);
@@ -1129,18 +1129,18 @@ namespace ReportingSystem.Data.SQL
             
         }
 
-        public async Task<Guid> GetProjectCategory3Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat2)
+        public async Task<Guid> GetCompanyCategory3Id(Guid idCu,Guid idCo, Guid idPr, Guid idCat2)
         {
 
             var query = @$"SELECT [Id] 
-                        FROM [{Context.dbName}].[dbo].[ProjectCategory3] 
-                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND ProjectId = @ProjectId AND ProjectCategory2 = @ProjectCategory2";
+                        FROM [{Context.dbName}].[dbo].[CompanyCategory3] 
+                        WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id AND CompanyCategory2 = @CompanyCategory2";
             var para = new
             {
                 CustomerId = idCu,
                 CompanyId = idCo,
-                ProjectId = idPr,
-                ProjectCategory2 = idCat2
+                Id = idPr,
+                CompanyCategory2 = idCat2
             };
             using var database = Context.ConnectToSQL;
             var result = await database.QueryAsync<Guid>(query, para);

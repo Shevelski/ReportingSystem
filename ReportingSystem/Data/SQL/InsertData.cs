@@ -10,6 +10,7 @@ using ReportingSystem.Utils;
 using System.ComponentModel.Design;
 using System.Data;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
@@ -68,142 +69,190 @@ namespace ReportingSystem.Data.SQL
 
             await _database.ExecuteAsync(query, parameters);
         }
-        public async Task CategoryProjects(ProjectModel project)
+      
+        public async Task CompanyCategories(ProjectCategoryModel category, Guid idCu, Guid idCo)
         {
-            var query0 = $@"INSERT INTO [{Context.dbName}].[dbo].[ProjectCategory0]
-                       ([Id]
-                       ,[CustomerId]
-                       ,[CompanyId]
-                       ,[ProjectId]
-                       ,[Name])
-                 VALUES
-                       (@Id
-                       ,@CustomerId
-                       ,@CompanyId
-                       ,@ProjectId
-                       ,@Name)";
-            var para0 = new
+            var cat0 = category;
+            if (category != null)
             {
-                Id = project.Category?.Level0CatId,
-                CustomerId = project.CustomerId,
-                CompanyId = project.CompanyId,
-                ProjectId = project.Id,
-                Name = project.Category?.Level0CatName,
-            };
-
-            var query1 = $@"INSERT INTO [{Context.dbName}].[dbo].[ProjectCategory1]
-                       ([Id]
-                       ,[CustomerId]
-                       ,[CompanyId]
-                       ,[ProjectId]
-                       ,[ProjectCategory0]
-                       ,[Name])
-                 VALUES
-                       (@Id
-                       ,@CustomerId
-                       ,@CompanyId
-                       ,@ProjectId
-                       ,@ProjectCategory0
-                       ,@Name)";
-            var para1 = new
-            {
-                Id = project.Category?.Level1CatId,
-                CustomerId = project.CustomerId,
-                CompanyId = project.CompanyId,
-                ProjectId = project.Id,
-                ProjectCategory0 = project.Category?.Level0CatId,
-                Name = project.Category?.Level1CatName,
-            };
-
-            var query2 = $@"INSERT INTO [{Context.dbName}].[dbo].[ProjectCategory2]
-                       ([Id]
-                       ,[CustomerId]
-                       ,[CompanyId]
-                       ,[ProjectId]
-                       ,[ProjectCategory1]
-                       ,[Name])
-                 VALUES
-                       (@Id
-                       ,@CustomerId
-                       ,@CompanyId
-                       ,@ProjectId
-                       ,@ProjectCategory1
-                       ,@Name)";
-            var para2 = new
-            {
-                Id = project.Category?.Level2CatId,
-                CustomerId = project.CustomerId,
-                CompanyId = project.CompanyId,
-                ProjectId = project.Id,
-                ProjectCategory1 = project.Category?.Level1CatId,
-                Name = project.Category?.Level2CatName,
-            };
-
-            var query3 = $@"INSERT INTO [dbo].[{Context.dbName}].[ProjectCategory3]
-                       ([Id]
-                       ,[CustomerId]
-                       ,[CompanyId]
-                       ,[ProjectId]
-                       ,[ProjectCategory2]
-                       ,[Name])
-                 VALUES
-                       (@Id
-                       ,@CustomerId
-                       ,@CompanyId
-                       ,@ProjectId
-                       ,@ProjectCategory2
-                       ,@Name)";
-            var para3 = new
-            {
-                Id = project.Category?.Level3CatId,
-                CustomerId = project.CustomerId,
-                CompanyId = project.CompanyId,
-                ProjectId = project.Id,
-                ProjectCategory2 = project.Category?.Level2CatId,
-                Name = project.Category?.Level3CatName,
-            };
-
-            if (project.Category?.Level0CatId != Guid.Empty && project.Category?.Level0CatId != null)
-            {
-                await UpdateProjectCategories(0, project.Category.Level0CatId, project);
-                await _database.ExecuteAsync(query0, para0);
-                if (project.Category?.Level1CatId != Guid.Empty && project.Category?.Level1CatId != null)
+                var query0 = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory0]
+                    ([Id]
+                    ,[CustomerId]
+                    ,[CompanyId]
+                    ,[Name])
+                VALUES
+                    (@Id
+                    ,@CustomerId
+                    ,@CompanyId
+                    ,@Name)";
+                var para0 = new
                 {
-                    await UpdateProjectCategories(1, project.Category.Level1CatId, project);
-                    await _database.ExecuteAsync(query1, para1);
-                    if (project.Category?.Level2CatId != Guid.Empty && project.Category?.Level2CatId != null)
+                    Id = cat0.Id,
+                    CustomerId = idCu,
+                    CompanyId = idCo,
+                    Name = cat0.Name,
+                };
+                await _database.ExecuteAsync(query0, para0);
+                if (cat0?.CategoriesLevel1 != null && cat0.CategoriesLevel1.Count > 0)
+                {
+                    foreach (var cat1 in cat0.CategoriesLevel1)
                     {
-                        await UpdateProjectCategories(2, project.Category.Level2CatId, project);
-                        await _database.ExecuteAsync(query2, para2);
-                        if (project.Category?.Level3CatId != Guid.Empty && project.Category?.Level3CatId != null)
+                        var query1 = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory1]
+                                    ([Id]
+                                    ,[CustomerId]
+                                    ,[CompanyId]
+                                    ,[CompanyCategory0]
+                                    ,[Name])
+                                VALUES
+                                    (@Id
+                                    ,@CustomerId
+                                    ,@CompanyId
+                                    ,@CompanyCategory0
+                                    ,@Name)";
+                        var para1 = new
                         {
-                            await UpdateProjectCategories(3, project.Category.Level3CatId, project);
-                            await _database.ExecuteAsync(query3, para3);
-                        }
-                        
-                    }
+                            Id = cat1.Id,
+                            CustomerId = idCu,
+                            CompanyId = idCo,
+                            CompanyCategory0 = cat0.Id,
+                            Name = cat1.Name,
+                        };
+                        await _database.ExecuteAsync(query1, para1);
 
-                    
+                        if (cat1.CategoriesLevel2 != null && cat1.CategoriesLevel2.Count > 0)
+                        {
+                            foreach (var cat2 in cat1.CategoriesLevel2)
+                            {
+                                var query2 = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory2]
+                                    ([Id]
+                                    ,[CustomerId]
+                                    ,[CompanyId]
+                                    ,[CompanyCategory1]
+                                    ,[Name])
+                                VALUES
+                                    (@Id
+                                    ,@CustomerId
+                                    ,@CompanyId
+                                    ,@CompanyCategory1
+                                    ,@Name)";
+                                var para2 = new
+                                {
+                                    Id = cat2.Id,
+                                    CustomerId = idCu,
+                                    CompanyId = idCo,
+                                    CompanyCategory1 = cat1.Id,
+                                    Name = cat2.Name,
+                                };
+                                await _database.ExecuteAsync(query2, para2);
+                                if (cat2.CategoriesLevel3 != null && cat2.CategoriesLevel3.Count > 0)
+                                {
+                                    foreach (var cat3 in cat2.CategoriesLevel3)
+                                    {
+                                        var query3 = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory3]
+                                    ([Id]
+                                    ,[CustomerId]
+                                    ,[CompanyId]
+                                    ,[CompanyCategory2]
+                                    ,[Name])
+                                VALUES
+                                    (@Id
+                                    ,@CustomerId
+                                    ,@CompanyId
+                                    ,@CompanyCategory2
+                                    ,@Name)";
+                                        var para3 = new
+                                        {
+                                            Id = cat3.Id,
+                                            CustomerId = idCu,
+                                            CompanyId = idCo,
+                                            CompanyCategory2 = cat2.Id,
+                                            Name = cat3.Name,
+                                        };
+                                        await _database.ExecuteAsync(query3, para3);
+                                    }
+                                }
+
+                            }
+                        }
+
+                    }
                 }
                 
-            }
+            };
         }
 
-        public async Task UpdateProjectCategories(int CategoriesLevel, Guid CategoriesId, ProjectModel project)
-        {
-            var query = $@"UPDATE [dbo].[Projects]
-                       SET [CategoryModel{CategoriesLevel}] = @CategoryModelLevel
-                     WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
-            var parameters = new
-            {
-                CategoryModeloriesLevel = CategoriesId,
 
-                Id = project.Id,
-                CustomerId = project.CustomerId,
-                CompanyId = project.CompanyId,
-                CategoryModelLevel = CategoriesId
-            };
-            await _database.ExecuteAsync(query, parameters);
+        public async Task UpdateProjectCategories(CompanyModel company)
+        {
+            var projects = company.Projects;
+
+            foreach (var project in projects)
+            {
+                if (project?.Category?.Level0CatId != Guid.Empty && project?.Category?.Level0CatId != null)
+                {
+                    var query0 = $@"UPDATE [{Context.dbName}].[dbo].[Projects]
+                               SET [CategoryModel0] = @CategoryModel0
+                               WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
+                    var para0 = new
+                    {
+                        Id = project.Id,
+                        CustomerId = project.CustomerId,
+                        CompanyId = project.CompanyId,
+                        CategoryModel0 = project.Category.Level0CatId
+                    };
+                    await _database.ExecuteAsync(query0, para0);
+                    {
+                        if (project.Category.Level1CatId != Guid.Empty && project?.Category?.Level1CatId != null)
+                        {
+                            var query1 = $@"UPDATE [{Context.dbName}].[dbo].[Projects]
+                               SET [CategoryModel1] = @CategoryModel1
+                               WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
+                            var para1 = new
+                            {
+                                Id = project.Id,
+                                CustomerId = project.CustomerId,
+                                CompanyId = project.CompanyId,
+                                CategoryModel1 = project.Category.Level1CatId
+                            };
+                            await _database.ExecuteAsync(query1, para1);
+                            {
+                                if (project.Category.Level2CatId != Guid.Empty && project?.Category.Level2CatId != null)
+                                {
+                                    var query2 = $@"UPDATE [{Context.dbName}].[dbo].[Projects]
+                                               SET [CategoryModel2] = @CategoryModel2
+                                               WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
+                                    var para2 = new
+                                    {
+                                        Id = project.Id,
+                                        CustomerId = project.CustomerId,
+                                        CompanyId = project.CompanyId,
+                                        CategoryModel2 = project.Category.Level2CatId
+                                    };
+                                    await _database.ExecuteAsync(query2, para2);
+                                    {
+                                        if (project.Category.Level2CatId != Guid.Empty && project?.Category.Level2CatId != null)
+                                        {
+                                            var query3 = $@"UPDATE [{Context.dbName}].[dbo].[Projects]
+                                               SET [CategoryModel3] = @CategoryModel3
+                                               WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
+                                            var para3 = new
+                                            {
+                                                Id = project.Id,
+                                                CustomerId = project.CustomerId,
+                                                CompanyId = project.CompanyId,
+                                                CategoryModel3 = project.Category.Level3CatId
+                                            };
+                                            await _database.ExecuteAsync(query3, para3);
+                                            {
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -261,10 +310,10 @@ namespace ReportingSystem.Data.SQL
                        ,@CategoryModel2
                        ,@CategoryModel3)";
 
-            var cat0 = await new SQLRead().GetProjectCategory0Id(project.CustomerId, project.CompanyId, project.Id);
-            var cat1 = await new SQLRead().GetProjectCategory1Id(project.CustomerId, project.CompanyId, project.Id, cat0);
-            var cat2 = await new SQLRead().GetProjectCategory2Id(project.CustomerId, project.CompanyId, project.Id, cat1);
-            var cat3 = await new SQLRead().GetProjectCategory3Id(project.CustomerId, project.CompanyId, project.Id, cat2);
+            var cat0 = await new SQLRead().GetCompanyCategory0Id(project.CustomerId, project.CompanyId, project.Id);
+            var cat1 = await new SQLRead().GetCompanyCategory1Id(project.CustomerId, project.CompanyId, project.Id, cat0);
+            var cat2 = await new SQLRead().GetCompanyCategory2Id(project.CustomerId, project.CompanyId, project.Id, cat1);
+            var cat3 = await new SQLRead().GetCompanyCategory3Id(project.CustomerId, project.CompanyId, project.Id, cat2);
 
 
             var parameters = new
@@ -360,13 +409,12 @@ namespace ReportingSystem.Data.SQL
 
                 await _database.ExecuteAsync(query, para);
                 await ProjectSteps(project, step.Id);
-                
+
             }
-            
         }
         public async Task ProjectSteps(ProjectModel project, Guid stepId)
         {
-            
+
             foreach (var step in project.Steps)
             {
                 var query = $@"INSERT INTO [{Context.dbName}].[dbo].[ProjectSteps]
@@ -385,20 +433,20 @@ namespace ReportingSystem.Data.SQL
                 };
                 await _database.ExecuteAsync(query, para);
             }
-            
+
         }
         public async Task ProjectMembers(ProjectModel project)
         {
             foreach (var pr in project.Members)
             {
                 var query = @$"INSERT INTO [dbo].[ProjectMembers]
-                               ([Id]
-                               ,[ProjectId]
-                               ,[EmployeeId])
-                         VALUES
-                               (@Id
-                               ,@ProjectId
-                               ,@EmployeeId)";
+                                   ([Id]
+                                   ,[ProjectId]
+                                   ,[EmployeeId])
+                             VALUES
+                                   (@Id
+                                   ,@ProjectId
+                                   ,@EmployeeId)";
                 var para = new
                 {
                     Id = Guid.NewGuid(),
@@ -407,11 +455,11 @@ namespace ReportingSystem.Data.SQL
                 };
                 await _database.ExecuteAsync(query, para);
             }
-            
+
         }
 
         public async Task Employee(EmployeeModel employee)
-        {
+            {
             var checkQuery1 = "SELECT COUNT(*) " +
                              $"FROM [{Context.dbName}].[dbo].[Administrators]" +
                              "Where EmailWork = @EmailWork";

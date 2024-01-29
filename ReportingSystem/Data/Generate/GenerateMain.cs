@@ -8,6 +8,7 @@ using ReportingSystem.Models.Configuration;
 using Microsoft.AspNetCore.SignalR;
 using ReportingSystem.Hubs;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.Generate
 {
@@ -109,24 +110,29 @@ namespace ReportingSystem.Data.Generate
                                     await UpdateStatusOnClient("Оновлення ролей ...", 65);
                                     var idRol = await new SQLRead().GetRolIdByType(rol);
                                     await new InsertData().CompanyRolls(idRol, customer.Id, company.Id);
-                                    //await new InsertData().CompanyCategories(customer.Id, company.Id);
+                                    
                                 }
                             }
-                            //if (company.Projects != null)
-                            //{
-                            //    foreach (var project in company.Projects)
-                            //    {
-                            //        await UpdateStatusOnClient("Оновлення проектів ...", 67);
-                            //        //var idRol = await new SQLRead().GetRolIdByType(rol);
+                            foreach (var category in company.Categories)
+                            {
+                                await UpdateStatusOnClient("Оновлення категорій ...", 66);
+                                await new InsertData().CompanyCategories(category, customer.Id, company.Id);
+                            }
 
-                            //        //await new InsertData().CategoryProjects(project);
-                            //        //await new InsertData().CompanyProjects(project);
-                            //        //await new InsertData().Steps(project);
-                            //        //await new InsertData().ProjectPositions(project);
-                            //        //await new InsertData().ProjectMembers(project);
-                            //    }
-                            //}
+                            if (company.Projects != null)
+                            {
+                                await UpdateStatusOnClient("Оновлення проектів ...", 67);
+                                foreach (var project in company.Projects)
+                                {
+                                    await new InsertData().CompanyProjects(project);
+                                    await new InsertData().Steps(project);
+                                    await new InsertData().ProjectPositions(project);
+                                    await new InsertData().ProjectMembers(project);
+                                }
+                                await new InsertData().UpdateProjectCategories(company);
+                            }
                         }
+                        
                     }
                 }
                 Debug.WriteLine($"SQL write End " + DateTime.Now);

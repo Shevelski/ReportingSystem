@@ -12,7 +12,7 @@
 @*<link rel="stylesheet" href="~/css/Authorization.css" asp-append-version="true" />*@
 
 <div id="Authorize">
-    <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home">
+    <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" autocomplete="off">
 
         <div class="el1 bm-3" v-if="mode == 0">
             <label class="label">Введіть email</label>
@@ -38,6 +38,7 @@
         <div class="el1 bm-3" v-if="mode == 1 || mode == 4">
             <label class="label">Password</label>
             <input class="input" type="password" name="password" v-model="password" />
+
         </div>
         <div class="el1 bm-3" v-if="mode == 1 || mode == 4">
             <button type="submit" class="button">Перевірити пароль</button>
