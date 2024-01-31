@@ -1,12 +1,17 @@
-﻿using Dapper;
+﻿using Bogus.DataSets;
+using Dapper;
 using Newtonsoft.Json;
+using ReportingSystem.Data.JSON;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
 {
@@ -737,6 +742,25 @@ namespace ReportingSystem.Data.SQL
             using var database = Context.ConnectToSQL;
             await database.QueryAsync(query, para);
         }
+        public async Task EditEmployeeRol(string[] ar)
+        {
+            if (!Guid.TryParse(ar[0], out Guid idCu) || !Guid.TryParse(ar[1], out Guid idCo) || !Guid.TryParse(ar[2], out Guid idEm))
+            {
+                return;
+            }
+            var rolId = await new SQLRead().GetEmployeeRoleIdByName(ar[3]);
+            var query = $"UPDATE [{Context.dbName}].[dbo].[Employees] SET [Rol] = @Rol WHERE [Id] = @EmployeeId AND [CompanyId] = @CompanyId AND [CustomerId] = @CustomerId";
+            var para = new
+            {
+                CustomerId = ar[0],
+                CompanyId = ar[1],
+                EmployeeId = ar[2],
+                Rol = rolId
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+
+        }
         public async Task EditEmployeePosition(string[] ar)
         {
             var positionId = await new SQLRead().GetPositionIdByName(ar[3], Guid.Parse(ar[0]), Guid.Parse(ar[1]));
@@ -874,6 +898,557 @@ namespace ReportingSystem.Data.SQL
 
                 throw;
             }
+        }
+        #endregion
+        #region Projects
+        public async Task CreateProject(string[] ar)
+        {
+            //if (!Guid.TryParse(ar[0], out Guid idCu))
+            //{
+            //    return;
+            //}
+            //if (!Guid.TryParse(ar[1], out Guid idCo))
+            //{
+            //    return;
+            //}
+
+
+
+
+            ////-----------------------------------------------------------------------------0
+
+            //if (ar[2] == null && company.Categories != null)
+            //{
+            //    ProjectCategoryModel categoryModel = new()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = ar[6],
+            //        Projects = [],
+            //        CategoriesLevel1 = []
+            //    };
+            //    company.Categories.Add(categoryModel);
+            //    UpdateJsonCustomers(customers);
+            //    return;
+            //}
+
+            ////-----------------------------------------------------------------------------1
+
+            //if (ar[2] != null && ar[3] == null && company.Categories != null)
+            //{
+
+            //    if (!Guid.TryParse(ar[2], out Guid idCatLevel1))
+            //    {
+            //        return;
+            //    }
+
+            //    var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+
+            //    if (cat0.CategoriesLevel1 == null)
+            //    {
+            //        return;
+            //    }
+            //    ProjectCategoryModel1 categoryModel1 = new()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = ar[6],
+            //        Projects = [],
+            //        CategoriesLevel2 = []
+            //    };
+            //    cat0.CategoriesLevel1.Add(categoryModel1);
+            //    UpdateJsonCustomers(customers);
+            //}
+
+            ////-----------------------------------------------------------------------------
+
+            //if (ar[2] != null && ar[3] != null && ar[4] == null && company.Categories != null)
+            //{
+            //    if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2))
+            //    {
+            //        return;
+            //    }
+
+            //    var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+            //    if (cat0.CategoriesLevel1 == null)
+            //    {
+            //        return;
+            //    }
+
+            //    var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
+
+            //    if (cat1.CategoriesLevel2 == null)
+            //    {
+            //        return;
+            //    }
+            //    ProjectCategoryModel2 categoryModel2 = new()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = ar[6],
+            //        Projects = [],
+            //        CategoriesLevel3 = []
+            //    };
+            //    cat1.CategoriesLevel2.Add(categoryModel2);
+            //    UpdateJsonCustomers(customers);
+
+
+            //}
+
+            ////-----------------------------------------------------------------------------
+
+            //if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null && company.Categories != null)
+            //{
+            //    if (!Guid.TryParse(ar[2], out Guid idCatLevel1) || !Guid.TryParse(ar[3], out Guid idCatLevel2) || !Guid.TryParse(ar[4], out Guid idCatLevel3))
+            //    {
+            //        return;
+            //    }
+
+            //    var cat0 = company.Categories.First(ca1 => ca1.Id.Equals(idCatLevel1));
+            //    if (cat0.CategoriesLevel1 == null)
+            //    {
+            //        return;
+            //    }
+
+            //    var cat1 = cat0.CategoriesLevel1.First(ca1 => ca1.Id.Equals(idCatLevel2));
+            //    if (cat1.CategoriesLevel2 == null)
+            //    {
+            //        return;
+            //    }
+
+            //    var cat2 = cat1.CategoriesLevel2.First(ca1 => ca1.Id.Equals(idCatLevel3));
+            //    if (cat2.CategoriesLevel3 == null)
+            //    {
+            //        return;
+            //    }
+
+            //    ProjectCategoryModel3 categoryModel3 = new()
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = ar[6],
+            //        Projects = []
+            //    };
+            //    cat2.CategoriesLevel3.Add(categoryModel3);
+            //    UpdateJsonCustomers(customers);
+            //}
+        }
+        #endregion
+        #region Categories
+        public async Task CreateCategory(string[] ar)
+        {
+            if (!Guid.TryParse(ar[0], out Guid idCu) || !Guid.TryParse(ar[1], out Guid idCo))
+            {
+                return;
+            }
+
+            if (ar[2] == null)
+            {
+                await CreateCategory0(idCu, idCo, ar[6]);
+                return;
+            }
+
+            if (ar[2] != null && ar[3] == null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0))
+                {
+                    return;
+                }
+                await CreateCategory1(idCu, idCo, idCat0, ar[6]);
+                return;
+            }
+
+            if (ar[2] != null && ar[3] != null && ar[4] == null)
+            {
+                if (!Guid.TryParse(ar[3], out Guid idCat1))
+                {
+                    return;
+                }
+                await CreateCategory2(idCu, idCo, idCat1, ar[6]);
+                return;
+            }
+
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null)
+            {
+                if (!Guid.TryParse(ar[4], out Guid idCat2))
+                {
+                    return;
+                }
+
+                await CreateCategory3(idCu, idCo, idCat2, ar[6]);
+                return;
+            }
+        }
+        public async Task CreateCategory0(Guid idCu, Guid idCo, string name)
+        {
+            var query = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory0]
+                               ([Id]
+                               ,[CustomerId]
+                               ,[CompanyId]
+                               ,[Name])
+                         VALUES
+                               (@Id
+                               ,@CustomerId
+                               ,@CompanyId
+                               ,@Name)";
+            var para = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = idCu,
+                CompanyId = idCo,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task CreateCategory1(Guid idCu, Guid idCo, Guid idCat0, string name)
+        {
+            var query = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory1]
+                               ([Id]
+                               ,[CustomerId]
+                               ,[CompanyId]
+                               ,[CompanyCategory0]
+                               ,[Name])
+                         VALUES
+                               (@Id
+                               ,@CustomerId
+                               ,@CompanyId
+                               ,@CompanyCategory0
+                               ,@Name)";
+            var para = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory0 = idCat0,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task CreateCategory2(Guid idCu, Guid idCo, Guid idCat1, string name)
+        {
+            var query = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory2]
+                               ([Id]
+                               ,[CustomerId]
+                               ,[CompanyId]
+                               ,[CompanyCategory1]
+                               ,[Name])
+                         VALUES
+                               (@Id
+                               ,@CustomerId
+                               ,@CompanyId
+                               ,@CompanyCategory1
+                               ,@Name)";
+            var para = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory1 = idCat1,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task CreateCategory3(Guid idCu, Guid idCo, Guid idCat2, string name)
+        {
+            var query = $@"INSERT INTO [{Context.dbName}].[dbo].[CompanyCategory3]
+                               ([Id]
+                               ,[CustomerId]
+                               ,[CompanyId]
+                               ,[CompanyCategory2]
+                               ,[Name])
+                         VALUES
+                               (@Id
+                               ,@CustomerId
+                               ,@CompanyId
+                               ,@CompanyCategory2
+                               ,@Name)";
+            var para = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory2 = idCat2,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task EditNameCategory(string[] ar)
+        {
+            if (!Guid.TryParse(ar[0], out Guid idCu))
+            {
+                return;
+            }
+
+            if (!Guid.TryParse(ar[1], out Guid idCo))
+            {
+                return;
+            }
+
+            if (ar[2] != null && ar[3] == null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0))
+                {
+                    return;
+                }
+                await EditNameCategory0(idCu, idCo, idCat0, ar[6]);
+                return;
+            }
+
+            if (ar[2] != null && ar[3] != null && ar[4] == null)
+            {
+
+                if (!Guid.TryParse(ar[2], out Guid idCat0) || !Guid.TryParse(ar[3], out Guid idCat1))
+                {
+                    return;
+                }
+
+                await EditNameCategory1(idCu, idCo, idCat0, idCat1, ar[6]);
+                return;
+            }
+
+            //-----------------------------------------------------------------------------2
+
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0) || !Guid.TryParse(ar[3], out Guid idCat1) || !Guid.TryParse(ar[4], out Guid idCat2))
+                {
+                    return;
+                }
+
+                await EditNameCategory2(idCu, idCo, idCat1, idCat2, ar[6]);
+            }
+
+            //-----------------------------------------------------------------------------3
+
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0) || !Guid.TryParse(ar[3], out Guid idCat1) || !Guid.TryParse(ar[4], out Guid idCat2) || !Guid.TryParse(ar[5], out Guid idCat3))
+                {
+                    return;
+                }
+
+                await EditNameCategory3(idCu, idCo, idCat2, idCat3, ar[6]);
+            }
+            return;
+        }
+        public async Task EditNameCategory0(Guid idCu, Guid idCo, Guid idCat0, string name)
+        {
+            var query = $@"UPDATE [{Context.dbName}].[dbo].[CompanyCategory0]
+                           SET [Name] = @Name
+                         WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
+            var para = new
+            {
+                Id = idCat0,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task EditNameCategory1(Guid idCu, Guid idCo, Guid idCat0, Guid idCat1, string name)
+        {
+            var query = $@"UPDATE [{Context.dbName}].[dbo].[CompanyCategory1]
+                           SET [Name] = @Name
+                         WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId AND CompanyCategory0 = @CompanyCategory0";
+            var para = new
+            {
+                Id = idCat1,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory0 = idCat0,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task EditNameCategory2(Guid idCu, Guid idCo, Guid idCat1, Guid idCat2, string name)
+        {
+            var query = $@"UPDATE [{Context.dbName}].[dbo].[CompanyCategory2]
+                           SET [Name] = @Name
+                         WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId AND CompanyCategory1 = @CompanyCategory1";
+            var para = new
+            {
+                Id = idCat2,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory1 = idCat1,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task EditNameCategory3(Guid idCu, Guid idCo, Guid idCat2, Guid idCat3, string name)
+        {
+            var query = $@"UPDATE [{Context.dbName}].[dbo].[CompanyCategory3]
+                           SET [Name] = @Name
+                         WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId AND CompanyCategory2 = @CompanyCategory2";
+            var para = new
+            {
+                Id = idCat3,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory2 = idCat2,
+                Name = name
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCategory(string[] ar)
+        {
+            if (!Guid.TryParse(ar[0], out Guid idCu) || !Guid.TryParse(ar[1], out Guid idCo))
+            {
+                return;
+            }
+
+            if (ar[2] != null && ar[3] == null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0))
+                {
+                    return;
+                }
+
+                await DeleteCategory0(idCu, idCo, idCat0);
+            }
+
+
+            if (ar[2] != null && ar[3] != null && ar[4] == null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0) || !Guid.TryParse(ar[3], out Guid idCat1))
+                {
+                    return;
+                }
+                await DeleteCategory1(idCu, idCo, idCat0, idCat1);
+            }
+
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] == null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0) || !Guid.TryParse(ar[3], out Guid idCat1) || !Guid.TryParse(ar[4], out Guid idCat2))
+                {
+                    return;
+                }
+                await DeleteCategory2(idCu, idCo, idCat1, idCat2);
+            }
+
+            if (ar[2] != null && ar[3] != null && ar[4] != null && ar[5] != null)
+            {
+                if (!Guid.TryParse(ar[2], out Guid idCat0) || !Guid.TryParse(ar[3], out Guid idCat1) || !Guid.TryParse(ar[4], out Guid idCat2) || !Guid.TryParse(ar[5], out Guid idCat3))
+                {
+                    return;
+                }
+                await DeleteCategory3(idCu, idCo, idCat2, idCat3);
+            }
+            return;
+        }
+
+        public async Task DeleteCategory0(Guid idCu, Guid idCo, Guid idCat0) 
+        {
+            var cat1 = await new SQLRead().GetCategories1(idCu, idCo, idCat0);
+            if (cat1.Count > 0)
+            {
+                foreach (var c1 in cat1)
+                {
+                    await DeleteCategory1(idCu, idCo, idCat0, c1.Id);
+                    var cat2 = await new SQLRead().GetCategories2(idCu, idCo, c1.Id);
+                    if (cat2.Count > 0)
+                    {
+                        foreach (var c2 in cat2)
+                        {
+                            await DeleteCategory2(idCu, idCo, c1.Id, c2.Id);
+                            var cat3 = await new SQLRead().GetCategories3(idCu, idCo, c2.Id);
+                            if (cat3.Count > 0)
+                            {
+                                foreach (var c3 in cat3)
+                                {
+                                    await DeleteCategory3(idCu, idCo, c2.Id, c3.Id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            var query = $@"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory0]
+                        WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId";
+            var para = new
+            {
+                Id = idCat0,
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteCategory1(Guid idCu, Guid idCo, Guid idCat0, Guid idCat1) 
+        {
+            var cat2 = await new SQLRead().GetCategories2(idCu, idCo, idCat1);
+            if (cat2.Count > 0)
+            {
+                foreach (var c2 in cat2)
+                {
+                    await DeleteCategory2(idCu, idCo, idCat1, c2.Id);
+                    var cat3 = await new SQLRead().GetCategories3(idCu, idCo, c2.Id);
+                    if (cat3.Count > 0)
+                    {
+                        foreach (var c3 in cat3)
+                        {
+                            await DeleteCategory3(idCu, idCo, c2.Id, c3.Id);
+                        }
+                    }
+                }
+            }
+
+            var query = $@"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory1]
+                        WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId AND CompanyCategory0 = @CompanyCategory0";
+            var para = new
+            {
+                Id = idCat1,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory0 = idCat0
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        
+        public async Task DeleteCategory2(Guid idCu, Guid idCo, Guid idCat1, Guid idCat2) 
+        {
+            var cat3 = await new SQLRead().GetCategories3(idCu, idCo, idCat2);
+            if (cat3.Count > 0)
+            {
+                foreach (var c3 in cat3)
+                {
+                    await DeleteCategory3(idCu, idCo, idCat2, c3.Id);
+                }
+            }
+
+            var query = $@"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory2]
+                        WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId AND CompanyCategory1 = @CompanyCategory1;";
+            var para = new
+            {
+                Id = idCat2,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory1 = idCat1
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+
+        }
+
+        public async Task DeleteCategory3(Guid idCu, Guid idCo, Guid idCat2, Guid idCat3) 
+        {
+            var query = $@"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory3]
+                        WHERE [Id] = @Id AND [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId AND CompanyCategory2 = @CompanyCategory2";
+            var para = new
+            {
+                Id = idCat3,
+                CustomerId = idCu,
+                CompanyId = idCo,
+                CompanyCategory2 = idCat2
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
         }
         #endregion
         #region ExtendedFunction

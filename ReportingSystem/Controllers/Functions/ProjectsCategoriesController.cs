@@ -13,39 +13,26 @@ namespace ReportingSystem.Controllers.Functions
         [HttpGet]
         public async Task<IActionResult> GetCategories(string idCu, string idCo)
         {
-            await Task.Delay(10);
-            var result = _projectsCategoriesService.GetCategories(idCu, idCo);
+            var result = await _projectsCategoriesService.GetCategories(idCu, idCo);
             return Json(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditNameCategory([FromBody] string[] ar)
+        public async Task EditNameCategory([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsCategoriesService.EditNameCategory(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _projectsCategoriesService.EditNameCategory(ar);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([FromBody] string[] ar)
+        public async Task CreateCategory([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsCategoriesService.CreateCategory(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _projectsCategoriesService.CreateCategory(ar);
         }
         
         [HttpPost]
-        public async Task<IActionResult> DeleteCategory([FromBody] string[] ar)
+        public async Task DeleteCategory([FromBody] string[] ar)
         {
-
-            await Task.Delay(10);
-            var result = _projectsCategoriesService.DeleteCategory(ar);
-            return result != null ? Ok(result) : NotFound();
-
+            await _projectsCategoriesService.DeleteCategory(ar);
         }
 
     }

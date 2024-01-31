@@ -10,9 +10,9 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         //Отримання списку ролей компанії 
-        public async Task<IActionResult> GetAllRolls(string idCu, string idCo, string idEm)
+        public async Task<IActionResult> GetAllRolls(string idCu, string idCo)
         {
-            var result = await _rollsService.GetAllRolls(idCu, idCo, idEm);
+            var result = await _rollsService.GetAllRolls(idCu, idCo);
             return Json(result);
         }
         

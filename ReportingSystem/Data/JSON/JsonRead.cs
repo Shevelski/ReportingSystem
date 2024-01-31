@@ -203,9 +203,40 @@ namespace ReportingSystem.Data.JSON
             devRols.Add(devRol);
             return devRols;
         }
+        public async Task<List<EmployeeModel>?> GetEmployeesByRoll(string idCu, string idCo, string rol)
+        {
+            List<CustomerModel> customers = await GetCustomers();
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = customers.FirstOrDefault(cu => cu.Id.Equals(idCustomer));
+
+            if (customer == null || customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (Guid.TryParse(idCo, out Guid idCompany))
+            {
+                var company = customer.Companies.FirstOrDefault(co => co.Id.Equals(idCompany));
+
+                if (company == null || company.Employees == null)
+                {
+                    return null;
+                }
+
+                return company.Employees.Where(employee => employee.Rol != null && employee.Rol.RolName != null && employee.Rol.RolName.Equals(rol)).ToList();
+            }
+
+            return null;
+        }
+
         #endregion
         #region Customers
-        public async Task<List<EmployeePositionModel>?> GetUniqPositions(string idCu, string idCo)
+            public async Task<List<EmployeePositionModel>?> GetUniqPositions(string idCu, string idCo)
         {
             var customers = await GetCustomers();
 
@@ -481,6 +512,44 @@ namespace ReportingSystem.Data.JSON
             }
 
             return list;
+        }
+        #endregion
+        #region Categories
+        public async Task<List<ProjectCategoryModel>?> GetCategories(string idCu, string idCo)
+        {
+            List<ProjectCategoryModel> projectCategoryModels = new List<ProjectCategoryModel>();
+            ProjectCategoryModel categoryModel = new ProjectCategoryModel();
+
+            var customers = await GetCustomers();
+
+            if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
+            {
+                return null;
+            }
+
+            var customer = customers.First(cu => cu.Id.Equals(idCustomer));
+
+            if (customer.Companies == null)
+            {
+                return null;
+            }
+
+            if (!Guid.TryParse(idCo, out Guid idCompany))
+            {
+                return null;
+            }
+
+            var company = customer.Companies.First(co => co.Id.Equals(idCompany));
+
+            if (company.Categories == null)
+            {
+                return null;
+            }
+
+            projectCategoryModels = company.Categories;
+
+            return projectCategoryModels;
+
         }
         #endregion
         #region Companies

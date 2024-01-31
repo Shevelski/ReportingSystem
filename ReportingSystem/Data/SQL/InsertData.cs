@@ -512,13 +512,15 @@ namespace ReportingSystem.Data.SQL
                     rol = rolResult.First();
                 }
 
+                var statusPosition = "SELECT [id]" +
+                              $"FROM [{Context.dbName}].[dbo].[EmployeePosition]" +
+                              "Where Name = @Name AND CustomerId = @CustomerId AND CompanyId = @CompanyId";
                 var paraPosition = new
                 {
                     Name = employee.Position.NamePosition,
+                    CustomerId = employee.CustomerId,
+                    CompanyId = employee.CompanyId
                 };
-                var statusPosition = "SELECT [id]" +
-                              $"FROM [{Context.dbName}].[dbo].[EmployeePosition]" +
-                              "Where Name = @Name";
                 var positionResult = await _database.QueryAsync<Guid>(statusPosition, paraPosition);
 
                 Guid statusPos = Guid.Empty;
@@ -527,7 +529,7 @@ namespace ReportingSystem.Data.SQL
                 {
                     statusPos = positionResult.First();
                 }
-
+                //var statusPos = await new SQLRead().GetPositionIdByName(employee.Position.NamePosition, employee.CustomerId, employee.CompanyId);
                 var query = $"INSERT INTO [{Context.dbName}].[dbo].[Employees]" +
                     "([Id],[CompanyId],[CustomerId],[FirstName],[SecondName],[ThirdName],[PhoneWork],[PhoneSelf],[EmailWork],[EmailSelf],[TaxNumber],[AddressReg],[AddressFact],[Photo],[Login],[Password],[Salary],[AddSalary],[Status],[BirthDate],[WorkStartDate],[WorkEndDate],[Position],[Rol])" +
                     "VALUES (@Id,@CompanyId,@CustomerId,@FirstName,@SecondName,@ThirdName,@PhoneWork,@PhoneSelf,@EmailWork,@EmailSelf,@TaxNumber,@AddressReg,@AddressFact,@Photo,@Login,@Password,@Salary,@AddSalary,@Status,@BirthDate,@WorkStartDate,@WorkEndDate,@Position,@Rol)";

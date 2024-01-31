@@ -58,6 +58,13 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpPost]
         // редагування посади у користувача
+        public async Task EditPosition([FromBody] string[] ar)
+        {
+            await _positionsService.EditPosition(ar);
+        }
+
+        [HttpPost]
+        // редагування посади у користувача
         public async Task EditEmployeePosition([FromBody] string[] ar)
         {
             await _positionsService.EditEmployeePosition(ar);

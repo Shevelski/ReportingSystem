@@ -48,7 +48,7 @@ namespace ReportingSystem.Services
         //створення нової посади
         public async Task CreatePosition(string[] ar)
         {
-            await new JsonWrite().CreatePosition(ar);
+            //await new JsonWrite().CreatePosition(ar);
             await new SQLWrite().CreatePosition(ar);
         }
 
@@ -56,21 +56,21 @@ namespace ReportingSystem.Services
         //створення нової посади
         public async Task EditPosition(string[] ar)
         {
-            await new JsonWrite().EditPosition(ar);
+            //await new JsonWrite().EditPosition(ar);
             await new SQLWrite().EditPosition(ar);
         }
 
         //видалення посади
         public async Task DeletePosition(string[] ar)
         {
-            await new JsonWrite().DeletePosition(ar);
+            //await new JsonWrite().DeletePosition(ar);
             await new SQLWrite().DeletePosition(ar);
         }
 
         //зміна посади
         public async Task EditEmployeePosition(string[] ar)
         {
-            await new JsonWrite().EditEmployeePosition(ar);
+            //await new JsonWrite().EditEmployeePosition(ar);
             await new SQLWrite().EditEmployeePosition(ar);
         }
     }

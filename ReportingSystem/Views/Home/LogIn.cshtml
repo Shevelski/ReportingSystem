@@ -1,3 +1,5 @@
+@using ReportingSystem.Properties
+
 @{
     ViewData["Title"] = "Вхід";    
     Layout = "_LayoutAuthorize";
@@ -19,6 +21,7 @@
         </div>
         <div class="el1 bm-3" v-else>
             <label class="label">{{ status.name }}</label>
+            @* <label class="label">@Resources.ResourceManager.GetString(status.name)</label> *@
         </div>
 
         <div class="el1 bm-3" v-if="mode == 0">
@@ -86,12 +89,6 @@
         background-color: #dc3545;
     }
 </style>
-
-
-
-
-
-
 
 @*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/Authorize.js" asp-append-version="true"></script>

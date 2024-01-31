@@ -23,8 +23,8 @@ namespace ReportingSystem.Services
 
         public async Task CreateProject(string[] ar)
         {
-            //await new JsonWrite().CreateProject(ar);
-            //await new SQLWrite().CreateProject(ar);
+            await new JsonWrite().CreateProject(ar);
+            await new SQLWrite().CreateProject(ar);
 
             //if (DatabaseMoq.Customers == null || !Guid.TryParse(ar[0], out Guid idCustomer))
             //{

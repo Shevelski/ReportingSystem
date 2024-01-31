@@ -150,7 +150,6 @@
                 params: {
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId,
-                    idEm: this.employeeId,
                 }
             });
             return responseRolls.data;

@@ -94,12 +94,13 @@ namespace ReportingSystem.Data.Generate
                                     await UpdateStatusOnClient("Вставлення даних по співробітникам ...", 60);
                                     await new InsertData().EmployeePosition(position, customer.Id, company.Id, i);
                                     i++;
-                                    if (company.Employees != null)
+                                    
+                                }
+                                if (company.Employees != null)
+                                {
+                                    foreach (var employee in company.Employees)
                                     {
-                                        foreach (var employee in company.Employees)
-                                        {
-                                            await new InsertData().Employee(employee);
-                                        }
+                                        await new InsertData().Employee(employee);
                                     }
                                 }
                             }
