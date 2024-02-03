@@ -1,5 +1,5 @@
 ﻿new Vue({
-    el: '#Configuration',
+    el: '#Start',
     data: {
         hasDatabase: false,
         generationProcess: '',
@@ -12,17 +12,9 @@
         newServer: '',
         newDatabase: '',
         status: 0,
-        loginDB:'',
-        passwordDB:'',
         login: '',
         password: '',
         useCred: false,
-        pagePasswordOk: false,
-        pagePasswordFailed: false,
-        showModal: true,
-        username: '',
-        isLoggedIn: false,
-        cust: ''
     },
     mounted() {
         this.Init();
@@ -37,30 +29,7 @@
             let response = await axios.get("/Home/GetConnectionString");
             this.serverName = response.data[0];
             this.databaseName = response.data[1];
-            this.showModal = true;
-            this.openModalProgrammatically();
-        },
-        openModal() {
-            this.showModal = true;
-        },
-        closeModal() {
-            this.showModal = false;
-        },
-        async loginUser() {
-            let result = await axios.get("/Home/ConfigEnter", {
-                params: {
-                    username: this.username,
-                    password: this.password,
-                }
-            });
-            if (result.data) {
-                this.pagePasswordOk = true;
-                this.isLoggedIn = true;
-                this.pagePasswordFailed = false;
-                this.closeModalProgrammatically();
-            } else {
-                this.pagePasswordFailed = true;
-            };
+            console.log("Test");
         },
         async IsServerAvailable() {
             if (!this.useCred) {
@@ -78,8 +47,8 @@
                 let result = await axios.get("/Home/IsServerAvailable1", {
                     params: {
                         serverName: this.newServer,
-                        login: this.loginDB,
-                        password: this.passwordDB
+                        login: this.login,
+                        password: this.password
                     }
                 });
                 if (result.data) {
@@ -101,15 +70,14 @@
                     this.SetStatus(6);
                 } else {
                     this.SetStatus(5);
-                };
-                this.SetConnectionString();
+                }
             } else {
                 let result = await axios.get("/Home/IsDatabaseAvailable2", {
                     params: {
                         serverName: this.newServer,
                         databaseName: this.newDatabase,
-                        login: this.loginDB,
-                        password: this.passwordDB
+                        login: this.login,
+                        password: this.password
                     }
                 });
                 if (result.data) {
@@ -205,37 +173,13 @@
             await axios.get("/Home/GenerateData");
             this.percentOperation = 0;
             this.SetStatus(10);
+
             //this.generationProcess = response.data;
+            console.log("Test");
         },
         async cancelCreation() {
             this.percentOperation = 0;
             this.SetStatus(0);
-        },
-        closeModalProgrammatically() {
-            let modalElement = document.getElementById('exampleModal');
-            if (modalElement) {
-                modalElement.dispatchEvent(new Event('click'));
-            }
-        },
-        openModalProgrammatically() {
-            if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function') {
-                let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
-                modalElement.show();
-            } else {
-                this.waitForBootstrap(() => {
-                    let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
-                    modalElement.show();
-                });
-            }
-        },
-
-        waitForBootstrap(callback) {
-            const interval = setInterval(() => {
-                if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function') {
-                    clearInterval(interval);
-                    callback();
-                }
-            }, 100);
         },
         setupSignalR() {
             // Створіть з'єднання SignalR
@@ -245,12 +189,6 @@
             this.connection.on("ReceiveStatus", (status, percent) => {
                 this.databaseStatus = status;  // Оновіть відображення статусу на сторінці
                 this.percentOperation = percent;  // Оновіть відображення статусу на сторінці
-                
-            });
-
-            // При отриманні повідомлення від сервера
-            this.connection.on("ReceiveStatus1", (customer) => {
-                this.cust = customer;
             });
 
             // Запуск підключення SignalR

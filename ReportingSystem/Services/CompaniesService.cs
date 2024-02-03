@@ -8,59 +8,46 @@ namespace ReportingSystem.Services
 {
     public class CompaniesService
     {
+        bool mode = Settings.Source().Equals("json");
+
         //Отримання списку компаній замовника
         public async Task<List<CompanyModel>?> GetCompanies(string idCu)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result = mode ? await new JsonRead().GetCompanies(idCu) :
-                      await new SQLRead().GetCompanies(idCu);
-            return result;
+            return mode ? await new JsonRead().GetCompanies(idCu) : await new SQLRead().GetCompanies(idCu);
         }
 
         //Отримання ролей системи в компанії 
         public async Task<List<EmployeeRolModel>?> GetRolls(string idCu, string idCo)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result = mode ? await new JsonRead().GetRolls(idCu, idCo) :
-                      await new SQLRead().GetRolls(idCu, idCo);
-            return result;
+            return mode ? await new JsonRead().GetRolls(idCu, idCo) : await new SQLRead().GetRolls(idCu, idCo);
         }
         public async Task<List<EmployeeRolModel>?> GetDevRolls()
         {
-            bool mode = Settings.Source().Equals("json");
-            var result = mode ? await new JsonRead().GetDevRolls() :
-                      await new SQLRead().GetDevRolls();
-            return result;
+            return mode ? await new JsonRead().GetDevRolls() : await new SQLRead().GetDevRolls();
         }
 
         //отримання списку компаній з статусом актуальні
         public async Task<List<CompanyModel>?> GetActualCompanies(string idCu)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result = mode ? await new JsonRead().GetActualCompanies(idCu) :
-                      await new SQLRead().GetActualCompanies(idCu);
-            return result;
+            return mode ? await new JsonRead().GetActualCompanies(idCu) : await new SQLRead().GetActualCompanies(idCu);
         }
         
         //редагування компанії
         public async Task EditCompany(string[] ar)
         {
-            await new JsonWrite().EditCompany(ar);
-            await new SQLWrite().EditCompany(ar);
+            await (mode ? new JsonWrite().EditCompany(ar) : new SQLWrite().EditCompany(ar));
         }
 
         //архівування компанії
         public async Task ArchiveCompany(string[] ar)
         {
-            await new JsonWrite().ArchiveCompany(ar);
-            await new SQLWrite().ArchiveCompany(ar);
+            await (mode ? new JsonWrite().ArchiveCompany(ar) : new SQLWrite().ArchiveCompany(ar));
         }
 
         //видалення компанії
         public async Task DeleteCompany(string[] ar)
         {
-            await new JsonWrite().DeleteCompany(ar);
-            await new SQLWrite().DeleteCompany(ar);
+            await (mode ? new JsonWrite().DeleteCompany(ar) : new SQLWrite().DeleteCompany(ar));
         }
 
         private static Dictionary<Guid, CompanyModel> companiesData = [];
@@ -80,7 +67,6 @@ namespace ReportingSystem.Services
             if (Guid.TryParse(id, out Guid guid) && companiesData.TryGetValue(guid, out var companyDetails))
             {
                 companiesData.Remove(guid);
-                //DatabaseMoq.UpdateJson();
                 return companyDetails;
             }
             return null;
@@ -90,8 +76,7 @@ namespace ReportingSystem.Services
 
         public async Task CreateCompany(string[] ar)
         {
-            await new JsonWrite().CreateCompany(ar);
-            await new SQLWrite().CreateCompany(ar);
+            await (mode ? new JsonWrite().CreateCompany(ar) : new SQLWrite().CreateCompany(ar));
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿new Vue({
-    el: '#Report',
+    el: '#ReportTest',
     data: {
         currentMonth: new Date().getMonth() + 1,
         currentYear: new Date().getFullYear(),
@@ -15,7 +15,7 @@
         worksHourStart: 9,
         breakHour: 1,
         highlightedRow: null,
-        cursorDateMonth: new Date().getMonth() + 1,
+        cursorDateMonth: new Date().getMonth()+1,
         cursorDateYear: new Date().getFullYear(),
         cursorDate: new Date(),
         modeScreen: "Місяць",
@@ -78,10 +78,12 @@
     },
     mounted() {
         this.cursorDate = new Date();
-        this.customerId = document.getElementById('idCu').textContent;
-        this.companyId = document.getElementById('idCo').textContent;
-        this.employeeId = document.getElementById('idEm').textContent;
-        this.rol = document.getElementById('rol').textContent;
+        //this.targetDate = this.cursorDateMonth + " " + this.cursorDateYear;
+        //this.customerId = document.getElementById('idCu').textContent;
+        //this.companyId = document.getElementById('idCo').textContent;
+        //this.employeeId = document.getElementById('idEm').textContent;
+        //this.rol = document.getElementById('rol').textContent;
+        //this.weeks();
         this.Init();
     },
     computed: {
@@ -93,11 +95,11 @@
                 year: now.getFullYear()
             };
         },
-        
         weeks() {
             let firstDayOfMonth = new Date(this.cursorDate.getFullYear(), this.cursorDate.getMonth(), 1).getDay();
             firstDayOfMonth = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
             const daysInMonth = new Date(this.cursorDate.getFullYear(), this.cursorDate.getMonth() + 1, 0).getDate();
+
             let d1;
             if (firstDayOfMonth <= 5) {
                 d1 = 5;
@@ -107,7 +109,9 @@
                 } else {
                     d1 = 5;
                 }
+
             }
+
             let dayCounter = 1;
             let calendar = [];
 
@@ -126,37 +130,9 @@
         },
     },
     methods: {
-        async Init() {
-
-            console.log(this.rol);
-
-            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
-                await this.updateCustomers();
-                await this.updateCompanies();
-                await this.updateEmployees();
-            }
-            if (this.rol == 'Customer') {
-                this.selectedCustomerId = this.customerId;
-                await this.updateCompanies();
-                await this.updateEmployees();
-            }
-            if (this.rol == 'CEO') {
-                this.selectedCustomerId = this.customerId;
-                this.selectedCompanyId = this.companyId;
-                this.selectedEmployeeId = this.employeeId;
-            }
-
-            this.rolls = await this.getAllRolls();
-            console.log(this.rolls);
-
-            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
-        },
-        showDetails() {
-            this.isShowDetails = true;
-        },
         isSelectedDay(day) {
             return day === this.selectedDate.getDate() &&
-                this.selectedDate.getMonth() + 1 === this.cursorDate.getMonth() + 1 &&
+                this.selectedDate.getMonth() + 1 === this.cursorDate.getMonth() +1 &&
                 this.selectedDate.getFullYear() === this.cursorDate.getFullYear();
         },
         isCurrentDay(day) {
@@ -183,7 +159,6 @@
                 this.cursorDate = dateObject;
 
                 this.selectedDate = this.cursorDate;
-                this.isShowDetails = false;
                 // Вивести дату у консоль при натисканні на комірку
                 console.log(`Clicked on cell with date: ${day}-${this.cursorDateMonth}-${this.cursorDateYear}`);
             }
@@ -255,23 +230,41 @@
         dateRight() {
             let currentDate = new Date(this.cursorDate);
             currentDate.setMonth(currentDate.getMonth() + 1);
-            this.cursorDate = currentDate;
+            this.cursorDate = currentDate; 
             console.log(this.cursorDate);
         },
         setToday() {
             this.cursorDate = new Date();
             this.selectedDate = new Date();
             this.weeks();
-
+            
         },
         toggleHover() {
             this.hovered = !this.hovered;
         },
-        setMode(period) {
-            this.mode = period;
-            console.log(period);
-        },
+        async Init() {
+            console.log(this.rol);
 
+            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
+                await this.updateCustomers();
+                await this.updateCompanies();
+                await this.updateEmployees();
+            }
+            if (this.rol == 'Customer') {
+                this.selectedCustomerId = this.customerId;
+                await this.updateCompanies();
+                await this.updateEmployees();
+            }
+            if (this.rol == 'CEO') {
+                this.selectedCustomerId = this.customerId;
+                this.selectedCompanyId = this.companyId;
+                this.selectedEmployeeId = this.employeeId;
+            }
+
+            console.log(this.rolls);
+
+            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
+        },
         async updateEmployees() {
             let responseEmployees = '';
             responseEmployees = await axios.get("/Employees/GetEmployees", {
@@ -306,25 +299,6 @@
             if (this.selectedCustomerId == 0) {
                 this.selectedCustomerId = this.customers[0].id;
             }
-        },
-        async getAllRolls() {
-
-            if (this.selectedCustomerId == 0) {
-                this.selectedCustomerId = this.customers[0].id;
-            }
-
-            if (this.selectedCompanyId == 0) {
-                this.selectedCompanyId = this.companies[0].id;
-            }
-
-            let responseRolls = await axios.get("/Rolls/GetAllRolls", {
-                params: {
-                    idCu: this.selectedCustomerId,
-                    idCo: this.selectedCompanyId,
-                    idEm: this.employeeId,
-                }
-            });
-            return responseRolls.data;
         },
         async getEmployeesByRol(rol) {
             this.tmpNameRol = rol;
@@ -363,6 +337,7 @@
             }
             this.Init();
         },
+        
         getSelectedCompany(event) {
             this.selectedCompanyId = event.target.value;
 
@@ -389,6 +364,5 @@
 
             this.Init();
         },
-        
     },
 });
