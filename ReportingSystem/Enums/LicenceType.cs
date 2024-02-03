@@ -1,25 +1,26 @@
 ﻿using ReportingSystem.Enums.Extensions;
+using ReportingSystem.Properties;
 
 namespace ReportingSystem.Enums
 {
     public enum LicenceType
     {
-        [EnumDisplayName("Неіснуюча")]
+        [EnumDisplayName("Неіснуюча", typeof(Resources))]
         None = 0,
 
-        [EnumDisplayName("Тестова")]
+        [EnumDisplayName("Тестова", typeof(Resources))]
         Test = 1,
 
-        [EnumDisplayName("Основна")]
+        [EnumDisplayName("Основна", typeof(Resources))]
         Main = 2,
 
-        [EnumDisplayName("Завершена")]
+        [EnumDisplayName("Завершена", typeof(Resources))]
         Expired = 3,
 
-        [EnumDisplayName("Архівна")]
+        [EnumDisplayName("Архівна", typeof(Resources))]
         Archive = 4,
 
-        [EnumDisplayName("Анульована")]
+        [EnumDisplayName("Анульована", typeof(Resources))]
         Nulled = 5,
     }
 }

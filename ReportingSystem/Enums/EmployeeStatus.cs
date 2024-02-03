@@ -1,14 +1,15 @@
 ﻿using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Project;
+using ReportingSystem.Properties;
 
 namespace ReportingSystem.Enums
 {
     public enum EmployeeStatus
     {
-        [EnumDisplayName("Актуальний")]
+        [EnumDisplayName("Актуальний", typeof(Resources))]
         Actual = 1,
 
-        [EnumDisplayName("Архівний")]
+        [EnumDisplayName("Архівний", typeof(Resources))]
         Archive = 2,
     }
 }

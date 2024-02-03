@@ -168,6 +168,9 @@
   <data name="directorInfoTypeLicense" xml:space="preserve">
     <value>Тип поточної ліцензії</value>
   </data>
+  <data name="EmailOk" xml:space="preserve">
+    <value>Email вірний. Введіть пароль</value>
+  </data>
   <data name="headerCompanies" xml:space="preserve">
     <value>Компанії</value>
   </data>
