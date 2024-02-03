@@ -13,11 +13,11 @@ namespace ReportingSystem.Services
 {
     public class RollsService
     {
+        bool mode = Settings.Source().Equals("json");
 
         //Отримання списку посад компанії 
         public async Task<List<EmployeeRolModel>?> GetAllRolls(string idCu, string idCo)
         {
-            bool mode = Settings.Source().Equals("json");
             var result = mode ? await new JsonRead().GetRolls(idCu, idCo) :
                       await new SQLRead().GetRolls(idCu, idCo);
             return result;
@@ -26,7 +26,6 @@ namespace ReportingSystem.Services
         //отримати користувачів компанії за ролями
         public async Task<List<EmployeeModel>?> GetEmployeesByRoll(string idCu, string idCo, string rol)
         {
-            bool mode = Settings.Source().Equals("json");
             var result = mode ? await new JsonRead().GetEmployeesByRoll(idCu, idCo, rol) :
                       await new SQLRead().GetEmployeesByRoll(idCu, idCo, rol);
             return result;
@@ -35,8 +34,7 @@ namespace ReportingSystem.Services
         //зміна ролі
         public async Task EditEmployeeRol(string[] ar)
         {
-            //await new JsonWrite().EditEmployeeRol(ar);
-            await new SQLWrite().EditEmployeeRol(ar);
+            await (mode ? new JsonWrite().EditEmployeeRol(ar) : new SQLWrite().EditEmployeeRol(ar));
         }
     }
 }

@@ -16,7 +16,7 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<link rel="stylesheet" href="~/css/Start.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/ReportTest.css" asp-append-version="true" />
 
 <div class="text-center">
     <div class="container">
@@ -35,5 +35,171 @@
     </div>
 </div>
 
-@*---------------------------------------------------------------------------------------------------------------------*@
-<script src="~/js/Start.js" asp-append-version="true"></script>
+
+<!-------------------------------------------------------------------------------->
+
+@* <div class="container" id="ReportTest">
+    <div class="row d-flex justify-content-between align-items-center">
+        <div class="col-5">
+            <div v-if="isShowDetails">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1" v-on:change="is24HourFormat = !is24HourFormat">
+                    <label class="form-check-label" for="flexSwitchCheckDefault1">Формат часу 24/12</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" v-on:change="isWorkHours = !isWorkHours">
+                    <label class="form-check-label" for="flexSwitchCheckDefault2">Неробочі години</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault3" v-on:change="isWorkDays = !isWorkDays">
+                    <label class="form-check-label" for="flexSwitchCheckDefault3">Неробочі дні</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault4" v-on:change="isWeekDay = !isWeekDay">
+                    <label class="form-check-label" for="flexSwitchCheckDefault4">День - Тиждень</label>
+                </div>
+                <div>
+                    <div style="text-align: center;">
+                        <button type="button" class="btn"
+                            v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                            v-on:mouseover="toggleHover"
+                            v-on:mouseout="toggleHover">
+                            Додати подію
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-7">
+            <span class="bold-month">{{convDate(cursorDate)}}</span>
+            <button type="button" class="btn"
+                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                    v-on:mouseover="toggleHover"
+                    v-on:mouseout="toggleHover"
+                    v-on:click="setToday()">
+                Сьогодні
+            </button>
+            <button type="button" class="btn"
+                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                    v-on:mouseover="toggleHover"
+                    v-on:mouseout="toggleHover"
+                    v-on:click="dateLeft()">
+                <
+            </button>
+            <button type="button" class="btn"
+                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                    v-on:mouseover="toggleHover"
+                    v-on:mouseout="toggleHover"
+                    v-on:click="dateRight()">
+                >
+            </button>
+            <table id="month-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Пн</th>
+                        <th>Вт</th>
+                        <th>Ср</th>
+                        <th>Чт</th>
+                        <th>Пт</th>
+                        <th>Сб</th>
+                        <th>Нд</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(week, indexWeek) in weeks" :key="indexWeek">
+                        <td v-for="(day, indexDay) in week"
+                            :key="indexDay"
+                            v-on:click="handleCellClick(day)"
+                            v-on:dblclick="isShowDetails = true"
+                            :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
+                            {{ day > 0 ? day : '' }}
+                            </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!------------------------------------------------------------------------->
+    <table id="weeknew-table" class="table table-bordered" v-if="!isWeekDay && isShowDetails">
+        <thead>
+            <tr>
+                <th>Час</th>
+                <th>Понеділок</th>
+                <th>Вівторок</th>
+                <th>Середа</th>
+                <th>Четвер</th>
+                <th>П'ятниця</th>
+                <th v-if="!isWorkDays">Субота</th>
+                <th v-if="!isWorkDays">Неділя</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>{{dataDayOfWeek(1)}}</th>
+                <th>{{dataDayOfWeek(2)}}</th>
+                <th>{{dataDayOfWeek(3)}}</th>
+                <th>{{dataDayOfWeek(4)}}</th>
+                <th>{{dataDayOfWeek(5)}}</th>
+                <th v-if="!isWorkDays">{{dataDayOfWeek(6)}}</th>
+                <th v-if="!isWorkDays">{{dataDayOfWeek(7)}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                <td v-on:click="handleCellWeekClick(hour,1)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,2)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,3)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,4)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,5)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
+                <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
+            </tr>
+            <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                <td v-on:click="handleCellWeekClick(hour,1)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,2)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,3)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,4)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,5)"> </td>
+                <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
+                <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!------------------------------------------------------------------------->
+
+    <table id="day-table" class="table table-bordered" v-if="isWeekDay && isShowDetails">
+        <thead>
+            <tr>
+                <th>{{convDate(selectedDate)}}</th>
+                <th>Проект</th>
+                <th>Коментар</th>
+            </tr>
+            
+        </thead>
+        <tbody>
+            <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                <td> </td>
+                <td> </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>Всього</th>
+                <th>Годин</th>
+                <th>Коментар</th>
+            </tr>
+        </tfoot>
+    </table>
+ </div>
+
+<p>-----------------------------------</p>
+
+<script src="~/js/ReportTest.js" asp-append-version="true"></script> *@

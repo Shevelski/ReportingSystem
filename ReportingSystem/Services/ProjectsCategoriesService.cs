@@ -9,29 +9,24 @@ namespace ReportingSystem.Services
 {
     public class ProjectsCategoriesService
     {
+        bool mode = Settings.Source().Equals("json");
         public async Task<List<ProjectCategoryModel>?> GetCategories(string idCu, string idCo)
         {
-            bool mode = Settings.Source().Equals("json");
-            var result = mode ? await new JsonRead().GetCategories(idCu, idCo) :
-                      await new SQLRead().GetCategories(idCu, idCo);
-            return result;
+            return mode ? await new JsonRead().GetCategories(idCu, idCo) : await new SQLRead().GetCategories(idCu, idCo);
         }
 
         public async Task CreateCategory(string[] ar)
         {
-            //await new JsonWrite().CreateCategory(ar); //звернути увагу під час тестування json
-            await new SQLWrite().CreateCategory(ar);
+            await (mode ? new JsonWrite().CreateCategory(ar) : new SQLWrite().CreateCategory(ar));//звернути увагу під час тестування json
         }
         public async Task EditNameCategory(string[] ar)
         {
-            //await new JsonWrite().EditNameCategory(ar);
-            await new SQLWrite().EditNameCategory(ar);
+            await (mode ? new JsonWrite().EditNameCategory(ar) : new SQLWrite().EditNameCategory(ar));
         }
 
         public async Task DeleteCategory(string[] ar)
         {
-            //await new JsonWrite().DeleteCategory(ar);
-            await new SQLWrite().DeleteCategory(ar);
+            await (mode ? new JsonWrite().DeleteCategory(ar) : new SQLWrite().DeleteCategory(ar));
         }
     }
 }

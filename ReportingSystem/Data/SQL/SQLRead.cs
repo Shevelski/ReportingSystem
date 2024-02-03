@@ -1000,14 +1000,14 @@ namespace ReportingSystem.Data.SQL
         {
             List<ProjectModel> projects = [];
 
-            var query = $"SELECT[Guid] FROM [{Context.dbName}].[dbo].[Projects] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[Projects] Where CustomerId = @CustomerId AND CompanyId = @CompanyId";
             var para = new
             {
                CustomerId = idCu,
                CompanyId = idCo
             };
             using var database = Context.ConnectToSQL;
-            var result = await database.QueryAsync<string>(query, para);
+            var result = await database.QueryAsync<Guid>(query, para);
 
 
             if (result.Any())
@@ -1015,7 +1015,7 @@ namespace ReportingSystem.Data.SQL
                 var x = result;
                 foreach (var pr in result)
                 {
-                    ProjectModel project = await GetProject(idCu, idCo, pr);
+                    ProjectModel project = await GetProject(idCu, idCo, pr.ToString());
                     projects.Add(project);
                 }
             }
@@ -1046,7 +1046,8 @@ namespace ReportingSystem.Data.SQL
         {
             ProjectModel project = new();
 
-            var query = $"SELECT [*] FROM [{Context.dbName}].[dbo].[Projects] Where CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id";
+            var query = @$"SELECT * FROM [{Context.dbName}].[dbo].[Projects] 
+                          Where CustomerId = @CustomerId AND CompanyId = @CompanyId AND Id = @Id";
             var para = new
             {
                 CustomerId = idCu,
@@ -1069,12 +1070,26 @@ namespace ReportingSystem.Data.SQL
                 project.EndDate = readProj.EndDate;
                 project.Status = await GetProjectStatus(readProj.Status);
                 project.Head = await GetEmployeeData(readProj.Head);
-                //project.Category = await GetCategoryData(readProj.CategoryModel);
-                //project.Category = await GetCategoryData(readProj.CategoryModel2);
-                //project.Category = await GetCategoryData(readProj.CategoryModel3);
+                project.Category = new();
+                project.Category.Level0CatName = readProj.CategoryModel0.ToString();
+                project.Category.Level1CatName = readProj.CategoryModel1.ToString();
+                project.Category.Level2CatName = readProj.CategoryModel2.ToString();
+                project.Category.Level3CatName = readProj.CategoryModel3.ToString();
+                //project.Positions = await GetProjectPositions(project.Id);
+                //project.Members = await GetProjectMembers(project.Id);
             }
             return project;
         }
+        //public async Task<List<EmployeePositionModel>> GetProjectPositions(Guid idPr)
+        //{
+        //    List<EmployeePositionModel> list = [];
+        //}
+        //public async Task<List<EmployeeModel>> GetProjectMembers()
+        //{
+        //    List<EmployeeModel> list = [];
+        //}
+
+
         public async Task<ProjectStatusModel?> GetProjectStatus(Guid id)
         {
             var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[ProjectStatus] Where Id = @Id";
@@ -1400,6 +1415,32 @@ namespace ReportingSystem.Data.SQL
             categoryModel.Projects = await new SQLRead().GetProjectsGuidByCategory(idCu, idCo, 3, idCa3);
             return categoryModel;
         }
+        //public async Task<ProjectCategoryModel> GetCategoriesForProject(Guid idCu, Guid idCo, Guid idCa0, Guid idCa1, Guid idCa2, Guid idCa3)
+        //{
+        //    ProjectCategoryModel category = new();
+        //    ProjectCategoryModel3 categoryModel = new();
+
+        //    var query = $@"SELECT [Name]
+        //                FROM [{Context.dbName}].[dbo].[CompanyCategory3]
+        //                WHERE [CustomerId] = @CustomerId AND [CompanyId] = @CompanyId 
+        //                      AND [CompanyCategory2] = @CompanyCategory2
+        //                      AND [Id] = @CompanyCategory3";
+        //    var para = new
+        //    {
+        //        CustomerId = idCu,
+        //        CompanyId = idCo,
+        //        CompanyCategory2 = idCa2,
+        //        CompanyCategory3 = idCa3
+        //    };
+        //    using var database = Context.ConnectToSQL;
+        //    var result = await database.QueryAsync<string>(query, para);
+
+        //    categoryModel.Id = idCa3;
+        //    categoryModel.Name = result.First();
+        //    categoryModel.Projects = await new SQLRead().GetProjectsGuidByCategory(idCu, idCo, 3, idCa3);
+        //    return categoryModel;
+        //}
+
 
         #endregion
     }

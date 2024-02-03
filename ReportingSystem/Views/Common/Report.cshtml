@@ -16,8 +16,8 @@
 @*---------------------------------------------------------------------------------------------------------------------*@
 
 <div class="container" id="Report">
+    @* <div> v-if="rol != 1"> *@
     <div class="accordion" id="accordionExample" v-if="rolls.length != 1">
-        
         @*---------------------------------------------------------------------------------------------------------------------*@
         
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
@@ -39,91 +39,162 @@
             </select>
         </div>
 
-        <div class="row">
-            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
-                    <button type="button" class="btn btn-secondary" v-bind:class="{active: mode == 'month'}" v-on:click="setMode('month')">Місяць</button>
-                    <button type="button" class="btn btn-secondary" v-bind:class="{active: mode == 'week'}" v-on:click="setMode('week')">Тиждень</button>
-                    <button type="button" class="btn btn-secondary" v-bind:class="{active: mode == 'day'}" v-on:click="setMode('day')">День</button>
-                </div>
-            </div>
-        </div>
-       @* <div class="mb-3">
-            <!-- Поле введення для пошуку -->
-            <input v-model="searchQuery" type="text" class="form-control" placeholder="Пошук...">
-        </div>*@
+    <!-------------------------------------------------------------------------------->
 
-        @*---------------------------------------------------------------------------------------------------------------------*@
-        <div class="container" v-if="countFilteredRolls > 10">
-            <div class="row">
-                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
-                        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
-                        <button type="button" v-if="countFilteredRolls > 10" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
-                        <button type="button" v-if="countFilteredRolls > 15"  class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
+        <div class="row d-flex justify-content-between align-items-center">
+            <div class="col-5">
+                <div v-if="isShowDetails">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1" v-on:change="is24HourFormat = !is24HourFormat">
+                        <label class="form-check-label" for="flexSwitchCheckDefault1">Формат часу 24/12</label>
                     </div>
-                    <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
-                        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні" :style="{ visibility: pageCur !== 1 ? 'visible' : 'hidden' }"><<</button>
-                        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
-                        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні" :style="{ visibility: pageCur < pageCount ? 'visible' : 'hidden' }">>></button>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" v-on:change="isWorkHours = !isWorkHours">
+                        <label class="form-check-label" for="flexSwitchCheckDefault2">Неробочі години</label>
                     </div>
-                </div>
-            </div>
-        </div>
-        @*---------------------------------------------------------------------------------------------------------------------*@
-        <div style="margin-top: 1em;"></div>
-        <div v-for="(rol, index) in filteredRolls" :key="index" class="accordion-item">
-            <h2 class="accordion-header" :id="'heading' + index">
-                <button class="accordion-button" type="button" v-on:click="getEmployeesByRol(rol.rolName)" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
-                    {{ rol.rolName }}
-                </button>
-            </h2>
-            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Report">
-                <div class="accordion-body">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault3" v-on:change="isWorkDays = !isWorkDays">
+                        <label class="form-check-label" for="flexSwitchCheckDefault3">Неробочі дні</label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault4" v-on:change="isWeekDay = !isWeekDay">
+                        <label class="form-check-label" for="flexSwitchCheckDefault4">День - Тиждень</label>
+                    </div>
                     <div>
-                        <div class="btn-group d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary col-sm-6 ms-2" v-on:click="isEditMode = !isEditMode">Редагувати</button>
+                        <div style="text-align: center;">
+                            <button type="button" class="btn"
+                                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                                    v-on:mouseover="toggleHover"
+                                    v-on:mouseout="toggleHover">
+                                Додати подію
+                            </button>
                         </div>
                     </div>
-                    <table class="table">
-                        <tbody>
-                            <tr>
-                                <td style="text-align: center"><strong>ПІБ</strong></td>
-                                <td style="text-align: center"><strong>Посада</strong></td>
-                                <td style="text-align: center"><strong>Редагувати роль</strong></td>
-                                <td style="text-align: center"><strong>Зберегти</strong></td>
-                            </tr>
-                           <tr v-for="(employee, index) in employees" :key="index" class="accordion-item">
-                                <td style="text-align: center">{{employee.firstName}} {{employee.secondName}} {{employee.thirdName}} </td>
-                                <td style="text-align: center">{{employee.position.namePosition}} </td>
-                                <td class="form-group">
-                                    <select class="form-select data" aria-label="Default select example"
-                                            v-bind:disabled="!isEditMode"
-                                            v-on:change="getSelectedRol($event,index)"
-                                            v-model="employee.rol.rolName">
-                                        <option :value="employee.rol.rolName" selected>
-                                            {{ employee.rol.rolName }}
-                                        </option>
-                                        <option v-for="rol in rolls" :value="rol.rolName">
-                                            {{ rol.rolName }}
-                                        </option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <div class="btn-group d-flex justify-content-between">
-                                        <button type="button" class="btn btn-primary col-sm-6 ms-2" 
-                                                v-if="showArrayButtonSave.some(item => item.key === index && item.value)"
-                                                v-on:click="editRol(index)">Зберегти</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
+            <div class="col-7">
+                <span class="bold-month">{{convDate(cursorDate)}}</span>
+                <button type="button" class="btn"
+                        v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                        v-on:mouseover="toggleHover"
+                        v-on:mouseout="toggleHover"
+                        v-on:click="setToday()">
+                    Сьогодні
+                </button>
+                <button type="button" class="btn"
+                        v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                        v-on:mouseover="toggleHover"
+                        v-on:mouseout="toggleHover"
+                        v-on:click="dateLeft()">
+                    <
+                </button>
+                <button type="button" class="btn"
+                        v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                        v-on:mouseover="toggleHover"
+                        v-on:mouseout="toggleHover"
+                        v-on:click="dateRight()">
+                    >
+                </button>
+                <table id="month-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Пн</th>
+                            <th>Вт</th>
+                            <th>Ср</th>
+                            <th>Чт</th>
+                            <th>Пт</th>
+                            <th>Сб</th>
+                            <th>Нд</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(week, indexWeek) in weeks" :key="indexWeek">
+                            <td v-for="(day, indexDay) in week"
+                                :key="indexDay"
+                                v-on:click="handleCellClick(day)"
+                                v-on:dblclick="showDetails()"
+                                :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
+                                {{ day > 0 ? day : '' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <!------------------------------------------------------------------------->
+        <table id="weeknew-table" class="table table-bordered" v-if="!isWeekDay && isShowDetails">
+            <thead>
+                <tr>
+                    <th>Час</th>
+                    <th>Понеділок</th>
+                    <th>Вівторок</th>
+                    <th>Середа</th>
+                    <th>Четвер</th>
+                    <th>П'ятниця</th>
+                    <th v-if="!isWorkDays">Субота</th>
+                    <th v-if="!isWorkDays">Неділя</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>{{dataDayOfWeek(1)}}</th>
+                    <th>{{dataDayOfWeek(2)}}</th>
+                    <th>{{dataDayOfWeek(3)}}</th>
+                    <th>{{dataDayOfWeek(4)}}</th>
+                    <th>{{dataDayOfWeek(5)}}</th>
+                    <th v-if="!isWorkDays">{{dataDayOfWeek(6)}}</th>
+                    <th v-if="!isWorkDays">{{dataDayOfWeek(7)}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                    <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,1)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,2)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,3)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,4)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,5)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
+                </tr>
+                <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                    <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,1)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,2)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,3)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,4)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,5)"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!------------------------------------------------------------------------->
+
+        <table id="day-table" class="table table-bordered" v-if="isWeekDay && isShowDetails">
+            <thead>
+                <tr>
+                    <th>{{convDate(selectedDate)}}</th>
+                    <th>Проект</th>
+                    <th>Коментар</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                    <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+                <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
+                    <td>{{ formatTime(hour, is24HourFormat) }}</td>
+                    <td> </td>
+                    <td> </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    <div v-else>
+    @*    <div v-else>
         <div style="margin-top: 50px; margin-bottom: 50px;">
             <div class="text-center">
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -131,7 +202,8 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
 </div>
+
 @*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/Report.js" asp-append-version="true"></script>

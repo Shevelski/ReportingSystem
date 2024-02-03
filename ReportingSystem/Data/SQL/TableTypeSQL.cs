@@ -121,7 +121,8 @@ namespace ReportingSystem.Data.SQL
             public DateTime EndDate;
             public Guid Status;
             public Guid Head;
-            public Guid CategoryModel;
+            public Guid CategoryModel0;
+            public Guid CategoryModel1;
             public Guid CategoryModel2;
             public Guid CategoryModel3;
         }
