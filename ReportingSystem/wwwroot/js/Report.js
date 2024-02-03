@@ -1,6 +1,8 @@
 ﻿new Vue({
     el: '#Report',
     data: {
+        selectedCategory: '',
+        selectedSubcategory:'',
         category1: '',
         category2: '',
         category3: '',

@@ -35,11 +35,18 @@
                             <input type="datetime-local" class="form-control" id="dateTimeInput2" v-model="dateTimeInput2">
                             
                             <label for="cat0" class="form-label">Виберіть категорію проекту:</label>
-                            <div>
+                            @* <div>
                                 <div v-for="category in categories" :key="category.id">
                                     {{ category.name }}
                                 </div>
-                            </div>
+                            </div> *@
+                            <label for="categorySelect" class="form-label">Виберіть категорію проекту:</label>
+                            <select v-model="selectedCategory" id="categorySelect" class="form-select">
+                                <option value="">Оберіть категорію</option>
+                                <option v-for="category in categories" :key="category.id" :value="category.id">
+                                    {{ category.name }}
+                                </option>
+                            </select>
                             
 
                         </div>
