@@ -4,6 +4,7 @@
     ViewData["Title"] = "Вхід";    
     Layout = "_LayoutAuthorize";
 }
+@* <p>Cookie Value: @ViewBag.CookieValue</p> *@
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
@@ -11,6 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <div id="Authorize">
+    @* <input type="hidden" id="statusName" value="@Model?.StatusName" /> *@
     <div class="el1 bm-3" v-if="mode == 0">
         <label class="label">@Localizer["WriteEmail"]</label>
     </div>
@@ -86,3 +88,6 @@
 
 @*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/Authorize.js" asp-append-version="true"></script>
+@* <script>
+    var statusName = @Html.Raw(Json.Serialize(Model?.StatusName));
+</script> *@

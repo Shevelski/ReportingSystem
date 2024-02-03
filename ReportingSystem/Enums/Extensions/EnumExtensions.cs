@@ -10,7 +10,7 @@ namespace ReportingSystem.Enums.Extensions
             if (field != null)
             {
                 EnumDisplayNameAttribute? attribute = field.GetCustomAttribute<EnumDisplayNameAttribute>();
-                return attribute != null ? attribute.DisplayName : value.ToString();
+                return attribute != null ? attribute.Description : value.ToString();
             }
             return null;  
         }

@@ -16,6 +16,9 @@ using static ReportingSystem.Data.SQL.TableTypeSQL;
 using ReportingSystem.Models.Settings;
 using ReportingSystem.Data.JSON;
 using HtmlAgilityPack;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+using Microsoft.Extensions.Localization;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -24,9 +27,23 @@ namespace ReportingSystem.Controllers.Users
         private readonly ILogger<HomeController> _logger = logger;
         private readonly AuthorizeService _authorizeService = authorizeService;
         private readonly IHubContext<StatusHub> _hubContext = hubContext;
+            
 
         public IActionResult Authorize()
         {
+            string cookieValue = Request.Cookies["culture"];
+            if ( cookieValue == null)
+            {
+                CultureInfo currentCulture = HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture;
+                string languageCode = currentCulture.TwoLetterISOLanguageName;
+                ViewBag.CookieValue = languageCode;
+            }
+            else
+            {
+                ViewBag.CookieValue = cookieValue;
+            }            
+            
+            
             return View();
         }
 
@@ -214,10 +231,12 @@ namespace ReportingSystem.Controllers.Users
         public async Task<IActionResult> ChangeLocalization(string culture)
         {
             HttpContext.Request.Cookies.TryGetValue("previous", out string? previous);
+            //string cookieValue = culture;
+            //ViewBag.CookieValue = cookieValue;
+
             return Redirect(previous ?? "/");
         }
-
-
+       
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

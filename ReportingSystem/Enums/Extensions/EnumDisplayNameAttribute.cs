@@ -3,40 +3,31 @@ using System.Resources;
 
 namespace ReportingSystem.Enums.Extensions
 {
-    public class EnumDisplayNameAttribute(string displayName) : Attribute
+    //public class EnumDisplayNameAttribute(string displayName) : Attribute
+    //{
+    //    public string DisplayName { get; } = displayName;
+    //}
+
+    public class EnumDisplayNameAttribute : DescriptionAttribute
     {
-        public string DisplayName { get; } = displayName;
+
+        ResourceManager _resourceManager;
+        private readonly string _resourceKey;
+
+        public EnumDisplayNameAttribute(string resourceKey, Type resourceType)
+        {
+            _resourceManager = new ResourceManager(resourceType);
+            _resourceKey = resourceKey;
+        }
+        public override string Description
+        {
+            get
+            {
+                string description = _resourceManager.GetString(_resourceKey);
+                return string.IsNullOrWhiteSpace(description) ? $"[[{_resourceKey}]]" : description;
+            }
+        }
+
+
     }
-
-    //public class EnumDisplayNameAttribute : Attribute
-    //{
-    //    public EnumDisplayNameAttribute(string resourceKey)
-    //          : base(GetDisplayName(resourceKey))
-    //    {
-
-    //    }
-    //    private static string GetDisplayName(string displayName)
-    //    {
-    //        return LocalizeCustom.GetText(displayName, typeof(Properties.Resources));
-    //    }
-    //    //public string DisplayName { get; } = displayName;
-    //}
-
-
-    //public class LocalizeCustom
-    //{
-    //    static ResourceManager _resourceManager;
-
-    //    public static string GetText(string resourceKey, Type resourceType)
-    //    {
-    //        if (_resourceManager is null)
-    //        {
-    //            _resourceManager = new ResourceManager(resourceType);
-    //        }
-    //        string category = _resourceManager.GetString(resourceKey);
-    //        return string.IsNullOrWhiteSpace(category) ? $"[[{resourceKey}]]" : category;
-    //    }
-
-
-    //}
 }
