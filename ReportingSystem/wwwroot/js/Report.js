@@ -1,6 +1,13 @@
 ﻿new Vue({
     el: '#Report',
     data: {
+        category1: '',
+        category2: '',
+        category3: '',
+        category4: '',
+        categories:[],
+        dateTimeInput1: '',
+        dateTimeInput2: '',
         currentMonth: new Date().getMonth() + 1,
         currentYear: new Date().getFullYear(),
         selectedDate: new Date(),
@@ -93,7 +100,6 @@
                 year: now.getFullYear()
             };
         },
-        
         weeks() {
             let firstDayOfMonth = new Date(this.cursorDate.getFullYear(), this.cursorDate.getMonth(), 1).getDay();
             firstDayOfMonth = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
@@ -145,14 +151,23 @@
                 this.selectedCompanyId = this.companyId;
                 this.selectedEmployeeId = this.employeeId;
             }
-
             this.rolls = await this.getAllRolls();
-            console.log(this.rolls);
-
-            this.pageCount = Math.ceil(this.countFilteredRolls / this.itemsPerPage);
+            this.getCategories();
+            console.log("cat = " + this.categories);
+        },
+        async getCategories() {
+            let responseCategory = '';
+            responseCategory = await axios.get("/ProjectsCategories/GetCategories", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId
+                }
+            });
+            this.categories = responseCategory.data;
+            console.log(responseCategory.data);
         },
         showDetails() {
-            this.isShowDetails = true;
+            this.isShowDetails = !this.isShowDetails;
         },
         isSelectedDay(day) {
             return day === this.selectedDate.getDate() &&
@@ -183,7 +198,7 @@
                 this.cursorDate = dateObject;
 
                 this.selectedDate = this.cursorDate;
-                this.isShowDetails = false;
+                //this.isShowDetails = false;
                 // Вивести дату у консоль при натисканні на комірку
                 console.log(`Clicked on cell with date: ${day}-${this.cursorDateMonth}-${this.cursorDateYear}`);
             }
@@ -270,6 +285,22 @@
         setMode(period) {
             this.mode = period;
             console.log(period);
+        },
+        async getReports() { 
+            let responseReports = '';
+            responseReports = await axios.get("/Reports/GetReports", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    idEm: this.selectedEmployeeId,
+                    datestart: this.datestart,
+                    dateend: this.dateend,
+                }
+            });
+            this.reports = responseReports.data;
+        },
+        async setReports() { 
+
         },
 
         async updateEmployees() {
