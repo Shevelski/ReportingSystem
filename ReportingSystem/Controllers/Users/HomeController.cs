@@ -11,11 +11,7 @@ using System.Text;
 using ReportingSystem.Data.SQL;
 using Microsoft.AspNetCore.SignalR;
 using ReportingSystem.Hubs;
-using ReportingSystem.Utils;
-using static ReportingSystem.Data.SQL.TableTypeSQL;
-using ReportingSystem.Models.Settings;
 using ReportingSystem.Data.JSON;
-using HtmlAgilityPack;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -29,7 +25,6 @@ namespace ReportingSystem.Controllers.Users
         {
             return View();
         }
-
         public void GenerateData()
         {
             try
@@ -41,7 +36,6 @@ namespace ReportingSystem.Controllers.Users
                 Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
             }
         }
-
         [HttpGet]
         public async Task<IActionResult> CheckEmail(string email)
         {
@@ -52,7 +46,6 @@ namespace ReportingSystem.Controllers.Users
                       await _authorizeService.CheckEmailSQL(email);
             return Json(result);
         }
-
         [HttpGet]
         public async Task<IActionResult> CheckPassword(string email, string password)
         {
@@ -95,8 +88,6 @@ namespace ReportingSystem.Controllers.Users
             }
             return Json(result);
         }
-
-
         [HttpGet]
         public async Task<bool> ConfigEnter(string username, string password)
         {
@@ -109,7 +100,6 @@ namespace ReportingSystem.Controllers.Users
                 return false;
             }
         }
-
         public async Task<IActionResult>  Registration()
         {   
             await Task.Delay(10);
@@ -213,6 +203,7 @@ namespace ReportingSystem.Controllers.Users
 
         public async Task<IActionResult> ChangeLocalization(string culture)
         {
+            await Task.Delay(10);
             HttpContext.Request.Cookies.TryGetValue("previous", out string? previous);
             return Redirect(previous ?? "/");
         }
