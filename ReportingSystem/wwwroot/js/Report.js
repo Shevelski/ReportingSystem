@@ -2,12 +2,21 @@
     el: '#Report',
     data: {
         selectedCategory: '',
+        selectedCategory1: '',
+        selectedCategory2: '',
+        selectedCategory3: '',
+        selectedProject: '',
+        projects:'',
+        project:'',
         selectedSubcategory:'',
         category1: '',
         category2: '',
         category3: '',
         category4: '',
         categories:[],
+        categories1:[],
+        categories2:[],
+        categories3:[],
         dateTimeInput1: '',
         dateTimeInput2: '',
         currentMonth: new Date().getMonth() + 1,
@@ -157,6 +166,93 @@
             this.getCategories();
             console.log("cat = " + this.categories);
         },
+        async GetProjects(ids) {
+            let responseProject = '';
+            let projects = [];
+            for (var i = 0; i < ids.length; i++) {
+                responseProject = await axios.get("/Projects/GetProject", {
+                    params: {
+                        idCu: this.selectedCustomerId,
+                        idCo: this.selectedCompanyId,
+                        idPr: ids[i]
+                    }
+                });
+                let project = responseProject.data;
+                projects.push(project);
+            }
+            return projects;
+        },
+        async GetProject(id) {
+
+        },
+        setProject(event) {
+            const selectedProjectId = event.target.value;
+            // Отримано вибраний проект
+            console.log("Selected Project ID:", selectedProjectId);
+
+            // Тепер ви можете використовувати selectedProjectId або викликати інші методи з ним
+        },
+        setCat0() {
+            this.projects = null;
+            console.log(this.selectedCategory);
+            console.log(this.categories);
+            for (var i = 0; i < this.categories.length; i++) {
+                if (this.categories[i].id == this.selectedCategory) {
+                    this.categories1 = this.categories[i].categoriesLevel1;
+                    this.categories2 = null;
+                    this.categories3 = null;
+                    if (this.categories[i].projects != null && this.categories[i].projects.length > 0) {
+                        let promise = this.GetProjects(this.categories[i].projects);
+                        promise.then(result => {
+                            this.projects = result;
+                        });
+                    }
+                };
+            }
+            console.log(this.projects);
+        },
+        setCat1() {
+            this.projects = null;
+            console.log(this.selectedCategory1);
+            for (var i = 0; i < this.categories1.length; i++) {
+                if (this.categories1[i].id == this.selectedCategory1) {
+                    this.categories2 = this.categories1[i].categoriesLevel2; 
+                    this.categories3 = null;
+                    if (this.categories1[i].projects != null && this.categories1[i].projects.length > 0) {
+                        let promise = this.GetProjects(this.categories1[i].projects);
+                        promise.then(result => {
+                            this.projects = result;
+                        });
+                    }
+                };
+            }
+        },
+        setCat2() {
+            this.projects = null;
+            for (var i = 0; i < this.categories2.length; i++) {
+                if (this.categories2[i].id == this.selectedCategory2) {
+                    this.categories3 = this.categories2[i].categoriesLevel3; 
+                    if (this.categories2[i].projects != null && this.categories2[i].projects.length > 0) {
+                        let promise = this.GetProjects(this.categories2[i].projects);
+                        promise.then(result => {
+                            this.projects = result;
+                        });
+                    }
+                };
+            }
+        },
+        setCat3() {
+            this.projects = null;
+            if (this.categories3.projects != null && this.categories3.projects.length > 0) {
+                this.projects = this.categories3.projects;
+                if (this.categories3[i].projects != null && this.categories3[i].projects.length > 0) {
+                    let promise = this.GetProjects(this.categories3[i].projects);
+                    promise.then(result => {
+                        this.projects = result;
+                    });
+                }
+            }
+        },
         async getCategories() {
             let responseCategory = '';
             responseCategory = await axios.get("/ProjectsCategories/GetCategories", {
@@ -168,8 +264,10 @@
             this.categories = responseCategory.data;
             console.log(responseCategory.data);
         },
-        showDetails() {
-            this.isShowDetails = !this.isShowDetails;
+        showDetails(day) {
+            if (day > 0) {
+                this.isShowDetails = !this.isShowDetails;
+            }
         },
         isSelectedDay(day) {
             return day === this.selectedDate.getDate() &&

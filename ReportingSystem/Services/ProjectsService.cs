@@ -17,6 +17,11 @@ namespace ReportingSystem.Services
         {
             return mode ? await new JsonRead().GetProjects(idCu, idCo) : await new SQLRead().GetProjects(idCu, idCo);
         }
+        public async Task<ProjectModel> GetProject(string idCu, string idCo, string idPr)
+        {
+            //return mode ? await new JsonRead().GetProject(idCu, idCo, idPr) : await new SQLRead().GetProjects(idCu, idCo);
+            return await new SQLRead().GetProject(idCu, idCo, idPr);
+        }
 
         public async Task CreateProject(string[] ar)
         {

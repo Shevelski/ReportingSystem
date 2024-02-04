@@ -35,19 +35,53 @@
                             <input type="datetime-local" class="form-control" id="dateTimeInput2" v-model="dateTimeInput2">
                             
                             <label for="cat0" class="form-label">Виберіть категорію проекту:</label>
-                            @* <div>
-                                <div v-for="category in categories" :key="category.id">
-                                    {{ category.name }}
-                                </div>
-                            </div> *@
+
                             <label for="categorySelect" class="form-label">Виберіть категорію проекту:</label>
-                            <select v-model="selectedCategory" id="categorySelect" class="form-select">
+                            <select v-model="selectedCategory" id="categorySelect" class="form-select" v-on:change="setCat0()">
                                 <option value="">Оберіть категорію</option>
                                 <option v-for="category in categories" :key="category.id" :value="category.id">
                                     {{ category.name }}
                                 </option>
                             </select>
-                            
+
+                            <div v-if="categories1 != null && categories1 != ''">
+                                <label for="categorySelect1" class="form-label">Виберіть підкатегорію 1 проекту:</label>
+                                <select v-model="selectedCategory1" id="categorySelect1" class="form-select" v-on:change="setCat1()">
+                                    <option value="">Оберіть підкатегорію</option>
+                                    <option v-for="category in categories1" :key="category.id" :value="category.id">
+                                        {{ category.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div v-if="categories2 != null && categories2 != ''">
+                                <label for="categorySelect2" class="form-label">Виберіть підкатегорію 2 проекту:</label>
+                                <select v-model="selectedCategory2" id="categorySelect2" class="form-select" v-on:change="setCat2()">
+                                    <option value="">Оберіть підкатегорію</option>
+                                    <option v-for="category in categories2" :key="category.id" :value="category.id">
+                                        {{ category.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div v-if="categories3 != null && categories3 != ''">
+                                <label for="categorySelect3" class="form-label">Виберіть підкатегорію 3 проекту:</label>
+                                <select v-model="selectedCategory3" id="categorySelect3" class="form-select" v-on:change="setCat3()">
+                                    <option value="">Оберіть підкатегорію</option>
+                                    <option v-for="category in categories3" :key="category.id" :value="category.id">
+                                        {{ category.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div v-if="projects != null && projects != ''">
+                                <label for="projectSelect" class="form-label">Виберіть проект:</label>
+                                <select v-model="selectedProject" id="projectSelect" class="form-select" v-on:change="setProject($event)">
+                                    <option value="">Оберіть проект</option>
+                                    <option v-for="project in projects" :key="project.id" :value="project.id">
+                                        {{ project.name }}
+                                    </option>
+                                </select>
+                            </div>
 
                         </div>
                     </div>
@@ -161,7 +195,7 @@
                             <td v-for="(day, indexDay) in week"
                                 :key="indexDay"
                                 v-on:click="handleCellClick(day)"
-                                v-on:dblclick="showDetails()"
+                                v-on:dblclick="showDetails(day)"
                                 :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
                                 {{ day > 0 ? day : '' }}
                             </td>

@@ -110,8 +110,8 @@ namespace ReportingSystem.Data.SQL
         public class Project
         {
             public Guid Id;
-            public Guid IdCustomer;
-            public Guid IdCompany;
+            public Guid CustomerId;
+            public Guid CompanyId;
             public string? Name;
             public string? Description;
             public double ProjectCostsForCompany;
