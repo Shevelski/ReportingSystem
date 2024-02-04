@@ -6,10 +6,10 @@ namespace ReportingSystem.Enums
 {
     public enum EmployeeStatus
     {
-        [EnumDisplayName("Актуальний", typeof(Resources))]
+        [EnumDisplayName("ActualSecond", typeof(Resources))]
         Actual = 1,
 
-        [EnumDisplayName("Архівний", typeof(Resources))]
+        [EnumDisplayName("ArchiveSecond", typeof(Resources))]
         Archive = 2,
     }
 }

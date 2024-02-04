@@ -5,13 +5,13 @@ namespace ReportingSystem.Enums
 {
     public enum CompanyStatus
     {
-        [EnumDisplayName("В проекті", typeof(Resources))]
+        [EnumDisplayName("Project", typeof(Resources))]
         Project = 1,
 
-        [EnumDisplayName("Актуальна", typeof(Resources))]
+        [EnumDisplayName("Actual", typeof(Resources))]
         Actual = 2,
 
-        [EnumDisplayName("Архівна", typeof(Resources))]
+        [EnumDisplayName("Archive", typeof(Resources))]
         Archive = 3,
     }
 }

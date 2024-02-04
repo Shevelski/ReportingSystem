@@ -5,22 +5,22 @@ namespace ReportingSystem.Enums
 {
     public enum LicenceType
     {
-        [EnumDisplayName("Неіснуюча", typeof(Resources))]
+        [EnumDisplayName("None", typeof(Resources))]
         None = 0,
 
-        [EnumDisplayName("Тестова", typeof(Resources))]
+        [EnumDisplayName("Test", typeof(Resources))]
         Test = 1,
 
-        [EnumDisplayName("Основна", typeof(Resources))]
+        [EnumDisplayName("Main", typeof(Resources))]
         Main = 2,
 
-        [EnumDisplayName("Завершена", typeof(Resources))]
+        [EnumDisplayName("Expired", typeof(Resources))]
         Expired = 3,
 
-        [EnumDisplayName("Архівна", typeof(Resources))]
+        [EnumDisplayName("Archive", typeof(Resources))]
         Archive = 4,
 
-        [EnumDisplayName("Анульована", typeof(Resources))]
+        [EnumDisplayName("Nulled", typeof(Resources))]
         Nulled = 5,
     }
 }

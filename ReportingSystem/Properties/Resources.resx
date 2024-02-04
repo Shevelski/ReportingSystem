@@ -117,8 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Actual" xml:space="preserve">
+    <value>Актуальна</value>
+  </data>
+  <data name="ActualSecond" xml:space="preserve">
+    <value>Актуальний</value>
+  </data>
   <data name="addPhoto" xml:space="preserve">
     <value>Додати фото</value>
+  </data>
+  <data name="Administrator" xml:space="preserve">
+    <value>Адміністратор</value>
+  </data>
+  <data name="Alarm" xml:space="preserve">
+    <value>Звернути увагу</value>
+  </data>
+  <data name="Archive" xml:space="preserve">
+    <value>Архівна</value>
+  </data>
+  <data name="ArchiveSecond" xml:space="preserve">
+    <value>Архівний</value>
   </data>
   <data name="buttonConfirm" xml:space="preserve">
     <value>Підтвердити</value>
@@ -128,6 +146,9 @@
   </data>
   <data name="buttonReset" xml:space="preserve">
     <value>Скинути</value>
+  </data>
+  <data name="CEO" xml:space="preserve">
+    <value>Директор компанії</value>
   </data>
   <data name="changePhoto" xml:space="preserve">
     <value>Змінити фото</value>
@@ -153,8 +174,20 @@
   <data name="companyWarning" xml:space="preserve">
     <value>Розробник не може додавати компанії</value>
   </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Завершений</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Замовник</value>
+  </data>
   <data name="deletePhoto" xml:space="preserve">
     <value>Видалити фото</value>
+  </data>
+  <data name="DevAdministrator" xml:space="preserve">
+    <value>Адміністратор системи</value>
+  </data>
+  <data name="Developer" xml:space="preserve">
+    <value>Розробник системи</value>
   </data>
   <data name="directorInfoAmountCompanies" xml:space="preserve">
     <value>Число компаній</value>
@@ -168,8 +201,14 @@
   <data name="directorInfoTypeLicense" xml:space="preserve">
     <value>Тип поточної ліцензії</value>
   </data>
+  <data name="EmailFailed" xml:space="preserve">
+    <value>Користувача з таким Email не існує. Бажаєте зареєструватися в системі як замовник?</value>
+  </data>
   <data name="EmailOk" xml:space="preserve">
     <value>Email вірний. Введіть пароль</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Завершена</value>
   </data>
   <data name="headerCompanies" xml:space="preserve">
     <value>Компанії</value>
@@ -191,6 +230,30 @@
   </data>
   <data name="headerSteps" xml:space="preserve">
     <value>Етапи</value>
+  </data>
+  <data name="InImprove" xml:space="preserve">
+    <value>У впровадженні</value>
+  </data>
+  <data name="InProcess" xml:space="preserve">
+    <value>В роботі</value>
+  </data>
+  <data name="Main" xml:space="preserve">
+    <value>Основна</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>Неіснуюча</value>
+  </data>
+  <data name="NoUser" xml:space="preserve">
+    <value>Не визначено</value>
+  </data>
+  <data name="Nulled" xml:space="preserve">
+    <value>Анульована</value>
+  </data>
+  <data name="PasswordFailed" xml:space="preserve">
+    <value>Пароль невірний. Повторіть спробу</value>
+  </data>
+  <data name="PasswordOk" xml:space="preserve">
+    <value>Пароль вірний. Перехід на сторінку</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="personalUserInfo19Photo" type="System.Resources.ResXFileRef, System.Windows.Forms">
@@ -273,5 +336,26 @@
   </data>
   <data name="personalUserInfoWorkStartDate" xml:space="preserve">
     <value>Дата прийняття на роботу</value>
+  </data>
+  <data name="Project" xml:space="preserve">
+    <value>В проекті</value>
+  </data>
+  <data name="ProjectManager" xml:space="preserve">
+    <value>Менеджер</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Підтримка</value>
+  </data>
+  <data name="Test" xml:space="preserve">
+    <value>Тестова</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Користувач</value>
+  </data>
+  <data name="Waiting" xml:space="preserve">
+    <value>В очікуванні</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Завершений з зауваженнями</value>
   </data>
 </root>

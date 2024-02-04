@@ -129,6 +129,9 @@
   <data name="EmailWrong" xml:space="preserve">
     <value>Користувача з таким Email не існує. Бажаєте зареєструватися в системі як замовник?</value>
   </data>
+  <data name="Entry" xml:space="preserve">
+    <value>Вхід</value>
+  </data>
   <data name="No" xml:space="preserve">
     <value>Ні</value>
   </data>

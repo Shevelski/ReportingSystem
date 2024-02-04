@@ -28,20 +28,20 @@ namespace ReportingSystem.Controllers.Users
 
         public IActionResult Authorize()
         {
-            string cookieValue = Request.Cookies["culture"];
-            if ( cookieValue == null)
-            {
-                CultureInfo currentCulture = HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture;
-                string languageCode = currentCulture.TwoLetterISOLanguageName;
-                ViewBag.CookieValue = languageCode;
-            }
-            else
-            {
-                ViewBag.CookieValue = cookieValue;
-            }            
+            //string cookieValue = Request.Cookies["culture"];
+            //if ( cookieValue == null)
+            //{
+            //    CultureInfo currentCulture = HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture;
+            //    string languageCode = currentCulture.TwoLetterISOLanguageName;
+            //    ViewBag.CookieValue = languageCode;
+            //}
+            //else
+            //{
+            //    ViewBag.CookieValue = cookieValue;
+            //}            
             
             
-            return View();
+            return PartialView();
         }
         public void GenerateData()
         {

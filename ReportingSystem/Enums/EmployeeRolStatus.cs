@@ -8,28 +8,28 @@ namespace ReportingSystem.Enums
 {
     public enum EmployeeRolStatus
     {
-        [EnumDisplayName("Розробник системи", typeof(Resources))]
+        [EnumDisplayName("Developer", typeof(Resources))]
         Developer = 1,
 
-        [EnumDisplayName("Адміністратор системи", typeof(Resources))]
+        [EnumDisplayName("DevAdministrator", typeof(Resources))]
         DevAdministrator = 2,
 
-        [EnumDisplayName("Замовник", typeof(Resources))] // бачить всі компанії
+        [EnumDisplayName("Customer", typeof(Resources))] // бачить всі компанії
         Customer = 3,
 
-        [EnumDisplayName("Директор компанії", typeof(Resources))] // бачить тільки свою компанію
+        [EnumDisplayName("CEO", typeof(Resources))] // бачить тільки свою компанію
         CEO = 4,
 
-        [EnumDisplayName("Адміністратор", typeof(Resources))]
+        [EnumDisplayName("Administrator", typeof(Resources))]
         Administrator = 5,
 
-        [EnumDisplayName("Менеджер", typeof(Resources))]
+        [EnumDisplayName("ProjectManager", typeof(Resources))]
         ProjectManager = 6,
 
-        [EnumDisplayName("Користувач", typeof(Resources))]
+        [EnumDisplayName("User", typeof(Resources))]
         User = 7,
 
-        [EnumDisplayName("Не визначено", typeof(Resources))]
+        [EnumDisplayName("NoUser", typeof(Resources))]
         NoUser = 8
     }
 }

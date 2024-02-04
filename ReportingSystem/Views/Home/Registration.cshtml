@@ -1,5 +1,7 @@
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Реєстрація";    
+    ViewData["Title"] = @Localizer["Registration"];
     Layout = "_LayoutAuthorize";
 }
 
@@ -9,27 +11,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <div mt-3 class="text-center">
-    <h2 class="display-4">Реєстрація</h2>
+    <h2 class="display-4 textcolor">@Localizer["Registration"]</h2>
 </div>
 
-<div id="Registration" class="container" >
-    <div class="panel panel-default" >
-        <div class="panel-heading"></div>
+<div id="Registration" class="container bg-transparent">
+    <div class="panel panel-default ">
+        <div class="panel-heading "></div>
         <div class="panel-body">
             <form>
                 <div class="row align-items-center">
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 textcolor ">
                        
                         <div class="form-group">
-                            <label class="control-label">Ім'я</label>
+                            <label class="control-label">@Localizer["FirstName"]</label>
                             <input type="text" class="form-control" v-model="firstName" />
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Прізвище</label>
+                            <label class="control-label">@Localizer["LastName"]</label>
                             <input type="text" class="form-control" v-model="secondName" />
                         </div>
                         <div class="form-group">
-                            <label class="control-label">По-батькові</label>
+                            <label class="control-label">@Localizer["Surname"]</label>
                             <input type="text" class="form-control" v-model="thirdName" />
                         </div>
                         <div class="col-sm-6">
@@ -40,18 +42,18 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Телефон</label>
+                                <label class="control-label">@Localizer["Phone"]</label>
                                 <input type="text" class="form-control" v-model="phone" />
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="control-label">Пароль</label>
+                                <label class="control-label">@Localizer["Password"]</label>
                                 <input type="password" class="form-control" v-model="password" />
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <button type="button" class="button mt-3" v-on:click="createCustomer()">Зареєструватись</button>
+                            <button type="button" class="button mt-3" v-on:click="createCustomer()">@Localizer["Register"]</button>
                         </div>
                     </div>
                 </div>
@@ -62,6 +64,17 @@
 </div>
 
 <style>
+    body {
+        background-image: url('/img/back.jpg'); /* Specify the path to your image */
+        background-size: cover; /* Adjust the size to cover the entire background */
+        background-repeat: no-repeat; /* Prevent the background image from repeating */
+        background-position: center center; /* Center the background image */
+        width: 100vw; /* Set the width to 100% of the viewport width */
+        height: 100vh; /* Set the height to 100% of the viewport height */
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+        /* opacity: 0.5; /* 50% transparency */
+    }
     .button {
         /* Стилі для кнопок */
         padding: 5px 10px;
@@ -72,5 +85,9 @@
         cursor: pointer;
     }
 
+    .textcolor {
+        color: white
+    }
+    
 </style>
 <script src="~/js/Registration.js" asp-append-version="true"></script>

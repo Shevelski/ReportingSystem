@@ -6,19 +6,19 @@ namespace ReportingSystem.Enums
 {
     public enum ProjectStatus
     {
-        [EnumDisplayName("В проекті", typeof(Resources))]
+        [EnumDisplayName("Project", typeof(Resources))]
         Project = 1,
 
-        [EnumDisplayName("В роботі", typeof(Resources))]
+        [EnumDisplayName("InProcess", typeof(Resources))]
         InProcess = 2,
 
-        [EnumDisplayName("У впровадженні", typeof(Resources))]
+        [EnumDisplayName("InImprove", typeof(Resources))]
         InImprove = 3,
 
-        [EnumDisplayName("Підтримка", typeof(Resources))]
+        [EnumDisplayName("Support", typeof(Resources))]
         Support = 4,
 
-        [EnumDisplayName("Архівний", typeof(Resources))]
+        [EnumDisplayName("ArchiveSecond", typeof(Resources))]
         Archive = 5,
 
     }

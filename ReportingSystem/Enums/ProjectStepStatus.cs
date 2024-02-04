@@ -6,19 +6,19 @@ namespace ReportingSystem.Enums
 {
     public enum ProjectStepStatus
     {
-        [EnumDisplayName("В очікуванні", typeof(Resources))]
+        [EnumDisplayName("Waiting", typeof(Resources))]
         Waiting = 1,
 
-        [EnumDisplayName("В роботі", typeof(Resources))]
+        [EnumDisplayName("InProcess", typeof(Resources))]
         InProcess = 2,
 
-        [EnumDisplayName("Завершений", typeof(Resources))]
+        [EnumDisplayName("Complete", typeof(Resources))]
         Complete = 3,
 
-        [EnumDisplayName("Завершений з зауваженнями", typeof(Resources))]
+        [EnumDisplayName("Warning", typeof(Resources))]
         Warning = 4,
 
-        [EnumDisplayName("Звернути увагу", typeof(Resources))]
+        [EnumDisplayName("Alarm", typeof(Resources))]
         Alarm = 5,
 
     }

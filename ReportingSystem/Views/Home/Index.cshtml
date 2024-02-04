@@ -1,14 +1,26 @@
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = @Localizer["StartPage"];
     Layout = "_LayoutAuthorize";
-    @* bool authorize = User.Identity?.IsAuthenticated ?? false; *@
 }
 
+@* 
 @{
     var path = Context.Request.Path;
-}
+} *@
 
-<h1 class="text-center">Стартова сторінка</h1>
+@* <section style="background-image: url('/img/back.jpg')">
+    <div class="full-container">
+        
+        <h1 class="text-center text">Стартова сторінка</h1>
+       
+    </div>
+</section>
+ *@
+
+
+<h1 class="text-center textcolor">@Localizer["ReportingSystem"]</h1>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.10/signalr.min.js"></script>
@@ -16,190 +28,25 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<link rel="stylesheet" href="~/css/ReportTest.css" asp-append-version="true" />
-
-<div class="text-center">
-    <div class="container">
-        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
-</div>
 
 
-<!-------------------------------------------------------------------------------->
 
-@* <div class="container" id="ReportTest">
-    <div class="row d-flex justify-content-between align-items-center">
-        <div class="col-5">
-            <div v-if="isShowDetails">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1" v-on:change="is24HourFormat = !is24HourFormat">
-                    <label class="form-check-label" for="flexSwitchCheckDefault1">Формат часу 24/12</label>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" v-on:change="isWorkHours = !isWorkHours">
-                    <label class="form-check-label" for="flexSwitchCheckDefault2">Неробочі години</label>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault3" v-on:change="isWorkDays = !isWorkDays">
-                    <label class="form-check-label" for="flexSwitchCheckDefault3">Неробочі дні</label>
-                </div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault4" v-on:change="isWeekDay = !isWeekDay">
-                    <label class="form-check-label" for="flexSwitchCheckDefault4">День - Тиждень</label>
-                </div>
-                <div>
-                    <div style="text-align: center;">
-                        <button type="button" class="btn"
-                            v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                            v-on:mouseover="toggleHover"
-                            v-on:mouseout="toggleHover">
-                            Додати подію
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-7">
-            <span class="bold-month">{{convDate(cursorDate)}}</span>
-            <button type="button" class="btn"
-                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                    v-on:mouseover="toggleHover"
-                    v-on:mouseout="toggleHover"
-                    v-on:click="setToday()">
-                Сьогодні
-            </button>
-            <button type="button" class="btn"
-                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                    v-on:mouseover="toggleHover"
-                    v-on:mouseout="toggleHover"
-                    v-on:click="dateLeft()">
-                <
-            </button>
-            <button type="button" class="btn"
-                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                    v-on:mouseover="toggleHover"
-                    v-on:mouseout="toggleHover"
-                    v-on:click="dateRight()">
-                >
-            </button>
-            <table id="month-table" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Пн</th>
-                        <th>Вт</th>
-                        <th>Ср</th>
-                        <th>Чт</th>
-                        <th>Пт</th>
-                        <th>Сб</th>
-                        <th>Нд</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(week, indexWeek) in weeks" :key="indexWeek">
-                        <td v-for="(day, indexDay) in week"
-                            :key="indexDay"
-                            v-on:click="handleCellClick(day)"
-                            v-on:dblclick="isShowDetails = true"
-                            :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
-                            {{ day > 0 ? day : '' }}
-                            </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <!------------------------------------------------------------------------->
-    <table id="weeknew-table" class="table table-bordered" v-if="!isWeekDay && isShowDetails">
-        <thead>
-            <tr>
-                <th>Час</th>
-                <th>Понеділок</th>
-                <th>Вівторок</th>
-                <th>Середа</th>
-                <th>Четвер</th>
-                <th>П'ятниця</th>
-                <th v-if="!isWorkDays">Субота</th>
-                <th v-if="!isWorkDays">Неділя</th>
-            </tr>
-            <tr>
-                <th></th>
-                <th>{{dataDayOfWeek(1)}}</th>
-                <th>{{dataDayOfWeek(2)}}</th>
-                <th>{{dataDayOfWeek(3)}}</th>
-                <th>{{dataDayOfWeek(4)}}</th>
-                <th>{{dataDayOfWeek(5)}}</th>
-                <th v-if="!isWorkDays">{{dataDayOfWeek(6)}}</th>
-                <th v-if="!isWorkDays">{{dataDayOfWeek(7)}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
-                <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                <td v-on:click="handleCellWeekClick(hour,1)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,2)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,3)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,4)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,5)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
-                <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
-            </tr>
-            <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
-                <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                <td v-on:click="handleCellWeekClick(hour,1)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,2)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,3)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,4)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,5)"> </td>
-                <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
-                <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
-            </tr>
-        </tbody>
-    </table>
+@* <link rel="stylesheet" href="~/css/ReportTest.css" asp-append-version="true" /> *@
 
-    <!------------------------------------------------------------------------->
+<style>
+    body {
+        background-image: url('/img/back.jpg'); /* Specify the path to your image */
+        background-size: cover; /* Adjust the size to cover the entire background */
+        background-repeat: no-repeat; /* Prevent the background image from repeating */
+        background-position: center center; /* Center the background image */
+        width: 100vw; /* Set the width to 100% of the viewport width */
+        height: 100vh; /* Set the height to 100% of the viewport height */
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+        /* opacity: 0.5; /* 50% transparency */
+    }
+    .textcolor {
+        color: white
+    }
 
-    <table id="day-table" class="table table-bordered" v-if="isWeekDay && isShowDetails">
-        <thead>
-            <tr>
-                <th>{{convDate(selectedDate)}}</th>
-                <th>Проект</th>
-                <th>Коментар</th>
-            </tr>
-            
-        </thead>
-        <tbody>
-            <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
-                <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                <td> </td>
-                <td> </td>
-            </tr>
-            <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
-                <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                <td> </td>
-                <td> </td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th>Всього</th>
-                <th>Годин</th>
-                <th>Коментар</th>
-            </tr>
-        </tfoot>
-    </table>
- </div>
-
-<p>-----------------------------------</p>
-
-<script src="~/js/ReportTest.js" asp-append-version="true"></script> *@
+</style>

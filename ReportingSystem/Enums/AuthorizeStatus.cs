@@ -9,19 +9,15 @@ namespace ReportingSystem.Enums
         
 
         [EnumDisplayName("EmailOk", typeof(Resources))]
-        //[Display(Name = "EmailOk", ResourceType = typeof(Resources))]
         EmailOk = 1,
 
-        [EnumDisplayName("Користувача з таким Email не існує. Бажаєте зареєструватися в системі як замовник?", typeof(Resources))]
-        //[Display(Name = "EmailOk", ResourceType = typeof(Resources))]
+        [EnumDisplayName("EmailFailed", typeof(Resources))]
         EmailFailed = 2,
 
-        [EnumDisplayName("Пароль вірний. Перехід на сторінку", typeof(Resources))]
-        //[Display(Name = "EmailOk", ResourceType = typeof(Resources))]
+        [EnumDisplayName("PasswordOk", typeof(Resources))]
         PasswordOk = 3,
 
-        [EnumDisplayName("Пароль невірний. Повторіть спробу", typeof(Resources))]
-        //[Display(Name = "EmailOk", ResourceType = typeof(Resources))]
+        [EnumDisplayName("PasswordFailed", typeof(Resources))]
         PasswordFailed = 4,
     }
 }

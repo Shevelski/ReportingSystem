@@ -1,0 +1,63 @@
+﻿body {
+    font-family: Arial, sans-serif; /* Задаємо шрифт для всієї сторінки */
+    background-color: #f8f8f8; /* Задаємо колір фону сторінки */
+}
+
+.navbar-brand {
+    font-weight: bold; /* Задаємо жирний стиль для тексту логотипу */
+    color: #fff; /* Задаємо колір тексту логотипу */
+    transition: all 0.3s ease-out;
+}
+
+.navbar-nav .nav-link {
+    color: #fff; /* Задаємо колір тексту посилань у навігаційному меню */
+    transition: all 0.3s ease-out;
+}
+
+.container {
+    margin-top: 20px; /* Відступ зверху для контейнера */
+    background-color: #fff; /* Колір фону контейнера з основним вмістом */
+    padding: 20px; /* Внутрішні відступи для контейнера */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Тінь для контейнера */
+}
+
+main {
+    padding: 20px; /* Внутрішні відступи для основного вмісту */
+}
+
+.nav-link.active {
+    text-decoration: underline;
+}
+
+.navbar {
+    background-color: #000;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #eeff01;
+    transition: all 0.3s ease-in;
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: rgb(161, 161, 161);
+    transition: all 0.3s ease-out;
+}
+
+.navbar .navbar-brand:hover {
+    color: #eeff01;
+    transition: all 0.3s ease-in;
+}
+
+.footercustom {
+    background-color: #000;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+}
+
+.link-custom-color {
+    color: #378f37;
+}
