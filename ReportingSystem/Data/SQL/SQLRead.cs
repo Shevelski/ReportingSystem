@@ -1,6 +1,4 @@
-﻿using Bogus.DataSets;
-using Dapper;
-using Microsoft.Identity.Client;
+﻿using Dapper;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models;
@@ -8,11 +6,9 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Project;
-using ReportingSystem.Models.Project.Step;
+using ReportingSystem.Models.Report;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
@@ -1434,5 +1430,52 @@ namespace ReportingSystem.Data.SQL
 
 
         #endregion
+        #region Reports
+        public async Task<List<ReportModel>> GetReports(string idCu, string idCo, string idEm, string startDate, string endDate)
+        {
+            var query = $@"SELECT 
+                        *
+                    FROM 
+                        [{Context.dbName}].[dbo].[Reports]
+                    WHERE 
+                        [CustomerId] = @CustomerId 
+                        AND [CompanyId] = @CompanyId 
+                        AND [EmployeeId] = @EmployeeId 
+                        AND [StartDate] <= @EndDate
+                        AND [EndDate] >= @StartDate;";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                EmployeeId = idEm,
+                StartDate = DateTime.Parse(startDate),
+                EndDate = DateTime.Parse(endDate),
+
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<TableTypeSQL.Report>(query, para);
+            List<ReportModel> list = [];
+            ReportModel report = new();
+            if (result.Any())
+            {
+                foreach (var report_ in result) {
+                    report.Id = report_.Id;
+                    report.IdCustomer = report_.CustomerId;
+                    report.IdCompany = report_.CompanyId;
+                    report.IdEmployee = report_.EmployeeId;
+                    report.StartDate = report_.StartDate;
+                    report.EndDate = report_.EndDate;
+                    report.IdCategory0 = report_.Category0Id;
+                    report.IdCategory1 = report_.Category1Id;
+                    report.IdCategory2 = report_.Category2Id;
+                    report.IdCategory3 = report_.Category3Id;
+                    report.IdProject = report_.ProjectId;
+                    report.Comment = report_.Comment;
+                }
+                list.Add(report);
+            }
+            return list;
+        }
+            #endregion
     }
 }

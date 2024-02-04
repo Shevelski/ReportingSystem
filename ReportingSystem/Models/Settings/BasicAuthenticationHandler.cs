@@ -47,7 +47,7 @@ namespace ReportingSystem.Models.Settings
                     return AuthenticateResult.Fail("Invalid Username or Password");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return AuthenticateResult.Fail("Error Occurred while processing your request");
             }

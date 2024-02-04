@@ -9,6 +9,7 @@ using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.ComponentModel.Design;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
@@ -903,6 +904,7 @@ namespace ReportingSystem.Data.SQL
         #region Projects
         public async Task CreateProject(string[] ar)
         {
+            await Task.Delay(10);
             //if (!Guid.TryParse(ar[0], out Guid idCu))
             //{
             //    return;
@@ -1446,6 +1448,67 @@ namespace ReportingSystem.Data.SQL
                 CustomerId = idCu,
                 CompanyId = idCo,
                 CompanyCategory2 = idCat2
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        #endregion
+        #region Report
+        public async Task SendReport(string[] ar)
+        {
+            var query = @$"INSERT INTO [{Context.dbName}].[dbo].[Reports]
+                           ([Id]
+                           ,[CustomerId]
+                           ,[CompanyId]
+                           ,[EmployeeId]
+                           ,[StartDate]
+                           ,[EndDate]
+                           ,[Category0Id]
+                           ,[Category1Id]
+                           ,[Category2Id]
+                           ,[Category3Id]
+                           ,[ProjectId]
+                           ,[Comment])
+                     VALUES
+                           (@Id
+                           ,@CustomerId
+                           ,@CompanyId
+                           ,@EmployeeId
+                           ,@StartDate
+                           ,@EndDate
+                           ,@Category0Id
+                           ,@Category1Id
+                           ,@Category2Id
+                           ,@Category3Id
+                           ,@ProjectId
+                           ,@Comment)";
+
+
+            Guid idCa0 = ar[5] == "" ? Guid.Empty : Guid.Parse(ar[5]);
+            Guid idCa1 = ar[6] == "" ? Guid.Empty : Guid.Parse(ar[6]);
+            Guid idCa2 = ar[7] == "" ? Guid.Empty : Guid.Parse(ar[7]);
+            Guid idCa3 = ar[8] == "" ? Guid.Empty : Guid.Parse(ar[8]);
+            Guid idPr = ar[9] == "" ? Guid.Empty : Guid.Parse(ar[9]);
+
+            string startDateString = ar[3];
+            string endDateString = ar[4];
+            DateTime startDate = DateTime.Parse(startDateString);
+            DateTime endDate = DateTime.Parse(endDateString);
+
+            var para = new
+            {
+                Id = Guid.NewGuid(),
+                CustomerId = ar[0],
+                CompanyId = ar[1],
+                EmployeeId = ar[2],
+                StartDate = startDate,
+                EndDate = endDate,
+                Category0Id = idCa0,
+                Category1Id = idCa1,
+                Category2Id = idCa2,
+                Category3Id = idCa3,
+                ProjectId = idPr,
+                Comment = ar[10]
             };
             using var database = Context.ConnectToSQL;
             await database.QueryAsync(query, para);

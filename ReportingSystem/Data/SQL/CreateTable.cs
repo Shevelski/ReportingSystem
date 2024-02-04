@@ -116,7 +116,8 @@ namespace ReportingSystem.Data.SQL
             //await AlterTableAsync("Steps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
             //await AlterTableAsync("ProjectPositions", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
             //await AlterTableAsync("StepSteps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
-            //await AlterTableAsync("ProjectSteps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
+
+            await AlterTableAsync("ProjectSteps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
         }
 
         public async Task HolidayDate()
@@ -151,12 +152,16 @@ namespace ReportingSystem.Data.SQL
         {
             await CreateAsync("ProjectSteps", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, StepsId UNIQUEIDENTIFIER");
             //await AlterTableAsync("ProjectSteps", "ADD FOREIGN KEY(StepsId) REFERENCES Steps(Id)");
-
         }
         public async Task ProjectMembers()
         {
             await CreateAsync("ProjectMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER");
         }
+        public async Task Reports()
+        {
+            await CreateAsync("Reports", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER, StartDate DateTime, EndDate DateTime, Category0Id UNIQUEIDENTIFIER, Category1Id UNIQUEIDENTIFIER, Category2Id UNIQUEIDENTIFIER, Category3Id UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, Comment NVARCHAR(MAX)");
+        }
+
         //public async Task StepPositions()
         //{
         //    await CreateAsync("StepPositions", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER,  EmployeePositionId UNIQUEIDENTIFIER NOT NULL");

@@ -126,5 +126,21 @@ namespace ReportingSystem.Data.SQL
             public Guid CategoryModel2;
             public Guid CategoryModel3;
         }
+
+        public class Report
+        {
+            public Guid Id;
+            public Guid CustomerId;
+            public Guid CompanyId;
+            public Guid EmployeeId;
+            public DateTime StartDate;
+            public DateTime EndDate;
+            public Guid Category0Id;
+            public Guid Category1Id;
+            public Guid Category2Id;
+            public Guid Category3Id;
+            public Guid ProjectId;
+            public string? Comment;  
+        }
     }
 }

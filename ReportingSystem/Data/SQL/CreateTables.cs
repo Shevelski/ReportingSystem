@@ -67,6 +67,7 @@ namespace ReportingSystem.Data.SQL
                 await CreateTableAndInsertIfNotExistsAsync("Companies", () => new CreateTable().Companies());
                 await CreateTableAndInsertIfNotExistsAsync("Customers", () => new CreateTable().Customers());
                 await CreateTableAndInsertIfNotExistsAsync("CompanyRolls", () => new CreateTable().CompanyRolls());
+                await CreateTableAndInsertIfNotExistsAsync("Reports", () => new CreateTable().Reports());
             }
             catch (Exception)
             {

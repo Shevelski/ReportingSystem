@@ -6,6 +6,5 @@ namespace ReportingSystem.Models.Customer
     {
         public CompanyStatus CompanyStatusType { get; set; }
         public string? CompanyStatusName { get; set; }
-
     }
 }

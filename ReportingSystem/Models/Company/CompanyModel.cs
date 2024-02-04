@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using ReportingSystem.Models.Customer;
+﻿using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 

@@ -1,23 +1,25 @@
 ﻿new Vue({
     el: '#Report',
     data: {
+        selectedHours: 0,
         comment: '',
+        isUsePeriod: false,
         selectedCategory: '',
         selectedCategory1: '',
         selectedCategory2: '',
         selectedCategory3: '',
         selectedProject: '',
-        projects:'',
-        project:'',
-        selectedSubcategory:'',
+        projects: '',
+        project: '',
+        selectedSubcategory: '',
         category1: '',
         category2: '',
         category3: '',
         category4: '',
-        categories:[],
-        categories1:[],
-        categories2:[],
-        categories3:[],
+        categories: [],
+        categories1: [],
+        categories2: [],
+        categories3: [],
         dateTimeInput1: '',
         dateTimeInput2: '',
         currentMonth: new Date().getMonth() + 1,
@@ -32,13 +34,13 @@
         isShowDetails: false,
         worksHourAmount: 8,
         worksHourStart: 9,
-        breakHour: 0,
+        breakHour: 1,
         highlightedRow: null,
         cursorDateMonth: new Date().getMonth() + 1,
         cursorDateYear: new Date().getFullYear(),
         cursorDate: new Date(),
         modeScreen: "Місяць",
-        modalRolActive:'',
+        modalRolActive: '',
         customerId: '',
         companyId: '',
         employeeId: '',
@@ -48,13 +50,13 @@
                 rolType: -1
             },
             position: {
-                namePosition:""
+                namePosition: ""
             }
         }],
         showSaveButton: false,
         showSaveIndex: -1,
-        showArrayButtonSave:[],
-        tmpNameRol: '', 
+        showArrayButtonSave: [],
+        tmpNameRol: '',
         isEditMode: false,
         isNewSelectedCustomer: false,
         saveCustomer: false,
@@ -62,7 +64,7 @@
         isNewSelectedCompany: false,
         saveCompany: false,
         idCompany: '',
-        selectedRol:'',
+        selectedRol: '',
         selectedCustomerId: 0,
         selectedCustomerIdCheck: 0,
         selectedEmployeeId: 0,
@@ -167,6 +169,22 @@
             this.getCategories();
             console.log("cat = " + this.categories);
         },
+        UsePeriod() {
+            this.isUsePeriod = !this.isUsePeriod;
+        },
+        UsePeriod1() {
+            // Перетворення значення selectedHours на числовий тип
+            const hoursToAdd = parseInt(this.selectedHours, 10);
+
+            this.dateTimeInput2 = new Date(this.dateTimeInput1);
+            console.log("s0 " + hoursToAdd);
+
+            // Додавання годин до dateTimeInput2
+            this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + hoursToAdd);
+
+            console.log("s1 " + this.dateTimeInput1);
+            console.log("s2 " + this.dateTimeInput2);
+        },
         async SendReport() {
             var v0 = this.selectedCustomerId;
             var v1 = this.selectedCompanyId;
@@ -180,7 +198,14 @@
             var v9 = this.selectedProjectId;
             var v10 = this.comment;
 
-            var ar = [v0,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10];
+            var ar = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10];
+
+            try {
+                await axios.post('/Report/SendReport', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу SendReport:', error);
+            }
+            this.closeModalProgrammatically();
         },
         async GetProjects(ids) {
             let responseProject = '';
@@ -199,7 +224,6 @@
             return projects;
         },
         setProject(event) {
-            const selectedProjectId = event.target.value;
             this.selectedProjectId = event.target.value;
         },
         setCat0() {
@@ -226,7 +250,7 @@
             console.log(this.selectedCategory1);
             for (var i = 0; i < this.categories1.length; i++) {
                 if (this.categories1[i].id == this.selectedCategory1) {
-                    this.categories2 = this.categories1[i].categoriesLevel2; 
+                    this.categories2 = this.categories1[i].categoriesLevel2;
                     this.categories3 = null;
                     if (this.categories1[i].projects != null && this.categories1[i].projects.length > 0) {
                         let promise = this.GetProjects(this.categories1[i].projects);
@@ -241,7 +265,7 @@
             this.projects = null;
             for (var i = 0; i < this.categories2.length; i++) {
                 if (this.categories2[i].id == this.selectedCategory2) {
-                    this.categories3 = this.categories2[i].categoriesLevel3; 
+                    this.categories3 = this.categories2[i].categoriesLevel3;
                     if (this.categories2[i].projects != null && this.categories2[i].projects.length > 0) {
                         let promise = this.GetProjects(this.categories2[i].projects);
                         promise.then(result => {
@@ -277,6 +301,7 @@
         showDetails(day) {
             if (day > 0) {
                 this.isShowDetails = !this.isShowDetails;
+                //this.getReports();
             }
         },
         isSelectedDay(day) {
@@ -308,6 +333,7 @@
                 this.cursorDate = dateObject;
                 this.selectedDate = this.cursorDate;
                 console.log(`Clicked on cell with date: ${day}-${this.cursorDateMonth}-${this.cursorDateYear}`);
+                this.getReports();
             }
         },
         handleCellWeekClick(hour, numDayOfWeek) {
@@ -323,19 +349,20 @@
                 // Додаємо години та хвилини до обраної дати
                 currentDate.setHours(hour);
                 currentDate.setMinutes(0);
-                
+
                 this.dateTimeInput1 = new Date(currentDate);
                 this.dateTimeInput2 = new Date(this.dateTimeInput1);
                 this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
                 console.log("w1 " + this.dateTimeInput1);
                 console.log("w2 " + this.dateTimeInput2);
                 this.openModalProgrammatically();
-                
+
             } else {
                 return null; // Дата не належить до поточного місяця
             }
         },
         handleCellDayClick(hour) {
+
             let currentDate = new Date(this.cursorDate);
 
             currentDate.setHours(hour);
@@ -359,6 +386,12 @@
                     let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
                     modalElement.show();
                 });
+            }
+        },
+        closeModalProgrammatically() {
+            let modalElement = document.getElementById('exampleModal');
+            if (modalElement) {
+                modalElement.dispatchEvent(new Event('click'));
             }
         },
         dataDayOfWeek(numDayOfWeek) {
@@ -447,22 +480,31 @@
             console.log(period);
         },
         async getReports() { 
-            let responseReports = '';
-            responseReports = await axios.get("/Reports/GetReports", {
+            let date = new Date(this.cursorDate);
+
+            // Додаємо 9 годин
+            let dateWith9Hours = new Date(date);
+            dateWith9Hours.setHours(dateWith9Hours.getHours() + 9);
+
+            // Додаємо 18 годин
+            let dateWith18Hours = new Date(date);
+            dateWith18Hours.setHours(dateWith18Hours.getHours() + 18);
+
+            let responseReports = await axios.get("/Report/GetReports", {
                 params: {
                     idCu: this.selectedCustomerId,
                     idCo: this.selectedCompanyId,
                     idEm: this.selectedEmployeeId,
-                    datestart: this.datestart,
-                    dateend: this.dateend,
+                    datestart: dateWith9Hours,
+                    dateend: dateWith18Hours,
                 }
             });
-            this.reports = responseReports.data;
+            this.reports = responseReports.data; 
+            console.log(this.reports);
         },
         async setReports() { 
 
         },
-
         async updateEmployees() {
             let responseEmployees = '';
             responseEmployees = await axios.get("/Employees/GetEmployees", {
@@ -580,6 +622,5 @@
 
             this.Init();
         },
-        
     },
 });

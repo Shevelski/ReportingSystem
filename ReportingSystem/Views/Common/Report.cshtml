@@ -28,16 +28,27 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            @* <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
-                            <input type="datetime-local" class="form-control" id="dateTimeInput1" v-model="dateTimeInput1">
-                            
-                            <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
-                            <input type="datetime-local" class="form-control" id="dateTimeInput2" v-model="dateTimeInput2"> *@
+                        
                             <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
                             <input type="datetime-local" class="form-control" id="dateTimeInput1" :value="formatDate(dateTimeInput1)" v-on:input="updateDateTimeInput1">
 
-                            <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
-                            <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault5" v-on:change="UsePeriod()">
+                                <label class="form-check-label" for="flexSwitchCheckDefault5">Використати період</label>
+                            </div>
+
+                            <div v-if="!isUsePeriod">
+                                <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
+                                <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2">
+                            </div>
+                            <div v-else>
+                                <label for="hoursDropdown">Виберіть кількість годин:</label>
+                                <select id="hoursDropdown" v-model="selectedHours"v-on:change="UsePeriod1()">
+                                    <option value="2">2 години</option>
+                                    <option value="4">4 години</option>
+                                    <option value="8">8 годин</option>
+                                </select>
+                            </div>
                             
                             <label for="cat0" class="form-label">Виберіть категорію проекту:</label>
 
@@ -104,9 +115,9 @@
 
     
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        @* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
             Launch demo modal
-        </button>
+        </button> *@
 
         
      @*---------------------------------------------------------------------------------------------------------------------*@
