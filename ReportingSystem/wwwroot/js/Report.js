@@ -1,13 +1,23 @@
 ﻿new Vue({
     el: '#Report',
     data: {
+        comment: '',
         selectedCategory: '',
+        selectedCategory1: '',
+        selectedCategory2: '',
+        selectedCategory3: '',
+        selectedProject: '',
+        projects:'',
+        project:'',
         selectedSubcategory:'',
         category1: '',
         category2: '',
         category3: '',
         category4: '',
         categories:[],
+        categories1:[],
+        categories2:[],
+        categories3:[],
         dateTimeInput1: '',
         dateTimeInput2: '',
         currentMonth: new Date().getMonth() + 1,
@@ -22,7 +32,7 @@
         isShowDetails: false,
         worksHourAmount: 8,
         worksHourStart: 9,
-        breakHour: 1,
+        breakHour: 0,
         highlightedRow: null,
         cursorDateMonth: new Date().getMonth() + 1,
         cursorDateYear: new Date().getFullYear(),
@@ -157,6 +167,102 @@
             this.getCategories();
             console.log("cat = " + this.categories);
         },
+        async SendReport() {
+            var v0 = this.selectedCustomerId;
+            var v1 = this.selectedCompanyId;
+            var v2 = this.selectedEmployeeId;
+            var v3 = this.dateTimeInput1;
+            var v4 = this.dateTimeInput2;
+            var v5 = this.selectedCategory;
+            var v6 = this.selectedCategory1;
+            var v7 = this.selectedCategory2;
+            var v8 = this.selectedCategory3;
+            var v9 = this.selectedProjectId;
+            var v10 = this.comment;
+
+            var ar = [v0,v1,v2,v3,v4,v5,v6,v7,v8,v9,v10];
+        },
+        async GetProjects(ids) {
+            let responseProject = '';
+            let projects = [];
+            for (var i = 0; i < ids.length; i++) {
+                responseProject = await axios.get("/Projects/GetProject", {
+                    params: {
+                        idCu: this.selectedCustomerId,
+                        idCo: this.selectedCompanyId,
+                        idPr: ids[i]
+                    }
+                });
+                let project = responseProject.data;
+                projects.push(project);
+            }
+            return projects;
+        },
+        setProject(event) {
+            const selectedProjectId = event.target.value;
+            this.selectedProjectId = event.target.value;
+        },
+        setCat0() {
+            this.projects = null;
+            console.log(this.selectedCategory);
+            console.log(this.categories);
+            for (var i = 0; i < this.categories.length; i++) {
+                if (this.categories[i].id == this.selectedCategory) {
+                    this.categories1 = this.categories[i].categoriesLevel1;
+                    this.categories2 = null;
+                    this.categories3 = null;
+                    if (this.categories[i].projects != null && this.categories[i].projects.length > 0) {
+                        let promise = this.GetProjects(this.categories[i].projects);
+                        promise.then(result => {
+                            this.projects = result;
+                        });
+                    }
+                };
+            }
+            console.log(this.projects);
+        },
+        setCat1() {
+            this.projects = null;
+            console.log(this.selectedCategory1);
+            for (var i = 0; i < this.categories1.length; i++) {
+                if (this.categories1[i].id == this.selectedCategory1) {
+                    this.categories2 = this.categories1[i].categoriesLevel2; 
+                    this.categories3 = null;
+                    if (this.categories1[i].projects != null && this.categories1[i].projects.length > 0) {
+                        let promise = this.GetProjects(this.categories1[i].projects);
+                        promise.then(result => {
+                            this.projects = result;
+                        });
+                    }
+                };
+            }
+        },
+        setCat2() {
+            this.projects = null;
+            for (var i = 0; i < this.categories2.length; i++) {
+                if (this.categories2[i].id == this.selectedCategory2) {
+                    this.categories3 = this.categories2[i].categoriesLevel3; 
+                    if (this.categories2[i].projects != null && this.categories2[i].projects.length > 0) {
+                        let promise = this.GetProjects(this.categories2[i].projects);
+                        promise.then(result => {
+                            this.projects = result;
+                        });
+                    }
+                };
+            }
+        },
+        setCat3() {
+            this.projects = null;
+            if (this.categories3.projects != null && this.categories3.projects.length > 0) {
+                this.projects = this.categories3.projects;
+                if (this.categories3[i].projects != null && this.categories3[i].projects.length > 0) {
+                    let promise = this.GetProjects(this.categories3[i].projects);
+                    promise.then(result => {
+                        this.projects = result;
+                    });
+                }
+            }
+        },
         async getCategories() {
             let responseCategory = '';
             responseCategory = await axios.get("/ProjectsCategories/GetCategories", {
@@ -168,8 +274,10 @@
             this.categories = responseCategory.data;
             console.log(responseCategory.data);
         },
-        showDetails() {
-            this.isShowDetails = !this.isShowDetails;
+        showDetails(day) {
+            if (day > 0) {
+                this.isShowDetails = !this.isShowDetails;
+            }
         },
         isSelectedDay(day) {
             return day === this.selectedDate.getDate() &&
@@ -198,10 +306,7 @@
                 const [dayPart, monthPart, yearPart] = dateString.split('-');
                 const dateObject = new Date(`${yearPart}-${monthPart}-${dayPart}`);
                 this.cursorDate = dateObject;
-
                 this.selectedDate = this.cursorDate;
-                //this.isShowDetails = false;
-                // Вивести дату у консоль при натисканні на комірку
                 console.log(`Clicked on cell with date: ${day}-${this.cursorDateMonth}-${this.cursorDateYear}`);
             }
         },
@@ -218,8 +323,14 @@
                 // Додаємо години та хвилини до обраної дати
                 currentDate.setHours(hour);
                 currentDate.setMinutes(0);
-
-                console.log(currentDate);
+                
+                this.dateTimeInput1 = new Date(currentDate);
+                this.dateTimeInput2 = new Date(this.dateTimeInput1);
+                this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
+                console.log("w1 " + this.dateTimeInput1);
+                console.log("w2 " + this.dateTimeInput2);
+                this.openModalProgrammatically();
+                
             } else {
                 return null; // Дата не належить до поточного місяця
             }
@@ -230,7 +341,25 @@
             currentDate.setHours(hour);
             currentDate.setMinutes(0);
 
-            console.log(currentDate);
+            this.dateTimeInput1 = new Date(currentDate);
+            this.dateTimeInput2 = new Date(this.dateTimeInput1);
+            this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
+
+            this.openModalProgrammatically();
+
+            console.log("d1 " + this.dateTimeInput1);
+            console.log("d2 " + this.dateTimeInput2);
+        },
+        openModalProgrammatically() {
+            if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function') {
+                let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
+                modalElement.show();
+            } else {
+                this.waitForBootstrap(() => {
+                    let modalElement = new bootstrap.Modal(document.getElementById('exampleModal'));
+                    modalElement.show();
+                });
+            }
         },
         dataDayOfWeek(numDayOfWeek) {
             let currentDate = new Date(this.cursorDate);
@@ -249,6 +378,35 @@
             } else {
                 return null; // Дата не належить до поточного місяця
             }
+        },
+        updateDateTimeInput1(event) {
+            const localDate = new Date(event.target.value);
+            const offsetMinutes = localDate.getTimezoneOffset();
+            console.log("Local date:", localDate);
+            console.log("Offset minutes:", offsetMinutes);
+            localDate.setMinutes(localDate.getMinutes() - offsetMinutes);
+            this.dateTimeInput1 = localDate.toISOString().slice(0, 16);
+            console.log("Updated dateTimeInput1:", this.dateTimeInput1);
+        },
+        updateDateTimeInput2(event) {
+            const localDate = new Date(event.target.value);
+            const offsetMinutes = localDate.getTimezoneOffset();
+            console.log("Local date:", localDate);
+            console.log("Offset minutes:", offsetMinutes);
+            localDate.setMinutes(localDate.getMinutes() - offsetMinutes);
+            this.dateTimeInput2 = localDate.toISOString().slice(0, 16);
+            console.log("Updated dateTimeInput2:", this.dateTimeInput2);
+        },
+        formatDate(dateTime) {
+            if (!dateTime) return "";
+
+            const localDate = new Date(dateTime);
+            const offsetMinutes = localDate.getTimezoneOffset();
+
+            // Коригуємо дату враховуючи різницю в хвилинах
+            localDate.setMinutes(localDate.getMinutes() - offsetMinutes);
+
+            return localDate.toISOString().slice(0, 16);
         },
         formatTime(hour, is24HourFormat) {
             if (is24HourFormat) {

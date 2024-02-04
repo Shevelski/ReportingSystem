@@ -1042,7 +1042,7 @@ namespace ReportingSystem.Data.SQL
             
             return projects;
         }
-        public async Task<ProjectModel>? GetProject(string idCu, string idCo, string idPr)
+        public async Task<ProjectModel> GetProject(string idCu, string idCo, string idPr)
         {
             ProjectModel project = new();
 
@@ -1059,8 +1059,8 @@ namespace ReportingSystem.Data.SQL
             foreach (var readProj in result)
             {
                 project.Id = readProj.Id;
-                project.CustomerId = readProj.IdCustomer;
-                project.CompanyId = readProj.IdCompany;
+                project.CustomerId = readProj.CustomerId;
+                project.CompanyId = readProj.CompanyId;
                 project.Name = readProj.Name;
                 project.Description = readProj.Description;
                 project.ProjectCostsForCompany = readProj.ProjectCostsForCompany;
@@ -1080,16 +1080,7 @@ namespace ReportingSystem.Data.SQL
             }
             return project;
         }
-        //public async Task<List<EmployeePositionModel>> GetProjectPositions(Guid idPr)
-        //{
-        //    List<EmployeePositionModel> list = [];
-        //}
-        //public async Task<List<EmployeeModel>> GetProjectMembers()
-        //{
-        //    List<EmployeeModel> list = [];
-        //}
-
-
+ 
         public async Task<ProjectStatusModel?> GetProjectStatus(Guid id)
         {
             var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[ProjectStatus] Where Id = @Id";

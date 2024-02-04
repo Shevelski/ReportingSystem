@@ -16,6 +16,13 @@ namespace ReportingSystem.Controllers.Functions
             var result = await _projectsService.GetProjects(idCu, idCo);
             return Json(result);
         }
+        
+        [HttpGet]
+        public async Task<IActionResult> GetProject(string idCu, string idCo, string idPr)
+        {
+            var result = await _projectsService.GetProject(idCu, idCo, idPr);
+            return Json(result);
+        }
 
         [HttpPost]
         public async Task EditProject([FromBody] string[] ar)
