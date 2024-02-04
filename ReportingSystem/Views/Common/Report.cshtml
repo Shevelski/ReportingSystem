@@ -28,11 +28,16 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
+                            @* <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
                             <input type="datetime-local" class="form-control" id="dateTimeInput1" v-model="dateTimeInput1">
                             
                             <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
-                            <input type="datetime-local" class="form-control" id="dateTimeInput2" v-model="dateTimeInput2">
+                            <input type="datetime-local" class="form-control" id="dateTimeInput2" v-model="dateTimeInput2"> *@
+                            <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
+                            <input type="datetime-local" class="form-control" id="dateTimeInput1" :value="formatDate(dateTimeInput1)" v-on:input="updateDateTimeInput1">
+
+                            <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
+                            <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2">
                             
                             <label for="cat0" class="form-label">Виберіть категорію проекту:</label>
 
@@ -82,12 +87,15 @@
                                     </option>
                                 </select>
                             </div>
-
+                            <div class="mb-3">
+                                <label for="commentTextarea" class="form-label">Введіть коментар:</label>
+                                <textarea class="form-control" id="commentTextarea" rows="4" v-model="comment"></textarea>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="button" class="btn btn-primary">Зберегти зміни</button>
+                        <button type="button" class="btn btn-primary" v-on:click="SendReport()">Зберегти зміни</button>
                     </div>
                 </div>
             </div>
