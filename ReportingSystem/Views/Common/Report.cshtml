@@ -285,13 +285,13 @@
             <tbody>
                 <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
                     <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                    <td> </td>
-                    <td> </td>
+                    <td>{{ getReportProject(hour) }} </td>
+                    <td>{{ getReportComment(hour) }} </td>
                 </tr>
                 <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" v-on:click="handleCellDayClick(hour)" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
                     <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                    <td> </td>
-                    <td> </td>
+                    <td>{{ getReportProject(hour) }} </td>
+                    <td>{{ getReportComment(hour) }} </td>
                 </tr>
             </tbody>
         </table>

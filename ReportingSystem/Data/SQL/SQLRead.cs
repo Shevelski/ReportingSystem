@@ -1441,8 +1441,8 @@ namespace ReportingSystem.Data.SQL
                         [CustomerId] = @CustomerId 
                         AND [CompanyId] = @CompanyId 
                         AND [EmployeeId] = @EmployeeId 
-                        AND [StartDate] <= @EndDate
-                        AND [EndDate] >= @StartDate;";
+                        AND [StartDate] >= @StartDate
+                        AND [EndDate] <= @EndDate ; ";
             var para = new
             {
                 CustomerId = idCu,
@@ -1455,24 +1455,28 @@ namespace ReportingSystem.Data.SQL
             using var database = Context.ConnectToSQL;
             var result = await database.QueryAsync<TableTypeSQL.Report>(query, para);
             List<ReportModel> list = [];
-            ReportModel report = new();
             if (result.Any())
             {
                 foreach (var report_ in result) {
-                    report.Id = report_.Id;
-                    report.IdCustomer = report_.CustomerId;
-                    report.IdCompany = report_.CompanyId;
-                    report.IdEmployee = report_.EmployeeId;
-                    report.StartDate = report_.StartDate;
-                    report.EndDate = report_.EndDate;
-                    report.IdCategory0 = report_.Category0Id;
-                    report.IdCategory1 = report_.Category1Id;
-                    report.IdCategory2 = report_.Category2Id;
-                    report.IdCategory3 = report_.Category3Id;
-                    report.IdProject = report_.ProjectId;
-                    report.Comment = report_.Comment;
+                    ReportModel report = new ReportModel
+                    {
+                        Id = report_.Id,
+                        IdCustomer = report_.CustomerId,
+                        IdCompany = report_.CompanyId,
+                        IdEmployee = report_.EmployeeId,
+                        StartDate = report_.StartDate,
+                        EndDate = report_.EndDate,
+                        IdCategory0 = report_.Category0Id,
+                        IdCategory1 = report_.Category1Id,
+                        IdCategory2 = report_.Category2Id,
+                        IdCategory3 = report_.Category3Id,
+                        IdProject = report_.ProjectId,
+                        Comment = report_.Comment
+                    };
+
+                    list.Add(report);
                 }
-                list.Add(report);
+                
             }
             return list;
         }

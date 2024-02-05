@@ -1484,11 +1484,11 @@ namespace ReportingSystem.Data.SQL
                            ,@Comment)";
 
 
-            Guid idCa0 = ar[5] == "" ? Guid.Empty : Guid.Parse(ar[5]);
-            Guid idCa1 = ar[6] == "" ? Guid.Empty : Guid.Parse(ar[6]);
-            Guid idCa2 = ar[7] == "" ? Guid.Empty : Guid.Parse(ar[7]);
-            Guid idCa3 = ar[8] == "" ? Guid.Empty : Guid.Parse(ar[8]);
-            Guid idPr = ar[9] == "" ? Guid.Empty : Guid.Parse(ar[9]);
+            Guid idCa0 = ar[5] == "" || ar[5] == null ? Guid.Empty : Guid.Parse(ar[5]);
+            Guid idCa1 = ar[6] == "" || ar[6] == null ? Guid.Empty : Guid.Parse(ar[6]);
+            Guid idCa2 = ar[7] == "" || ar[7] == null ? Guid.Empty : Guid.Parse(ar[7]);
+            Guid idCa3 = ar[8] == "" || ar[8] == null ? Guid.Empty : Guid.Parse(ar[8]);
+            Guid idPr = ar[9] == "" || ar[9] == null ? Guid.Empty : Guid.Parse(ar[9]);
 
             string startDateString = ar[3];
             string endDateString = ar[4];
