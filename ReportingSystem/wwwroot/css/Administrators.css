@@ -112,3 +112,7 @@ body {
         transition: opacity 1s ease-in-out, width 1s ease-in-out;
         transition-delay: 1s;
     }
+
+.textcolor {
+    color: white
+}
