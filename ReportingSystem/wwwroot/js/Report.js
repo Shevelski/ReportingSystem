@@ -1,8 +1,11 @@
 ﻿new Vue({
     el: '#Report',
     data: {
+        curday:'',
         selectedHours: 0,
         comment: '',
+        projectsDay: '',
+        reportsDay:'',
         isUsePeriod: false,
         selectedCategory: '',
         selectedCategory1: '',
@@ -32,7 +35,7 @@
         isWorkDays: true,
         isWeekDay: true,
         isShowDetails: false,
-        worksHourAmount: 8,
+        worksHourAmount: 7,
         worksHourStart: 9,
         breakHour: 1,
         highlightedRow: null,
@@ -167,6 +170,7 @@
             }
             this.rolls = await this.getAllRolls();
             this.getCategories();
+            
             console.log("cat = " + this.categories);
         },
         UsePeriod() {
@@ -184,6 +188,73 @@
 
             console.log("s1 " + this.dateTimeInput1);
             console.log("s2 " + this.dateTimeInput2);
+        },
+       // getReportProject(hour) {
+       //     const reportForHour = this.reports.find(report => {
+       //         const reportStartDate = new Date(report.startDate);
+       //         const reportEndDate = new Date(report.endDate);
+       //         const reportStartHour = reportStartDate.getHours();
+       //         const reportEndHour = reportEndDate.getHours();
+
+       //         return hour >= reportStartHour && hour <= reportEndHour;
+       //     });
+
+       //     let name = "";
+       //reportsDay
+
+       //     return reportForHour ? reportForHour.idProject : "";
+        // },
+        getReportProject(hour) {
+            const reportForHour = this.reports.find(report => {
+                const reportStartDate = new Date(report.startDate);
+                const reportEndDate = new Date(report.endDate);
+                const reportStartHour = reportStartDate.getHours();
+                const reportEndHour = reportEndDate.getHours();
+
+                return hour >= reportStartHour && hour < reportEndHour;
+            });
+
+            if (reportForHour && reportForHour.idProject) {
+                const project = this.projectsDay.find(project => project.id === reportForHour.idProject);
+
+                if (project) {
+                    return project.name;
+                } else {
+                    let category = "";
+                    const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
+                    
+                    if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
+                        category = category0.name;
+                        const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
+                        if (category1 != null && category1 != "" && category1 != "'00000000-0000-0000-0000-000000000000'") {
+                            category = category1.name;
+                            const category2 = this.categories.find(category => category1.categoriesLevel2.id === reportForHour.idCategory2);
+                            if (category2 != null && category2 != "" && category2 != "'00000000-0000-0000-0000-000000000000'") {
+                                category = category2.name;
+                                const category3 = this.categories.find(category => category2.categoriesLevel3.id === reportForHour.idCategory3);
+                                if (category3 != null && category3 != "" && category3 != "'00000000-0000-0000-0000-000000000000'") {
+                                    category = category3.name;
+                                }
+                            }
+                        }
+                    }
+                    return category;
+                }
+            }
+
+            return "";
+        },
+        getReportComment(hour) {
+            const reportForHour = this.reports.find(report => {
+                const reportStartDate = new Date(report.startDate);
+                const reportEndDate = new Date(report.endDate);
+                const reportStartHour = reportStartDate.getHours();
+                const reportEndHour = reportEndDate.getHours();
+
+                return hour >= reportStartHour && hour < reportEndHour;
+            });
+
+            return reportForHour ? reportForHour.comment : "";
         },
         async SendReport() {
             var v0 = this.selectedCustomerId;
@@ -206,6 +277,7 @@
                 console.error('Помилка під час виклику методу SendReport:', error);
             }
             this.closeModalProgrammatically();
+            this.showDetails(this.curday);
         },
         async GetProjects(ids) {
             let responseProject = '';
@@ -222,6 +294,19 @@
                 projects.push(project);
             }
             return projects;
+        },
+        async GetProjectName(id) {
+            let responseProject = '';
+            responseProject = await axios.get("/Projects/GetProject", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    idPr: id
+                }
+            });
+            let project = responseProject.data;
+            console.log("project = " + project);
+            return project.name;
         },
         setProject(event) {
             this.selectedProjectId = event.target.value;
@@ -296,13 +381,21 @@
                 }
             });
             this.categories = responseCategory.data;
-            console.log(responseCategory.data);
+            console.log(this.categories);
         },
         showDetails(day) {
             if (day > 0) {
-                this.isShowDetails = !this.isShowDetails;
-                //this.getReports();
+                this.isShowDetails = true;
             }
+        },
+        async getProjects() {
+            let response = await axios.get("/Projects/GetProjects", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId
+                }
+            });
+            this.projectsDay = response.data;
         },
         isSelectedDay(day) {
             return day === this.selectedDate.getDate() &&
@@ -334,6 +427,8 @@
                 this.selectedDate = this.cursorDate;
                 console.log(`Clicked on cell with date: ${day}-${this.cursorDateMonth}-${this.cursorDateYear}`);
                 this.getReports();
+                this.getProjects();
+                this.curday = day;
             }
         },
         handleCellWeekClick(hour, numDayOfWeek) {
@@ -484,12 +579,13 @@
 
             // Додаємо 9 годин
             let dateWith9Hours = new Date(date);
-            dateWith9Hours.setHours(dateWith9Hours.getHours() + 9);
+            //dateWith9Hours.setHours(dateWith9Hours.getHours() + 9);
+            dateWith9Hours.setHours(0, 0, 0, 0);
 
             // Додаємо 18 годин
             let dateWith18Hours = new Date(date);
-            dateWith18Hours.setHours(dateWith18Hours.getHours() + 18);
-
+            //dateWith18Hours.setHours(dateWith18Hours.getHours() + 18);
+            dateWith18Hours.setHours(23, 59, 59, 999);
             let responseReports = await axios.get("/Report/GetReports", {
                 params: {
                     idCu: this.selectedCustomerId,
