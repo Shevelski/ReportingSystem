@@ -1458,7 +1458,7 @@ namespace ReportingSystem.Data.SQL
             if (result.Any())
             {
                 foreach (var report_ in result) {
-                    ReportModel report = new ReportModel
+                    ReportModel report = new()
                     {
                         Id = report_.Id,
                         IdCustomer = report_.CustomerId,

@@ -1,11 +1,14 @@
 ﻿new Vue({
     el: '#Report',
     data: {
-        curday:'',
-        selectedHours: 0,
+        curday: '',
+        selectedHours: 1,
+        selectedDays: 0,
         comment: '',
         projectsDay: '',
         reportsDay:'',
+        projectsWeek: '',
+        reportsWeek:'',
         isUsePeriod: false,
         selectedCategory: '',
         selectedCategory1: '',
@@ -181,29 +184,25 @@
             const hoursToAdd = parseInt(this.selectedHours, 10);
 
             this.dateTimeInput2 = new Date(this.dateTimeInput1);
-            console.log("s0 " + hoursToAdd);
 
-            // Додавання годин до dateTimeInput2
-            this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + hoursToAdd);
+            let currentDate = new Date(this.dateTimeInput1);
+            let hour18 = new Date(currentDate.setHours(18, 0, 0, 0));
+
+            let nextDate = new Date(this.dateTimeInput1);
+            nextDate.setHours(this.dateTimeInput1.getHours() + hoursToAdd);
+
+            if (nextDate < hour18) {
+                this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + hoursToAdd);
+            } else {
+                currentDate.setHours(18, 0, 0, 0);
+                //currentDate.setHours(currentDate.getHours() + hoursToAdd);
+                this.dateTimeInput2 = currentDate;
+            };
+            
 
             console.log("s1 " + this.dateTimeInput1);
             console.log("s2 " + this.dateTimeInput2);
         },
-       // getReportProject(hour) {
-       //     const reportForHour = this.reports.find(report => {
-       //         const reportStartDate = new Date(report.startDate);
-       //         const reportEndDate = new Date(report.endDate);
-       //         const reportStartHour = reportStartDate.getHours();
-       //         const reportEndHour = reportEndDate.getHours();
-
-       //         return hour >= reportStartHour && hour <= reportEndHour;
-       //     });
-
-       //     let name = "";
-       //reportsDay
-
-       //     return reportForHour ? reportForHour.idProject : "";
-        // },
         getReportProject(hour) {
             const reportForHour = this.reports.find(report => {
                 const reportStartDate = new Date(report.startDate);
@@ -223,6 +222,47 @@
                     let category = "";
                     const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
                     
+                    if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
+                        category = category0.name;
+                        const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
+                        if (category1 != null && category1 != "" && category1 != "'00000000-0000-0000-0000-000000000000'") {
+                            category = category1.name;
+                            const category2 = this.categories.find(category => category1.categoriesLevel2.id === reportForHour.idCategory2);
+                            if (category2 != null && category2 != "" && category2 != "'00000000-0000-0000-0000-000000000000'") {
+                                category = category2.name;
+                                const category3 = this.categories.find(category => category2.categoriesLevel3.id === reportForHour.idCategory3);
+                                if (category3 != null && category3 != "" && category3 != "'00000000-0000-0000-0000-000000000000'") {
+                                    category = category3.name;
+                                }
+                            }
+                        }
+                    }
+                    return category;
+                }
+            }
+
+            return "";
+        },
+        getReportProject1(hour, dayOfWeek) {
+            const reportForHour = this.reportsWeek.find(report => {
+                const reportStartDate = new Date(report.startDate);
+                const reportEndDate = new Date(report.endDate);
+                const reportStartHour = reportStartDate.getHours();
+                const reportEndHour = reportEndDate.getHours();
+                const reportDayOfWeek = reportStartDate.getDay(); // Отримати день тижня для звіту
+
+                return hour >= reportStartHour && hour < reportEndHour && reportDayOfWeek === dayOfWeek;
+            });
+
+            if (reportForHour && reportForHour.idProject) {
+                const project = this.projects.find(project => project.id === reportForHour.idProject);
+
+                if (project) {
+                    return project.name;
+                } else {
+                    let category = "";
+                    const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
+
                     if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
                         category = category0.name;
                         const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
@@ -278,6 +318,7 @@
             }
             this.closeModalProgrammatically();
             this.showDetails(this.curday);
+            
         },
         async GetProjects(ids) {
             let responseProject = '';
@@ -386,6 +427,7 @@
         showDetails(day) {
             if (day > 0) {
                 this.isShowDetails = true;
+                //this.handleCellClick(day)
             }
         },
         async getProjects() {
@@ -420,14 +462,15 @@
         },
         handleCellClick(day) {
             if (day > 0) {
+                this.showDetails(day);
                 const dateString = `${day}-${this.cursorDate.getMonth() + 1}-${this.cursorDate.getFullYear()}`;
                 const [dayPart, monthPart, yearPart] = dateString.split('-');
                 const dateObject = new Date(`${yearPart}-${monthPart}-${dayPart}`);
                 this.cursorDate = dateObject;
                 this.selectedDate = this.cursorDate;
-                console.log(`Clicked on cell with date: ${day}-${this.cursorDateMonth}-${this.cursorDateYear}`);
                 this.getReports();
                 this.getProjects();
+                this.getWeekReports();
                 this.curday = day;
             }
         },
@@ -448,12 +491,10 @@
                 this.dateTimeInput1 = new Date(currentDate);
                 this.dateTimeInput2 = new Date(this.dateTimeInput1);
                 this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
-                console.log("w1 " + this.dateTimeInput1);
-                console.log("w2 " + this.dateTimeInput2);
                 this.openModalProgrammatically();
 
             } else {
-                return null; // Дата не належить до поточного місяця
+                return null;
             }
         },
         handleCellDayClick(hour) {
@@ -468,9 +509,6 @@
             this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
 
             this.openModalProgrammatically();
-
-            console.log("d1 " + this.dateTimeInput1);
-            console.log("d2 " + this.dateTimeInput2);
         },
         openModalProgrammatically() {
             if (typeof bootstrap !== 'undefined' && typeof bootstrap.Modal === 'function') {
@@ -510,20 +548,14 @@
         updateDateTimeInput1(event) {
             const localDate = new Date(event.target.value);
             const offsetMinutes = localDate.getTimezoneOffset();
-            console.log("Local date:", localDate);
-            console.log("Offset minutes:", offsetMinutes);
             localDate.setMinutes(localDate.getMinutes() - offsetMinutes);
             this.dateTimeInput1 = localDate.toISOString().slice(0, 16);
-            console.log("Updated dateTimeInput1:", this.dateTimeInput1);
         },
         updateDateTimeInput2(event) {
             const localDate = new Date(event.target.value);
             const offsetMinutes = localDate.getTimezoneOffset();
-            console.log("Local date:", localDate);
-            console.log("Offset minutes:", offsetMinutes);
             localDate.setMinutes(localDate.getMinutes() - offsetMinutes);
             this.dateTimeInput2 = localDate.toISOString().slice(0, 16);
-            console.log("Updated dateTimeInput2:", this.dateTimeInput2);
         },
         formatDate(dateTime) {
             if (!dateTime) return "";
@@ -570,10 +602,6 @@
         toggleHover() {
             this.hovered = !this.hovered;
         },
-        setMode(period) {
-            this.mode = period;
-            console.log(period);
-        },
         async getReports() { 
             let date = new Date(this.cursorDate);
 
@@ -598,8 +626,35 @@
             this.reports = responseReports.data; 
             console.log(this.reports);
         },
-        async setReports() { 
+        async getWeekReports() {
+            let date = new Date(this.cursorDate);
 
+            // Знаходимо перший день тижня (понеділок)
+            let firstDayOfWeek = new Date(date);
+            firstDayOfWeek.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1));
+
+            // Знаходимо останній день тижня (п'ятниця)
+            let lastDayOfWeek = new Date(firstDayOfWeek);
+            lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 4);
+
+            // Встановлюємо час для першого дня на 9:00:00
+            firstDayOfWeek.setHours(9, 0, 0, 0);
+
+            // Встановлюємо час для останнього дня на 18:00:00
+            lastDayOfWeek.setHours(18, 0, 0, 0);
+
+            let responseReports = await axios.get("/Report/GetReports", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    idEm: this.selectedEmployeeId,
+                    datestart: firstDayOfWeek,
+                    dateend: lastDayOfWeek,
+                }
+            });
+
+            this.reportsWeek = responseReports.data;
+            console.log(this.reportsWeek);
         },
         async updateEmployees() {
             let responseEmployees = '';
@@ -637,15 +692,12 @@
             }
         },
         async getAllRolls() {
-
             if (this.selectedCustomerId == 0) {
                 this.selectedCustomerId = this.customers[0].id;
             }
-
             if (this.selectedCompanyId == 0) {
                 this.selectedCompanyId = this.companies[0].id;
             }
-
             let responseRolls = await axios.get("/Rolls/GetAllRolls", {
                 params: {
                     idCu: this.selectedCustomerId,
@@ -668,12 +720,10 @@
             this.showArrayButtonSave.length = 0;
            
             this.employees = response.data;
-            console.log(this.employees);
             return response.data;
         },
         getSelectedRol(event,index) {
             this.selectedRol = event.target.value;
-
             if (this.tmpNameRol != this.selectedRol) {
                 this.showArrayButtonSave.push({ key: index, value: true });
             } else {
@@ -694,7 +744,6 @@
         },
         getSelectedCompany(event) {
             this.selectedCompanyId = event.target.value;
-
             if (this.selectedCompanyIdCheck !== this.selectedCompanyId) {
                 this.IsNewSelectedCompany = true;
                 this.saveCompany = false;
