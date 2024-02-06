@@ -215,7 +215,7 @@
                                 :key="indexDay"
                                 v-on:click="handleCellClick(day)"
                                 v-on:dblclick="showDetails(day)"
-                                :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
+                                :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),} ">
                                 {{ day > 0 ? day : '' }}
                             </td>
                         </tr>
