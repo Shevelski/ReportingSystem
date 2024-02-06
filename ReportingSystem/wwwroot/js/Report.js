@@ -204,44 +204,46 @@
             console.log("s2 " + this.dateTimeInput2);
         },
         getReportProject(hour) {
-            const reportForHour = this.reports.find(report => {
-                const reportStartDate = new Date(report.startDate);
-                const reportEndDate = new Date(report.endDate);
-                const reportStartHour = reportStartDate.getHours();
-                const reportEndHour = reportEndDate.getHours();
+            if (this.reports != undefined) {
+                const reportForHour = this.reports.find(report => {
+                    const reportStartDate = new Date(report.startDate);
+                    const reportEndDate = new Date(report.endDate);
+                    const reportStartHour = reportStartDate.getHours();
+                    const reportEndHour = reportEndDate.getHours();
 
-                return hour >= reportStartHour && hour < reportEndHour;
-            });
+                    return hour >= reportStartHour && hour < reportEndHour;
+                });
 
-            if (reportForHour && reportForHour.idProject) {
-                const project = this.projectsDay.find(project => project.id === reportForHour.idProject);
+                if (reportForHour && reportForHour.idProject) {
+                    const project = this.projectsDay.find(project => project.id === reportForHour.idProject);
 
-                if (project) {
-                    return project.name;
-                } else {
-                    let category = "";
-                    const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
-                    
-                    if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
-                        category = category0.name;
-                        const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
-                        if (category1 != null && category1 != "" && category1 != "'00000000-0000-0000-0000-000000000000'") {
-                            category = category1.name;
-                            const category2 = this.categories.find(category => category1.categoriesLevel2.id === reportForHour.idCategory2);
-                            if (category2 != null && category2 != "" && category2 != "'00000000-0000-0000-0000-000000000000'") {
-                                category = category2.name;
-                                const category3 = this.categories.find(category => category2.categoriesLevel3.id === reportForHour.idCategory3);
-                                if (category3 != null && category3 != "" && category3 != "'00000000-0000-0000-0000-000000000000'") {
-                                    category = category3.name;
+                    if (project) {
+                        return project.name;
+                    } else {
+                        let category = "";
+                        const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
+
+                        if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
+                            category = category0.name;
+                            const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
+                            if (category1 != null && category1 != "" && category1 != "'00000000-0000-0000-0000-000000000000'") {
+                                category = category1.name;
+                                const category2 = this.categories.find(category => category1.categoriesLevel2.id === reportForHour.idCategory2);
+                                if (category2 != null && category2 != "" && category2 != "'00000000-0000-0000-0000-000000000000'") {
+                                    category = category2.name;
+                                    const category3 = this.categories.find(category => category2.categoriesLevel3.id === reportForHour.idCategory3);
+                                    if (category3 != null && category3 != "" && category3 != "'00000000-0000-0000-0000-000000000000'") {
+                                        category = category3.name;
+                                    }
                                 }
                             }
                         }
+                        return category;
                     }
-                    return category;
                 }
-            }
 
-            return "";
+                return "";
+            }
         },
         getReportProject1(hour, dayOfWeek) {
             const reportForHour = this.reportsWeek.find(report => {
@@ -285,16 +287,21 @@
             return "";
         },
         getReportComment(hour) {
-            const reportForHour = this.reports.find(report => {
-                const reportStartDate = new Date(report.startDate);
-                const reportEndDate = new Date(report.endDate);
-                const reportStartHour = reportStartDate.getHours();
-                const reportEndHour = reportEndDate.getHours();
+            
+            if (this.reports != undefined) {
+                const reportForHour = this.reports.find(report => {
+                    const reportStartDate = new Date(report.startDate);
+                    const reportEndDate = new Date(report.endDate);
+                    const reportStartHour = reportStartDate.getHours();
+                    const reportEndHour = reportEndDate.getHours();
 
-                return hour >= reportStartHour && hour < reportEndHour;
-            });
+                    return hour >= reportStartHour && hour < reportEndHour;
+                });
 
-            return reportForHour ? reportForHour.comment : "";
+                return reportForHour ? reportForHour.comment : "";
+            }
+
+           
         },
         async SendReport() {
             var v0 = this.selectedCustomerId;
