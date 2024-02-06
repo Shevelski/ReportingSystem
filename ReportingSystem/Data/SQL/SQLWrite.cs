@@ -1492,26 +1492,54 @@ namespace ReportingSystem.Data.SQL
 
             string startDateString = ar[3];
             string endDateString = ar[4];
+
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
 
-            var para = new
+            //var para = new
+            //{
+            //    Id = Guid.NewGuid(),
+            //    CustomerId = ar[0],
+            //    CompanyId = ar[1],
+            //    EmployeeId = ar[2],
+            //    StartDate = startDate,
+            //    EndDate = endDate,
+            //    Category0Id = idCa0,
+            //    Category1Id = idCa1,
+            //    Category2Id = idCa2,
+            //    Category3Id = idCa3,
+            //    ProjectId = idPr,
+            //    Comment = ar[10]
+            //};
+            //using var database = Context.ConnectToSQL;
+            //await database.QueryAsync(query, para);
+
+            for (DateTime currentHour = startDate; currentHour < endDate; currentHour = currentHour.AddHours(1))
             {
-                Id = Guid.NewGuid(),
-                CustomerId = ar[0],
-                CompanyId = ar[1],
-                EmployeeId = ar[2],
-                StartDate = startDate,
-                EndDate = endDate,
-                Category0Id = idCa0,
-                Category1Id = idCa1,
-                Category2Id = idCa2,
-                Category3Id = idCa3,
-                ProjectId = idPr,
-                Comment = ar[10]
-            };
-            using var database = Context.ConnectToSQL;
-            await database.QueryAsync(query, para);
+                // Отримати наступну годину
+                DateTime nextHour = currentHour.AddHours(1);
+
+                // Створити параметри для кожного запису
+                var para = new
+                {
+                    Id = Guid.NewGuid(),
+                    CustomerId = ar[0],
+                    CompanyId = ar[1],
+                    EmployeeId = ar[2],
+                    StartDate = currentHour,
+                    EndDate = nextHour,
+                    Category0Id = idCa0,
+                    Category1Id = idCa1,
+                    Category2Id = idCa2,
+                    Category3Id = idCa3,
+                    ProjectId = idPr,
+                    Comment = ar[10]
+                };
+
+                // Виконати запит для поточного запису
+                using var database = Context.ConnectToSQL;
+                await database.QueryAsync(query, para);
+            }
         }
         #endregion
         #region ExtendedFunction

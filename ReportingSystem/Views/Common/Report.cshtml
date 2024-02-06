@@ -32,23 +32,25 @@
                             <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
                             <input type="datetime-local" class="form-control" id="dateTimeInput1" :value="formatDate(dateTimeInput1)" v-on:input="updateDateTimeInput1">
 
-                            <div class="form-check form-switch">
+                            @* <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault5" v-on:change="UsePeriod()">
                                 <label class="form-check-label" for="flexSwitchCheckDefault5">Використати період</label>
-                            </div>
+                            </div> *@
 
-                            <div v-if="!isUsePeriod">
-                                <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
-                                <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2">
-                            </div>
-                            <div v-else>
-                                <label for="hoursDropdown">Виберіть кількість годин:</label>
-                                <select id="hoursDropdown" v-model="selectedHours"v-on:change="UsePeriod1()">
+                            <div class="mb-3">
+                                <label for="hoursDropdown" class="form-label">Виберіть кількість годин:</label>
+                                <select id="hoursDropdown" class="form-select" v-model="selectedHours" v-on:change="UsePeriod1()">
+                                    <option value="1">1 година</option> <!-- Змінили значення на 1 -->
                                     <option value="2">2 години</option>
                                     <option value="4">4 години</option>
                                     <option value="8">8 годин</option>
+                                    <option value="10">До кінця дня</option>
                                 </select>
                             </div>
+
+
+                            <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
+                            <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2" :readonly="true">
                             
                             <label for="cat0" class="form-label">Виберіть категорію проекту:</label>
 
@@ -214,7 +216,7 @@
                             <td v-for="(day, indexDay) in week"
                                 :key="indexDay"
                                 v-on:click="handleCellClick(day)"
-                                v-on:dblclick="showDetails(day)"
+                                @* v-on:dblclick="showDetails(day)" *@
                                 :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
                                 {{ day > 0 ? day : '' }}
                             </td>
@@ -250,23 +252,23 @@
             <tbody>
                 <tr v-if="isWorkHours && hour >= worksHourStart && hour <= worksHourStart + worksHourAmount + breakHour" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
                     <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                    <td v-on:click="handleCellWeekClick(hour,1)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,2)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,3)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,4)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,5)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,1)">{{ getReportProject1(hour, 1) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,2)">{{ getReportProject1(hour, 2) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,3)">{{ getReportProject1(hour, 3) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,4)">{{ getReportProject1(hour, 4) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,5)">{{ getReportProject1(hour, 5) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays">{{ getReportProject1(hour, 6) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays">{{ getReportProject1(hour, 7) }}</td>
                 </tr>
                 <tr v-if="!isWorkHours" v-for="hour in 24" :key="hour" v-on:mouseover="highlightRow(hour)" v-on:mouseout="resetHighlight" :class="{ 'highlighted-row': isRowHighlighted && highlightedRow === hour }">
                     <td>{{ formatTime(hour, is24HourFormat) }}</td>
-                    <td v-on:click="handleCellWeekClick(hour,1)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,2)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,3)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,4)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,5)"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays"> </td>
-                    <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays"> </td>
+                    <td v-on:click="handleCellWeekClick(hour,1)">{{ getReportProject1(hour, 1) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,2)">{{ getReportProject1(hour, 2) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,3)">{{ getReportProject1(hour, 3) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,4)">{{ getReportProject1(hour, 4) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,5)">{{ getReportProject1(hour, 5) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,6)" v-if="!isWorkDays">{{ getReportProject1(hour, 6) }}</td>
+                    <td v-on:click="handleCellWeekClick(hour,7)" v-if="!isWorkDays">{{ getReportProject1(hour, 7) }}</td>
                 </tr>
             </tbody>
         </table>
