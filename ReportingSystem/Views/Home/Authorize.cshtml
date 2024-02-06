@@ -8,7 +8,7 @@
 
 
 
-<div id="Authorize">
+<div id="Authorize" class="fontcustom">
     @* <input type="hidden" id="statusName" value="@Model?.StatusName" /> *@
     <div class="el1 bm-3 textcolor" v-if="mode == 0">
         <label class="label">@Localizer["WriteEmail"]</label>
@@ -27,17 +27,17 @@
         <button type="button" class="button no-button" v-on:click="mode = 0">@Localizer["No"]</button>
     </div>
 
-    <div class="el1 bm-3 textcolor" v-if="mode == 0">
-        <button type="button" class="button" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
+    <div class="el1 bm-3 textcolor mt-4" v-if="mode == 0">
+        <button type="button" class="button hover-color" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
     </div>
 
 
     <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home">
-        <div class="el1 bm-3 textcolor" v-if="mode == 1 || mode == 4">
-            <label class="label">@Localizer["Password"]</label>
-            <input class="input textcolor" name="password" v-model="password" />
+        <div class="el1 bm-3 " v-if="mode == 1 || mode == 4">
+            <label class="label textcolor">@Localizer["Password"]</label>
+            <input class="input" name="password" v-model="password" />
         </div>
-        <div class="el1 bm-3 textcolor" v-if="mode == 1 || mode == 4">
+        <div class="el1 bm-3 textcolor mt-4" v-if="mode == 1 || mode == 4">
             <button type="submit" class="button">@Localizer["CheckPass"]</button>
         </div>
         <input type="hidden" name="email" v-model="email" />
@@ -86,7 +86,14 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        transition: all 0.3s ease-out;
     }
+
+        .button:hover, .hover-color:hover {
+            color: black;
+            transition: all 0.3s ease-in;
+            background-color: #3797ff;
+        }
 
     .yes-button {
         /* Стилі для кнопки "Так" */
@@ -101,6 +108,10 @@
 
     .textcolor {
         color: white
+    }
+
+    .fontcustom {
+        font-size: 24px;
     }
 </style>
 

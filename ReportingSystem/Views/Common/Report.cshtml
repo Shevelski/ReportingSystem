@@ -5,7 +5,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Звіт</h1>
+    <h1 class="display-4 textcolor">Звіт</h1>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
@@ -15,8 +15,8 @@
 <link rel="stylesheet" href="~/css/Report.css" asp-append-version="true" />
 @*---------------------------------------------------------------------------------------------------------------------*@
 
-<div class="container" id="Report">
-    <div class="accordion" id="accordionExample" v-if="rolls.length != 1">
+<div class="container " id="Report">
+    <div class="accordion textcolor" id="accordionExample" v-if="rolls.length != 1">
 
         @* Модальне вікно *@
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -199,7 +199,7 @@
                         v-on:click="dateRight()">
                     >
                 </button>
-                <table id="month-table" class="table table-bordered">
+                <table id="month-table" class="table table-bordered textcolor">
                     <thead>
                         <tr>
                             <th>Пн</th>
@@ -216,8 +216,8 @@
                             <td v-for="(day, indexDay) in week"
                                 :key="indexDay"
                                 v-on:click="handleCellClick(day)"
-                                @* v-on:dblclick="showDetails(day)" *@
-                                :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),}">
+                                v-on:dblclick="showDetails(day)"
+                                :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),} ">
                                 {{ day > 0 ? day : '' }}
                             </td>
                         </tr>
