@@ -12,6 +12,7 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
 <link rel="stylesheet" href="~/css/Report.css" asp-append-version="true" />
 @*---------------------------------------------------------------------------------------------------------------------*@
 
@@ -40,11 +41,16 @@
                             <div class="mb-3">
                                 <label for="hoursDropdown" class="form-label">Виберіть кількість годин:</label>
                                 <select id="hoursDropdown" class="form-select" v-model="selectedHours" v-on:change="UsePeriod1()">
-                                    <option value="1">1 година</option> <!-- Змінили значення на 1 -->
-                                    <option value="2">2 години</option>
-                                    <option value="4">4 години</option>
-                                    <option value="8">8 годин</option>
                                     <option value="10">До кінця дня</option>
+                                    <option value="1">1 година</option> 
+                                    <option value="2">2 години</option>
+                                    <option value="3">3 години</option>
+                                    <option value="4">4 годин</option>
+                                    <option value="5">5 годин</option>
+                                    <option value="6">6 годин</option>
+                                    <option value="7">7 годин</option>
+                                    <option value="8">8 годин</option>
+                                    
                                 </select>
                             </div>
 
@@ -52,8 +58,7 @@
                             <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
                             <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2" :readonly="true">
                             
-                            <label for="cat0" class="form-label">Виберіть категорію проекту:</label>
-
+                            
                             <label for="categorySelect" class="form-label">Виберіть категорію проекту:</label>
                             <select v-model="selectedCategory" id="categorySelect" class="form-select" v-on:change="setCat0()">
                                 <option value="">Оберіть категорію</option>

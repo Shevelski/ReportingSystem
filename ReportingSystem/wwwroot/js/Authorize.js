@@ -1,6 +1,7 @@
 ﻿new Vue({
     el: '#Authorize',
     data: {
+        delay: false,
         email: '',
         login: '',
         rol: '',
@@ -12,6 +13,12 @@
             name: '',
         },
         id: '',
+    },
+    mounted() {
+        setTimeout(() => {
+            this.delay = true;
+            document.getElementById('mask').classList.add('hidden'); // Приховуємо маску
+        }, 500);
     },
     methods: {
         async CheckEmail() {

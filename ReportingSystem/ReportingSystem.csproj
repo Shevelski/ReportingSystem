@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\css\Users\" />
     <Folder Include="wwwroot\img\UserCertificate\" />
   </ItemGroup>
 
