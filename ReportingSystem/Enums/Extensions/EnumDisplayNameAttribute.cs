@@ -24,7 +24,7 @@ namespace ReportingSystem.Enums.Extensions
             get
             {
                 string description = _resourceManager.GetString(_resourceKey);
-                return string.IsNullOrWhiteSpace(description) ? $"[[{_resourceKey}]]" : description;
+                return string.IsNullOrWhiteSpace(description) ? $"{_resourceKey}" : description;
             }
         }
 

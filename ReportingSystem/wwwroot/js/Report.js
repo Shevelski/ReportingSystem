@@ -152,6 +152,9 @@
         },
     },
     methods: {
+        forceRerender() {
+            this.$forceUpdate();
+        },
         async Init() {
 
             console.log(this.rol);
@@ -434,7 +437,6 @@
         showDetails(day) {
             if (day > 0) {
                 this.isShowDetails = true;
-                //this.handleCellClick(day)
             }
         },
         async getProjects() {
@@ -491,7 +493,6 @@
 
             // Перевірка, чи нова дата належить до поточного місяця
             if (currentDate.getMonth() === this.cursorDate.getMonth()) {
-                // Додаємо години та хвилини до обраної дати
                 currentDate.setHours(hour);
                 currentDate.setMinutes(0);
 
