@@ -159,7 +159,7 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task Reports()
         {
-            await CreateAsync("Reports", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER, StartDate DateTime, EndDate DateTime, Category0Id UNIQUEIDENTIFIER, Category1Id UNIQUEIDENTIFIER, Category2Id UNIQUEIDENTIFIER, Category3Id UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, Comment NVARCHAR(MAX)");
+            await CreateAsync("Reports", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER, StartDate DateTime, EndDate DateTime, Category0Id UNIQUEIDENTIFIER, Category1Id UNIQUEIDENTIFIER, Category2Id UNIQUEIDENTIFIER, Category3Id UNIQUEIDENTIFIER, GroupId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, Comment NVARCHAR(MAX)");
         }
 
         //public async Task StepPositions()

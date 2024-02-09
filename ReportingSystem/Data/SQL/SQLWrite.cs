@@ -1,5 +1,6 @@
 ﻿using Bogus.DataSets;
 using Dapper;
+using Microsoft.EntityFrameworkCore.Query;
 using Newtonsoft.Json;
 using ReportingSystem.Data.JSON;
 using ReportingSystem.Enums;
@@ -1467,6 +1468,7 @@ namespace ReportingSystem.Data.SQL
                            ,[Category1Id]
                            ,[Category2Id]
                            ,[Category3Id]
+                           ,[GroupId]
                            ,[ProjectId]
                            ,[Comment])
                      VALUES
@@ -1480,6 +1482,7 @@ namespace ReportingSystem.Data.SQL
                            ,@Category1Id
                            ,@Category2Id
                            ,@Category3Id
+                           ,@GroupId
                            ,@ProjectId
                            ,@Comment)";
 
@@ -1496,29 +1499,16 @@ namespace ReportingSystem.Data.SQL
             DateTime startDate = DateTime.Parse(startDateString);
             DateTime endDate = DateTime.Parse(endDateString);
 
-            //var para = new
-            //{
-            //    Id = Guid.NewGuid(),
-            //    CustomerId = ar[0],
-            //    CompanyId = ar[1],
-            //    EmployeeId = ar[2],
-            //    StartDate = startDate,
-            //    EndDate = endDate,
-            //    Category0Id = idCa0,
-            //    Category1Id = idCa1,
-            //    Category2Id = idCa2,
-            //    Category3Id = idCa3,
-            //    ProjectId = idPr,
-            //    Comment = ar[10]
-            //};
-            //using var database = Context.ConnectToSQL;
-            //await database.QueryAsync(query, para);
+            Guid GroupId = Guid.NewGuid();
 
             for (DateTime currentHour = startDate; currentHour < endDate; currentHour = currentHour.AddHours(1))
             {
                 // Отримати наступну годину
                 DateTime nextHour = currentHour.AddHours(1);
+                string[] ar1 = [ar[0], ar[1], ar[2], currentHour.ToString(), nextHour.ToString()];
 
+                await new SQLWrite().ClearReport(ar1);
+                
                 // Створити параметри для кожного запису
                 var para = new
                 {
@@ -1532,6 +1522,7 @@ namespace ReportingSystem.Data.SQL
                     Category1Id = idCa1,
                     Category2Id = idCa2,
                     Category3Id = idCa3,
+                    GroupId = GroupId,
                     ProjectId = idPr,
                     Comment = ar[10]
                 };
@@ -1540,6 +1531,62 @@ namespace ReportingSystem.Data.SQL
                 using var database = Context.ConnectToSQL;
                 await database.QueryAsync(query, para);
             }
+        }
+       public async Task ClearReport(string[] ar)
+        {
+
+            string startDateString = ar[3];
+            string endDateString = ar[4];
+
+            DateTime startDate = DateTime.Parse(startDateString);
+            DateTime endDate = DateTime.Parse(endDateString);
+
+            var query = @$"DELETE FROM [{Context.dbName}].[dbo].[Reports]
+                           WHERE [CustomerId] = @CustomerId AND
+                           [CompanyId] = @CompanyId AND
+                           [EmployeeId] = @EmployeeId AND
+                           [StartDate] = @StartDate AND
+                           [EndDate] = @EndDate";
+
+            var para = new
+            {
+                CustomerId = ar[0],
+                CompanyId = ar[1],
+                EmployeeId = ar[2],
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+       public async Task ClearDayReport(string[] ar)
+        {
+
+            string startDateString = ar[3];
+            string endDateString = ar[4];
+
+            DateTime startDate = DateTime.Parse(startDateString);
+            DateTime endDate = DateTime.Parse(endDateString);
+
+            var query = @$"DELETE FROM [{Context.dbName}].[dbo].[Reports]
+                           WHERE [CustomerId] = @CustomerId AND
+                           [CompanyId] = @CompanyId AND
+                           [EmployeeId] = @EmployeeId AND
+                           [StartDate] >= @StartDate AND
+                           [EndDate] <= @EndDate";
+
+            var para = new
+            {
+                CustomerId = ar[0],
+                CompanyId = ar[1],
+                EmployeeId = ar[2],
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
         }
         #endregion
         #region ExtendedFunction

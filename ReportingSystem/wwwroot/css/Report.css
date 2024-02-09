@@ -72,6 +72,9 @@ body {
     background-color: #ededed;
 }
 
+[v-cloak] {
+    display: none;
+}
 
 #month-table {
     width: 100%;

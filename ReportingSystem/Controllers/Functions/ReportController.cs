@@ -27,10 +27,24 @@ namespace ReportingSystem.Controllers.Functions
 
 
         [HttpPost]
-        // редагування ролі у користовуча
+        // редагування ролі у користувача
         public async Task SendReport([FromBody] string[] ar)
         {
             await _reportService.SendReport(ar);
+        }
+
+        [HttpPost]
+        // редагування ролі у користувача
+        public async Task ClearReport([FromBody] string[] ar)
+        {
+            await _reportService.ClearReport(ar);
+        }
+
+        [HttpPost]
+        // редагування ролі у користувача
+        public async Task ClearDayReport([FromBody] string[] ar)
+        {
+            await _reportService.ClearDayReport(ar);
         }
     }
 }

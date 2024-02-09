@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="~/css/Report.css" asp-append-version="true" />
 @*---------------------------------------------------------------------------------------------------------------------*@
 
-<div class="container " id="Report">
+<div class="container " id="Report" v-cloak>
     <div class="accordion textcolor" id="accordionExample" v-if="rolls.length != 1">
 
         @* Модальне вікно *@
@@ -29,14 +29,8 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                        
                             <label for="dateTimeInput1" class="form-label">Виберіть дату та час початку події:</label>
                             <input type="datetime-local" class="form-control" id="dateTimeInput1" :value="formatDate(dateTimeInput1)" v-on:input="updateDateTimeInput1">
-
-                            @* <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault5" v-on:change="UsePeriod()">
-                                <label class="form-check-label" for="flexSwitchCheckDefault5">Використати період</label>
-                            </div> *@
 
                             <div class="mb-3">
                                 <label for="hoursDropdown" class="form-label">Виберіть кількість годин:</label>
@@ -54,10 +48,8 @@
                                 </select>
                             </div>
 
-
                             <label for="dateTimeInput2" class="form-label">Виберіть дату та час кінця події:</label>
-                            <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2" :readonly="true">
-                            
+                            <input type="datetime-local" class="form-control" id="dateTimeInput2" :value="formatDate(dateTimeInput2)" v-on:input="updateDateTimeInput2" :readonly="true">                            
                             
                             <label for="categorySelect" class="form-label">Виберіть категорію проекту:</label>
                             <select v-model="selectedCategory" id="categorySelect" class="form-select" v-on:change="setCat0()">
@@ -96,6 +88,7 @@
                                     </option>
                                 </select>
                             </div>
+
                             <div v-if="projects != null && projects != ''">
                                 <label for="projectSelect" class="form-label">Виберіть проект:</label>
                                 <select v-model="selectedProject" id="projectSelect" class="form-select" v-on:change="setProject($event)">
@@ -105,6 +98,7 @@
                                     </option>
                                 </select>
                             </div>
+
                             <div class="mb-3">
                                 <label for="commentTextarea" class="form-label">Введіть коментар:</label>
                                 <textarea class="form-control" id="commentTextarea" rows="4" v-model="comment"></textarea>
@@ -112,23 +106,17 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" v-on:click="DeleteReport()">Видалити</button>
+                        <button type="button" class="btn btn-danger" v-on:click="DeleteDayReport()">День</button>
+                        <button type="button" class="btn btn-danger" v-on:click="DeleteWeekReport()" v-if="!isWeekDay">Тиждень</button>
+                        <button type="button" class="btn btn-primary" v-on:click="SendReport()">Зберегти</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="button" class="btn btn-primary" v-on:click="SendReport()">Зберегти зміни</button>
                     </div>
                 </div>
             </div>
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
-
-    
-        <!-- Button trigger modal -->
-        @* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Launch demo modal
-        </button> *@
-
-        
-     @*---------------------------------------------------------------------------------------------------------------------*@
-        
+  
         <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
             <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
@@ -151,83 +139,100 @@
     <!-------------------------------------------------------------------------------->
 
         <div class="row d-flex justify-content-between align-items-center">
-            <div class="col-4">
-                <div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1" v-on:change="is24HourFormat = !is24HourFormat">
-                        <label class="form-check-label" for="flexSwitchCheckDefault1">Формат часу 24/12</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" v-on:change="isWorkHours = !isWorkHours">
-                        <label class="form-check-label" for="flexSwitchCheckDefault2">Неробочі години</label>
-                    </div>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault4" v-on:change="isWeekDay = !isWeekDay">
-                        <label class="form-check-label" for="flexSwitchCheckDefault4">День - Тиждень</label>
-                    </div>
-                    <div class="form-check form-switch" v-if="!isWeekDay">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault3" v-on:change="isWorkDays = !isWorkDays">
-                        <label class="form-check-label" for="flexSwitchCheckDefault3">Неробочі дні</label>
-                    </div>
-                </div>
-                <div>
-                    <div style="text-align: center;">
-                        <button type="button" class="btn"
-                                v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                                v-on:mouseover="toggleHover"
-                                v-on:mouseout="toggleHover">
-                            Додати подію
-                        </button>
-                    </div>
-                </div>
+            <div style="text-align: center;">
+                <h2 class="bold-month">{{ convDate(cursorDate) }}</h2>
             </div>
-            <div class="col-7">
-                <span class="bold-month">{{convDate(cursorDate)}}</span>
-                <button type="button" class="btn"
-                        v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                        v-on:mouseover="toggleHover"
-                        v-on:mouseout="toggleHover"
-                        v-on:click="setToday()">
-                    Сьогодні
-                </button>
-                <button type="button" class="btn"
-                        v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                        v-on:mouseover="toggleHover"
-                        v-on:mouseout="toggleHover"
-                        v-on:click="dateLeft()">
-                    <
-                </button>
-                <button type="button" class="btn"
-                        v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
-                        v-on:mouseover="toggleHover"
-                        v-on:mouseout="toggleHover"
-                        v-on:click="dateRight()">
-                    >
-                </button>
-                <table id="month-table" class="table table-bordered textcolor">
-                    <thead>
-                        <tr>
-                            <th>Пн</th>
-                            <th>Вт</th>
-                            <th>Ср</th>
-                            <th>Чт</th>
-                            <th>Пт</th>
-                            <th>Сб</th>
-                            <th>Нд</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(week, indexWeek) in weeks" :key="indexWeek">
-                            <td v-for="(day, indexDay) in week"
-                                :key="indexDay"
-                                v-on:click="handleCellClick(day)"
-                                v-on:dblclick="showDetails(day)"
-                                :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),} ">
-                                {{ day > 0 ? day : '' }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="row">
+                <div class="col-4 justify-content-center">
+                    <div class="row justify-content-center">
+                        <div>
+                            <div class="form-check form-switch" v-if="isShowDetails">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault1" v-on:change="is24HourFormat = !is24HourFormat">
+                                <label class="form-check-label" for="flexSwitchCheckDefault1">Формат часу 24/12</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch" v-if="isShowDetails">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault2" v-on:change="isWorkHours = !isWorkHours">
+                                <label class="form-check-label" for="flexSwitchCheckDefault2">Неробочі години</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch" v-if="isShowDetails">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault4" v-on:change="isWeekDay = !isWeekDay">
+                                <label class="form-check-label" for="flexSwitchCheckDefault4">День - Тиждень</label>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-check form-switch" v-if="!isWeekDay && isShowDetails">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault3" v-on:change="isWorkDays = !isWorkDays">
+                                <label class="form-check-label" for="flexSwitchCheckDefault3">Неробочі дні</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-2">
+                            <button type="button" class="btn"
+                                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                                    v-on:mouseover="toggleHover"
+                                    v-on:mouseout="toggleHover"
+                                    v-on:click="setToday()">
+                                Сьогодні
+                            </button>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn"
+                                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                                    v-on:mouseover="toggleHover"
+                                    v-on:mouseout="toggleHover"
+                                    v-on:click="dateLeft()">
+                                <
+                            </button>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn"
+                                    v-bind:class="{ 'btn-light': hovered, 'btn-grey': !hovered }"
+                                    v-on:mouseover="toggleHover"
+                                    v-on:mouseout="toggleHover"
+                                    v-on:click="dateRight()">
+                                >
+                            </button>
+                        </div>
+                        <div class="col-8">
+                            <input type="date" class="form-control" :value="getLocalDate(cursorDate)" v-on:input="updateCursorDate($event)" />
+
+
+                            @* <input type="date" class="form-control" v-model="cursorDate" /> *@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table id="month-table" class="table table-bordered textcolor">
+                            <thead>
+                                <tr>
+                                    <th>Пн</th>
+                                    <th>Вт</th>
+                                    <th>Ср</th>
+                                    <th>Чт</th>
+                                    <th>Пт</th>
+                                    <th>Сб</th>
+                                    <th>Нд</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(week, indexWeek) in weeks" :key="indexWeek">
+                                    <td v-for="(day, indexDay) in week"
+                                        :key="indexDay"
+                                        v-on:click="handleCellClick(day)"
+                                        :style="{'background-color': isCurrentDay(day) ? '#008080' : (isSelectedDay(day) ? 'green' : ''),} ">
+                                        {{ day > 0 ? day : '' }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
         <!------------------------------------------------------------------------->
@@ -283,7 +288,7 @@
         <table id="day-table" class="table table-bordered" v-if="isWeekDay && isShowDetails">
             <thead>
                 <tr>
-                    <th>{{convDate(selectedDate)}}</th>
+                    <th style="width: 150px;">{{convDate(selectedDate)}}</th>
                     <th>Проект</th>
                     <th>Коментар</th>
                 </tr>

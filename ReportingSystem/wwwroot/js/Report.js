@@ -105,6 +105,7 @@
     },
     mounted() {
         this.cursorDate = new Date();
+        console.log(this.cursorDate);
         this.customerId = document.getElementById('idCu').textContent;
         this.companyId = document.getElementById('idCo').textContent;
         this.employeeId = document.getElementById('idEm').textContent;
@@ -152,9 +153,6 @@
         },
     },
     methods: {
-        forceRerender() {
-            this.$forceUpdate();
-        },
         async Init() {
 
             console.log(this.rol);
@@ -175,22 +173,15 @@
                 this.selectedEmployeeId = this.employeeId;
             }
             this.rolls = await this.getAllRolls();
-            this.getCategories();
-            
-            console.log("cat = " + this.categories);
         },
         UsePeriod() {
             this.isUsePeriod = !this.isUsePeriod;
         },
         UsePeriod1() {
-            // Перетворення значення selectedHours на числовий тип
             const hoursToAdd = parseInt(this.selectedHours, 10);
-
             this.dateTimeInput2 = new Date(this.dateTimeInput1);
-
             let currentDate = new Date(this.dateTimeInput1);
             let hour18 = new Date(currentDate.setHours(18, 0, 0, 0));
-
             let nextDate = new Date(this.dateTimeInput1);
             nextDate.setHours(this.dateTimeInput1.getHours() + hoursToAdd);
 
@@ -198,13 +189,8 @@
                 this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + hoursToAdd);
             } else {
                 currentDate.setHours(18, 0, 0, 0);
-                //currentDate.setHours(currentDate.getHours() + hoursToAdd);
                 this.dateTimeInput2 = currentDate;
             };
-            
-
-            console.log("s1 " + this.dateTimeInput1);
-            console.log("s2 " + this.dateTimeInput2);
         },
         getReportProject(hour) {
             if (this.reports != undefined) {
@@ -228,15 +214,22 @@
 
                         if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
                             category = category0.name;
-                            const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
-                            if (category1 != null && category1 != "" && category1 != "'00000000-0000-0000-0000-000000000000'") {
-                                category = category1.name;
-                                const category2 = this.categories.find(category => category1.categoriesLevel2.id === reportForHour.idCategory2);
-                                if (category2 != null && category2 != "" && category2 != "'00000000-0000-0000-0000-000000000000'") {
-                                    category = category2.name;
-                                    const category3 = this.categories.find(category => category2.categoriesLevel3.id === reportForHour.idCategory3);
-                                    if (category3 != null && category3 != "" && category3 != "'00000000-0000-0000-0000-000000000000'") {
-                                        category = category3.name;
+
+                            for (var i = 0; i < category0.categoriesLevel1.length; i++) {
+                                if (category0.categoriesLevel1[i].id  === reportForHour.idCategory1) {
+                                    const category1 = category0.categoriesLevel1[i];
+                                    category = category1.name;
+                                    for (var i1 = 0; i1 < category1.categoriesLevel2.length; i1++) {
+                                        if (category1.categoriesLevel2[i1].id === reportForHour.idCategory2) {
+                                            const category2 = category1.categoriesLevel2[i1];
+                                            category = category2.name;
+                                            for (var i2 = 0; i2 < category2.categoriesLevel3.length; i2++) {
+                                                if (category2.categoriesLevel3[i2].id === reportForHour.idCategory3) {
+                                                    const category3 = category2.categoriesLevel3[i2];
+                                                    category = category3.name;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -248,46 +241,78 @@
                 return "";
             }
         },
-        getReportProject1(hour, dayOfWeek) {
-            const reportForHour = this.reportsWeek.find(report => {
-                const reportStartDate = new Date(report.startDate);
-                const reportEndDate = new Date(report.endDate);
-                const reportStartHour = reportStartDate.getHours();
-                const reportEndHour = reportEndDate.getHours();
-                const reportDayOfWeek = reportStartDate.getDay(); // Отримати день тижня для звіту
+        getReportProject1(hour, day) {
+            if (this.reportsWeek != undefined && this.reportsWeek.length > 0) {
 
-                return hour >= reportStartHour && hour < reportEndHour && reportDayOfWeek === dayOfWeek;
-            });
+                let currentDate = new Date(this.cursorDate);
+                let currentDayOfWeek = currentDate.getDay();
 
-            if (reportForHour && reportForHour.idProject) {
-                const project = this.projects.find(project => project.id === reportForHour.idProject);
+                let difference = day - currentDayOfWeek;
+                let startOfWeek = new Date(currentDate);
+                startOfWeek.setDate(currentDate.getDate() + difference - (currentDayOfWeek < day ? 7 : 0));
 
-                if (project) {
-                    return project.name;
-                } else {
-                    let category = "";
-                    const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
+                let endOfWeek = new Date(startOfWeek);
+                endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-                    if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
-                        category = category0.name;
-                        const category1 = this.categories.find(category => category0.categoriesLevel1.id === reportForHour.idCategory1);
-                        if (category1 != null && category1 != "" && category1 != "'00000000-0000-0000-0000-000000000000'") {
-                            category = category1.name;
-                            const category2 = this.categories.find(category => category1.categoriesLevel2.id === reportForHour.idCategory2);
-                            if (category2 != null && category2 != "" && category2 != "'00000000-0000-0000-0000-000000000000'") {
-                                category = category2.name;
-                                const category3 = this.categories.find(category => category2.categoriesLevel3.id === reportForHour.idCategory3);
-                                if (category3 != null && category3 != "" && category3 != "'00000000-0000-0000-0000-000000000000'") {
-                                    category = category3.name;
+                const reportForHour = this.reportsWeek.find(report => {
+                    const reportStartDate = new Date(report.startDate);
+                    const reportEndDate = new Date(report.endDate);
+                    const reportStartHour = reportStartDate.getHours();
+                    const reportEndHour = reportEndDate.getHours();
+                    let reportStartDay = reportStartDate.getDay();
+                    let reportEndDay = reportEndDate.getDay();
+                    if (reportStartDay == 0) {
+                        reportStartDay = 7
+                    };
+                    if (reportEndDay == 0) {
+                        reportEndDay = 7
+                    };
+                    // Перевірка, чи година потрапляє в інтервал годин
+                    const isHourInRange = hour >= reportStartHour && hour < reportEndHour;
+
+                    // Перевірка, чи день тижня потрапляє в інтервал між startOfWeek і endOfWeek
+                    const isDayInRange = reportStartDay == day && reportEndDay == day;
+
+                    return isHourInRange && isDayInRange;
+                });
+
+                if (reportForHour && reportForHour.idProject && this.projectsDay.length > 0) {
+                    const project = this.projectsDay.find(project => project.id === reportForHour.idProject);
+
+                    if (project) {
+                        return project.name;
+                    } else {
+                        let category = "";
+                        const category0 = this.categories.find(category => category.id === reportForHour.idCategory0);
+
+                        if (category0 != null && category0 != "" && category0 != "'00000000-0000-0000-0000-000000000000'") {
+                            category = category0.name;
+
+                            for (var i = 0; i < category0.categoriesLevel1.length; i++) {
+                                if (category0.categoriesLevel1[i].id  === reportForHour.idCategory1) {
+                                    const category1 = category0.categoriesLevel1[i];
+                                    category = category1.name;
+                                    for (var i1 = 0; i1 < category1.categoriesLevel2.length; i1++) {
+                                        if (category1.categoriesLevel2[i1].id === reportForHour.idCategory2) {
+                                            const category2 = category1.categoriesLevel2[i1];
+                                            category = category2.name;
+                                            for (var i2 = 0; i2 < category2.categoriesLevel3.length; i2++) {
+                                                if (category2.categoriesLevel3[i2].id === reportForHour.idCategory3) {
+                                                    const category3 = category2.categoriesLevel3[i2];
+                                                    category = category3.name;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+                        return category;
                     }
-                    return category;
                 }
-            }
 
-            return "";
+                return "";
+            }
         },
         getReportComment(hour) {
             
@@ -305,6 +330,95 @@
             }
 
            
+        },
+        async DeleteDayReport() {
+            this.dateTimeInput1 = new Date(this.dateTimeInput1);
+            this.dateTimeInput1.setHours(0, 0, 0, 0);
+            this.dateTimeInput2 = new Date(this.dateTimeInput1);
+            this.dateTimeInput2.setHours(23, 59, 59, 999);
+
+            var v0 = this.selectedCustomerId;
+            var v1 = this.selectedCompanyId;
+            var v2 = this.selectedEmployeeId;
+            var v3 = this.dateTimeInput1;
+            var v4 = this.dateTimeInput2;
+            var ar = [v0, v1, v2, v3, v4];
+
+            try {
+                await axios.post('/Report/ClearDayReport', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу ClearDayReport:', error);
+            }
+            this.closeModalProgrammatically();
+            this.getReports();
+            this.getWeekReports();
+            this.getProjects();
+            this.getCategories();
+            this.showDetails(this.curday);
+
+        },
+        updateCursorDate(event) {
+            console.log("Selected date:", event.target.value);
+            this.cursorDate = new Date(event.target.value);
+            this.handleCellClick(this.cursorDate.getDate());
+        },
+        getLocalDate(date) {
+            const dateObject = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+            return dateObject.toISOString().split('T')[0];
+        },
+        async DeleteWeekReport() {
+
+            // Встановлення дати початку на понеділок
+            let currentDate = new Date(this.cursorDate); 
+            this.dateTimeInput1 = new Date(currentDate);
+            this.dateTimeInput1.setHours(0, 0, 0, 0);
+            this.dateTimeInput1.setDate(currentDate.getDate() - currentDate.getDay() + 1);
+
+            // Встановлення дати кінця на неділю
+            this.dateTimeInput2 = new Date(currentDate);
+            this.dateTimeInput2.setHours(23, 59, 59, 999);
+            this.dateTimeInput2.setDate(currentDate.getDate() - currentDate.getDay() + 7);
+
+
+            var v0 = this.selectedCustomerId;
+            var v1 = this.selectedCompanyId;
+            var v2 = this.selectedEmployeeId;
+            var v3 = this.dateTimeInput1;
+            var v4 = this.dateTimeInput2;
+            var ar = [v0, v1, v2, v3, v4];
+
+            try {
+                await axios.post('/Report/ClearDayReport', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу ClearDayReport:', error);
+            }
+            this.closeModalProgrammatically();
+            this.getReports();
+            this.getWeekReports();
+            this.getProjects();
+            this.getCategories();
+            this.showDetails(this.curday);
+
+        },
+        async DeleteReport() {
+            var v0 = this.selectedCustomerId;
+            var v1 = this.selectedCompanyId;
+            var v2 = this.selectedEmployeeId;
+            var v3 = this.dateTimeInput1;
+            var v4 = this.dateTimeInput2;
+            var ar = [v0, v1, v2, v3, v4];
+
+            try {
+                await axios.post('/Report/ClearReport', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу ClearReport:', error);
+            }
+            this.closeModalProgrammatically();
+            this.getReports();
+            this.getWeekReports();
+            this.getProjects();
+            this.getCategories();
+            this.showDetails(this.curday);
         },
         async SendReport() {
             var v0 = this.selectedCustomerId;
@@ -327,6 +441,10 @@
                 console.error('Помилка під час виклику методу SendReport:', error);
             }
             this.closeModalProgrammatically();
+            this.getReports();
+            this.getWeekReports();
+            this.getProjects();
+            this.getCategories();
             this.showDetails(this.curday);
             
         },
@@ -364,6 +482,8 @@
         },
         setCat0() {
             this.projects = null;
+            this.selectedHours = 1;
+            this.selectedProjectId = null;
             console.log(this.selectedCategory);
             console.log(this.categories);
             for (var i = 0; i < this.categories.length; i++) {
@@ -383,6 +503,8 @@
         },
         setCat1() {
             this.projects = null;
+            this.selectedHours = 1;
+            this.selectedProjectId = null;
             console.log(this.selectedCategory1);
             for (var i = 0; i < this.categories1.length; i++) {
                 if (this.categories1[i].id == this.selectedCategory1) {
@@ -399,6 +521,8 @@
         },
         setCat2() {
             this.projects = null;
+            this.selectedHours = 1;
+            this.selectedProjectId = null;
             for (var i = 0; i < this.categories2.length; i++) {
                 if (this.categories2[i].id == this.selectedCategory2) {
                     this.categories3 = this.categories2[i].categoriesLevel3;
@@ -413,6 +537,8 @@
         },
         setCat3() {
             this.projects = null;
+            this.selectedHours = 1;
+            this.selectedProjectId = null;
             if (this.categories3.projects != null && this.categories3.projects.length > 0) {
                 this.projects = this.categories3.projects;
                 if (this.categories3[i].projects != null && this.categories3[i].projects.length > 0) {
@@ -471,50 +597,164 @@
         },
         handleCellClick(day) {
             if (day > 0) {
-                this.showDetails(day);
                 const dateString = `${day}-${this.cursorDate.getMonth() + 1}-${this.cursorDate.getFullYear()}`;
                 const [dayPart, monthPart, yearPart] = dateString.split('-');
                 const dateObject = new Date(`${yearPart}-${monthPart}-${dayPart}`);
                 this.cursorDate = dateObject;
                 this.selectedDate = this.cursorDate;
+
+
+                console.log("1= " + day);
+                console.log("2= " + this.cursorDate);
+                console.log("3= " + this.selectedDate);
+
                 this.getReports();
                 this.getProjects();
+                this.getCategories();
+
                 this.getWeekReports();
                 this.curday = day;
+                this.showDetails(day);
             }
         },
         handleCellWeekClick(hour, numDayOfWeek) {
+
+            this.selectedCategory = "";
+            this.selectedCategory0 = "";
+            this.selectedCategory1 = "";
+            this.selectedCategory2 = "";
+            this.selectedCategory3 = "";
+            this.selectedProject = "";
+            this.categories1 = "";
+            this.categories2 = "";
+            this.categories3 = "";
+            this.comment = "";
+            this.projectSelect = "";
+
             let currentDate = new Date(this.cursorDate);
             let currentDay = currentDate.getDate();
             let currentDayOfWeek = currentDate.getDay();
 
+            if (currentDayOfWeek == 0) {
+                currentDayOfWeek = 7;
+            };
             let difference = numDayOfWeek - currentDayOfWeek;
             currentDate.setDate(currentDay + difference);
-
-            // Перевірка, чи нова дата належить до поточного місяця
-            if (currentDate.getMonth() === this.cursorDate.getMonth()) {
-                currentDate.setHours(hour);
-                currentDate.setMinutes(0);
-
-                this.dateTimeInput1 = new Date(currentDate);
-                this.dateTimeInput2 = new Date(this.dateTimeInput1);
-                this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
-                this.openModalProgrammatically();
-
-            } else {
-                return null;
-            }
-        },
-        handleCellDayClick(hour) {
-
-            let currentDate = new Date(this.cursorDate);
-
             currentDate.setHours(hour);
             currentDate.setMinutes(0);
 
+            let targetReport = this.reportsWeek.find(report => {
+                let reportDate = new Date(report.startDate);
+                return reportDate.getTime() === currentDate.getTime();
+            });
+
+            console.log(targetReport);
+
+            if (targetReport) {
+
+                this.dateTimeInput1 = new Date(targetReport.startDate);
+                this.dateTimeInput2 = new Date(targetReport.endDate);
+
+                this.selectedCategory = targetReport.idCategory0;
+                this.selectedCategory1 = targetReport.idCategory1;
+                this.selectedCategory2 = targetReport.idCategory2;
+                this.selectedCategory3 = targetReport.idCategory3;
+                this.selectedProject = targetReport.idProject;
+                this.comment = targetReport.comment;
+                this.setCat0();
+                if (this.selectedCategory1 && this.selectedCategory1 !== "00000000-0000-0000-0000-000000000000") {
+                    this.setCat1();
+                    if (this.selectedCategory2 && this.selectedCategory2 !== "00000000-0000-0000-0000-000000000000") {
+                        this.setCat2();
+                        if (this.selectedCategory3 && this.selectedCategory3 !== "00000000-0000-0000-0000-000000000000") {
+                            this.setCat3();
+                        }
+                    }
+                }
+                if (this.selectedProject && this.selectedProject !== "00000000-0000-0000-0000-000000000000") {
+                    this.selectedProjectId = this.selectedProject;
+                }
+                this.openModalProgrammatically();
+            } else {
+                if (currentDate.getMonth() === this.cursorDate.getMonth()) {
+                    currentDate.setHours(hour);
+                    currentDate.setMinutes(0);
+
+                    this.dateTimeInput1 = new Date(currentDate);
+                    this.dateTimeInput2 = new Date(this.dateTimeInput1);
+                    this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
+                    this.openModalProgrammatically();
+
+                } else {
+                    return null;
+                }
+            }
+
+            //if (currentDate.getMonth() === this.cursorDate.getMonth()) {
+            //    currentDate.setHours(hour);
+            //    currentDate.setMinutes(0);
+
+            //    this.dateTimeInput1 = new Date(currentDate);
+            //    this.dateTimeInput2 = new Date(this.dateTimeInput1);
+            //    this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
+            //    this.openModalProgrammatically();
+
+            //} else {
+            //    return null;
+            //}
+        },
+        handleCellDayClick(hour) {
+            let currentDate = new Date(this.cursorDate);
+
+            this.selectedCategory = "";
+            this.selectedCategory0 = "";
+            this.selectedCategory1 = "";
+            this.selectedCategory2 = "";
+            this.selectedCategory3 = "";
+            this.selectedProject = "";
+            this.categories1 = "";
+            this.categories2 = "";
+            this.categories3 = "";
+
+            this.comment = "";
+            this.projectSelect = "";
+            currentDate.setHours(hour);
+            currentDate.setMinutes(0);
+
+            let targetReport = this.reports.find(report => {
+                let reportDate = new Date(report.startDate);
+                    return reportDate.getTime() === currentDate.getTime();
+            });
+
+            if (targetReport) {
+
+                this.dateTimeInput1 = new Date(targetReport.startDate);
+                this.dateTimeInput2 = new Date(targetReport.endDate);
+
+                this.selectedCategory = targetReport.idCategory0;
+                this.selectedCategory1 = targetReport.idCategory1;
+                this.selectedCategory2 = targetReport.idCategory2;
+                this.selectedCategory3 = targetReport.idCategory3;
+                this.selectedProject = targetReport.idProject;
+                this.comment = targetReport.comment;
+                this.setCat0();
+                if (this.selectedCategory1 && this.selectedCategory1 !== "00000000-0000-0000-0000-000000000000") {
+                    this.setCat1();
+                    if (this.selectedCategory2 && this.selectedCategory2 !== "00000000-0000-0000-0000-000000000000") {
+                        this.setCat2();
+                        if (this.selectedCategory3 && this.selectedCategory3 !== "00000000-0000-0000-0000-000000000000") {
+                            this.setCat3();
+                        }
+                    }
+                }
+                if (this.selectedProject && this.selectedProject !== "00000000-0000-0000-0000-000000000000") {
+                    this.selectedProjectId = this.selectedProject;
+                }
+            } else {
             this.dateTimeInput1 = new Date(currentDate);
             this.dateTimeInput2 = new Date(this.dateTimeInput1);
             this.dateTimeInput2.setHours(this.dateTimeInput2.getHours() + 1);
+            }
 
             this.openModalProgrammatically();
         },
@@ -539,6 +779,9 @@
             let currentDate = new Date(this.cursorDate);
             let currentDay = currentDate.getDate();
             let currentDayOfWeek = currentDate.getDay();
+            if (currentDayOfWeek == 0) {
+                currentDayOfWeek = 7
+            };
 
             let difference = numDayOfWeek - currentDayOfWeek;
             currentDate.setDate(currentDay + difference);
@@ -604,8 +847,8 @@
         setToday() {
             this.cursorDate = new Date();
             this.selectedDate = new Date();
-            this.weeks();
-
+            this.curday = this.selectedDate.getDate();
+            this.handleCellClick(this.curday);
         },
         toggleHover() {
             this.hovered = !this.hovered;
@@ -632,7 +875,6 @@
                 }
             });
             this.reports = responseReports.data; 
-            console.log(this.reports);
         },
         async getWeekReports() {
             let date = new Date(this.cursorDate);
@@ -643,13 +885,13 @@
 
             // Знаходимо останній день тижня (п'ятниця)
             let lastDayOfWeek = new Date(firstDayOfWeek);
-            lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 4);
+            lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
 
             // Встановлюємо час для першого дня на 9:00:00
-            firstDayOfWeek.setHours(9, 0, 0, 0);
+            firstDayOfWeek.setHours(0, 0, 0, 0);
 
             // Встановлюємо час для останнього дня на 18:00:00
-            lastDayOfWeek.setHours(18, 0, 0, 0);
+            lastDayOfWeek.setHours(23, 59, 59, 999);
 
             let responseReports = await axios.get("/Report/GetReports", {
                 params: {

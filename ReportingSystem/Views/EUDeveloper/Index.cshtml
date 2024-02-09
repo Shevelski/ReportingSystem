@@ -8,7 +8,7 @@
 
 
 
-@model string[];
+@* @model string[]; *@
 
 <!DOCTYPE html>
 <html>
@@ -16,13 +16,13 @@
     <title>Сторінка зі списком даних</title>
 </head>
 <body>
-    <h1 class="textcolor">Список даних:</h1>
+    @* <h1 class="textcolor">Список даних:</h1>
     <ul>
         @foreach (var item in Model)
         {
             <li class="textcolor">@item</li>
         }
-    </ul>
+    </ul> *@
 </body>
 </html>
 

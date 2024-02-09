@@ -95,7 +95,9 @@ namespace ReportingSystem.Controllers.Users
                             }
                             string[] ids = [custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()];
                             HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));
-                            return RedirectToAction("Index", controller, new { ids });
+                            //return RedirectToAction("Index", controller, new { ids });
+                            return RedirectToAction("Index", controller);
+
                         }
                     }
                 }

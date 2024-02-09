@@ -1470,6 +1470,7 @@ namespace ReportingSystem.Data.SQL
                         IdCategory1 = report_.Category1Id,
                         IdCategory2 = report_.Category2Id,
                         IdCategory3 = report_.Category3Id,
+                        IdGroup = report_.GroupId,
                         IdProject = report_.ProjectId,
                         Comment = report_.Comment
                     };

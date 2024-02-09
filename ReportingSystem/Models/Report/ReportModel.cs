@@ -12,6 +12,7 @@
         public Guid IdCategory1 { get; set; }
         public Guid IdCategory2 { get; set; }
         public Guid IdCategory3 { get; set; }
+        public Guid IdGroup { get; set; }
         public Guid IdProject { get; set; }
         public string? Comment { get; set; }
     }

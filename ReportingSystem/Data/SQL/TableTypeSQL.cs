@@ -139,6 +139,7 @@ namespace ReportingSystem.Data.SQL
             public Guid Category1Id;
             public Guid Category2Id;
             public Guid Category3Id;
+            public Guid GroupId;
             public Guid ProjectId;
             public string? Comment;  
         }
