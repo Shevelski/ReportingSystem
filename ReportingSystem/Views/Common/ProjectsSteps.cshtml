@@ -1,54 +1,35 @@
 ﻿@using ReportingSystem.Properties;
 
 
-<head>
-    <title>123</title>
-</head>
-
 @{
-    ViewData["Title"] = "Проекти";
+    ViewData["Title"] = "Етапи проектів";
 }
 
 <div class="text-center">
-    <h1 class="display-4 textcolor">Проекти</h1>
+    <h1 class="display-4 textcolor">Етапи проектів</h1>
 </div>
-
-<style>
-    .modal-dialog {
-        position: fixed;
-        top: 30%;
-        left: 30%;
-        transform: translate(-50%, -50%);
-    }
-
-    .highlighted .accordion-button lv1 {
-        background-color: #c5ff24;
-        color: black;
-    }
-
-    .highlighted .accordion-button lv2 {
-        background-color: #b5c1ce;
-        color: black;
-    }
-
-    .highlighted .accordion-button lv3 {
-        background-color: #9aa9bc;
-        color: black;
-    }
-
-    .textcolor {
-        color: white
-    }
-</style>
 
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="~/css/ProjectsSteps.css" asp-append-version="true" />
 
-<div class="container textcolor" id="app">
-    <div class="accordion">
+<div class="container textcolor" id="ProjectsSteps">
+
+    <div class="row mb-3">
+        <div class="col">
+
+            <div class="btn-group d-flex justify-content-between">
+                <button type="button" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1,-1, -1, -1, -1)">
+                    Додати етапи
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion" v-if="steps.length !== 1">
 
         @* Модальне вікно *@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -64,805 +45,293 @@
                         <div v-if="modalType === 2">
                             <div class="form-group">
                                 <label class="form-label">{{modalName}}</label>
-                                <input class="form-control" placeholder="Введіть нову назву категорії" type="text" v-model="editCategoryName" />
+                                <input class="form-control" placeholder="Введіть нову назву кроку" type="text" v-model="editStepyName" />
                             </div>
                         </div>
 
                         @*Для додавання категорії*@
                         <div v-if="modalType === 1">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Введіть назву нової категорії" type="text" v-model="editCategoryName" />
+                                <input class="form-control" placeholder="Введіть назву нового кроку" type="text" v-model="editStepName" />
                             </div>
                         </div>
 
-                        <p> {{modalOperation}}</p>
+                        <p :class="{ 'red-text': modalStepUsed }">{{ modalOperation }}</p>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateCategory()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditCategory()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteCategory()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 4" v-on:click="confirmCreateProject()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 5" v-on:click="confirmEditProject()">Підтвердити</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 6" v-on:click="confirmDeleteProject()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 1" v-on:click="confirmCreateStep()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditStep()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmDeleteStep()">Підтвердити</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mb-3" v-if="modeCategories">
-            <!-- Поле введення для пошуку -->
-            <input v-model="searchQueryCategory" type="text" class="form-control" placeholder="Пошук...">
+
+
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
+            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
+                <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
+            </select>
         </div>
 
-        <div class="mb-3" v-if="modeProjects">
-            <!-- Поле введення для пошуку -->
-            <input v-model="searchQueryProject" type="text" class="form-control" placeholder="Пошук...">
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
+            <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedCompany($event)" v-model="selectedCompanyId">
+                <option v-for="company in companies" :value="company.id">{{ company.name }}</option>
+            </select>
+        </div>
+        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator' || rol === 'Customer'">
+            <select class="form-select mb-3" aria-label="Default select example 1" v-on:change="getSelectedProject($event)" v-model="selectedProjectId">
+                <option v-for="project in projects" :value="project.id">{{ project.name }}</option>
+            </select>
         </div>
 
+        <div class="mb-3">
+            <!-- Поле введення для пошуку -->
+            <input v-model="searchQueryStep" type="text" class="form-control" placeholder="Пошук...">
+        </div>
 
-        <div class="row mb-3">
-            <div class="col">            
-                <div class="btn-group d-flex justify-content-between">
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="modeProjects" v-model="modeProjects" v-on:change="showProjects()">
-                        <label class="form-check-label" for="modeProjects">Проекти</label>
+        <div class="container" v-if="countFilteredSteps > 10">
+            <div class="row">
+                <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
+                        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
+                        <button type="button" v-if="countFilteredSteps > 10" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
+                        <button type="button" v-if="countFilteredSteps > 15" class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
                     </div>
-
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="modeSteps" v-model="modeSteps" v-on:change="showSteps()">
-                        <label class="form-check-label" for="modeSteps">Етапи проектів</label>
-                    </div>
-
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="modeCategories" v-model="modeCategories" v-on:change="showCategories()">
-                        <label class="form-check-label" for="modeCategories">Категорії проектів</label>
+                    <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
+                        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні" :style="{ visibility: pageCur !== 1 ? 'visible' : 'hidden' }"><<</button>
+                        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
+                        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні" :style="{ visibility: pageCur < pageCount ? 'visible' : 'hidden' }">>></button>
                     </div>
                 </div>
-
-                <div class="btn-group d-flex justify-content-between">
-                    <button type="button" v-if="modeCategories" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-on:click="toggleModal(1,-1, -1, -1)">Додати Категорії</button>
-                    <button type="button" v-if="modeProjects" class="btn btn-secondary col-sm-6 ms-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Додати Проект</button>
-                </div>
-
             </div>
         </div>
+
+        @*<div class="container">
+        <div class="row">
+        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
+        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
+        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
+        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
+        </div>
+        <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
+        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні"><<</button>
+        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
+        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні">>></button>
+        </div>
+        </div>
+        </div>
+        </div>*@
 
         <div style="margin-top: 1em;"></div>
-
-        <div v-if="modeCategories" v-for="(categoryLevel1, indexLevel1) in filteredCategory" :key="indexLevel1" class="accordion-item">
-            <h2 class="accordion-header" :id="'heading' + indexLevel1">
-                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1" :aria-controls="'collapse' + indexLevel1">
-                    {{ categoryLevel1.name }}
+        <div v-for="(step, index) in filteredSteps" :key="index" class="accordion-item">
+            <h2 class="accordion-header" :id="'heading' + index">
+                <button class="accordion-button" v-on:click="setFilteredIndex(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
+                    {{step.name}}
                 </button>
             </h2>
-            <div :id="'collapse' + indexLevel1" class="accordion-collapse collapse" :aria-labelledby="'heading' + indexLevel1" data-bs-parent="#app">
+            <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#ProjectsSteps">
                 <div class="accordion-body">
                     <table class="table">
                         <tbody>
+                             <tr>
+                                <td><strong>Назва:</strong></td>
+                                <td>{{step.name}}</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Дата початку:</strong></td>
+                                <td>{{ showFormatDate(step.startDate) }}</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Дата кінця:</strong></td>
+                                <td>{{showFormatDate(step.endDate)}}</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Дата кінця планова:</strong></td>
+                                <td>{{showFormatDate(step.planDate)}}</td>
+                            </tr>
+                            @*  <tr>
+                                <td><strong>Посади:</strong></td>
+                                <td>{{positions}}</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Учасники:</strong></td>
+                                <td>{{members}}</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Статус:</strong></td>
+                                <td>
+                                    {{status}}
+                                </td>
+                            </tr> *@
+
+                            @*<tr>
+                                <td><strong>Телефон:</strong></td>
+                                <td>{{customer.phone}}</td>
+                            </tr>
                             <tr>
-                                <td colspan="2" class="text-left">
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати категорію" v-on:click="toggleModal(2,indexLevel1, -1, -1)">ε</button>&nbsp;
-                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити категорію" v-on:click="toggleModal(3,indexLevel1, -1, -1)">-</button>
-                                    <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Додати підкатегорію"  v-on:click="toggleModal(1,indexLevel1, -1, -1)">+</button>
+                                <td><strong>E-mail:</strong></td>
+                                <td>{{customer.email}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Пароль:</strong></td>
+                                <td>{{customer.password}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Кількість компаній:</strong></td>
+                                <td>{{amountCompany(index)}}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Кількість співробітників:</strong></td>
+                                <td>{{ getTotalEmployeesForUser(index) }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Тип ліцензії:</strong></td>
+                                <td>{{ customer.statusLicence.licenceName }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Дата завершення ліцензії:</strong></td>
+                                <td>{{ showFormatDate(customer.endTimeLicense) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    <button v-on:click="toggleRenewalAccordion(index)" class="btn btn-outline-secondary">
+                                        Продовжити ліцензію
+                                    </button>
+                                    <button v-if="customer.statusLicence.licenceType !== 4" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Архівування
+                                    </button>
+                                    <button v-if="historyCount>0" v-on:click="toggleModal(4, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Історія
+                                    </button>
+                                    <button v-if="customer.statusLicence.licenceType !== 4 && customer.statusLicence.licenceType !== 5 && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Анулювання ліцензії
+                                    </button>
+                                    <button v-if="customer.statusLicence.licenceType == 4" v-on:click="toggleModal(5, index)" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                        Видалити
+                                    </button>
                                 </td>
                             </tr>
-                        </tbody>
-                    </table>
-                     <div v-if="categoryLevel1.categoriesLevel2">
-                        <div v-for="(categoryLevel2, indexLevel2) in categoryLevel1.categoriesLevel2" :key="indexLevel2" class="accordion-item">
-                            <h2 class="accordion-header" :id="'heading' + indexLevel1 + indexLevel2">
-                                <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + indexLevel1 + indexLevel2" :aria-controls="'collapse' + indexLevel1 + indexLevel2">
-                                    {{ categoryLevel2.name }}
-                                </button>
-                            </h2>
-                            <div :id="'collapse' + indexLevel1 + indexLevel2" class="accordion-collapse collapse" :aria-labelledby="'heading' + indexLevel1 + indexLevel2" :data-bs-parent="'#collapse' + indexLevel1">
-                                <div class="accordion-body">
+                            <tr v-if="isRenewalAccordionOpen(index)">
+                                <td colspan="2">
+                                    <h4>Продовження ліцензії:</h4>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="period" v-model="selectedOption">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Період
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="endDate" v-model="selectedOption">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Кінцева дата
+                                        </label>
+                                    </div>
+
+                                    <p>Термін продовження:</p>
+                                    <div v-if="selectedOption === 'period'">
+                                        <p>
+                                            <div class="form-group">
+                                                <label for="renewalPeriod">Період продовження:</label>
+                                                <div class="input-group">
+                                                    <input type="number" class="form-control" id="renewalPeriod" v-model="bufferCost.renewalPeriod" v-on:input="handleRenewalPeriodChange(index)">
+                                                    <select class="form-control" v-model="bufferCost.renewalUnit" v-on:change="handleRenewalUnitChange(index)">
+                                                        <option value="day">День</option>
+                                                        <option value="week">Тиждень</option>
+                                                        <option value="month">Місяць</option>
+                                                        <option value="quarter">Квартал</option>
+                                                        <option value="year">Рік</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </p>
+                                    </div>
+                                    <div v-else>
+                                        <p>Дата до якої буде продовжено:</p><input type="date" class="form-control" data-date="" data-date-format="DD MMMM YYYY"
+                                                                                   v-model="bufferCost.nextDateCalendar" v-on:change="handleRenewalCalendar(index)" />
+                                    </div>
+
+                                    <h4>Загальна вартість ліцензії:</h4>
                                     <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Стаття</th>
+                                                <th scope="col">Вартість</th>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="2" class="text-left">
-                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати категорію" v-on:click="toggleModal(2,indexLevel1, indexLevel2, -1)">ε</button>&nbsp;
-                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити категорію" v-on:click="toggleModal(3,indexLevel1, indexLevel2, -1)">-</button>
-                                                <button type="button" class="btn btn-secondary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Додати підкатегорію"  v-on:click="toggleModal(1,indexLevel1, indexLevel2, -1)">+</button>
+                                                <th scope="row">1</th>
+                                                <td>Базова ціна(місяць)</td>
+                                                <td>5000</td>
+                                            </tr>
                                             <tr>
-                                                <td>
-                                                    <div v-if="categoryLevel2.categoriesLevel3">
-                                                        <div v-for="(categoryLevel3, indexLevel3) in categoryLevel2.categoriesLevel3" :key="indexLevel3">
-                                                            {{ categoryLevel3.name }}
-
-                                                            <div>
-                                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати категорію" v-on:click="toggleModal(2,indexLevel1, indexLevel2, indexLevel3)">ε</button>&nbsp;
-                                                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити категорію" v-on:click="toggleModal(3,indexLevel1, indexLevel2, indexLevel3)">-</button>
-                                                            </div>
-                                                        </div>
+                                                <th scope="row">2</th>
+                                                <td>Період продовження</td>
+                                                <td>{{bufferCost.subPeriod}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td> Завершення нової ліцензії</td>
+                                                <td>{{showFormatDate(bufferCost.nextDate)}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>Розмір знижки(місяць)</td>
+                                                <td>{{bufferCost.amountCostDown}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>Всього знижка</td>
+                                                <td>{{bufferCost.allCostDown}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">6</th>
+                                                <td>Загальна вартість</td>
+                                                <td>{{bufferCost.amountGeneralCost}}</td>
+                                            </tr>
+                                            <tr v-if="isShowCheckMode(index)">
+                                                <td colspan="3" align="center">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" v-model="bufferCost.inactiveUser" v-on:change="calculateCost(index)">
+                                                        <label class="form-check-label" for="flexCheckDefault">
+                                                            Користувач не був активним (розрахунок від поточної дати)
+                                                        </label>
                                                     </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" align="right">
+                                                    <button v-on:click="toggleModal(1, index)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Підтвердити</button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </td>
+                            </tr> *@
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    
-        <div class="container" v-if="modeCategories">
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="input-group mb-3 mt-3">
-                        <span class="input-group-text" id="basic-addon1">Показати</span>
-                        <input type="text" class="form-control" v-model="itemsPerPage" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="mb-3 mt-3 d-flex justify-content-end">
-                        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні"><<</button>
-                        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
-                        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні">>></button>
-                    </div>
+       
+    </div>
+
+    <div v-else>
+        <div style="margin-top: 50px; margin-bottom: 50px;">
+            <div class="text-center">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-                                                        
-<script>
 
-    new Vue({
-        el: '#app',
-        data: {
-            searchQueryCategory:'',
-            searchQueryProject:'',
-            pageCount:1,
-            pageCur:1,
-            itemsPerPage: 10,
-            modalType: 0,
-            modalIndex: null,
-            modalName: '',
-            modalOperation: null,
-            modalTitle: null,
-            modalCategoryUsed:false,
-            modeProjects: true,
-            modeCategories: false,
-            modeSteps: false,
-            editCategoryName:'',
-            navigLevel1: -1,
-            navigLevel2: -1,
-            navigLevel3: -1,
-            levelCategory:0,
-            buferCategories:{
-            },
-            buferProject: {
-            },
-            projects:[
-                {
-                    name:'Проект 1'
-                },
-                {
-                    name: 'Проект 2'
-                },
-                {
-                    name: 'Проект 3'
-                },
-                {
-                    name: 'Проект 4'
-                },
-                {
-                    name: 'Проект 5'
-                },
-                {
-                    name: 'Проект 6'
-                },
-            ],
-            categoriesLevel1:[
-                {
-                    name: 'Категорія 1 Рівень 1',
-                    used: true,
-                    projects: ['1'],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: ['1'],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: ['1'],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: ['1'],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: ['1'],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: ['1'],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: ['1'],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 2 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 3 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 4 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 5 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 6 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 7 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 8 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 8 Рівень 1',
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 9 Рівень 1',
-                    
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 10 Рівень 1',
-                    
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    name: 'Категорія 11 Рівень 1',
-                    
-                    projects: [],
-                    categoriesLevel2: [
-                        {
-                            name: 'Категорія 1 Рівень 2',
-                            
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                        {
-                            name: 'Категорія 2 Рівень 2',
-                            
-                            projects: [],
-                            categoriesLevel3: [
-                                {
-                                    name: 'Категорія 1 Рівень 3',
-                                    projects: [],
-                                },
-                                {
-                                    name: 'Категорія 2 Рівень 3',
-                                    projects: [],
-                                },
-                            ],
-                        },
-                    ],
-                }
-            ],
-
-        },
-        created() {
-            // Виконайте сортування за іменем при створенні компоненту
-            this.sortCategoriesByName();
-        },
-        computed: {
-            countFilteredCategory(){
-                const nameFilter = this.searchQueryCategory ? this.searchQueryCategory.toLowerCase() : '';
-               
-                let filteredList = this.categoriesLevel1.filter((categoryLevel1) => {
-                    const nameMatches = !nameFilter || categoryLevel1.name.toLowerCase().includes(nameFilter);
-                        return nameMatches;
-                });
-                return filteredList.length;
-            },
-            filteredCategory(){
-                const nameFilter = this.searchQueryCategory ? this.searchQueryCategory.toLowerCase() : '';
-               
-                let filteredList = this.categoriesLevel1.filter((categoryLevel1) => {
-                    const nameMatches = !nameFilter || categoryLevel1.name.toLowerCase().includes(nameFilter);
-                        return nameMatches;
-                    
-                });
-
-                if (this.pageCur === 1) {
-                    return filteredList.slice(0, this.pageCur * this.itemsPerPage);
-                } else
-                {
-                    return filteredList.slice(this.pageCur * this.itemsPerPage - this.itemsPerPage, this.pageCur * this.itemsPerPage);
-                }
-
-            },
-        },
-        methods: {
-            nextBatch(){
-                this.pageCount = Math.ceil(this.countFilteredCategory / this.itemsPerPage);
-  
-                if (this.pageCur < this.pageCount) {
-                    this.pageCur++;
-                }
-            }, 
-            prevBatch() {
-                if (this.pageCur > 1) {
-                    this.pageCur--;
-                }
-            },
-            firstBatch() {
-                if (this.pageCur !== 1) {
-                    this.pageCur = 1;
-                }
-            },
-            sortCategoriesByName() {
-                this.categoriesLevel1.sort((a, b) => {
-                    return a.name.localeCompare(b.name);
-                });
-            },
-            confirmCreateCategory(){
-                const newSubcategoryLevel1 = 
-                {
-                      name: this.editCategoryName,
-                      categoriesLevel2: []
-                }
-                const newSubcategoryLevel2 = 
-                {
-                      name: this.editCategoryName,
-                      categoriesLevel3: []
-                }
-                const newSubcategoryLevel3 = 
-                {
-                    name: this.editCategoryName,
-                }
-                 
-                if (this.navigLevel1 == -1) {
-                    this.categoriesLevel1.push(newSubcategoryLevel1)
-                }
-
-                if (this.navigLevel1 !== -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
-                     this.filteredCategory[this.navigLevel1].categoriesLevel2.push(newSubcategoryLevel2);
-                }
-
-                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 == -1) {
-                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3.push(newSubcategoryLevel3);
-                }
-                this.editCategoryName = '';
- 
-            },
-            confirmEditCategory() {
-                if (this.navigLevel1 !== -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1) {
-                     this.filteredCategory[this.navigLevel1].name = this.editCategoryName;
-                }
-
-
-                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 == -1) {
-                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].name = this.editCategoryName;
-                }
-
-                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 !== -1) {
-                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3[this.navigLevel3].name = this.editCategoryName;
-                }
-
-            },
-            confirmDeleteCategory() {
-
-                if (this.navigLevel1 !== -1 && this.navigLevel2 == -1 && this.navigLevel3 == -1 && !this.modalCategoryUsed) {
-                    this.categoriesLevel1.splice(this.navigLevel1 + this.pageCur * this.itemsPerPage - this.itemsPerPage, 1);
-                        this.navigLevel1 = -1;
-                }
-                
-                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 == -1 && !this.modalCategoryUsed) {
-                    this.filteredCategory[this.navigLevel1].categoriesLevel2.splice(this.navigLevel2, 1);
-                    this.navigLevel2 = -1;
-                } 
-                
-                if (this.navigLevel1 !== -1 && this.navigLevel2 !== -1 && this.navigLevel3 !== -1 && !this.modalCategoryUsed) {
-                    this.filteredCategory[this.navigLevel1].categoriesLevel2[this.navigLevel2].categoriesLevel3.splice(this.navigLevel3, 1);
-                    this.navigLevel3 = -1;
-                }
-            },
-            confirmCreateProject() {
-
-            },
-            confirmEditProject() {
-
-            },
-            confirmDeleteProject() {
-
-            },
-            showProjects(){
-                this.modeCategories = false;
-                this.modeSteps = false;
-                this.modeProjects = true;
-                this.pageCur = 1;
-            },
-            showCategories(){
-                this.modeProjects = false;
-                this.modeSteps = false;
-                this.modeCategories = true;
-                this.pageCur = 1;
-            },
-            showSteps(){
-                this.modeProjects = false;
-                this.modeCategories = false;
-                this.modeSteps = true;
-                this.pageCur = 1;
-            },
-
-            toggleModal(type, indexLevel1, indexLevel2, indexLevel3) {
-                
-                this.modalType = type;
-
-                this.navigLevel1 = indexLevel1;
-                this.navigLevel2 = indexLevel2;
-                this.navigLevel3 = indexLevel3;
-
-                //console.log(indexLevel1);
-                //console.log(this.navigLevel1);
-                //console.log(indexLevel2);
-                //console.log(this.navigLevel2);
-                //console.log(indexLevel3);
-                //console.log(this.navigLevel3);
-
-                
-                if (indexLevel1 == -1) {
-                    this.modalName = '';
-                }
-
-                if (indexLevel1 !== -1 && indexLevel2 == -1) {
-                     this.modalName = this.filteredCategory[indexLevel1].name;
-                     this.modalCategoryUsed = this.filteredCategory[indexLevel1].projects.length !== 0;
-                }
-
-                if (indexLevel1 !== -1 && indexLevel2 !== -1) {
-                    this.modalName = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].name;
-                    this.modalCategoryUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].projects.length !== 0;
-                }
-
-                if (indexLevel1 !== -1 && indexLevel2 !== -1 && indexLevel3 !== -1) {
-                    this.modalName = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].name;
-                    this.modalCategoryUsed = this.filteredCategory[indexLevel1].categoriesLevel2[indexLevel2].categoriesLevel3[indexLevel3].projects.length !== 0;
-                }
-
-
-                if (type === 1) {
-                    this.modalOperation = 'Ви впевнені, що хочете додати категорію в структуру? ' + this.modalName;
-                    this.modalTitle = 'Додавання категорії';
-                }
-                if (type === 2) {
-                    this.modalOperation = 'Ви впевнені, що хочете редагувати категорію проекту? ' + this.modalName;
-                    this.modalTitle = 'Редагування категорії';
-                    this.editCategoryName = this.modalName;
-                }
-                if (type === 3) {
-                    if (!this.modalCategoryUsed) {
-                        this.modalOperation = 'Ви впевнені, що хочете видалити категорію проекту? ' + this.modalName;
-                    } else {
-                        this.modalOperation = 'Категорія з назвою ' + this.modalName + ' використовується в проекті. Видалення не буде виконане';
-                    }
-                    this.modalTitle = 'Видалення категорії';
-                }
-                if (type === 4) {
-                    this.modalOperation = 'Ви впевнені, що хочете створити проект? ' + this.modalName;
-                    this.modalTitle = 'Додавання проекту';
-                }
-                if (type === 5) {
-                    this.modalOperation = 'Ви впевнені, що хочете редагувати проект?' + this.modalName;
-                    this.modalTitle = 'Редагування проекту';
-                }
-                if (type === 6) {
-                    this.modalOperation = 'Ви впевнені, що хочете видалити проект? ' + this.modalName;
-                    this.modalTitle = 'Видалення проекту';
-                }
-
-            },
-            closeAllAccordions() {
-                const accordionItems = document.querySelectorAll(".accordion-collapse");
-                accordionItems.forEach(item => {
-                    item.classList.remove("show");
-                })
-            },
-
-        }
-    });
-</script>
+<script src="~/js/ProjectsSteps.js" asp-append-version="true"></script>

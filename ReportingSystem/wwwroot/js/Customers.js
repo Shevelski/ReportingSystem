@@ -300,7 +300,6 @@
             const jsDate = new Date(dateString);
             return jsDate.toLocaleDateString('en-GB', options);
         },
-
         toggleRenewalAccordion(index) {
             if (this.isRenewalAccordionOpen(index)) {
                 this.closeRenewalAccordion(index);

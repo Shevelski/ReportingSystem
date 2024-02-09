@@ -5,6 +5,7 @@ using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Project;
+using ReportingSystem.Models.Project.Step;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 using System.ComponentModel.Design;
@@ -409,8 +410,72 @@ namespace ReportingSystem.Data.SQL
 
                 await _database.ExecuteAsync(query, para);
                 await ProjectSteps(project, step.Id);
+                await StepPositions(step);
+                await StepMembers(step);
 
             }
+        }
+        public async Task StepPositions(ProjectStepModel step)
+        {
+            foreach (var pos in step.Positions)
+            {
+                var query = $@"INSERT INTO [{Context.dbName}].[dbo].[StepPositions]
+                        ([Id]
+                        ,[StepId]
+                        ,[ProjectId]
+                        ,[CustomerId]
+                        ,[CompanyId]
+                        ,[EmployeePositionId])
+                    VALUES
+                        (@Id
+                        ,@StepId
+                        ,@ProjectId
+                        ,@CustomerId
+                        ,@CompanyId
+                        ,@EmployeePositionId)";
+                var para = new
+                {
+                    Id = Guid.NewGuid(),
+                    StepId = step.Id,
+                    ProjectId = step.ProjectId,
+                    CustomerId = step.CustomerId,
+                    CompanyId = step.CompanyId,
+                    EmployeePositionId = await new SQLRead().GetPositionIdByName(pos.NamePosition, step.CustomerId, step.CompanyId)
+                };
+                await _database.ExecuteAsync(query, para);
+            }
+            
+        }
+        public async Task StepMembers(ProjectStepModel? step)
+        {
+            foreach (var item in step.Members)
+            {
+                var query = $@"INSERT INTO [{Context.dbName}].[dbo].[StepMembers]
+                        ([Id]
+                       ,[StepId]
+                       ,[ProjectId]
+                       ,[CustomerId]
+                       ,[CompanyId]
+                       ,[EmployeeId])
+                 VALUES
+                       (@Id
+                       ,@StepId
+                       ,@ProjectId
+                       ,@CustomerId
+                       ,@CompanyId
+                       ,@EmployeeId)";
+                var para = new
+                {
+                    Id = Guid.NewGuid(),
+                    StepId = step.Id,
+                    ProjectId = step.ProjectId,
+                    CustomerId = step.CustomerId,
+                    CompanyId = step.CompanyId,
+                    EmployeeId = item.Id
+                };
+                await _database.ExecuteAsync(query, para);
+            }
+            
         }
         public async Task ProjectSteps(ProjectModel project, Guid stepId)
         {

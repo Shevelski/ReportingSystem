@@ -20,15 +20,17 @@ namespace ReportingSystem.Services
         }
 
         //реєстрація замовника
-        public async Task RegistrationCustomer(string[] ar)
+        public async Task<bool> RegistrationCustomer(string[] ar)
         {
-            await (mode ? new JsonWrite().RegistrationCustomer(ar) : new SQLWrite().RegistrationCustomer(ar));
+            //await (mode ? new JsonWrite().RegistrationCustomer(ar) : 
+                return await new SQLWrite().RegistrationCustomer(ar);
         }
 
         //продовження ліцензії
         public async Task RenewalLicense(string[] ar)
         {
-            await (mode ? new JsonWrite().RenewalLicense(ar) : new SQLWrite().RenewalLicense(ar));
+            //await (mode ? new JsonWrite().RenewalLicense(ar) : 
+                await new SQLWrite().RenewalLicense(ar);
         }
 
         public async Task ArchivingLicence(string[] ar)

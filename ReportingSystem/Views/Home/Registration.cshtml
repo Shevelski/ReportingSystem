@@ -15,7 +15,7 @@
 </div>
 
 <div id="Registration" class="container bg-transparent">
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-if="result == ''">
         <div class="panel-heading "></div>
         <div class="panel-body">
             <form class="fontcustom">
@@ -60,6 +60,8 @@
             </form>
         </div>
     </div>
+
+    <h1 class="display-4 textcolor">{{result}}</h1>
 
 </div>
 

@@ -6,6 +6,7 @@ using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Project;
+using ReportingSystem.Models.Project.Step;
 using ReportingSystem.Models.Report;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
@@ -1076,7 +1077,6 @@ namespace ReportingSystem.Data.SQL
             }
             return project;
         }
- 
         public async Task<ProjectStatusModel?> GetProjectStatus(Guid id)
         {
             var query = $"SELECT [Type] FROM [{Context.dbName}].[dbo].[ProjectStatus] Where Id = @Id";
@@ -1429,6 +1429,49 @@ namespace ReportingSystem.Data.SQL
         //}
 
 
+        #endregion
+        #region Steps
+
+        public async Task<List<ProjectStepModel>?> GetStepsProjects(string idCu, string idCo, string idPr)
+        {
+            var query = $@"SELECT * FROM [{Context.dbName}].[dbo].[Steps]
+                            WHERE CustomerId = @CustomerId AND
+                                  CompanyId = @CompanyId AND
+                                  ProjectId = @ProjectId";
+            var para = new { 
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+            };
+
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<TableTypeSQL.StepsProjects>(query, para);
+            List<ProjectStepModel> list = [];
+            if (result.Any())
+            {
+                foreach (var step_ in result)
+                {
+                    ProjectStepModel step = new()
+                    {
+                        Id = step_.Id,
+                        CustomerId = step_.CustomerId,
+                        CompanyId = step_.CompanyId,
+                        ProjectId = step_.ProjectId,
+                        Name = step_.Name,
+                        Description = step_.Description,
+                        StartDate = step_.DateStart,
+                        PlanDate = step_.DatePlan,
+                        EndDate = step_.DateEnd,
+                        //Positions = step_.Positions,
+                        //Members = 
+                    };
+
+                    list.Add(step);
+                }
+
+            }
+            return list;
+        }
         #endregion
         #region Reports
         public async Task<List<ReportModel>> GetReports(string idCu, string idCo, string idEm, string startDate, string endDate)

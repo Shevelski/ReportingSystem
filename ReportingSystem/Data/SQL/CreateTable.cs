@@ -109,14 +109,8 @@ namespace ReportingSystem.Data.SQL
         {
             await CreateAsync("Projects", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, Name NVARCHAR(MAX) NOT NULL, Description NVARCHAR(MAX), ProjectCostsForCompany FLOAT, ProjectCostsForCustomer FLOAT, StartDate DATETIME, PlanDate DATETIME, EndDate DATETIME, Status UNIQUEIDENTIFIER, Head UNIQUEIDENTIFIER, CategoryModel0 UNIQUEIDENTIFIER, CategoryModel1 UNIQUEIDENTIFIER, CategoryModel2 UNIQUEIDENTIFIER, CategoryModel3 UNIQUEIDENTIFIER");
             await AlterTableAsync("Projects", "ADD FOREIGN KEY(Status) REFERENCES ProjectStatus(Id)");
-            //await AlterTableAsync("Projects", "ADD FOREIGN KEY(CategoryModel0) REFERENCES ProjectCategory0(Id)");
-            //await AlterTableAsync("Projects", "ADD FOREIGN KEY(CategoryModel1) REFERENCES ProjectCategory1(Id)");
-            //await AlterTableAsync("Projects", "ADD FOREIGN KEY(CategoryModel2) REFERENCES ProjectCategory2(Id)");
-            //await AlterTableAsync("Projects", "ADD FOREIGN KEY(CategoryModel3) REFERENCES ProjectCategory3(Id)");
-            //await AlterTableAsync("Steps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
-            //await AlterTableAsync("ProjectPositions", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
-            //await AlterTableAsync("StepSteps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
-
+            await AlterTableAsync("Steps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
+            await AlterTableAsync("ProjectMembers", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
             await AlterTableAsync("ProjectSteps", "ADD FOREIGN KEY(ProjectId) REFERENCES Projects(Id)");
         }
 
@@ -138,9 +132,22 @@ namespace ReportingSystem.Data.SQL
         {
             await CreateAsync("TaketimeoffDate", "Id UNIQUEIDENTIFIER PRIMARY KEY, EmployeeId UNIQUEIDENTIFIER NOT NULL, Date DATETIME");
         }
+
         public async Task Steps()
         {
             await CreateAsync("Steps", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER NOT NULL, CompanyId UNIQUEIDENTIFIER NOT NULL, ProjectId UNIQUEIDENTIFIER NOT NULL, Name NVARCHAR(MAX) NOT NULL, Description NVARCHAR(MAX), DateStart DATETIME, DatePlan DATETIME, DateEnd DATETIME");
+        }
+
+        public async Task StepMembers()
+        {
+            await CreateAsync("StepMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER");
+            await AlterTableAsync("StepMembers", "ADD FOREIGN KEY(StepId) REFERENCES Steps(Id)");
+        }
+
+        public async Task StepPositions()
+        {
+            await CreateAsync("StepPositions", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER,  EmployeePositionId UNIQUEIDENTIFIER NOT NULL");
+            await AlterTableAsync("StepPositions", "ADD FOREIGN KEY(StepId) REFERENCES Steps(Id)");
         }
 
         public async Task ProjectPositions()
@@ -151,7 +158,6 @@ namespace ReportingSystem.Data.SQL
         public async Task ProjectSteps()
         {
             await CreateAsync("ProjectSteps", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, StepsId UNIQUEIDENTIFIER");
-            //await AlterTableAsync("ProjectSteps", "ADD FOREIGN KEY(StepsId) REFERENCES Steps(Id)");
         }
         public async Task ProjectMembers()
         {
@@ -161,23 +167,6 @@ namespace ReportingSystem.Data.SQL
         {
             await CreateAsync("Reports", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER, StartDate DateTime, EndDate DateTime, Category0Id UNIQUEIDENTIFIER, Category1Id UNIQUEIDENTIFIER, Category2Id UNIQUEIDENTIFIER, Category3Id UNIQUEIDENTIFIER, GroupId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, Comment NVARCHAR(MAX)");
         }
-
-        //public async Task StepPositions()
-        //{
-        //    await CreateAsync("StepPositions", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER,  EmployeePositionId UNIQUEIDENTIFIER NOT NULL");
-        //    await AlterTableAsync("StepPositions", "ADD FOREIGN KEY(StepId) REFERENCES Steps(Id)");
-        //    await AlterTableAsync("StepPositions", "ADD FOREIGN KEY(EmployeePositionId) REFERENCES EmployeePosition(Id)");
-        //}
-        //public async Task StepSteps()
-        //{
-        //    await CreateAsync("StepSteps", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, StepsId UNIQUEIDENTIFIER");
-        //    await AlterTableAsync("StepSteps", "ADD FOREIGN KEY(StepId) REFERENCES Steps(Id)");
-        //}
-        //public async Task StepMembers()
-        //{
-        //    await CreateAsync("StepMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER");
-        //}
-
 
         public async Task Employees()
         {
@@ -189,8 +178,7 @@ namespace ReportingSystem.Data.SQL
             await AlterTableAsync("HospitalDate", "ADD FOREIGN KEY(EmployeeId) REFERENCES Employees(Id)");
             await AlterTableAsync("AssignmentDate", "ADD FOREIGN KEY(EmployeeId) REFERENCES Employees(Id)");
             await AlterTableAsync("TaketimeoffDate", "ADD FOREIGN KEY(EmployeeId) REFERENCES Employees(Id)");
-            //await AlterTableAsync("ProjectMembers", "ADD FOREIGN KEY(EmployeeId) REFERENCES Employees(Id)");
-            //await AlterTableAsync("StepMembers", "ADD FOREIGN KEY(EmployeeId) REFERENCES Employees(Id)");
+            await AlterTableAsync("Reports", "ADD FOREIGN KEY(EmployeeId) REFERENCES Employees(Id)");
         }
 
         public async Task Companies()

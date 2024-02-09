@@ -46,7 +46,6 @@ namespace ReportingSystem.Data.SQL
         public async Task<bool> ProjectStepsAsync() => await TableExistsAsync("ProjectSteps");
         public async Task<bool> ProjectMembersAsync() => await TableExistsAsync("ProjectMembers");
         public async Task<bool> StepPositionsAsync() => await TableExistsAsync("StepPositions");
-        public async Task<bool> StepStepsAsync() => await TableExistsAsync("StepSteps");
         public async Task<bool> StepMembersAsync() => await TableExistsAsync("StepMembers");
         public async Task<bool> ReportsAsync() => await TableExistsAsync("Reports");
     }

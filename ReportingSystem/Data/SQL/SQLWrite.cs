@@ -497,30 +497,79 @@ namespace ReportingSystem.Data.SQL
             };
             await database.QueryAsync<Guid>(query, para);
         }
-        public async Task RegistrationCustomer(string[] ar)
+        public async Task<bool> RegistrationCustomer(string[] ar)
         {
-            using var database = Context.ConnectToSQL;
+            Guid ConfigureId = Guid.NewGuid();
+
+            await CustomerConfigureCreate(ConfigureId);
+
             var query = $"INSERT INTO [{Context.dbName}].[dbo].[Customers] ([Id], [FirstName], [SecondName], [ThirdName], [StatusLicenceId], [ConfigureId], [Phone], [Email], [Password], [EndTimeLicense], [DateRegistration])" +
-                        "VALUES(@id, @firstName, @secondName, @thirdName, @statusLicenceId, @phone, @email, @password, @endTimeLicense, @dateRegistration)";
+                        "VALUES(@Id, @FirstName, @SecondName, @ThirdName, @StatusLicenceId, @ConfigureId, @Phone, @Email, @Password, @EndTimeLicense, @DateRegistration)";
             var para = new
             {
-                id = Guid.NewGuid(),
-                firstName = ar[1],
-                secondName = ar[2],
-                thirdName = ar[3],
-                statusLicenceId = GetLicenceIdByType(4),
-                phone = ar[4],
-                email = ar[0],
-                password = EncryptionHelper.Encrypt(ar[5]),
-                endTimeLicense = DateTime.Today.AddDays(30),
-                dateRegistration = DateTime.Today
+                Id = Guid.NewGuid(),
+                FirstName = ar[1],
+                SecondName = ar[2],
+                ThirdName = ar[3],
+                StatusLicenceId = await GetLicenceIdByType(4),
+                ConfigureId = ConfigureId,
+                Phone = ar[4],
+                Email = ar[0],
+                Password = EncryptionHelper.Encrypt(ar[5]),
+                EndTimeLicense = DateTime.Today.AddDays(30),
+                DateRegistration = DateTime.Today
             };
-            await database.QueryAsync(query, para);
-
-            await InsertCustomerHistory(para.id,
-                para.dateRegistration, para.endTimeLicense,
+            using var database = Context.ConnectToSQL;
+            try
+            {
+                await database.QueryAsync(query, para);
+                await InsertCustomerHistory(para.Id, para.DateRegistration, para.EndTimeLicense,
                 await GetLicenceIdByType(0), await GetLicenceIdByType(4),
                 0.0, "30d", "Реєстрація замовника");
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+                throw;
+            }
+        }
+        public async Task CustomerConfigureCreate(Guid id)
+        {
+            var query = $@"INSERT INTO [{Context.dbName}].[dbo].[Configure]
+                       ([Id]
+                       ,[Param1]
+                       ,[Param2]
+                       ,[Param3]
+                       ,[Param4]
+                       ,[Param5]
+                       ,[Param6]
+                       ,[Param7]
+                       ,[Param8]
+                       ,[Param9]
+                       ,[Param10]
+                       ,[Param11]
+                       ,[Param12])
+                 VALUES
+                       (@Id
+                       ,-1
+                       ,-1
+                       ,-1
+                       ,-1
+                       ,'string'
+                       ,'string'
+                       ,'string'
+                       ,'string'
+                       ,'00000000-0000-0000-0000-000000000000'
+                       ,'00000000-0000-0000-0000-000000000000'
+                       ,'00000000-0000-0000-0000-000000000000'
+                       ,'00000000-0000-0000-0000-000000000000')";
+            var para = new
+            {
+                Id = id
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
         }
         #endregion
         #region Authorization

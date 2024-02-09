@@ -1,0 +1,66 @@
+html {
+  font-size: 14px;
+}
+
+.control-label {
+    font-size: 12px;
+}
+
+.form-control {
+    font-size: 14px;
+    height:33px;
+}
+
+.btn-default.active {
+    background: #6c757d;
+    color: #fff;
+}
+
+form.editable input {
+    color: #008080;
+}
+
+    @media (min-width: 768px) {
+        html {
+            font-size: 16px;
+        }
+    }
+
+    html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.modal-dialog {
+    position: fixed;
+    top: 30%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+}
+
+.accordion-button {
+    height: 45px;
+}
+
+.lv1 .accordion-button {
+    background-color: #e7f4ff;
+    color: black;
+}
+
+.lv2 .accordion-button {
+    background-color: #b5c1ce;
+    color: black;
+}
+
+
+.red-text {
+    color: red;
+}
+
+.textcolor {
+    color: white
+}

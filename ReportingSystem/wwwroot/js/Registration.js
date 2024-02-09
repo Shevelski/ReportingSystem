@@ -7,6 +7,7 @@ new Vue({
         thirdName: '',
         password: '',
         phone: '',
+        result:'',
     },
     methods: {
         async createCustomer() {
@@ -17,14 +18,18 @@ new Vue({
             const v4 = this.phone;
             const v5 = this.password;
             const ar = [v0, v1, v2, v3, v4, v5];
-            try 
-            {
-                await axios.post('/Customers/RegistrationCustomer', ar);
-            } 
-            catch (error) 
-            {
-                console.error('Помилка під час виклику методу RegistrationCustomer:', error);
-            }
-            },
+            var x = await axios.post('/Customers/RegistrationCustomer', ar);
+            if (x) {
+                this.result = "Реєстрація успішна, можете перейти до авторизації";
+            } else {
+                this.result = "Реєстрація невдала, можете звернутися до менеджера";
+            };
+            this.email = '';
+            this.firstName = '';
+            this.secondName = '';
+            this.thirdName = '';
+            this.password = '';
+            this.phone = '';
+        },
     }
 })

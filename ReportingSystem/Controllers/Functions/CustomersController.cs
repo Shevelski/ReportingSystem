@@ -36,10 +36,9 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpPost]
         //створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
-        public IActionResult RegistrationCustomer([FromBody] string[] ar)
+        public Task<bool> RegistrationCustomer([FromBody] string[] ar)
         {
-            var result = _customersService.RegistrationCustomer(ar);
-            return result != null ? Ok(result) : NotFound();
+            return _customersService.RegistrationCustomer(ar);
         }
 
         [HttpPost]

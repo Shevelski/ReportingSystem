@@ -127,6 +127,19 @@ namespace ReportingSystem.Data.SQL
             public Guid CategoryModel3;
         }
 
+        public class StepsProjects
+        {
+            public Guid Id;
+            public Guid CustomerId;
+            public Guid CompanyId;
+            public Guid ProjectId;
+            public string? Name;
+            public string? Description;
+            public DateTime DateStart;
+            public DateTime DatePlan;
+            public DateTime DateEnd;
+        }
+
         public class Report
         {
             public Guid Id;
