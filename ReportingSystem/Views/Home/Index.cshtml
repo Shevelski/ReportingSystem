@@ -4,9 +4,16 @@
     ViewData["Title"] = @Localizer["StartPage"];
     Layout = "_LayoutAuthorize";
 }
-
-
-<h1 class="text-center textcolor">@Localizer["ReportingSystem"]</h1>
+@{
+    var path = Context.Request.Path;
+    if (path == "/")
+    {
+        
+    }
+}
+<p class="text-center textcolor customfont">
+    @Localizer["ReportingSystem"]
+</p>
 
 @* <p class="textcolor">Cookie Value: @ViewBag.CookieValue</p> *@
 
@@ -24,6 +31,9 @@
     
     .textcolor {
         color: white
+    }
+    .customfont{
+        font-size: 24px;
     }
 
 </style>

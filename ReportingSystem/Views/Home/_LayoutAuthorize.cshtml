@@ -48,7 +48,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand main-name @(path == "/" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["ReportingSystem"]</a>
+                <a class="navbar-brand main-name" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["ReportingSystem"]</a>
                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                 </button>
@@ -56,7 +56,7 @@
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         
                        <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" href="/Home/Authorize" data-target="#content-container">@Localizer["Authorize"]</a>
+                            <a class="nav-link" href="/Home/Authorize" data-target="#content-container">@Localizer["Authorize"]</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @(path == "/Home/Registration" ? "active": "")" href="/Home/Registration" data-target="#content-container">@Localizer["Registration"]</a>
@@ -115,7 +115,7 @@
     </div>
 
     <footer class="border-top footercustom" id="Footer">
-        &copy; @formattedDate - @Localizer["ReportingSystem"] - <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
+        @formattedDate &copy @Localizer["ReportingSystem"] <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
        @*  <div class="container">
             
         </div> *@
@@ -150,6 +150,13 @@
                 var url = $(this).attr('href');
                 var target = $(this).data('target');
                 loadContent(url, target);
+            });
+
+            $(document).ready(function () {
+                $('.nav-link').click(function () {
+                    $('.nav-link').removeClass('active'); // Remove 'active' class from all items
+                    $(this).closest('.nav-link').addClass('active'); // Add 'active' class to the clicked item
+                });
             });
         });
     </script> 
@@ -214,7 +221,7 @@
         padding: 20px; /* Внутрішні відступи для основного вмісту */
     }
 
-    .nav-link.active {
+    .active {
         text-decoration: underline;
     }
 
