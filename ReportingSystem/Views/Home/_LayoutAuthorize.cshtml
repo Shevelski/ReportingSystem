@@ -54,34 +54,26 @@
                 </button>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        @* @if (User.Identity.IsAuthenticated)
-                        {
-                        <li class="nav-item">
-                            <a class="nav-link  @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Admin">Admin</a>
-                        </li>
-                        }
-                        else
-                        {
-                        <li class="nav-item">
-                            <a class="nav-link  @(path == "/Home/LogIn" ? "active": "")" asp-area="" asp-controller="Home" asp-action="LogIn">Вхід</a>
-                        </li>
-                        } *@
-
-                       @*  <li class="nav-item">
-                            <a class="nav-link" href="/Home/Authorize" data-target="#content-container">@Localizer["Authorize"]</a>
+                        
+                       <li class="nav-item">
+                            <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" href="/Home/Authorize" data-target="#content-container">@Localizer["Authorize"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/Home/Registration" data-target="#content-container">@Localizer["Registration"]</a>
-                        </li> *@
-                        <li class="nav-item">
+                            <a class="nav-link @(path == "/Home/Registration" ? "active": "")" href="/Home/Registration" data-target="#content-container">@Localizer["Registration"]</a>
+                        </li>
+                        @* <li class="nav-item">
                             <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">@Localizer["Authorize"]</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @(path == "/Home/Registration" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Registration">@Localizer["Registration"]</a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" asp-area="" asp-controller="Home" asp-action="AboutUs">@Localizer["AboutUs"]</a>
+                            <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" href="/Home/AboutUs" data-target="#content-container">@Localizer["AboutUs"]</a>
                         </li>
+
+                        @* <li class="nav-item">
+                            <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" asp-area="" asp-controller="Home" asp-action="AboutUs">@Localizer["AboutUs"]</a>
+                        </li> *@
                         <li class="nav-item">
                             <a class="nav-link @(path == "/Home/Contacts" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Contacts">@Localizer["Contacts"]</a>
                         </li>
@@ -111,15 +103,16 @@
         </nav>
     </header>
    @*  <div id="page-content">
-    </div> *@
+    </div>  *@
+    
     <div class="container transparent-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    @* <div id="content-container">
-    </div> *@
+    <div id="content-container">
+    </div>
 
     <footer class="border-top footercustom" id="Footer">
         &copy; @formattedDate - @Localizer["ReportingSystem"] - <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
@@ -135,7 +128,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    @* <script>
+    <script>
         $(document).ready(function () {
             // Function to load content dynamically
             function loadContent(url, target) {
@@ -159,7 +152,7 @@
                 loadContent(url, target);
             });
         });
-    </script> *@
+    </script> 
 
     @* <script>
         $(document).ready(function () {
@@ -187,6 +180,16 @@
     body {
         font-family: Arial, sans-serif; /* Задаємо шрифт для всієї сторінки */
         background-color: #f8f8f8; /* Задаємо колір фону сторінки */
+        background-image: url('/img/back.jpg'); /* Specify the path to your image */
+        background-size: cover; /* Adjust the size to cover the entire background */
+        background-repeat: no-repeat; /* Prevent the background image from repeating */
+        background-position: center center; /* Center the background image */
+        width: 100vw; /* Set the width to 100% of the viewport width */
+        height: 100vh; /* Set the height to 100% of the viewport height */
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+        background-attachment: fixed;
+        /* opacity: 0.5; /* 50% transparency */
     }
 
     .navbar-brand {

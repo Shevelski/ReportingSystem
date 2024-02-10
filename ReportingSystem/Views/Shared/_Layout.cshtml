@@ -6,7 +6,8 @@
     <title>@ViewData["Title"] - ReportingSystem</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />
+    @*
+    <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />*@
 </head>
 <body>
     @* @Html.Partial("_Header") *@
@@ -20,7 +21,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                       <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
@@ -49,18 +50,13 @@
             </div>
         </nav>
     </header> *@
-    
-    <div class="container">
+
+    <div class="container transparent-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-             &copy; 2023 - ReportingSystem - <a asp-area="" asp-controller="Home" asp-action="Index">DIGITAP</a>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
@@ -69,3 +65,11 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+
+
+    .textcolor {
+        color: white
+    }
+</style>
