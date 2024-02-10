@@ -121,14 +121,11 @@
     @* <div id="content-container">
     </div> *@
 
-    <footer class="border-top footercustom">
-
-
-
-        &copy;@formattedDate - @Localizer["ReportingSystem"] - <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
-       @* <div class="container transparent-container">
+    <footer class="border-top footercustom" id="Footer">
+        &copy; @formattedDate - @Localizer["ReportingSystem"] - <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
+       @*  <div class="container">
             
-       </div> *@
+        </div> *@
     </footer>
 
     
@@ -184,7 +181,6 @@
 </body>
 
 </html>
-
 
 
 <style>
@@ -275,3 +271,4 @@
         /* opacity: 0.5; /* 50% transparency */
     }
 </style>
+

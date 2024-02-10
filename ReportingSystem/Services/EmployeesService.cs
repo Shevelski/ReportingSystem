@@ -1,5 +1,8 @@
-﻿using ReportingSystem.Data.JSON;
+﻿using Microsoft.AspNetCore.Mvc;
+using ReportingSystem.Data.JSON;
 using ReportingSystem.Data.SQL;
+using ReportingSystem.Models.Employee;
+using ReportingSystem.Models.News;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
 
@@ -21,6 +24,24 @@ namespace ReportingSystem.Services
         public async Task<EmployeeModel?> GetEmployee(Guid idCu, Guid idCo, Guid idEm)
         {
             return mode ? await new JsonRead().GetEmployee(idCu, idCo, idEm) : await new SQLRead().GetEmployee(idCu, idCo, idEm);
+        }
+
+        public async Task<List<EmployeeBirthdayModel>> GetEmployeeBirthday(Guid idCu, Guid idCo)
+        {
+            //return mode ? await new JsonRead().GetEmployee(idCu, idCo, idEm) : 
+                return await new SQLRead().GetEmployeeBirthday(idCu, idCo);
+        }
+
+        public async Task<List<EmployeeBirthdayModel>> GetEmployeeDevBirthday()
+        {
+            //return mode ? await new JsonRead().GetEmployee(idCu, idCo, idEm) : 
+                return await new SQLRead().GetEmployeeDevBirthday();
+        }
+
+        public async Task<List<EmployeeBirthdayModel>> GetEmployeeChiefBirthday(Guid idCu)
+        {
+            //return mode ? await new JsonRead().GetEmployee(idCu, idCo, idEm) : 
+                return await new SQLRead().GetEmployeeChiefBirthday(idCu);
         }
 
         //Редагування співробітника

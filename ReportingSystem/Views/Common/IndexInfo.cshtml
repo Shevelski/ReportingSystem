@@ -8,14 +8,27 @@
 
 <div class="container" id="IndexInfo">
 
-    <div class="text-center">
-        <h1 class="display-4 textcolor">Іменинники місяця</h1>
+    <div class="text-center" v-if="birthdays.length > 0">
+        <h1 class="display-4 textcolor" v-if="birthdays.length > 1">Іменинники дня:</h1>
+        <h1 class="display-4 textcolor" v-if="birthdays.length == 1">Іменинник дня:</h1>
         
+        <div v-for="user in birthdays" :key="user.id">
+            <p class="textcolor">{{ user.firstName }} {{ user.secondName }} {{ user.thirdName }}  {{ user.emailWork }}  {{ user.phoneWork }}</p>
+            @* <p class="textcolor">Email: {{ user.emailWork }}</p>
+            <p class="textcolor">Phone: {{ user.phoneWork }}</p> *@
+            <hr />
+        </div>
     </div>
 
 
     <div class="text-center">
-        <h1 class="display-4 textcolor">Останні новини</h1>
+        <h1 class="display-4 textcolor">Останні новини:</h1>
+        @* <div v-for="new in news" :key="new.id">
+            <p class="textcolor">{{ new.header }}</p>
+            <p class="textcolor">{{ new.url }}</p>
+            
+            <hr />
+        </div> *@
     </div>
 
 </div>
