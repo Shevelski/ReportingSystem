@@ -16,7 +16,9 @@
         modalOperation: null,
         modalType: 0,
         selectedCategory: '',
-        categories:''
+        selectedCategoryId: '',
+        categories: [0],
+        category:''
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -48,21 +50,32 @@
             this.personalInfo.birthDate = this.formatDate(this.personalInfo.birthDate);
             this.personalInfo.workStartDate = this.formatDate(this.personalInfo.workStartDate);
             this.GetCategoriesNews();
-            this.GetNews();
+        },
+        getSelectedCategory(event) {
+            this.selectedCategory = event.target.value;
+            this.category = this.categories.find(category => category.name === this.selectedCategory);
+            console.log(this.category);
+            this.GetNews(this.category.url);
+        },
+        openNewWindow(url) {
+            window.open(url, '_blank');
         },
         async GetCategoriesNews() { 
             let response = await axios.get("/News/GetCategoriesNews");
             this.categories = response.data;
             console.log(this.categories);
+            this.selectedCategory = this.categories[0].name;
+            this.category = this.categories.find(category => category.name === this.selectedCategory);
+            this.GetNews(this.category.url);
         },
-        async GetNews() { 
+        async GetNews(categoryIn) {
             let response = await axios.get("/News/GetNews", {
                 params: {
-                    category: this.selectedCategory
+                    url: categoryIn
                 }
             });
-            this.news = response.data;
-            console.log(this.news);
+            this.news = response.data.slice(0, 5);
+
         },
         async GetEmployeeDevBirthday() { 
             let response = await axios.get("/Employees/GetEmployeeDevBirthday");

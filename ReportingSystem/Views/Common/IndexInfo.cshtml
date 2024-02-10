@@ -8,29 +8,41 @@
 
 <div class="container" id="IndexInfo">
 
-    <div class="text-center" v-if="birthdays.length > 0">
-        <h1 class="display-4 textcolor" v-if="birthdays.length > 1">Іменинники дня:</h1>
-        <h1 class="display-4 textcolor" v-if="birthdays.length == 1">Іменинник дня:</h1>
-        
-        <div v-for="user in birthdays" :key="user.id">
-            <p class="textcolor">{{ user.firstName }} {{ user.secondName }} {{ user.thirdName }}  {{ user.emailWork }}  {{ user.phoneWork }}</p>
-            @* <p class="textcolor">Email: {{ user.emailWork }}</p>
-            <p class="textcolor">Phone: {{ user.phoneWork }}</p> *@
-            <hr />
+    <div class="row">
+        <div class="col-6">
+            <div class="text-center">
+                <h1 class="display-4 textcolor">Останні новини:</h1>
+                <select class="form-select data" aria-label="Default select example"
+                        v-on:change="getSelectedCategory($event)"
+                        v-model="selectedCategory">
+                    <option v-for="category in categories" :value="category.name">
+                        {{ category.name }}
+                    </option>
+                </select>
+               
+                <div>
+                    <ul class="list-group">
+                        <li v-for="link in news" :key="link.id" class="list-group-item" style="background-color: transparent;">
+                      <a href="#" v-on:click="openNewWindow(link.url)" class="link-primary" style="color: #FFFF" target="_blank">{{ link.name }}</a>
+                    </li>
+                  </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center" v-if="birthdays.length > 0">
+                <h1 class="display-4 textcolor" v-if="birthdays.length > 1">Іменинники дня:</h1>
+                <h1 class="display-4 textcolor" v-if="birthdays.length == 1">Іменинник дня:</h1>
+
+                <div v-for="user in birthdays" :key="user.id">
+                    <p class="textcolor">{{ user.firstName }} {{ user.secondName }} {{ user.thirdName }}</p>
+                    <p class="textcolor">Email: {{ user.emailWork }}</p>
+                    <p class="textcolor">Phone: {{ user.phoneWork }}</p>
+                    <hr />
+                </div>
+            </div>
         </div>
     </div>
-
-
-    <div class="text-center">
-        <h1 class="display-4 textcolor">Останні новини:</h1>
-        @* <div v-for="new in news" :key="new.id">
-            <p class="textcolor">{{ new.header }}</p>
-            <p class="textcolor">{{ new.url }}</p>
-            
-            <hr />
-        </div> *@
-    </div>
-
 </div>
 
 @*---------------------------------------------------------------------------------------------------------------------*@

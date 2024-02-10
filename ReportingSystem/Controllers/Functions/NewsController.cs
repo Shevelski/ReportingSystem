@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ReportingSystem.Models.News;
 using ReportingSystem.Services;
 
 namespace ReportingSystem.Controllers.Functions
@@ -9,9 +10,9 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         // отримання новин
-        public async Task<IActionResult> GetNews(string category)
+        public async Task<IActionResult> GetNews(string url)
         {
-            var news = await _newsService.GetNews(category);
+            var news = await _newsService.GetNews(url);
             return Json(news);
         }
 
