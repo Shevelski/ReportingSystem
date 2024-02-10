@@ -2,7 +2,7 @@
 
 namespace ReportingSystem.Models.News
 {
-    public class NewsModel
+    public class CategoryNewsModel
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }
