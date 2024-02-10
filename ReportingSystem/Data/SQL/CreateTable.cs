@@ -135,7 +135,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task Steps()
         {
-            await CreateAsync("Steps", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER NOT NULL, CompanyId UNIQUEIDENTIFIER NOT NULL, ProjectId UNIQUEIDENTIFIER NOT NULL, Name NVARCHAR(MAX) NOT NULL, Description NVARCHAR(MAX), DateStart DATETIME, DatePlan DATETIME, DateEnd DATETIME");
+            await CreateAsync("Steps", "Id UNIQUEIDENTIFIER PRIMARY KEY, CustomerId UNIQUEIDENTIFIER NOT NULL, CompanyId UNIQUEIDENTIFIER NOT NULL, ProjectId UNIQUEIDENTIFIER NOT NULL, Name NVARCHAR(MAX) NOT NULL, Description NVARCHAR(MAX), DateStart DATETIME, DatePlan DATETIME, DateEnd DATETIME, Status UNIQUEIDENTIFIER NOT NULL");
         }
 
         public async Task StepMembers()

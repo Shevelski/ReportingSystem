@@ -384,7 +384,8 @@ namespace ReportingSystem.Data.SQL
                        ,[Description]
                        ,[DateStart]
                        ,[DatePlan]
-                       ,[DateEnd])
+                       ,[DateEnd]
+                       ,[Status])
                  VALUES
                        (@Id
                        ,@CustomerId
@@ -394,7 +395,8 @@ namespace ReportingSystem.Data.SQL
                        ,@Description
                        ,@DateStart
                        ,@DatePlan
-                       ,@DateEnd)";
+                       ,@DateEnd
+                       ,@Status)";
                 var para = new
                 {
                     Id = step.Id,
@@ -406,6 +408,7 @@ namespace ReportingSystem.Data.SQL
                     DateStart = step.StartDate,
                     DatePlan = step.PlanDate,
                     DateEnd = step.EndDate,
+                    Status = await new SQLRead().GetProjectStatusId(step.Status),
                 };
 
                 await _database.ExecuteAsync(query, para);

@@ -1462,13 +1462,66 @@ namespace ReportingSystem.Data.SQL
                         StartDate = step_.DateStart,
                         PlanDate = step_.DatePlan,
                         EndDate = step_.DateEnd,
-                        //Positions = step_.Positions,
-                        //Members = 
+                        Positions = await new SQLRead().GetPositionsStep(step_.CustomerId, step_.CompanyId, step_.ProjectId, step_.Id),
+                        Members = await new SQLRead().GetMembersStep(step_.CustomerId, step_.CompanyId, step_.ProjectId, step_.Id),
+                        Status = await new SQLRead().GetProjectStatus(step_.Status)
                     };
 
                     list.Add(step);
                 }
 
+            }
+            return list;
+        }
+
+        public async Task<List<EmployeePositionModel>> GetPositionsStep(Guid idCu, Guid idCo, Guid idPr, Guid idSt)
+        {
+            List<EmployeePositionModel> list = [];
+            var query = $@"SELECT [EmployeePositionId]
+                          FROM [{Context.dbName}].[dbo].[StepPositions]
+                          WHERE [CustomerId] = @CustomerId AND 
+		                        [CompanyId] = @CompanyId AND
+		                        [ProjectId] = @ProjectId AND
+		                        [StepId] = @StepId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+                StepId = idSt
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+
+            foreach (var item in result)
+            {
+                EmployeePositionModel pos = await new SQLRead().GetPositionEmployee(item);
+                list.Add(pos);
+            }
+            return list;
+        }
+        public async Task<List<EmployeeModel>> GetMembersStep(Guid idCu, Guid idCo, Guid idPr, Guid idSt)
+        {
+            List<EmployeeModel> list = [];
+            var query = $@"SELECT [EmployeeId]
+                          FROM [{Context.dbName}].[dbo].[StepMembers]
+                          WHERE [CustomerId] = @CustomerId AND 
+		                        [CompanyId] = @CompanyId AND
+		                        [ProjectId] = @ProjectId AND
+		                        [StepId] = @StepId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo,
+                ProjectId = idPr,
+                StepId = idSt
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<Guid>(query, para);
+            foreach (var item in result)
+            {
+                EmployeeModel emp = await new SQLRead().GetEmployee(idCu, idCo, item);
+                list.Add(emp);
             }
             return list;
         }

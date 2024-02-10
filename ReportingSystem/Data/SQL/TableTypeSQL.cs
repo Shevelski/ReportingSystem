@@ -138,6 +138,7 @@ namespace ReportingSystem.Data.SQL
             public DateTime DateStart;
             public DateTime DatePlan;
             public DateTime DateEnd;
+            public Guid Status;
         }
 
         public class Report
