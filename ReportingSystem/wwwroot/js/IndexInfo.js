@@ -1,6 +1,8 @@
 ﻿new Vue({
     el: '#IndexInfo',
     data: {
+        birthdays: [0],
+        news: [0],
         mode: 'standart',
         personalInfo: [0],
         lengthArray: 0,
@@ -13,6 +15,8 @@
         modalEmployeeActive: false,
         modalOperation: null,
         modalType: 0,
+        selectedCategory: '',
+        categories:''
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -30,12 +34,61 @@
             console.log(this.companyId);
             console.log(this.employeeId);
 
+            if (this.rol == 'Developer' || this.rol == 'DevAdministrator') {
+                this.GetEmployeeDevBirthday();
+            }
+            if (this.rol == 'Customer') {
+                this.GetEmployeeChiefBirthday();
+            }
+            if (this.rol == 'User' || this.rol == 'CEO') {
+                this.GetEmployeeBirthday();
+            }
+
             this.personalInfo = await this.getEmployee();
-            console.log(this.personalInfo);
             this.personalInfo.birthDate = this.formatDate(this.personalInfo.birthDate);
             this.personalInfo.workStartDate = this.formatDate(this.personalInfo.workStartDate);
-
+            this.GetCategoriesNews();
+            this.GetNews();
         },
+        async GetCategoriesNews() { 
+            let response = await axios.get("/News/GetCategoriesNews");
+            this.categories = response.data;
+            console.log(this.categories);
+        },
+        async GetNews() { 
+            let response = await axios.get("/News/GetNews", {
+                params: {
+                    category: this.selectedCategory
+                }
+            });
+            this.news = response.data;
+            console.log(this.news);
+        },
+        async GetEmployeeDevBirthday() { 
+            let response = await axios.get("/Employees/GetEmployeeDevBirthday");
+            this.birthdays = response.data;
+            console.log(this.birthdays);
+        },
+        async GetEmployeeChiefBirthday() { 
+            let response = await axios.get("/Employees/GetEmployeeChiefBirthday", {
+                params: {
+                    idCu: this.customerId
+                }
+            });
+            this.birthdays = response.data;
+            console.log(this.birthdays);
+        },
+        async GetEmployeeBirthday() { 
+            let response = await axios.get("/Employees/GetEmployeeBirthday", {
+                params: {
+                    idCu: this.customerId,
+                    idCo: this.companyId
+                }
+            });
+            this.birthdays = response.data;
+            console.log(this.birthdays);
+        },
+
         async getEmployee() {
             let response = await axios.get("/Employees/GetEmployee", {
                 params: {

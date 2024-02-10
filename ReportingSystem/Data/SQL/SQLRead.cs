@@ -5,6 +5,7 @@ using ReportingSystem.Models;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
+using ReportingSystem.Models.Employee;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models.Project.Step;
 using ReportingSystem.Models.Report;
@@ -597,6 +598,123 @@ namespace ReportingSystem.Data.SQL
         }
         #endregion
         #region Employees
+
+        public async Task<List<EmployeeBirthdayModel>> GetEmployeeBirthday(Guid idCu, Guid idCo)
+        {
+            List<EmployeeBirthdayModel> list = [];
+
+            var query = $@"SELECT [Id]
+                                  ,[FirstName]
+                                  ,[SecondName]
+                                  ,[ThirdName]
+                                  ,[PhoneWork]
+                                  ,[EmailWork]
+                                  ,[BirthDate]
+                              FROM  [{Context.dbName}].[dbo].[Employees]
+                              WHERE [CompanyId] = @CompanyId AND [CustomerId] = @CustomerId AND 
+                                    MONTH([BirthDate]) = MONTH(@BirthDate)
+                                    AND DAY([BirthDate]) = DAY(@BirthDate)";
+            var para = new
+            {
+                CompanyId = idCo,
+                CustomerId = idCu,
+                BirthDate = DateTime.Now,
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<EmployeeBirthdayModel>(query, para);
+            if (result.Any())
+            {
+                foreach (var item in result)
+                {
+                    EmployeeBirthdayModel emp = new();
+                    emp = item;
+                    list.Add(emp);
+                }
+            };
+            return list;
+        }
+        public async Task<List<EmployeeBirthdayModel>> GetEmployeeDevBirthday()
+        {
+            List<EmployeeBirthdayModel> list = [];
+
+            DateTime today = DateTime.Now;
+
+            var query = $@"SELECT [Id]
+                                  ,[FirstName]
+                                  ,[SecondName]
+                                  ,[ThirdName]
+                                  ,[PhoneWork]
+                                  ,[EmailWork]
+                                  ,[BirthDate]
+                              FROM [{Context.dbName}].[dbo].[Administrators]
+                              WHERE MONTH([BirthDate]) = MONTH(@BirthDate)
+                                    AND DAY([BirthDate]) = DAY(@BirthDate)";
+            var para = new
+            {
+                BirthDate = DateTime.Now
+            };
+            using var database = Context.ConnectToSQL;
+            var result = await database.QueryAsync<EmployeeBirthdayModel>(query, para);
+            if (result.Any())
+            {
+                foreach (var item in result)
+                {
+                    EmployeeBirthdayModel emp = new();
+                    emp = item;
+                    list.Add(emp);
+                }
+            };
+            return list;
+        }
+        public async Task<List<EmployeeBirthdayModel>> GetEmployeeChiefBirthday(Guid idCu)
+        {
+
+            List<EmployeeBirthdayModel> list = [];
+
+            var query0 = $@"SELECT [Chief]
+                            FROM [{Context.dbName}].[dbo].[Companies]
+                            WHERE  [CustomerId] = @CustomerId";
+            var para0 = new 
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            var result0 = await database.QueryAsync<Guid>(query0, para0);
+
+            if (result0.Any())
+            {
+                foreach (var chiefId in result0)
+                {
+                    var query = $@"SELECT [FirstName]
+                                  ,[SecondName]
+                                  ,[ThirdName]
+                                  ,[PhoneWork]
+                                  ,[EmailWork]
+                                  ,[BirthDate]
+                              FROM [{Context.dbName}].[dbo].[Employees]
+                              WHERE MONTH([BirthDate]) = MONTH(@BirthDate)
+                                    AND DAY([BirthDate]) = DAY(@BirthDate) 
+                                    AND [Id] = @Id";
+                    var para = new
+                    {
+                        BirthDate = DateTime.Now,
+                        Id = chiefId
+                    };
+
+                    var result = await database.QueryAsync<EmployeeBirthdayModel>(query, para);
+                    if (result.Any())
+                    {
+                        foreach (var item in result)
+                        {
+                            EmployeeBirthdayModel emp = new();
+                            emp = item;
+                            list.Add(emp);
+                        }
+                    };
+                }
+            }
+            return list;
+        }
         public async Task<EmployeeStatusModel> GetEmployeeStatus(Guid id)
         {
             EmployeeStatusModel status = new();
@@ -1577,6 +1695,6 @@ namespace ReportingSystem.Data.SQL
             }
             return list;
         }
-            #endregion
+        #endregion
     }
 }

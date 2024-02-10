@@ -20,22 +20,25 @@
         <label class="label">{{ status.name }}</label>
     </div>
 
-    <div class="el1 bm-3 textcolor" v-if="mode == 0">
-        <label class="label">Email</label>
-        <input class="input" v-model="email" />
-    </div>
+    <form method="get" class="el1 bm-3" asp-action="CheckEmail" asp-controller="Home" v-on:submit.prevent="CheckEmail" v-if="mode == 0 || mode == 2">
+        
+        <div class="el1 bm-3 textcolor" v-if="mode == 0">
+            <label class="label">Email</label>
+            <input class="input" v-model="email" />
+        </div>
 
-    <div class="el1 bm-3 textcolor" v-if="mode == 2">
-        <button type="button" class="button yes-button" v-on:click="CheckEmail()">@Localizer["Yes"]</button>
-        <button type="button" class="button no-button" v-on:click="mode = 0">@Localizer["No"]</button>
-    </div>
+        <div class="el1 bm-3 textcolor" v-if="mode == 2">
+            <button type="button" class="button yes-button" v-on:click="CheckEmail()">@Localizer["Yes"]</button>
+            <button type="button" class="button no-button" v-on:click="mode = 0">@Localizer["No"]</button>
+        </div>
 
-    <div class="el1 bm-3 textcolor mt-4" v-if="mode == 0">
-        <button type="button" class="button hover-color" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
-    </div>
+        <div class="el1 bm-3 textcolor mt-4" v-if="mode == 0">
+            <button type="submit" class="button hover-color" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
+        </div>
+    </form>
+    
 
-
-    <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home">
+    <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" v-if="mode == 1 || mode == 4">
         <div class="el1 bm-3 " v-if="mode == 1 || mode == 4">
             <label class="label textcolor">@Localizer["Password"]</label>
             <input class="input" type="password" name="password" v-model="password" />
@@ -45,6 +48,18 @@
         </div>
         <input type="hidden" name="email" v-model="email" />
     </form>
+
+    @* <form method="post" action="login.aspx">
+        <div class="form-group">
+            <label for="txtUsername">Username:</label>
+            <input type="text" class="form-control" id="txtUsername" name="txtUsername" required />
+        </div>
+        <div class="form-group">
+            <label for="txtPassword">Password:</label>
+            <input type="password" class="form-control" id="txtPassword" name="txtPassword" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form> *@
 
 </div>
 

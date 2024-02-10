@@ -17,6 +17,30 @@ namespace ReportingSystem.Controllers.Functions
         }
 
         [HttpGet]
+        // отримання актуальних днів народження
+        public async Task<IActionResult> GetEmployeeBirthday(Guid idCu, Guid idCo)
+        {
+            var employees = await _employeesService.GetEmployeeBirthday(idCu, idCo);
+            return Json(employees);
+        }
+
+        [HttpGet]
+        // отримання актуальних днів народження
+        public async Task<IActionResult> GetEmployeeDevBirthday()
+        {
+            var employees = await _employeesService.GetEmployeeDevBirthday();
+            return Json(employees);
+        }
+
+        [HttpGet]
+        // отримання актуальних днів народження
+        public async Task<IActionResult> GetEmployeeChiefBirthday(Guid idCu)
+        {
+            var employees = await _employeesService.GetEmployeeChiefBirthday(idCu);
+            return Json(employees);
+        }
+
+        [HttpGet]
         // отримання співробітників
         public async Task<IActionResult> GetAdministrators()
         {

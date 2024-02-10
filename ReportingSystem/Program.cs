@@ -32,6 +32,7 @@ namespace ReportingSystem
             builder.Services.AddScoped<ProjectsStepsService>();
             builder.Services.AddScoped<ProjectsService>();
             builder.Services.AddScoped<ReportService>();
+            builder.Services.AddScoped<NewsService>();
             builder.Services.AddScoped<LocalizationCookiesAttribute>();
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.AddControllersWithViews()
