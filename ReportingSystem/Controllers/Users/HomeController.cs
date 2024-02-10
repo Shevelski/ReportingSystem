@@ -19,7 +19,7 @@ using Microsoft.Extensions.Localization;
 
 namespace ReportingSystem.Controllers.Users
 {
-    public class HomeController(ILogger<HomeController> logger, AuthorizeService authorizeService, IHubContext<StatusHub> hubContext) : Controller
+    public class HomeController(ILogger<HomeController> logger, AuthorizeService authorizeService, IHubContext<StatusHub> hubContext) : BaseController
     {
         private readonly ILogger<HomeController> _logger = logger;
         private readonly AuthorizeService _authorizeService = authorizeService;

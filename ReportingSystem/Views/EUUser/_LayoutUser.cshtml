@@ -11,6 +11,21 @@
 
 @{
     var path = Context.Request.Path;
+    DateTime currentDate = DateTime.Now;
+    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
+
+    string day = currentDate.ToString("dddd");
+    string month = currentDate.ToString("MMMM");
+    string dayNumber = currentDate.ToString("dd");
+    string year = currentDate.ToString("yyyy");
+    string dateFormat = "yyyy-MM-dd";
+
+    char[] charArray = day.ToCharArray();
+    charArray[0] = char.ToUpper(charArray[0]);
+
+    string upperDay = new string(charArray);
+    dateFormat = "dd.MM.yyyy";
+    string formattedDate = $"{upperDay} {currentDate.ToString(dateFormat)}";
 }
 
 @model string[];
@@ -81,9 +96,9 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footercustom">
         <div class="container">
-            &copy; 2023 - ReportingSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @formattedDate - Звітна система - <a asp-area="" asp-controller="EUUser" asp-action="Index" class="link-custom-color">DIGITAP</a>
         </div>
     </footer>
 
@@ -98,6 +113,19 @@
 </html>
 
 <style>
+    .link-custom-color {
+        color: rgb(161, 161, 161);
+    }
+
+    .footercustom {
+        background-color: #72767c;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
     .first-list {
         list-style: none; /* Remove bullet points */
         padding-left: 5px; /* Remove padding */

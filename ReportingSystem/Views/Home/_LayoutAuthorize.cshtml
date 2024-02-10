@@ -1,4 +1,5 @@
 ﻿@inject IViewLocalizer Localizer
+@using System.Globalization
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +14,34 @@
 
 @{
     var path = Context.Request.Path;
+
+    CultureInfo culture = CultureInfo.GetCultureInfo(ViewBag.CookieValue);
+
+    DateTime currentDate = DateTime.Now;
+    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
+
+    string day = currentDate.ToString("dddd", culture);
+    string month = currentDate.ToString("MMMM", culture);
+    string dayNumber = currentDate.ToString("dd", culture);
+    string year = currentDate.ToString("yyyy", culture);
+    string dateFormat = "yyyy-MM-dd";
+    string formattedDate = "";
+
+    if (ViewBag.CookieValue == "uk-UA" || ViewBag.CookieValue == "uk")
+    {
+        char[] charArray = day.ToCharArray();
+        charArray[0] = char.ToUpper(charArray[0]);
+
+        string upperDay = new string(charArray);
+        dateFormat = "dd.MM.yyyy";
+        formattedDate = $"{upperDay} {currentDate.ToString(dateFormat)}";
+    }
+    else
+    {
+        formattedDate = $"{day} {dayNumber} {month} {year}";
+    }
+
+    
 }
 
 <body>
@@ -93,11 +122,16 @@
     </div> *@
 
     <footer class="border-top footercustom">
-        &copy; 2024 - @Localizer["ReportingSystem"] - <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
-       @*  <div class="container">
+
+
+
+        &copy;@formattedDate - @Localizer["ReportingSystem"] - <a asp-area="" asp-controller="Home" asp-action="Index" class="link-custom-color">DIGITAP</a>
+       @* <div class="container transparent-container">
             
-        </div> *@
+       </div> *@
     </footer>
+
+    
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
@@ -238,6 +272,6 @@
     .transparent-container {
         background-color: rgba(0, 0, 0, 0); /* Background color (can be any color) */
         padding: 20px;
-        /* opacity: 0.5; /* 50% transparency */ */
+        /* opacity: 0.5; /* 50% transparency */
     }
 </style>

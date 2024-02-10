@@ -13,7 +13,21 @@
 
 @{
     var path = Context.Request.Path;
+    DateTime currentDate = DateTime.Now;
+    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
 
+    string day = currentDate.ToString("dddd");
+    string month = currentDate.ToString("MMMM");
+    string dayNumber = currentDate.ToString("dd");
+    string year = currentDate.ToString("yyyy");
+    string dateFormat = "yyyy-MM-dd";
+
+    char[] charArray = day.ToCharArray();
+    charArray[0] = char.ToUpper(charArray[0]);
+
+    string upperDay = new string(charArray);
+    dateFormat = "dd.MM.yyyy";
+    string formattedDate = $"{upperDay} {currentDate.ToString(dateFormat)}";
 }
 
 @model string[];
@@ -123,7 +137,7 @@
 
     <footer class="border-top footercustom">
         <div class="container">
-            &copy; 2024 - Reporting System - <a asp-area="" asp-controller="EUDeveloper" asp-action="Index" class="link-custom-color">DIGITAP</a>
+            &copy; @formattedDate - Звітна система - <a asp-area="" asp-controller="EUDeveloper" asp-action="Index" class="link-custom-color">DIGITAP</a>
         </div>
     </footer>
 
