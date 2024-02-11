@@ -1,0 +1,23 @@
+﻿@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = @Localizer["StartPage"];
+    // Layout = "_LayoutAuthorize";
+}
+
+@section StartPageContent {
+    <body class="start-page">
+    <p class="text-center textcolor customfont">
+        @Localizer["ReportingSystem"]
+    </p>
+    </body>
+    <style>
+        .textcolor {
+            color: white
+        }
+
+        .customfont {
+            font-size: 24px;
+        }
+    </style>
+}

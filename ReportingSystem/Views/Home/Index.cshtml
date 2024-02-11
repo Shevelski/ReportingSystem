@@ -2,14 +2,10 @@
 
 @{
     ViewData["Title"] = @Localizer["StartPage"];
-    Layout = "_LayoutAuthorize";
+    // Layout = "_LayoutAuthorize";
 }
 @{
     var path = Context.Request.Path;
-    if (path == "/")
-    {
-        
-    }
 }
 <p class="text-center textcolor customfont">
     @Localizer["ReportingSystem"]
