@@ -61,7 +61,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-
                         <li class="nav-item">
                             <a class="nav-link" href="/Home/Authorize" data-target="#content-container">@Localizer["Authorize"]</a>
                         </li>
@@ -84,7 +83,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="Home/Contacts" data-target="#content-container">@Localizer["Contacts"]</a>
                         </li>
-                        <li class="nav-item dropdown ">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle dropdown-toggle-split" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @Localizer["Language"]
                             </a>
@@ -110,14 +109,14 @@
         </nav>
     </header>
 
-    @if (IsSectionDefined("StartPageContent"))
+   @*  @if (IsSectionDefined("StartPageContent"))
     {
         <div class="container transparent-container start-page-content">
             <main role="main" class="pb-3">
                 @RenderSection("StartPageContent", required: false)
             </main>
         </div>
-    }
+    } *@
 
     @* <div class="container transparent-container">
         <main role="main" class="pb-3">
@@ -149,12 +148,7 @@
                     url: url,
                     type: 'GET',
                     success: function (data) {
-                        var isStartPage = data.includes('ReportingSystem'); // Adjust this condition as per your StartPage content
-
-                        // Toggle visibility of StartPage content container
-                        $('.start-page-content').toggle(isStartPage);
-
-                        // Clear the existing content
+                      
                         $(target).empty();
 
                         // Load new content
@@ -194,6 +188,8 @@
                     $('.nav-link').removeClass('active');
                 }
             });
+           
+
             //Set active element in header
             $(document).ready(function () {
                 $('.nav-link').click(function () {
@@ -212,6 +208,7 @@
                 });
             });
         });
+        
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
@@ -234,14 +231,6 @@
         /* opacity: 0.5; /* 50% transparency */
     }
 
-    .start-page-content {
-        display: block; /* or any other initial display value you may need */
-    }
-
-    /* Hide the container when it's not the StartPage */
-    body:not(.start-page) .start-page-content {
-        display: none;
-    }
 
 
     .navbar-brand {
