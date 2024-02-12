@@ -1,71 +1,316 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@inject IViewLocalizer Localizer
+@using System.Globalization
+
+
+@{
+    var path = Context.Request.Path;
+
+    // string cultureHeader = Context.Request.Cookies["culture"] ?? "uk-UA"; // Default to uk-UA if culture cookie is not set
+    // CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(cultureHeader);
+    // CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureHeader);
+
+    
+    CultureInfo culture = CultureInfo.GetCultureInfo(ViewBag.CookieValue);
+
+    DateTime currentDate = DateTime.Now;
+    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
+
+    string day = currentDate.ToString("dddd", culture);
+    string month = currentDate.ToString("MMMM", culture);
+    string dayNumber = currentDate.ToString("dd", culture);
+    string year = currentDate.ToString("yyyy", culture);
+    string dateFormat = "yyyy-MM-dd";
+    string formattedDate = "";
+
+    if (ViewBag.CookieValue == "uk-UA" || ViewBag.CookieValue == "uk")
+    {
+        char[] charArray = day.ToCharArray();
+        charArray[0] = char.ToUpper(charArray[0]);
+
+        string upperDay = new string(charArray);
+        dateFormat = "dd.MM.yyyy";
+        formattedDate = $"{upperDay} {currentDate.ToString(dateFormat)}";
+    }
+    else
+    {
+        formattedDate = $"{day} {dayNumber} {month} {year}";
+    }
+
+}
+
+<!DOCTYPE html>
+@* <html lang=@cultureHeader> *@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ReportingSystem</title>
+    <title>@ViewData["Title"] -  @Localizer["ReportingSystem"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />
+    @*
+    <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" />*@
 </head>
+
+
 <body>
-    @* @Html.Partial("_Header") *@
-    @* <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ReportingSystem</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand main-name" href="/Home/Index" data-target="#content-container">@Localizer["ReportingSystem"]</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                       <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/Authorize" data-target="#content-container">@Localizer["Authorize"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Customers">Замовники</a>
+                            <a class="nav-link" href="/Home/Registration" data-target="#content-container">@Localizer["Registration"]</a>
+                        </li>
+                        @* <li class="nav-item">
+                        <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">@Localizer["Authorize"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Companies">Компанії</a>
-                        </li>
+                        <a class="nav-link @(path == "/Home/Registration" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Registration">@Localizer["Registration"]</a>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Employees">Співробітники</a>
+                            <a class="nav-link" href="/Home/AboutUs" data-target="#content-container">@Localizer["AboutUs"]</a>
                         </li>
+
+                        @* <li class="nav-item">
+                        <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" asp-area="" asp-controller="Home" asp-action="AboutUs">@Localizer["AboutUs"]</a>
+                        </li> *@
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Projects">Проекти</a>
+                            <a class="nav-link" href="Home/Contacts" data-target="#content-container">@Localizer["Contacts"]</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ProjectsCategories">Категорії</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle dropdown-toggle-split" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @Localizer["Language"]
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end dropdowncustom" aria-labelledby="navbarDropdownMenuLink" style="min-width: 55px;">
+                                <li>
+                                    <a asp-controller="Home" asp-action="ChangeLocalization" asp-route-culture="en-US" class="dropdown-item">
+                                        <i class="flag-icon flag-icon-gb"></i>EN
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Home" asp-action="ChangeLocalization" asp-route-culture="uk-UA" class="dropdown-item">
+                                        <i class="flag-icon flag-icon-gb"></i>UK
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="StepsProjects">Етапи</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UserInfo">Користувач</a>
-                        </li>
+
+
                     </ul>
                 </div>
             </div>
         </nav>
-    </header> *@
-    
-    <div class="container">
+    </header>
+
+   @*  @if (IsSectionDefined("StartPageContent"))
+    {
+        <div class="container transparent-container start-page-content">
+            <main role="main" class="pb-3">
+                @RenderSection("StartPageContent", required: false)
+            </main>
+        </div>
+    } *@
+
+    @* <div class="container transparent-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
+    </div> *@
+
+    <div id="content-container">
+         @RenderBody()
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-             &copy; 2023 - ReportingSystem - <a asp-area="" asp-controller="Home" asp-action="Index">DIGITAP</a>
-        </div>
+    <footer class="border-top footercustom" id="Footer">
+        @formattedDate &copy @Localizer["ReportingSystem"] <a href="/Home/Index" class="link-custom-color linkfooter" data-target="#content-container">DIGITAP</a>
+        @*  <div class="container">
+
+        </div> *@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Function to load content dynamically
+            function loadContent(url, target) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (data) {
+                      
+                        $(target).empty();
+
+                        // Load new content
+                        $(target).html(data);
+                    },
+                    error: function () {
+                        alert('Error loading content');
+                    }
+                });
+            }
+
+            // Handle navigation clicks
+            $('.nav-link').on('click', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                var target = $(this).data('target');
+                loadContent(url, target);
+            });
+
+            
+            $('.navbar-brand').on('click', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                var target = $(this).data('target');
+                loadContent(url, target);
+            });
+
+            $('.linkfooter').on('click', function (e) {
+                e.preventDefault();
+                var url = $(this).attr('href');
+                var target = $(this).data('target');
+                loadContent(url, target);
+                if ($('.navbar-brand').hasClass('active')) {
+                    $('.navbar-brand').removeClass('active');
+                }
+                if ($('.nav-link').hasClass('active')) {
+                    $('.nav-link').removeClass('active');
+                }
+            });
+           
+
+            //Set active element in header
+            $(document).ready(function () {
+                $('.nav-link').click(function () {
+                    if ($('.navbar-brand').hasClass('active')) {
+                        $('.navbar-brand').removeClass('active');} 
+                    $('.nav-link').removeClass('active'); 
+                    $(this).closest('.nav-link').addClass('active');
+                });
+            });
+
+            $(document).ready(function () {
+                $('.navbar-brand').click(function () {
+                    if ($('.nav-link').hasClass('active')) {
+                        $('.nav-link').removeClass('active');}
+                    $(this).closest('.navbar-brand').addClass('active'); 
+                });
+            });
+        });
+        
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<style>
+    body {
+        font-family: Arial, sans-serif; /* Задаємо шрифт для всієї сторінки */
+        background-color: #f8f8f8; /* Задаємо колір фону сторінки */
+        background-image: url('/img/back.jpg'); /* Specify the path to your image */
+        background-size: cover; /* Adjust the size to cover the entire background */
+        background-repeat: no-repeat; /* Prevent the background image from repeating */
+        background-position: center center; /* Center the background image */
+        width: 100vw; /* Set the width to 100% of the viewport width */
+        height: 100vh; /* Set the height to 100% of the viewport height */
+        margin: 0; /* Remove default body margin */
+        padding: 0; /* Remove default body padding */
+        background-attachment: fixed;
+        /* opacity: 0.5; /* 50% transparency */
+    }
+
+
+
+    .navbar-brand {
+        font-weight: bold; /* Задаємо жирний стиль для тексту логотипу */
+        color: #fff; /* Задаємо колір тексту логотипу */
+        transition: all 0.3s ease-out;
+    }
+
+    .navbar-nav .nav-link {
+        color: #fff; /* Задаємо колір тексту посилань у навігаційному меню */
+        transition: all 0.3s ease-out;
+    }
+
+    .container {
+        margin-top: 20px; /* Відступ зверху для контейнера */
+        background-color: #fff; /* Колір фону контейнера з основним вмістом */
+        padding: 20px; /* Внутрішні відступи для контейнера */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Тінь для контейнера */
+    }
+
+    main {
+        padding: 20px; /* Внутрішні відступи для основного вмісту */
+    }
+
+    .active {
+        text-decoration: underline;
+    }
+
+    .navbar {
+        background-color: #000;
+    }
+
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #eeff01;
+        transition: all 0.2s ease-in;
+        background-color: #262626
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        color: rgb(161, 161, 161);
+        transition: all 0.3s ease-out;
+        background-color: #000;
+    }
+
+    .navbar .navbar-brand:hover {
+        color: #eeff01;
+        transition: all 0.3s ease-in;
+    }
+
+    .footercustom {
+        background-color: #000;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .link-custom-color {
+        color: rgb(161, 161, 161);
+    }
+
+    .dropdowncustom {
+        background-color: #000;
+    }
+
+        .dropdowncustom .dropdown-item:hover {
+            color: #eeff01;
+            transition: all 0.2s ease-in;
+        }
+
+        .dropdowncustom .dropdown-item {
+            color: rgb(161, 161, 161);
+            transition: all 0.3s ease-out;
+        }
+
+    .transparent-container {
+        background-color: rgba(0, 0, 0, 0); /* Background color (can be any color) */
+        padding: 20px;
+        /* opacity: 0.5; /* 50% transparency */
+    }
+</style>

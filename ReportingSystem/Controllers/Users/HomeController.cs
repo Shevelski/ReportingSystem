@@ -123,7 +123,13 @@ namespace ReportingSystem.Controllers.Users
         public async Task<IActionResult>  Registration()
         {   
             await Task.Delay(10);
+            return PartialView();
+        }
+        public async Task<IActionResult> StartPage()
+        {
+            await Task.Delay(10);
             return View();
+            //return RedirectToAction("Index", "Home");
         }
         public async Task<IActionResult> LogIn()
         {
@@ -133,18 +139,19 @@ namespace ReportingSystem.Controllers.Users
         public async Task<IActionResult> Index()
         {
             await Task.Delay(10);
-            return View();
+            return PartialView();
         }
          public async Task<IActionResult>  AboutUs()
         {
             await Task.Delay(10);
-            return View();
+            return PartialView();
         }
          public async Task<IActionResult>  Contacts()
          {
             await Task.Delay(10);
-            return View();
-         }
+            return PartialView();
+        }
+       
 
 
 

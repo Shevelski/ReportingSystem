@@ -2,25 +2,14 @@
 
 @{
     ViewData["Title"] = @Localizer["StartPage"];
-    Layout = "_LayoutAuthorize";
+    // Layout = "_LayoutAuthorize";
 }
-
-@* 
 @{
     var path = Context.Request.Path;
-} *@
-
-@* <section style="background-image: url('/img/back.jpg')">
-    <div class="full-container">
-        
-        <h1 class="text-center text">Стартова сторінка</h1>
-       
-    </div>
-</section>
- *@
-
-
-<h1 class="text-center textcolor">@Localizer["ReportingSystem"]</h1>
+}
+<p class="text-center textcolor customfont">
+    @Localizer["ReportingSystem"]
+</p>
 
 @* <p class="textcolor">Cookie Value: @ViewBag.CookieValue</p> *@
 
@@ -35,20 +24,12 @@
 @* <link rel="stylesheet" href="~/css/ReportTest.css" asp-append-version="true" /> *@
 
 <style>
-    body {
-        background-image: url('/img/back.jpg'); /* Specify the path to your image */
-        background-size: cover; /* Adjust the size to cover the entire background */
-        background-repeat: no-repeat; /* Prevent the background image from repeating */
-        background-position: center center; /* Center the background image */
-        width: 100vw; /* Set the width to 100% of the viewport width */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
-        background-attachment: fixed;
-        /* opacity: 0.5; /* 50% transparency */
-    }
+    
     .textcolor {
         color: white
+    }
+    .customfont{
+        font-size: 24px;
     }
 
 </style>

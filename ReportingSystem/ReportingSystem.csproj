@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\_ViewStart.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Views\Shared\_Layout.cshtml.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="35.4.0" />
     <PackageReference Include="Dapper" Version="2.1.28" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />

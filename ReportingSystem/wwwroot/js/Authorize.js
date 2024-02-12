@@ -15,10 +15,10 @@
         id: '',
     },
     mounted() {
-        setTimeout(() => {
-            this.delay = true;
-            document.getElementById('mask').classList.add('hidden'); // Приховуємо маску
-        }, 500);
+        //setTimeout(() => {
+        //    this.delay = true;
+        //    document.getElementById('mask').classList.add('hidden'); // Приховуємо маску
+        //}, 500);
     },
     methods: {
         async CheckEmail() {

@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = @Localizer["Registration"];
-    Layout = "_LayoutAuthorize";
+    // Layout = "_LayoutAuthorize";
 }
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
@@ -14,47 +14,54 @@
     <h2 class="display-4 textcolor">@Localizer["Registration"]</h2>
 </div>
 
-<div id="Registration" class="container bg-transparent">
+<div id="Registration" class="container bg-transparent textcolor">
     <div class="panel panel-default" v-if="result == ''">
-        <div class="panel-heading "></div>
+        <div class="panel-heading"></div>
         <div class="panel-body">
             <form class="fontcustom">
-                <div class="row align-items-center">
-                    <div class="col-sm-6 textcolor">
-                       
+                <div class="row">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">@Localizer["FirstName"]</label>
                             <input type="text" class="form-control" v-model="firstName" />
                         </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label class="control-label mt-3 ">@Localizer["LastName"]</label>
+                            <label class="control-label">@Localizer["LastName"]</label>
                             <input type="text" class="form-control" v-model="secondName" />
                         </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
-                            <label class="control-label mt-3 ">@Localizer["Surname"]</label>
+                            <label class="control-label">@Localizer["Surname"]</label>
                             <input type="text" class="form-control" v-model="thirdName" />
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label mt-3 ">Email</label>
-                                <input type="email" class="form-control" v-model="email" />
-                            </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">Email</label>
+                            <input type="email" class="form-control" v-model="email" />
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label mt-3 ">@Localizer["Phone"]</label>
-                                <input type="text" class="form-control" v-model="phone" />
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["Phone"]</label>
+                            <input type="text" class="form-control" v-model="phone" />
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="control-label mt-3">@Localizer["Password"]</label>
-                                <input type="password" class="form-control" v-model="password" />
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["Password"]</label>
+                            <input type="password" class="form-control" v-model="password" />
                         </div>
-                        <div class="col-sm-6">
-                            <button type="button" class="button mt-4" v-on:click="createCustomer()">@Localizer["Register"]</button>
-                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="button mt-4" v-on:click="createCustomer()">@Localizer["Register"]</button>
                     </div>
                 </div>
             </form>
@@ -62,21 +69,12 @@
     </div>
 
     <h1 class="display-4 textcolor">{{result}}</h1>
-
 </div>
 
+ 
+
 <style>
-    body {
-        background-image: url('/img/back.jpg'); /* Specify the path to your image */
-        background-size: cover; /* Adjust the size to cover the entire background */
-        background-repeat: no-repeat; /* Prevent the background image from repeating */
-        background-position: center center; /* Center the background image */
-        width: 100vw; /* Set the width to 100% of the viewport width */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
-        /* opacity: 0.5; /* 50% transparency */
-    }
+    
     .button {
         /* Стилі для кнопок */
         padding: 5px 10px;

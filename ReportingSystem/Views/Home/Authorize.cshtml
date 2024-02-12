@@ -2,54 +2,71 @@
 
 @{
     ViewData["Title"] = @Localizer["Entry"];
-    Layout = "_LayoutAuthorize";
+    // Layout = "_LayoutAuthorize";
 }
 @* <p class="textcolor">Cookie Value: @ViewBag.CookieValue</p> *@
 
-<div id="mask" v-show="!delay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 9999;">
+@* <div id="mask" v-show="!delay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 9999;">
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
         <p>Loading...</p>
     </div>
-</div>
+</div> *@
 
-<div id="Authorize" class="fontcustom" v-show="delay">
-    <div class="el1 bm-3 textcolor" v-if="mode == 0">
-        <label class="label">@Localizer["WriteEmail"]</label>
-    </div>
-    <div class="el1 bm-3 textcolor" v-else>
-        <label class="label">{{ status.name }}</label>
-    </div>
+<div class="container bg-transparent border-0">
 
-    <form method="get" class="el1 bm-3" asp-action="CheckEmail" asp-controller="Home" v-on:submit.prevent="CheckEmail" v-if="mode == 0 || mode == 2">
-        
+    <div id="Authorize" class="fontcustom">
         <div class="el1 bm-3 textcolor" v-if="mode == 0">
-            <label class="label">Email</label>
-            <input class="input" v-model="email" />
+            <label class="label">@Localizer["WriteEmail"]</label>
+        </div>
+        <div class="el1 bm-3 textcolor" v-else>
+            <label class="label">{{ status.name }}</label>
         </div>
 
-        <div class="el1 bm-3 textcolor" v-if="mode == 2">
-            <button type="button" class="button yes-button" v-on:click="CheckEmail()">@Localizer["Yes"]</button>
-            <button type="button" class="button no-button" v-on:click="mode = 0">@Localizer["No"]</button>
-        </div>
+        <form method="get" class="el1 bm-3" asp-action="CheckEmail" asp-controller="Home" v-on:submit.prevent="CheckEmail" v-if="mode == 0 || mode == 2">
 
-        <div class="el1 bm-3 textcolor mt-4" v-if="mode == 0">
-            <button type="submit" class="button hover-color" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
-        </div>
-    </form>
-    
+            <div class="el1 bm-3 textcolor" v-if="mode == 0">
+                <label class="label">Email</label>
+                <input class="input" v-model="email" />
+            </div>
 
-    <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" v-if="mode == 1 || mode == 4">
-        <div class="el1 bm-3 " v-if="mode == 1 || mode == 4">
-            <label class="label textcolor">@Localizer["Password"]</label>
-            <input class="input" type="password" name="password" v-model="password" />
+            <div class="el1 bm-3 textcolor" v-if="mode == 2">
+                <button type="button" class="button yes-button" v-on:click="CheckEmail()">@Localizer["Yes"]</button>
+                <button type="button" class="button no-button" v-on:click="mode = 0">@Localizer["No"]</button>
+            </div>
+
+            <div class="el1 bm-3 textcolor mt-4" v-if="mode == 0">
+                <button type="submit" class="button hover-color" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
+            </div>
+        </form>
+
+
+        <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" v-if="mode == 1 || mode == 4">
+            <div class="el1 bm-3 " v-if="mode == 1 || mode == 4">
+                <label class="label textcolor">@Localizer["Password"]</label>
+                <input class="input" type="password" name="password" v-model="password" />
+            </div>
+            <div class="el1 bm-3 textcolor mt-4" v-if="mode == 1 || mode == 4">
+                <button type="submit" class="button">@Localizer["CheckPass"]</button>
+            </div>
+            <input type="hidden" name="email" v-model="email" />
+        </form>
+
+    @* <form method="post" action="login.aspx">
+        <div class="form-group">
+            <label for="txtUsername">Username:</label>
+            <input type="text" class="form-control" id="txtUsername" name="txtUsername" required />
         </div>
-        <div class="el1 bm-3 textcolor mt-4" v-if="mode == 1 || mode == 4">
-            <button type="submit" class="button">@Localizer["CheckPass"]</button>
+        <div class="form-group">
+            <label for="txtPassword">Password:</label>
+            <input type="password" class="form-control" id="txtPassword" name="txtPassword" required />
         </div>
-        <input type="hidden" name="email" v-model="email" />
-    </form>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form> *@
 
 </div>
+
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
@@ -57,6 +74,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <style>
+    .container {
+        width: 600px; /* Adjust the width as needed */
+        margin: 0 auto; /* This centers the container horizontally */
+    }
+
     #mask {
         display: flex;
         align-items: center;
@@ -68,18 +90,6 @@
             opacity: 0; /* Приховуємо маску затемнення */
             pointer-events: none; /* Вимикаємо події для маски */
         }
-
-    body {
-        background-image: url('/img/back.jpg'); /* Specify the path to your image */
-        background-size: cover; /* Adjust the size to cover the entire background */
-        background-repeat: no-repeat; /* Prevent the background image from repeating */
-        background-position: center center; /* Center the background image */
-        width: 100vw; /* Set the width to 100% of the viewport width */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
-        /* opacity: 0.5; /* 50% transparency */
-    }
 
 
     .label {
