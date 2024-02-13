@@ -1,5 +1,11 @@
 ﻿<!DOCTYPE html>
 
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,8 +14,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     @* <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" /> *@
 </head>
-
-
 
 @{
     var path = Context.Request.Path;
@@ -112,9 +116,11 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href="/EUDeveloper/Info" data-target="#content-container">Власні дані</a>
                                         </li>
-                                        <li class="nav-item" v-if="windowWidth > 992">
-                                            <a class="nav-link" href="/Home/Authorize" data-target="#content-container">Вихід</a>
+                                        <li class="nav-item">
+                                            <a asp-controller="EUDeveloper" asp-action="Exit" class="nav-link-asp">Вихід</a>
                                         </li>
+
+                                        
                                     </ul>
                                 </li>
                             </ul>
@@ -123,8 +129,9 @@
                                     <a class="nav-link" href="/EUDeveloper/Info" data-target="#content-container">Власні дані</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/Home/Authorize" data-target="#content-container">Вихід</a>
+                                    <a asp-controller="EUDeveloper" asp-action="Exit" class="nav-link-asp">Вихід</a>
                                 </li>
+
                             </ul>
                         </li>
                     </ul>
@@ -138,7 +145,7 @@
     </div>
 
     <footer class="border-top footercustom" id="Footer">
-        @formattedDate &copy Звітна система <a href="/Home/Index" class="link-custom-color linkfooter" data-target="#content-container">DIGITAP</a>
+        @formattedDate &copy Звітна система <a asp-controller="Home" asp-action="StartPage">DIGITAP</a>
     </footer>
 
 
@@ -146,154 +153,9 @@
 </body>
 </html>
 
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
-<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
 <script src="~/js/Header.js" asp-append-version="true"></script>
-
-<script>
-    $(document).ready(function () {
-        function loadContent(url, target) {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (data) {
-
-                    $(target).empty();
-                    $(target).html(data);
-                },
-                error: function () {
-                    alert('Error loading content');
-                }
-            });
-        }
-
-        $('.nav-link').on('click', function (e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            var target = $(this).data('target');
-            loadContent(url, target);
-        });
+<script src="~/js/Layout.js" asp-append-version="true"></script>
 
 
-        $('.navbar-brand').on('click', function (e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            var target = $(this).data('target');
-            loadContent(url, target);
-        });
 
-        $('.linkfooter').on('click', function (e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            var target = $(this).data('target');
-            loadContent(url, target);
-            if ($('.navbar-brand').hasClass('active')) {
-                $('.navbar-brand').removeClass('active');
-            }
-            if ($('.nav-link').hasClass('active')) {
-                $('.nav-link').removeClass('active');
-            }
-        });
-
-        $(document).ready(function () {
-            $('.nav-link').click(function () {
-                if ($('.navbar-brand').hasClass('active')) {
-                    $('.navbar-brand').removeClass('active');
-                }
-                $('.nav-link').removeClass('active');
-                $(this).closest('.nav-link').addClass('active');
-            });
-        });
-
-        $(document).ready(function () {
-            $('.navbar-brand').click(function () {
-                if ($('.nav-link').hasClass('active')) {
-                    $('.nav-link').removeClass('active');
-                }
-                $(this).closest('.navbar-brand').addClass('active');
-            });
-        });
-    });
-
-</script>
-
-
-<style>
-    .link-custom-color {
-        color: rgb(161, 161, 161);
-    }
-
-    .footercustom {
-        background-color: #7B3838;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-    }
-
-    .first-list {
-        list-style: none; /* Remove bullet points */
-        padding-left: 5px; /* Remove padding */
-        margin: 0; /* Remove margin */
-    }
-
-    .second-list {
-        list-style: none; /* Remove bullet points */
-        padding: 0; /* Remove padding */
-        margin: 0; /* Remove margin */
-    }
-
-    .circle {
-        width: 35px;
-        height: 35px;
-        background-color: #be1e1e; /* Change the background color as desired */
-        border-radius: 50%; /* Makes the div circular */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: rgb(224, 224, 224); /* Text color */
-    @* font-size: 24px; /* Font size for initials */ *@
-    }
-
-    .dropdown-menu {
-        background-color: #7B3838;
-    }
-
-    .navbar-nav .dropdown .nav-link:hover {
-        color: #000;
-    }
-
-    .navbar {
-        background-color: #7B3838;
-    }
-
-    .nav-link.active {
-        text-decoration: underline;
-        color: #fff;
-    }
-
-    .navbar-nav .nav-item .nav-link:hover {
-        color: #000000;
-        background-color: #b87d7d;
-        transition: all 0.3s ease-in;
-    }
-
-    .navbar-nav .nav-item .nav-link {
-        color: rgb(224, 224, 224);
-        transition: all 0.3s ease-out;
-    }
-
-    .navbar .navbar-brand {
-        color: #fff;
-        transition: all 0.3s ease-out;
-    }
-
-        .navbar .navbar-brand:hover {
-            color: #000;
-            transition: all 0.3s ease-in;
-        }
-</style>

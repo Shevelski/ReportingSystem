@@ -53,8 +53,6 @@ namespace ReportingSystem
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-            //builder.Services.AddScoped<ProjectsService>();
-            //builder.Services.AddScoped<ReportModel>();
 
             var app = builder.Build();
 
@@ -76,7 +74,7 @@ namespace ReportingSystem
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/StartPage");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -89,7 +87,11 @@ namespace ReportingSystem
 
             app.UseSession();
 
+
             app.UseAuthorization();
+
+            app.UseStatusCodePagesWithReExecute("/Home/StartPage", "?statusCode={0}");
+
 
             app.MapControllerRoute(
                 name: "default",

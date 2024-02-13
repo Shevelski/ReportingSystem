@@ -30,7 +30,7 @@ namespace ReportingSystem.Controllers.Functions
             else
             {
                 httpContext.SignOutAsync();
-                return new RedirectToActionResult("Authorize", "Home", null);
+                return new RedirectToActionResult("StartPage", "Home", null);
             }
         }
         public static IActionResult ViewDataFullSession(HttpContext httpContext)
@@ -52,7 +52,7 @@ namespace ReportingSystem.Controllers.Functions
             else
             {
                 httpContext.SignOutAsync();
-                return new RedirectToActionResult("Authorize", "Home", null);
+                return new RedirectToActionResult("StartPage", "Home", null);
             }
         }
     }

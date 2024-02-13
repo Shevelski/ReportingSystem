@@ -1,0 +1,127 @@
+﻿.link-custom-color {
+    color: rgb(161, 161, 161);
+}
+
+.footercustom {
+    background-color: #7B3838;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.first-list {
+    list-style: none; /* Remove bullet points */
+    padding-left: 5px; /* Remove padding */
+    margin: 0; /* Remove margin */
+}
+
+.second-list {
+    list-style: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+}
+
+.circle {
+    width: 35px;
+    height: 35px;
+    background-color: #be1e1e; /* Change the background color as desired */
+    border-radius: 50%; /* Makes the div circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(224, 224, 224); /* Text color */
+}
+
+.dropdown-menu {
+    background-color: #7B3838;
+}
+
+.navbar-nav .dropdown .nav-link:hover {
+    color: #000;
+}
+
+.navbar-nav .dropdown .nav-link-asp:hover {
+    color: #000;
+}
+
+.navbar {
+    background-color: #7B3838;
+}
+
+.nav-link.active {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.nav-link-asp.active {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #000000;
+    background-color: #b87d7d;
+    transition: all 0.3s ease-in;
+}
+
+.navbar-nav .nav-item .nav-link-asp:hover {
+    color: #000000;
+    background-color: #b87d7d;
+    transition: all 0.3s ease-in;
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: rgb(224, 224, 224);
+    transition: all 0.3s ease-out;
+}
+
+.navbar-nav .nav-item .nav-link-asp {
+    color: rgb(224, 224, 224);
+    transition: all 0.3s ease-out;
+}
+
+
+.navbar .navbar-brand {
+    color: #fff;
+    transition: all 0.3s ease-out;
+}
+
+    .navbar .navbar-brand:hover {
+        color: #000;
+        transition: all 0.3s ease-in;
+    }
+
+.navbar-expand-lg .navbar-nav .nav-link-asp {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.nav-link-asp {
+    display: block;
+    padding: 0.5rem 1rem;
+    padding-top: 0.5rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    color: #0d6efd;
+    text-decoration: none;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+body {
+    background-image: url('/img/back.jpg'); /* Specify the path to your image */
+    background-size: cover; /* Adjust the size to cover the entire background */
+    background-repeat: no-repeat; /* Prevent the background image from repeating */
+    background-position: center center; /* Center the background image */
+    width: 100vw; /* Set the width to 100% of the viewport width */
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    margin: 0; /* Remove default body margin */
+    padding: 0; /* Remove default body padding */
+    background-attachment: fixed;
+}
+
+.textcolor {
+    color: white
+}

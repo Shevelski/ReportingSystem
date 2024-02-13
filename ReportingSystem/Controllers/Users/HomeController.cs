@@ -12,10 +12,6 @@ using ReportingSystem.Data.SQL;
 using Microsoft.AspNetCore.SignalR;
 using ReportingSystem.Hubs;
 using ReportingSystem.Data.JSON;
-using HtmlAgilityPack;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
-using Microsoft.Extensions.Localization;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -103,7 +99,8 @@ namespace ReportingSystem.Controllers.Users
                 }
                 else
                 {
-                    return RedirectToAction("Authorize", "Home", new { result });
+                    //return Json(result);
+                    return RedirectToAction("StartPage", "Home", new { result });
                 }
             }
             return Json(result);
