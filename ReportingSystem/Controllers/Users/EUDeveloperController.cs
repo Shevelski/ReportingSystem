@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using ReportingSystem.Controllers.Functions;
-using ReportingSystem.Models.User;
-using System.Reflection;
-using System.Text;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -17,6 +12,11 @@ namespace ReportingSystem.Controllers.Users
         public EUDeveloperController(ILogger<EUDeveloperController> logger)
         {
             _logger = logger;
+        }
+
+        public IActionResult StartPage()
+        {
+            return SessionHelper.ViewDataFullSession(HttpContext);
         }
 
         public IActionResult Index()
@@ -68,7 +68,7 @@ namespace ReportingSystem.Controllers.Users
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
-        
+
         public IActionResult Rolls()
         {
             return SessionHelper.ViewDataSession(HttpContext);
@@ -78,7 +78,6 @@ namespace ReportingSystem.Controllers.Users
             return SessionHelper.ViewDataSession(HttpContext);
         }
 
-
         public IActionResult Report()
         {
             return SessionHelper.ViewDataSession(HttpContext);
@@ -87,7 +86,7 @@ namespace ReportingSystem.Controllers.Users
         public IActionResult Exit()
         {
             HttpContext.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("StartPage", "Home");
         }
 
     }

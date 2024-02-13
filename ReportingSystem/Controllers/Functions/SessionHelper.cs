@@ -22,6 +22,28 @@ namespace ReportingSystem.Controllers.Functions
                     Model = ids
                 };
 
+                return new PartialViewResult
+                {
+                    ViewData = viewData
+                };
+            }
+            else
+            {
+                httpContext.SignOutAsync();
+                return new RedirectToActionResult("Authorize", "Home", null);
+            }
+        }
+        public static IActionResult ViewDataFullSession(HttpContext httpContext)
+        {
+            if (httpContext.Session.TryGetValue("ids", out byte[]? idsBytes))
+            {
+                var ids = JsonConvert.DeserializeObject<string[]>(Encoding.UTF8.GetString(idsBytes));
+
+                var viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                {
+                    Model = ids
+                };
+
                 return new ViewResult
                 {
                     ViewData = viewData

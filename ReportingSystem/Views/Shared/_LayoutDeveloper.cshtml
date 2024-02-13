@@ -40,7 +40,7 @@
         <p hidden id="rol">@Model[3]</p>
     </div>
 
-    <header id="content-container">
+    <header>
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
 
@@ -113,7 +113,7 @@
                                             <a class="nav-link" href="/EUDeveloper/Info" data-target="#content-container">Власні дані</a>
                                         </li>
                                         <li class="nav-item" v-if="windowWidth > 992">
-                                            <a class="nav-link" href="/Home/Authorize" data-target="#content-container">Вихід</a>
+                                            <a class="nav-link" href="/Home/StartPage" data-target="#content-container">Вихід</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -133,7 +133,7 @@
         </nav>
     </header>
 
-    <div >
+    <div id="content-container">
         @RenderBody()
     </div>
 
@@ -141,7 +141,7 @@
         @formattedDate &copy Звітна система <a href="/Home/Index" class="link-custom-color linkfooter" data-target="#content-container">DIGITAP</a>
     </footer>
 
-
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
@@ -296,4 +296,10 @@
             color: #000;
             transition: all 0.3s ease-in;
         }
+
+    .transparent-container {
+        background-color: rgba(0, 0, 0, 0); /* Background color (can be any color) */
+        padding: 20px;
+        /* opacity: 0.5; /* 50% transparency */
+    }
 </style>
