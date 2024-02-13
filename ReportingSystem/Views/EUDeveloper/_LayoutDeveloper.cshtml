@@ -1,9 +1,17 @@
 ﻿<!DOCTYPE html>
 
+@* <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
 
 
 <html lang="en">
@@ -65,10 +73,10 @@
                             <a class="nav-link" href="/EUDeveloper/Companies" data-target="#content-container">Компанії</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Проекти
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown1">
+                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/EUDeveloper/Projects" data-target="#content-container">Проекти</a>
                                 </li>
@@ -82,10 +90,10 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Співробітники
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown2">
+                            <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/EUDeveloper/Employees" data-target="#content-container">Співробітники</a>
                                 </li>
@@ -108,10 +116,10 @@
                         <li class="nav-item dropdown" id="header_dropdown">
                             <ul class="first-list" v-if="windowWidth > 992">
                                 <li class="circle border">
-                                    <a class="nav-link" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         {{ firstInitial }}{{ secondInitial }}
                                     </a>
-                                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown3">
+                                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
 
                                         <li class="nav-item">
                                             <a class="nav-link" href="/EUDeveloper/Info" data-target="#content-container">Власні дані</a>
@@ -140,7 +148,10 @@
         </nav>
     </header>
 
-    <div >
+
+   
+
+    <div>
         @RenderBody()
     </div>
 
@@ -149,13 +160,42 @@
     </footer>
 
 
-    @await RenderSectionAsync("Scripts", required: false)
+    @* @await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>
 
-<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
 <script src="~/js/Header.js" asp-append-version="true"></script>
-<script src="~/js/Layout.js" asp-append-version="true"></script>
 
+<script>
+    $(document).ready(function () {
+        function loadContent(url, target) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $(target).html(data);
+                },
+                error: function () {
+                    alert('Error loading content');
+                }
+            });
+        }
+
+        $('.nav-link').on('click', function (e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var target = $(this).data('target');
+            loadContent(url, target);
+        });
+
+        $(document).ready(function () {
+            $('.nav-link').click(function () {
+                $('.nav-link').removeClass('active');
+                $(this).closest('.nav-link').addClass('active');
+            });
+        });
+    });
+</script>
+<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
 
 
