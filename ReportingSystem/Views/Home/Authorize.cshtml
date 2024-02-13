@@ -22,12 +22,11 @@
             <label class="label">{{ status.name }}</label>
         </div>
 
-        <form method="get" class="el1 bm-3" asp-action="CheckEmail" asp-controller="Home" v-on:submit.prevent="CheckEmail" v-if="mode == 0 || mode == 2">
-
-            <div class="el1 bm-3 textcolor" v-if="mode == 0">
-                <label class="label">Email</label>
-                <input class="input" v-model="email" />
-            </div>
+    <form method="get" class="el1 bm-3" asp-action="CheckEmail" asp-controller="Home" v-on:submit.prevent="CheckEmail" v-if="mode == 0 || mode == 2">
+        <div class="el1 bm-3 textcolor" v-if="mode == 0">
+            <label class="label">Email</label>
+            <input class="input" v-model="email" />
+        </div>
 
             <div class="el1 bm-3 textcolor" v-if="mode == 2">
                 <button type="button" class="button yes-button" v-on:click="CheckEmail()">@Localizer["Yes"]</button>
