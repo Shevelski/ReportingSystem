@@ -26,13 +26,14 @@ form.editable input {
         }
     }
 
-    html {
+html {
   position: relative;
   min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-attachment: fixed;
 }
 
 .modal-dialog {

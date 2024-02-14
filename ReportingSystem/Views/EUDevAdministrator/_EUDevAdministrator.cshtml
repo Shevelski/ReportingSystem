@@ -1,19 +1,10 @@
 ﻿<!DOCTYPE html>
-
-@* <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
-<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> *@
-
-
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ReportingSystem</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    @* <link rel="stylesheet" href="~/ReportingSystem.styles.css" asp-append-version="true" /> *@
 </head>
 
 @{
@@ -49,7 +40,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
             <div class="container-fluid">
 
-                <a class="navbar-brand main-name" href="/EUDeveloper/Index" data-target="#content-container">Звітна система</a>
+                <a class="navbar-brand main-name" href="/EUDevAdministrator/Index" data-target="#content-container">Звітна система</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -57,13 +48,13 @@
                 <div class="navbar-collapse collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         <li class="nav-item">
-                            <a class="nav-link" href="/EUDeveloper/Index" data-target="#content-container">Сповіщення</a>
+                            <a class="nav-link" href="/EUDevAdministrator/Index" data-target="#content-container">Сповіщення</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/EUDeveloper/Customers" data-target="#content-container">Замовники</a>
+                            <a class="nav-link" href="/EUDevAdministrator/Customers" data-target="#content-container">Замовники</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/EUDeveloper/Companies" data-target="#content-container">Компанії</a>
+                            <a class="nav-link" href="/EUDevAdministrator/Companies" data-target="#content-container">Компанії</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -71,13 +62,13 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Projects" data-target="#content-container">Проекти</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Projects" data-target="#content-container">Проекти</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Steps" data-target="#content-container">Етапи</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Steps" data-target="#content-container">Етапи</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Categories" data-target="#content-container">Категорії</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Categories" data-target="#content-container">Категорії</a>
                                 </li>
                             </ul>
                         </li>
@@ -88,23 +79,21 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-lg-end " aria-labelledby="navbarDropdown">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Employees" data-target="#content-container">Співробітники</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Employees" data-target="#content-container">Співробітники</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Administrators" data-target="#content-container">Адміністратори</a>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Positions" data-target="#content-container">Посади</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Positions" data-target="#content-container">Посади</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Rolls" data-target="#content-container">Ролі</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Rolls" data-target="#content-container">Ролі</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Structure" data-target="#content-container">Структура</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Structure" data-target="#content-container">Структура</a>
                                 </li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/EUDeveloper/Report" data-target="#content-container">Звіт</a>
+                            <a class="nav-link" href="/EUDevAdministrator/Report" data-target="#content-container">Звіт</a>
                         </li>
                         <li class="nav-item dropdown" id="header_dropdown">
                             <ul class="first-list" v-if="windowWidth > 992">
@@ -115,20 +104,20 @@
                                     <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
 
                                         <li class="nav-item">
-                                            <a class="nav-link" href="/EUDeveloper/Info" data-target="#content-container">Власні дані</a>
+                                            <a class="nav-link" href="/EUDevAdministrator/Info" data-target="#content-container">Власні дані</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a asp-controller="EUDeveloper" asp-action="Exit" class="nav-link-asp">Вихід</a>
+                                            <a asp-controller="EUDevAdministrator" asp-action="Exit" class="nav-link-asp">Вихід</a>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
                             <ul class="second-list" v-else>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/EUDeveloper/Info" data-target="#content-container">Власні дані</a>
+                                    <a class="nav-link" href="/EUDevAdministrator/Info" data-target="#content-container">Власні дані</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a asp-controller="EUDeveloper" asp-action="Exit" class="nav-link-asp">Вихід</a>
+                                    <a asp-controller="EUDevAdministrator" asp-action="Exit" class="nav-link-asp">Вихід</a>
                                 </li>
 
                             </ul>
@@ -144,6 +133,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Users/EUDevLayout.css" asp-append-version="true" />
+
     <script src="~/js/Header.js" asp-append-version="true"></script>
     <script src="~/js/Layout.js" asp-append-version="true"></script>
 

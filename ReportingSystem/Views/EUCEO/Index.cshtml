@@ -1,23 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Директор";
-    Layout = "_LayoutCEO";
+    Layout = "_EUCEO";
 }
 
-
-@model string[];
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Сторінка зі списком даних</title>
-</head>
-<body>
-    <h1>Список даних:</h1>
-    <ul>
-        @foreach (var item in Model)
-        {
-            <li>@item</li>
-        }
-    </ul>
-</body>
-</html>
+<partial name="~/Views/Common/IndexInfo.cshtml" />

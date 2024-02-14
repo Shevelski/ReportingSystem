@@ -6,14 +6,6 @@ namespace ReportingSystem.Controllers.Users
 {
     public class EUDeveloperController : Controller
     {
-
-        private readonly ILogger<EUDeveloperController> _logger;
-
-        public EUDeveloperController(ILogger<EUDeveloperController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult StartPage()
         {
             return SessionHelper.ViewDataFullSession(HttpContext);

@@ -1,6 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "Директор";
-    Layout = "_LayoutCustomer";
+    Layout = "_EUCustomer";
 }
+<div class="text-center">
+    <h2 class="display-4 textcolor">Управління етапами проектів</h2>
+</div>
 
-<p>Етапи проекту розробник</p>
+@model string[];
+
+<div>
+    <p hidden id="idCu">@Model[0]</p>
+    <p hidden id="idCo">@Model[1]</p>
+    <p hidden id="idEm">@Model[2]</p>
+    <p hidden id="rol">@Model[3]</p>
+</div>
+<partial name="~/Views/Common/ProjectsSteps.cshtml" />

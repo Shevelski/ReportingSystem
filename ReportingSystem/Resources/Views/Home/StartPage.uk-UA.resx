@@ -120,4 +120,7 @@
   <data name="ReportingSystem" xml:space="preserve">
     <value>Звітна система</value>
   </data>
+  <data name="StartPage" xml:space="preserve">
+    <value>Портал</value>
+  </data>
 </root>

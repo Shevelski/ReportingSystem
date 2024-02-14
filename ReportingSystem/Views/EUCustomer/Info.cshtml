@@ -1,8 +1,9 @@
 ﻿@{
-    ViewData["Title"] = "Власні дані";
-    Layout = "_LayoutCustomer";
+    Layout = "_EUCustomer";
 }
-
+<div class="text-center">
+    <h2 class="display-4 textcolor">Власні дані</h2>
+</div>
 
 @model string[];
 
@@ -13,4 +14,4 @@
     <p hidden id="rol">@Model[3]</p>
 </div>
 
-<partial name="~/Views/Common/InfoCustomer.cshtml" />
+<partial name="~/Views/Common/Info.cshtml" />

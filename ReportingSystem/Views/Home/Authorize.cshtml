@@ -2,15 +2,7 @@
 
 @{
     ViewData["Title"] = @Localizer["Entry"];
-    // Layout = "_LayoutAuthorize";
 }
-@* <p class="textcolor">Cookie Value: @ViewBag.CookieValue</p> *@
-
-@* <div id="mask" v-show="!delay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 9999;">
-    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-        <p>Loading...</p>
-    </div>
-</div> *@
 
 <div class="container bg-transparent border-0">
 
@@ -49,18 +41,6 @@
             </div>
             <input type="hidden" name="email" v-model="email" />
         </form>
-
-    @* <form method="post" action="login.aspx">
-        <div class="form-group">
-            <label for="txtUsername">Username:</label>
-            <input type="text" class="form-control" id="txtUsername" name="txtUsername" required />
-        </div>
-        <div class="form-group">
-            <label for="txtPassword">Password:</label>
-            <input type="password" class="form-control" id="txtPassword" name="txtPassword" required />
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form> *@
 
 </div>
 
@@ -144,6 +124,3 @@
 
 @*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/Authorize.js" asp-append-version="true"></script>
-@* <script>
-    var statusName = @Html.Raw(Json.Serialize(Model?.StatusName));
-</script> *@

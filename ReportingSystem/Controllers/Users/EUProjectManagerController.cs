@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ReportingSystem.Controllers.Functions;
 using ReportingSystem.Models.User;
@@ -12,9 +13,9 @@ namespace ReportingSystem.Controllers.Users
 
         private readonly ILogger<EUProjectManagerController> _logger;
 
-        public EUProjectManagerController(ILogger<EUProjectManagerController> logger)
+        public IActionResult StartPage()
         {
-            _logger = logger;
+            return SessionHelper.ViewDataFullSession(HttpContext);
         }
 
         public IActionResult Index()
@@ -22,7 +23,7 @@ namespace ReportingSystem.Controllers.Users
             return SessionHelper.ViewDataSession(HttpContext);
         }
 
-        public IActionResult Companies()
+        public IActionResult Steps()
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
@@ -31,29 +32,36 @@ namespace ReportingSystem.Controllers.Users
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
+
         public IActionResult Projects()
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
-        public IActionResult Employees()
-        {
-            return SessionHelper.ViewDataSession(HttpContext);
-        }
+
         public IActionResult Info()
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
-        public IActionResult Positions()
+
+        public IActionResult Report()
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
+
+        public IActionResult Employees()
+        {
+            return SessionHelper.ViewDataSession(HttpContext);
+        }
+
         public IActionResult Structure()
         {
             return SessionHelper.ViewDataSession(HttpContext);
         }
-        public IActionResult Report()
+
+        public IActionResult Exit()
         {
-            return SessionHelper.ViewDataSession(HttpContext);
+            HttpContext.SignOutAsync();
+            return RedirectToAction("StartPage", "Home");
         }
     }
 }

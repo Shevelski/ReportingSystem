@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ReportingSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+
+@{
+    var path = Context.Request.Path;
+    DateTime currentDate = DateTime.Now;
+    DayOfWeek dayOfWeek = currentDate.DayOfWeek;
+
+    string day = currentDate.ToString("dddd");
+    string month = currentDate.ToString("MMMM");
+    string dayNumber = currentDate.ToString("dd");
+    string year = currentDate.ToString("yyyy");
+    string dateFormat = "yyyy-MM-dd";
+
+    char[] charArray = day.ToCharArray();
+    charArray[0] = char.ToUpper(charArray[0]);
+
+    string upperDay = new string(charArray);
+    dateFormat = "dd.MM.yyyy";
+    string formattedDate = $"{upperDay} {currentDate.ToString(dateFormat)}";
+}
+
+@model string[];
+
+<body>
+    <div>
+        <p hidden id="idCu">@Model[0]</p>
+        <p hidden id="idCo">@Model[1]</p>
+        <p hidden id="idEm">@Model[2]</p>
+        <p hidden id="rol">@Model[3]</p>
+    </div>
+
+    <header id="content-container">
+        <nav class="navbar navbar-expand-lg navbar-dark border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+
+                <a class="navbar-brand main-name" href="/EUUser/Index" data-target="#content-container">Звітна система</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav flex-grow-1 justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/EUUser/Index" data-target="#content-container">Сповіщення</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/EUUser/Employees" data-target="#content-container">Співробітники</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/EUUser/Structure" data-target="#content-container">Структура</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/EUUser/Report" data-target="#content-container">Звіт</a>
+                        </li>
+                        <li class="nav-item dropdown" id="header_dropdown">
+                            <ul class="first-list" v-if="windowWidth > 992">
+                                <li class="circle border">
+                                    <a class="nav-link" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ firstInitial }}{{ secondInitial }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdown">
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="/EUUser/Info" data-target="#content-container">Власні дані</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a asp-controller="EUUser" asp-action="Exit" class="nav-link-asp">Вихід</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul class="second-list" v-else>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/EUUser/Info" data-target="#content-container">Власні дані</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="EUUser" asp-action="Exit" class="nav-link-asp">Вихід</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Users/EUDevLayout.css" asp-append-version="true" />
+
+    <script src="~/js/Header.js" asp-append-version="true"></script>
+    <script src="~/js/Layout.js" asp-append-version="true"></script>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <footer class="border-top footercustom" id="Footer">
+        @formattedDate &copy Звітна система <a asp-controller="Home" asp-action="StartPage">DIGITAP</a>
+    </footer>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "_EUCustomer";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/Header.js" asp-append-version="true"></script>
+
+<script>
+    // Викликати функцію при завантаженні сторінки
+    $(document).ready(function () {
+    });
+        loadInfoPage();
+
+    function loadInfoPage() {
+        $.ajax({
+            url: '/EUCustomer/Index', // Змініть шлях відповідно до вашого проекту
+            type: 'GET',
+            success: function (data) {
+                $('#content-container').html(data);
+            },
+            error: function () {
+                alert('Помилка при завантаженні сторінки.');
+            }
+        });
+    }
+</script>

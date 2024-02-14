@@ -97,6 +97,11 @@ namespace ReportingSystem
                 name: "default",
                 pattern: "{controller=Home}/{action=StartPage}/{id?}");
 
+            //app.MapControllerRoute(
+            //    name: "configuration",
+            //    pattern: "configuration",
+            //    defaults: new { controller = "Home", action = "Configuration" });
+
             app.MapControllerRoute(
                 name: "configuration",
                 pattern: "configuration",

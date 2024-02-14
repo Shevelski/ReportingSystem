@@ -147,7 +147,12 @@ namespace ReportingSystem.Controllers.Users
          {
             await Task.Delay(10);
             return PartialView();
-        }
+         }
+         public async Task<IActionResult>  Configuration()
+         {
+            await Task.Delay(10);
+            return PartialView();
+         }
        
 
 

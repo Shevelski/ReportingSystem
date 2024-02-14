@@ -1,14 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Адміністратор";
-    Layout = "_LayoutAdministrator";
+    Layout = "_EUAdministrator";
 }
-
+<div class="text-center">
+    <h2 class="display-4 textcolor">Звіт</h2>
+</div>
 
 @model string[];
 
-<head>
-    <title>Ролі</title>
-</head>
 <div>
     <p hidden id="idCu">@Model[0]</p>
     <p hidden id="idCo">@Model[1]</p>

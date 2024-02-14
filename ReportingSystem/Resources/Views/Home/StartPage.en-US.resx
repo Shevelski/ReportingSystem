@@ -120,4 +120,7 @@
   <data name="ReportingSystem" xml:space="preserve">
     <value>Reporting System</value>
   </data>
+  <data name="StartPage" xml:space="preserve">
+    <value>Portal</value>
+  </data>
 </root>

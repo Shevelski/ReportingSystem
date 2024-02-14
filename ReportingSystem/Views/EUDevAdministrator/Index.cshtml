@@ -1,49 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Розробник-Адміністратор";
-    Layout = "_LayoutDevAdministrator";
+    Layout = "_EUDevAdministrator";
 }
 
-
-<p>Стартова сторінка - Розробник-Адміністратор</p>
-
-
-
-@model string[];
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>
-        Сторінка зі списком даних
-    </title>
-</head>
-<body>
-    <h1 class="textcolor">Список даних:</h1>
-    <ul>
-        @foreach (var item in Model)
-        {
-            <li class="textcolor">@item</li>
-        }
-    </ul>
-</body>
-</html>
-
-<style>
-    body {
-        background-image: url('/img/backEUDevAdministrator.jpg'); /* Specify the path to your image */
-        background-size: cover; /* Adjust the size to cover the entire background */
-        background-repeat: no-repeat; /* Prevent the background image from repeating */
-        background-position: center center; /* Center the background image */
-        width: 100vw; /* Set the width to 100% of the viewport width */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
-        background-attachment: fixed;
-        /* opacity: 0.5; /* 50% transparency */
-    }
-
-    .textcolor {
-        color: white
-    }
-
-</style>
+<partial name="~/Views/Common/IndexInfo.cshtml" />
