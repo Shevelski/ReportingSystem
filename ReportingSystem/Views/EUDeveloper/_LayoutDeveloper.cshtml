@@ -3,15 +3,8 @@
 @* <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
-
-<script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
-<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> *@
 
 
 <html lang="en">
@@ -127,8 +120,6 @@
                                         <li class="nav-item">
                                             <a asp-controller="EUDeveloper" asp-action="Exit" class="nav-link-asp">Вихід</a>
                                         </li>
-
-                                        
                                     </ul>
                                 </li>
                             </ul>
@@ -149,7 +140,12 @@
     </header>
 
 
-   
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <script src="~/js/Header.js" asp-append-version="true"></script>
+    <script src="~/js/Layout.js" asp-append-version="true"></script>
 
     <div>
         @RenderBody()
@@ -159,43 +155,11 @@
         @formattedDate &copy Звітна система <a asp-controller="Home" asp-action="StartPage">DIGITAP</a>
     </footer>
 
-
-    @* @await RenderSectionAsync("Scripts", required: false) *@
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 
-<script src="~/js/Header.js" asp-append-version="true"></script>
 
-<script>
-    $(document).ready(function () {
-        function loadContent(url, target) {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (data) {
-                    $(target).html(data);
-                },
-                error: function () {
-                    alert('Error loading content');
-                }
-            });
-        }
 
-        $('.nav-link').on('click', function (e) {
-            e.preventDefault();
-            var url = $(this).attr('href');
-            var target = $(this).data('target');
-            loadContent(url, target);
-        });
-
-        $(document).ready(function () {
-            $('.nav-link').click(function () {
-                $('.nav-link').removeClass('active');
-                $(this).closest('.nav-link').addClass('active');
-            });
-        });
-    });
-</script>
-<link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
 
 
