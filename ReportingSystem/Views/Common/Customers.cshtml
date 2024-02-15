@@ -20,7 +20,7 @@
                     </div>
                     <div class="modal-body">
                         {{modalOperation}}
-                        <table class="table" id="historyTable" v-if="historyCount > 0 && modalType === 4">
+                        <table class="table table-black" id="historyTable" v-if="historyCount > 0 && modalType === 4">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -97,7 +97,7 @@
             </h2>
             <div :id="'collapse' + index" class="accordion-collapse collapse" :aria-labelledby="'heading' + index" data-bs-parent="#Customers">
                 <div class="accordion-body">
-                    <table class="table">
+                    <table class="table table-black">
                         <tbody>
                             <tr>
                                 <td><strong>ПІБ замовника:</strong></td>
@@ -185,7 +185,7 @@
                                     </div>
 
                                     <h4>Загальна вартість ліцензії:</h4>
-                                    <table class="table">
+                                    <table class="table table-black">
                                         <thead>
                                             <tr>
                                                 <th scope="col">#</th>

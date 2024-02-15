@@ -116,3 +116,8 @@ body {
 .textcolor {
     color: white
 }
+
+.control-label {
+    font-size: 12px;
+    color: black;
+}

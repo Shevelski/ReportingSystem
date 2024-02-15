@@ -60,7 +60,7 @@ body {
 }
 
 #day-table .highlighted-row:hover {
-    background-color: #ededed;
+    background-color: #7b7b7b;
 }
 
 #day-table .table-bordered tbody tr:hover {
@@ -69,7 +69,7 @@ body {
 
 
 #week-table tbody tr:hover {
-    background-color: #ededed;
+    background-color: #363a3e;
 }
 
 [v-cloak] {
@@ -87,10 +87,6 @@ body {
         padding: 8px;
     }
 
-        /*    #month-table th {
-        background-color: #f2f2f2;
-    }*/
-
         #month-table td:hover {
             background-color: #7b7b7b;
         }
@@ -107,9 +103,9 @@ body {
     }
 
     #weeknew-table th {
-        background-color: #f2f2f2;
+        background-color: #7b7b7b;
     }
 
     #weeknew-table td:hover {
-        background-color: #ededed;
+        background-color: #7b7b7b;
     }

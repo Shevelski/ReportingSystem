@@ -2,16 +2,6 @@
     color: rgb(161, 161, 161);
 }
 
-.footercustom {
-    background-color: #7B3838;
-    color: white;
-    padding: 10px;
-    text-align: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
-
 .first-list {
     list-style: none; /* Remove bullet points */
     padding-left: 5px; /* Remove padding */
@@ -45,10 +35,6 @@
 
 .navbar-nav .dropdown .nav-link-asp:hover {
     color: #000;
-}
-
-.navbar {
-    background-color: #7B3838;
 }
 
 .nav-link.active {
@@ -127,5 +113,13 @@ body {
 }
 
 .modal-content {
-    background-color: #363a3e;
+    background-color: rgb(161, 161, 161);
+}
+
+.table {
+    color: #FFFF;
+}
+
+.table-black {
+    color: #000;
 }
