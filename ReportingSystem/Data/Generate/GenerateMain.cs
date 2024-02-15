@@ -114,10 +114,14 @@ namespace ReportingSystem.Data.Generate
                                     
                                 }
                             }
-                            foreach (var category in company.Categories)
+                            if (company.Categories != null)
                             {
-                                await UpdateStatusOnClient("Оновлення категорій ...", 66);
-                                await new InsertData().CompanyCategories(category, customer.Id, company.Id);
+
+                                foreach (var category in company.Categories)
+                                {
+                                    await UpdateStatusOnClient("Оновлення категорій ...", 66);
+                                    await new InsertData().CompanyCategories(category, customer.Id, company.Id);
+                                }
                             }
 
                             if (company.Projects != null)

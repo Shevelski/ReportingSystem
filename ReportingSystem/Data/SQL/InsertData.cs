@@ -187,6 +187,10 @@ namespace ReportingSystem.Data.SQL
         {
             var projects = company.Projects;
 
+            if (projects == null)
+            {
+                return;
+            }
             foreach (var project in projects)
             {
                 if (project?.Category?.Level0CatId != Guid.Empty && project?.Category?.Level0CatId != null)
@@ -329,8 +333,8 @@ namespace ReportingSystem.Data.SQL
                 StartDate = project.StartDate,
                 PlanDate = project.PlanDate,
                 EndDate = project.EndDate,
-                Status = await new SQLRead().GetProjectStatusId(project.Status),
-                Head = project.Head.Id,
+                Status = project.Status != null ? await new SQLRead().GetProjectStatusId(project.Status) : Guid.Empty,
+                Head = project.Head != null ? project.Head.Id : Guid.Empty,
                 CategoryModel0 = cat0,
                 CategoryModel1 = cat1,
                 CategoryModel2 = cat2,
@@ -349,6 +353,10 @@ namespace ReportingSystem.Data.SQL
 
             foreach (var pos in project.Positions)
             {
+                if (pos == null || pos.NamePosition == null)
+                {
+                    return;
+                }
                 var idPos = await new SQLRead().GetPositionIdByName(pos.NamePosition, project.CustomerId, project.CompanyId);
 
                 var query = @$"INSERT INTO [{Context.dbName}].[dbo].[ProjectPositions]
@@ -373,8 +381,16 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task Steps(ProjectModel project)
         {
+            if (project.Steps == null)
+            {
+                return;
+            }
             foreach (var step in project.Steps)
             {
+                if (step.Status == null)
+                {
+                    return;
+                }
                 var query = $@"INSERT INTO [{Context.dbName}].[dbo].[Steps]
                        ([Id]
                        ,[CustomerId]
@@ -420,8 +436,17 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task StepPositions(ProjectStepModel step)
         {
+            if (step == null || step.Positions == null)
+            {
+                return;
+            };
+
             foreach (var pos in step.Positions)
             {
+                if (pos.NamePosition == null)
+                {
+                    return;
+                }
                 var query = $@"INSERT INTO [{Context.dbName}].[dbo].[StepPositions]
                         ([Id]
                         ,[StepId]
@@ -451,6 +476,10 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task StepMembers(ProjectStepModel? step)
         {
+            if (step == null || step.Members == null)
+            {
+                return;
+            }
             foreach (var item in step.Members)
             {
                 var query = $@"INSERT INTO [{Context.dbName}].[dbo].[StepMembers]

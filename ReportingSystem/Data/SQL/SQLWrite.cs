@@ -511,7 +511,7 @@ namespace ReportingSystem.Data.SQL
                 FirstName = ar[1],
                 SecondName = ar[2],
                 ThirdName = ar[3],
-                StatusLicenceId = await GetLicenceIdByType(4),
+                StatusLicenceId = await GetLicenceIdByType(1),
                 ConfigureId = ConfigureId,
                 Phone = ar[4],
                 Email = ar[0],
@@ -524,7 +524,7 @@ namespace ReportingSystem.Data.SQL
             {
                 await database.QueryAsync(query, para);
                 await InsertCustomerHistory(para.Id, para.DateRegistration, para.EndTimeLicense,
-                await GetLicenceIdByType(0), await GetLicenceIdByType(4),
+                await GetLicenceIdByType(0), await GetLicenceIdByType(1),
                 0.0, "30d", "Реєстрація замовника");
                 return true;
             }

@@ -1104,7 +1104,7 @@ namespace ReportingSystem.Data.JSON
                 return;
             }
 
-            var customer = DatabaseMoq.Customers.First(cu => cu.Id.Equals(idCustomer));
+            var customer = customers.First(cu => cu.Id.Equals(idCustomer));
 
             if (customer.Companies == null || !Guid.TryParse(ar[1], out Guid idCompany))
             {
@@ -1514,12 +1514,15 @@ namespace ReportingSystem.Data.JSON
         {
             string json = File.ReadAllText("appsettings.json");
             RootObject? root = JsonConvert.DeserializeObject<RootObject>(json);
-            root.ConnectionSettings.Server = ar[0];
-            root.ConnectionSettings.DB = ar[1];
-            root.ConnectionSettings.Login = ar[2];
-            root.ConnectionSettings.Password = ar[3];
-            string newJson = JsonConvert.SerializeObject(root, Formatting.Indented);
-            File.WriteAllText("appsettings.json", newJson);
+            if (root!=null && root.ConnectionSettings != null)
+            {
+                root.ConnectionSettings.Server = ar[0];
+                root.ConnectionSettings.DB = ar[1];
+                root.ConnectionSettings.Login = ar[2];
+                root.ConnectionSettings.Password = ar[3];
+                string newJson = JsonConvert.SerializeObject(root, Formatting.Indented);
+                File.WriteAllText("appsettings.json", newJson);
+            }
         }
         private static void UpdateJsonAdministrators(List<EmployeeModel> administrators)
         {

@@ -205,7 +205,7 @@ namespace ReportingSystem.Data.JSON
         }
         public async Task<List<EmployeeModel>?> GetEmployeesByRoll(string idCu, string idCo, string rol)
         {
-            List<CustomerModel> customers = await GetCustomers();
+            List<CustomerModel>? customers = await GetCustomers();
 
             if (customers == null || !Guid.TryParse(idCu, out Guid idCustomer))
             {

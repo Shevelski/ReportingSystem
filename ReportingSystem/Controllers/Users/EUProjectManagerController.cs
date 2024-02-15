@@ -11,8 +11,6 @@ namespace ReportingSystem.Controllers.Users
     public class EUProjectManagerController : Controller
     {
 
-        private readonly ILogger<EUProjectManagerController> _logger;
-
         public IActionResult StartPage()
         {
             return SessionHelper.ViewDataFullSession(HttpContext);

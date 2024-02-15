@@ -10,12 +10,12 @@ namespace ReportingSystem.Controllers.Users
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            string cookieValue = Request.Cookies["culture"];
+            string? cookieValue = Request.Cookies["culture"];
 
             if (cookieValue == null)
             {
-                CultureInfo currentCulture = HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture;
-                string languageCode = currentCulture.TwoLetterISOLanguageName;
+                CultureInfo? currentCulture = HttpContext?.Features?.Get<IRequestCultureFeature>()?.RequestCulture.Culture;
+                string? languageCode = currentCulture?.TwoLetterISOLanguageName;
                 ViewBag.CookieValue = languageCode;
             }
             else

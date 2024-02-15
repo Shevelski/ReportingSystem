@@ -605,7 +605,6 @@
         private Label EUAdministrator_label;
         private Label label3;
         private Label label4;
-        private Label label5;
         private Button Get1;
     }
 }

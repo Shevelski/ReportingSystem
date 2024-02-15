@@ -351,7 +351,7 @@ namespace Utils
             string Db = await new AppSettingsService().GetAppSetting("Db");
             string connectionName = $"Server={Server};Trusted_Connection=True;Database={Db}";
 
-            List<string?>? data = await new SQLRead().GetData(Server, Db, connectionName);
+            List<string> data = await new SQLRead().GetData(Server, Db, connectionName);
 
             EUDeveloper_mail.Text = data[0];
             EUDeveloper_password.Text = data[1];

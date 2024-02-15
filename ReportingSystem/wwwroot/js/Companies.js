@@ -4,6 +4,7 @@
         customerId: '',
         companyId: '',
         employeeId: '',
+        rol:'',
         isNewSelectedCustomer: false,
         saveCustomer: false,
         idCustomer: '',
@@ -31,15 +32,30 @@
         editStatusWeb: '',
         StatutCapital: '',
         newCompany: [0],
-        companies: [0],
+        companies: [
+            {
+                status: {
+                    companyStatusType: '',
+                },
+            },
+        ],
+        employees: [{
+            positions: [{
+                namePosition: ''
+            }],
+        }],
+        customers:''
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
         this.selectedCustomerId = this.customerId;
         this.companyId = document.getElementById('idCo').textContent;
         this.employeeId = document.getElementById('idEm').textContent;
-        this.rol = document.getElementById('rol').textContent;
+        console.log(this.rol);
+        this.rol = document.getElementById('rol').textContent; console.log(this.rol);
+        console.log(this.rol);
         this.Init();
+        console.log(this.rol);
     },
     computed: {
         countFilteredCompanies() {

@@ -11,6 +11,7 @@ namespace ReportingSystem.Controllers.Functions
         [HttpGet("{key}")]
         public async Task<string> GetSetting(string key)
         {
+            await Task.Delay(10);
             string value = "";
             
             if (key.Equals("Server"))
@@ -20,6 +21,14 @@ namespace ReportingSystem.Controllers.Functions
             if (key.Equals("Db"))
             {
                 value = Context.dbName;
+            }
+            if (key.Equals("Login"))
+            {
+                value = Context.login;
+            }
+            if (key.Equals("Password"))
+            {
+                value = Context.password;
             }
 
             return value;

@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="~/css/Companies.css" asp-append-version="true" />
 @*---------------------------------------------------------------------------------------------------------------------*@
 
-<div class="container textcolor" id="Companies">
-    <div class="accordion" id="accordionExample" v-if="companies.length !== 1">
+<div class="container textcolor" id="Companies" v-if="rol !== undefined">
+    <div class="accordion" id="accordionExample">
         @*---------------------------------------------------------------------------------------------------------------------*@
         @* Модальне вікно*@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -83,7 +83,7 @@
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
         
-        <div style="display: flex; align-items: center;" v-if="rol === 'Developer' || rol === 'DevAdministrator'">
+        <div style="display: flex; align-items: center;" v-if="(rol === 'Developer' || rol === 'DevAdministrator') && customers.length > 1">
             <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
             </select>
@@ -132,7 +132,7 @@
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
         <div style="margin-top: 1em;"></div>
-        <div v-for="(company, index) in filteredCompanies" :key="index" class="accordion-item">
+        <div v-if="companies.length > 0"  v-for="(company, index) in filteredCompanies" :key="index" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + index">
                 <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
                     {{ company.name }}
@@ -194,8 +194,17 @@
                 </div>
             </div>
         </div>
+        <div v-else>
+            <div style="margin-top: 50px; margin-bottom: 50px;">
+                <div class="text-center">
+                    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div v-else>
+   @*  <div v-else>
         <div style="margin-top: 50px; margin-bottom: 50px;">
             <div class="text-center">
                 <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
@@ -203,7 +212,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> *@
 </div>
 @*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/Companies.js" asp-append-version="true"></script>

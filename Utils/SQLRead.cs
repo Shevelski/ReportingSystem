@@ -66,14 +66,28 @@ namespace Utils
                 Rol = rolId
             };
             using var database = Context.ConnectToSQL(connectionName);
-            List<string> val = new List<string>();
+            List<string> val = [];
             var result = await database.QueryAsync<AuthModel>(query, para);
             if (result.Any())
             {
                 foreach (var item in result)
                 {
-                    val.Add(item.EmailWork);
-                    val.Add(EncryptionHelper.Decrypt(item.Password));
+                    if (item.EmailWork != null)
+                    {
+                        val.Add(item.EmailWork);
+                    }
+                    else
+                    {
+                        val.Add("");
+                    }
+                    if (item.Password != null)
+                    {
+                        val.Add(EncryptionHelper.Decrypt(item.Password));
+                    }
+                    else
+                    {
+                        val.Add("");
+                    }
                 }
             }
             
@@ -92,8 +106,22 @@ namespace Utils
             {
                 foreach (var item in result)
                 {
-                    val.Add(item.Email);
-                    val.Add(EncryptionHelper.Decrypt(item.Password));
+                    if (item.Email != null)
+                    {
+                        val.Add(item.Email);
+                    }
+                    else
+                    {
+                        val.Add("");
+                    }
+                    if (item.Password != null)
+                    {
+                        val.Add(EncryptionHelper.Decrypt(item.Password));
+                    }
+                    else
+                    {
+                        val.Add("");
+                    }
                 }
             }
 
@@ -116,8 +144,22 @@ namespace Utils
             {
                 foreach (var item in result)
                 {
-                    val.Add(item.EmailWork);
-                    val.Add(EncryptionHelper.Decrypt(item.Password));
+                    if (item.EmailWork != null)
+                    {
+                        val.Add(item.EmailWork);
+                    }
+                    else
+                    {
+                        val.Add("");
+                    }
+                    if (item.Password != null)
+                    {
+                        val.Add(EncryptionHelper.Decrypt(item.Password));
+                    }
+                    else
+                    {
+                        val.Add("");
+                    }
                 }
             }
 
