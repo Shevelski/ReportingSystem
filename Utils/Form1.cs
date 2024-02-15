@@ -2,6 +2,7 @@ using Microsoft.VisualBasic.ApplicationServices;
 using System.Data;
 using System.Text;
 using System.Xml.Linq;
+using Utils;
 
 namespace Utils
 {
@@ -346,7 +347,11 @@ namespace Utils
         private async void Get1_Click(object sender, EventArgs e)
         {
 
-            List<string?>? data = await new SQLRead().GetData();
+            string Server = await new AppSettingsService().GetAppSetting("Server");
+            string Db = await new AppSettingsService().GetAppSetting("Db");
+            string connectionName = $"Server={Server};Trusted_Connection=True;Database={Db}";
+
+            List<string?>? data = await new SQLRead().GetData(Server, Db, connectionName);
 
             EUDeveloper_mail.Text = data[0];
             EUDeveloper_password.Text = data[1];
@@ -368,6 +373,8 @@ namespace Utils
 
             EUUser_mail.Text = data[12];
             EUUser_password.Text = data[13];
+
+
 
         }
     }

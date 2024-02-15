@@ -6,13 +6,22 @@ namespace Utils
 {
     public class SQLRead
     {
+        private string Server = "";
+        private string Db = "";
+        private string connectionName = "";
+
         private class DatabaseData
         {
             public string? email { get; set; }
             public string? password { get; set; }
         }
 
-        public async Task<List<string>> GetData() {
+        public async Task<List<string>> GetData(string Server, string Db, string connectionName) {
+
+            this.Server = Server;
+            this.Db = Db;
+            this.connectionName = connectionName;
+
             List<string> list = new List<string>();
 
             for (int i = 1; i < 8; i++)
@@ -50,13 +59,13 @@ namespace Utils
         {
             var query = @$"SELECT TOP (1) [EmailWork]
                               ,[Password]
-                          FROM [{Context.dbName}].[dbo].[Administrators]
+                          FROM [{Db}].[dbo].[Administrators]
                           WHERE [Rol] = @Rol";
             var para = new
             {
                 Rol = rolId
             };
-            using var database = Context.ConnectToSQL;
+            using var database = Context.ConnectToSQL(connectionName);
             List<string> val = new List<string>();
             var result = await database.QueryAsync<AuthModel>(query, para);
             if (result.Any())
@@ -75,8 +84,8 @@ namespace Utils
         {
             var query = @$"SELECT TOP (1) [Email]
                               ,[Password]
-                          FROM [{Context.dbName}].[dbo].[Customers]";
-            using var database = Context.ConnectToSQL;
+                          FROM [{Db}].[dbo].[Customers]";
+            using var database = Context.ConnectToSQL(connectionName);
             List<string> val = new List<string>();
             var result = await database.QueryAsync<AuthCustModel>(query);
             if (result.Any())
@@ -94,13 +103,13 @@ namespace Utils
         {
             var query = @$"SELECT TOP (1) [EmailWork]
                               ,[Password]
-                          FROM [{Context.dbName}].[dbo].[Employees]
+                          FROM [{Db}].[dbo].[Employees]
                           WHERE [Rol] = @Rol";
             var para = new
             {
                 Rol = rolId
             };
-            using var database = Context.ConnectToSQL;
+            using var database = Context.ConnectToSQL(connectionName);
             List<string> val = new List<string>();
             var result = await database.QueryAsync<AuthModel>(query, para);
             if (result.Any())
@@ -118,12 +127,12 @@ namespace Utils
         public async Task<Guid> GetEmployeeRoleIdByType(int type)
         {
            
-            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeeRolStatus] Where Type = @type";
+            var query = $"SELECT [Id] FROM [{Db}].[dbo].[EmployeeRolStatus] Where Type = @type";
             var para = new
             {
                 Type = type,
             };
-            using var database = Context.ConnectToSQL;
+            using var database = Context.ConnectToSQL(connectionName);
             var result = await database.QueryAsync<Guid>(query, para);
             return result.First();
         }

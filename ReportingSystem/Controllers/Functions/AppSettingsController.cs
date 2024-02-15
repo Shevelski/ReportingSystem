@@ -7,9 +7,9 @@ namespace ReportingSystem.Controllers.Functions
     [ApiController]
     public class AppSettingsController : ControllerBase
     {
-        
+
         [HttpGet("{key}")]
-        public IActionResult GetSetting(string key)
+        public async Task<string> GetSetting(string key)
         {
             string value = "";
             
@@ -22,7 +22,7 @@ namespace ReportingSystem.Controllers.Functions
                 value = Context.dbName;
             }
 
-            return Ok(value);
+            return value;
         }
     }
 }
