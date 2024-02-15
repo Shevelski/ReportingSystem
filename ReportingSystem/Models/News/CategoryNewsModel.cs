@@ -7,5 +7,6 @@ namespace ReportingSystem.Models.News
         public Guid Id { get; set; }
         public string? Name { get; set; }
         public string? Url { get; set; }
+        public List<NewsModel> news { get; set; }
     }
 }

@@ -55,7 +55,7 @@
             this.selectedCategory = event.target.value;
             this.category = this.categories.find(category => category.name === this.selectedCategory);
             console.log(this.category);
-            this.GetNews(this.category.url);
+            /*this.GetNews(this.category.url);*/
         },
         openNewWindow(url) {
             window.open(url, '_blank');
@@ -66,7 +66,7 @@
             console.log(this.categories);
             this.selectedCategory = this.categories[0].name;
             this.category = this.categories.find(category => category.name === this.selectedCategory);
-            this.GetNews(this.category.url);
+            //this.GetNews(this.category.url);
         },
         async GetNews(categoryIn) {
             let response = await axios.get("/News/GetNews", {
