@@ -19,14 +19,15 @@
         searchQuery: '',
         historyCount: 0,
         historyArr: [],
-        customers: [
-            {
-                statusLicence: {
-                    licenceName: '',
-                    licenceType: 0,
-                }
-            }
-        ],
+        customers:[0],
+        //customers: [
+        //    {
+        //        statusLicence: {
+        //            licenceName: '',
+        //            licenceType: 0,
+        //        }
+        //    }
+        //],
         bufferCost:
         {
             nextDate: new Date(),
@@ -91,7 +92,6 @@
         async Init() {
             let response = await axios.get("/Customers/GetCustomers");
             this.customers = response.data;
-            console.log(this.customers);
             this.pageCount = Math.ceil(this.countFilteredCustomers / this.itemsPerPage);
             this.defaultPeriod();
             
@@ -409,21 +409,6 @@
             }
             this.Init();
         },
-        //async createCustomer() {
-        //    const v0 = "email";
-        //    const v1 = "firstName";
-        //    const v2 = "secondName";
-        //    const v3 = "thirdName";
-        //    const v4 = "phone";
-        //    const v5 = "password";
-        //    const ar = [v0, v1, v2, v3, v4, v5]
-        //    try {
-        //        await axios.post('/Customers/RegistrationCustomer', ar);
-        //    } catch (error) {
-        //        console.error('Помилка під час виклику методу ArchivingLicence:', error);
-        //    }
-        //    this.Init();
-        //},
         toggleModal(type, index) {
             this.modalIndex = index;
             this.modalName = this.filteredCustomers[index].firstName + " " + this.filteredCustomers[index].secondName + " " + this.filteredCustomers[index].thirdName;

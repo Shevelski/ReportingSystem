@@ -125,3 +125,7 @@ body {
 .textcolor {
     color: white
 }
+
+.modal-content {
+    background-color: #363a3e;
+}

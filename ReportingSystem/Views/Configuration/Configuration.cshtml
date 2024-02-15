@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Configuration";
     Layout = "_LayoutConfiguration";
-    @* bool authorize = User.Identity?.IsAuthenticated ?? false; *@
 }
 
 @{
@@ -169,7 +168,7 @@
                 </div>
                 <div v-else>
                     <p>База даних існує. Перехід на сторінку авторизації</p>
-                    <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
+                    <a class="nav-link @(path == "/Home/StartPage" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
                 </div>
              </div>
         </div>

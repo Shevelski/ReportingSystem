@@ -9,7 +9,7 @@
 
 <div id="Customers" class="container textcolor">
    
-    <div class="accordion" id="accordionExample" v-if="selectedCustomer !== ''">
+    <div class="accordion" id="accordionExample" v-if="customers.length !== 1">
         @* Модальне вікно *@
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -248,11 +248,12 @@
                 </div>
             </div>
         </div>
+        
     </div>
     <div v-else>
         <div style="margin-top: 50px; margin-bottom: 50px;">
             <div class="text-center">
-                <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                <div class="spinner-border" style="width: 3rem; height: 3rem;color:white" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
