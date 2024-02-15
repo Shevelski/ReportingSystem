@@ -123,4 +123,7 @@
   <data name="StartPage" xml:space="preserve">
     <value>Портал</value>
   </data>
+  <data name="Today" xml:space="preserve">
+    <value>Сьогодні</value>
+  </data>
 </root>
