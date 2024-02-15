@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
-using ReportingSystem.Utils;
+﻿using ReportingSystem.Utils;
 using System.Data;
 using System.Data.SqlClient;
 

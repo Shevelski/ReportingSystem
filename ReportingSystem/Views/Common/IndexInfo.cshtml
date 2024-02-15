@@ -6,28 +6,70 @@
 <div class="container" id="IndexInfo">
 
     <div class="row">
-        <div class="col-6">
+        <div v-if="birthdays.length > 0" class="col-6">
             <div class="text-center">
-                <h1 class="display-4 textcolor">Останні новини:</h1>
-                <select class="form-select data" aria-label="Default select example"
-                        v-on:change="getSelectedCategory($event)"
-                        v-model="selectedCategory">
-                    <option v-for="category in categories" :value="category.name">
-                        {{ category.name }}
-                    </option>
-                </select>
-               
-                <div>
-                    <ul class="list-group">
-                        <li v-for="link in news" :key="link.id" class="list-group-item" style="background-color: transparent;">
-                      <a href="#" v-on:click="openNewWindow(link.url)" class="link-primary" style="color: #FFFF" target="_blank">{{ link.name }}</a>
-                    </li>
-                  </ul>
+                <div v-if="selectedCategory !== ''">
+                    <h1 class="display-4 textcolor">Останні новини:</h1>
+                    <select class="form-select data" aria-label="Default select example"
+                            v-on:change="getSelectedCategory($event)"
+                            v-model="selectedCategory">
+                        <option v-for="category in categories" :value="category.name">
+                            {{ category.name }}
+                        </option>
+                    </select>
+
+                    <div>
+                        <ul class="list-group">
+                            <li v-for="link in category.news" :key="link.id" class="list-group-item" style="background-color: transparent;">
+                                <a href="#" v-on:click="openNewWindow(link.url)" class="link-primary" style="color: #FFFF" target="_blank">{{ link.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div v-else>
+                    <div style="margin-top: 50px; margin-bottom: 50px;">
+                        <div class="text-center">
+                            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-6">
-            <div class="text-center" v-if="birthdays.length > 0">
+        <div v-else>
+            <div class="text-center">
+                <div v-if="selectedCategory !== ''">
+                    <h1 class="display-4 textcolor">Останні новини:</h1>
+                    <select class="form-select data" aria-label="Default select example"
+                            v-on:change="getSelectedCategory($event)"
+                            v-model="selectedCategory">
+                        <option v-for="category in categories" :value="category.name">
+                            {{ category.name }}
+                        </option>
+                    </select>
+
+                    <div>
+                        <ul class="list-group">
+                            <li v-for="link in category.news" :key="link.id" class="list-group-item" style="background-color: transparent;">
+                                <a href="#" v-on:click="openNewWindow(link.url)" class="link-primary" style="color: #FFFF" target="_blank">{{ link.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div v-else>
+                    <div style="margin-top: 50px; margin-bottom: 50px;">
+                        <div class="text-center">
+                            <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6" v-if="birthdays.length > 0">
+            <div class="text-center">
                 <h1 class="display-4 textcolor" v-if="birthdays.length > 1">Іменинники дня:</h1>
                 <h1 class="display-4 textcolor" v-if="birthdays.length == 1">Іменинник дня:</h1>
 
@@ -37,6 +79,7 @@
                     <p class="textcolor">Phone: {{ user.phoneWork }}</p>
                     <hr />
                 </div>
+            </div>
             </div>
         </div>
     </div>

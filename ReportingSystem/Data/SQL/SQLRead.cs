@@ -1562,6 +1562,9 @@ namespace ReportingSystem.Data.SQL
                 ProjectId = idPr,
             };
 
+            Console.WriteLine(Context.dbName);
+            Console.WriteLine(Context.connectionName);
+
             using var database = Context.ConnectToSQL;
             var result = await database.QueryAsync<TableTypeSQL.StepsProjects>(query, para);
             List<ProjectStepModel> list = [];

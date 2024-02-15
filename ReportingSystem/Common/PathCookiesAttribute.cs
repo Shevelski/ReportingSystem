@@ -7,7 +7,7 @@ namespace ReportingSystem.Common
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             string? urlCurrent = context.HttpContext.Request.Path.Value;
-            context.HttpContext.Response.Cookies.Append("previous", urlCurrent ?? "/Home/Index");
+            context.HttpContext.Response.Cookies.Append("previous", urlCurrent ?? "/Home/StartPage");
         }
     }
 }
