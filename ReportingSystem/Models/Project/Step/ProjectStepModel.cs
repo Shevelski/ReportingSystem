@@ -1,4 +1,5 @@
-﻿using ReportingSystem.Models.Project;
+﻿using ReportingSystem.Models.Employee;
+using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 
 namespace ReportingSystem.Models.Project.Step
@@ -16,6 +17,7 @@ namespace ReportingSystem.Models.Project.Step
         public DateTime EndDate { get; set; }
         public ProjectStatusModel? Status { get; set; }
         public List<EmployeePositionModel>? Positions { get; set; }
+        public List<EmployeesPositionsModel>? EmpPositions { get; set; }
         public List<EmployeeModel>? Members { get; set; }
     }
 }

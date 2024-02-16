@@ -144,166 +144,59 @@
                                 <td><strong>Дата кінця планова:</strong></td>
                                 <td>{{showFormatDate(step.planDate)}}</td>
                             </tr>
-                            @*  <tr>
+                             <tr>
                                 <td><strong>Посади:</strong></td>
-                                <td>{{positions}}</td>
-                            </tr>
-                             <tr>
-                                <td><strong>Учасники:</strong></td>
-                                <td>{{members}}</td>
-                            </tr>
-                             <tr>
-                                <td><strong>Статус:</strong></td>
                                 <td>
-                                    {{status}}
-                                </td>
-                            </tr> *@
-
-                            @*<tr>
-                                <td><strong>Телефон:</strong></td>
-                                <td>{{customer.phone}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>E-mail:</strong></td>
-                                <td>{{customer.email}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Пароль:</strong></td>
-                                <td>{{customer.password}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Кількість компаній:</strong></td>
-                                <td>{{amountCompany(index)}}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Кількість співробітників:</strong></td>
-                                <td>{{ getTotalEmployeesForUser(index) }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Тип ліцензії:</strong></td>
-                                <td>{{ customer.statusLicence.licenceName }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Дата завершення ліцензії:</strong></td>
-                                <td>{{ showFormatDate(customer.endTimeLicense) }}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="text-center">
-                                    <button v-on:click="toggleRenewalAccordion(index)" class="btn btn-outline-secondary">
-                                        Продовжити ліцензію
-                                    </button>
-                                    <button v-if="customer.statusLicence.licenceType !== 4" v-on:click="toggleModal(3, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        Архівування
-                                    </button>
-                                    <button v-if="historyCount>0" v-on:click="toggleModal(4, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        Історія
-                                    </button>
-                                    <button v-if="customer.statusLicence.licenceType !== 4 && customer.statusLicence.licenceType !== 5 && !showExpired" v-on:click="toggleModal(2, index)" type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        Анулювання ліцензії
-                                    </button>
-                                    <button v-if="customer.statusLicence.licenceType == 4" v-on:click="toggleModal(5, index)" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                        Видалити
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr v-if="isRenewalAccordionOpen(index)">
-                                <td colspan="2">
-                                    <h4>Продовження ліцензії:</h4>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="period" v-model="selectedOption">
-                                        <label class="form-check-label" for="flexRadioDefault1">
-                                            Період
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="endDate" v-model="selectedOption">
-                                        <label class="form-check-label" for="flexRadioDefault2">
-                                            Кінцева дата
-                                        </label>
-                                    </div>
-
-                                    <p>Термін продовження:</p>
-                                    <div v-if="selectedOption === 'period'">
-                                        <p>
-                                            <div class="form-group">
-                                                <label for="renewalPeriod">Період продовження:</label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="renewalPeriod" v-model="bufferCost.renewalPeriod" v-on:input="handleRenewalPeriodChange(index)">
-                                                    <select class="form-control" v-model="bufferCost.renewalUnit" v-on:change="handleRenewalUnitChange(index)">
-                                                        <option value="day">День</option>
-                                                        <option value="week">Тиждень</option>
-                                                        <option value="month">Місяць</option>
-                                                        <option value="quarter">Квартал</option>
-                                                        <option value="year">Рік</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </p>
-                                    </div>
-                                    <div v-else>
-                                        <p>Дата до якої буде продовжено:</p><input type="date" class="form-control" data-date="" data-date-format="DD MMMM YYYY"
-                                                                                   v-model="bufferCost.nextDateCalendar" v-on:change="handleRenewalCalendar(index)" />
-                                    </div>
-
-                                    <h4>Загальна вартість ліцензії:</h4>
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">#</th>
-                                                <th scope="col">Стаття</th>
-                                                <th scope="col">Вартість</th>
-                                            </tr>
-                                        </thead>
+                                    <table class="table table-black">
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Базова ціна(місяць)</td>
-                                                <td>5000</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Період продовження</td>
-                                                <td>{{bufferCost.subPeriod}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td> Завершення нової ліцензії</td>
-                                                <td>{{showFormatDate(bufferCost.nextDate)}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">4</th>
-                                                <td>Розмір знижки(місяць)</td>
-                                                <td>{{bufferCost.amountCostDown}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">5</th>
-                                                <td>Всього знижка</td>
-                                                <td>{{bufferCost.allCostDown}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">6</th>
-                                                <td>Загальна вартість</td>
-                                                <td>{{bufferCost.amountGeneralCost}}</td>
-                                            </tr>
-                                            <tr v-if="isShowCheckMode(index)">
-                                                <td colspan="3" align="center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" v-model="bufferCost.inactiveUser" v-on:change="calculateCost(index)">
-                                                        <label class="form-check-label" for="flexCheckDefault">
-                                                            Користувач не був активним (розрахунок від поточної дати)
-                                                        </label>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3" align="right">
-                                                    <button v-on:click="toggleModal(1, index)" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Підтвердити</button>
-                                                </td>
+                                            <tr v-for="pos in step.positions">
+                                                <td>{{pos.namePosition}}</td>
+                                                <td>{{pos.namePosition}}1</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </td>
-                            </tr> *@
+                                @* <td v-for="pos in step.positions">
+                                    <div>pos.namePosition</div>
+                                    <table class="table table-black">
+                                        <tbody>
+                                            <tr>
+                                                pos.namePosition
+                                                <td>1</td>
+                                                <td>2</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>4</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td> *@
+                                @* <td v-for="pos in step.positions">
+                                    <table class="table table-black">
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>2</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>4</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td> *@
+                            </tr>
+                             <tr>
+                                <td><strong>Учасники:</strong></td>
+                                <td>{{step.members}}</td>
+                            </tr>
+                             <tr>
+                                <td><strong>Статус:</strong></td>
+                                <td>
+                                    {{step.status}}
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

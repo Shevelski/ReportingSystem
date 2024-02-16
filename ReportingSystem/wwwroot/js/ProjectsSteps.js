@@ -31,6 +31,7 @@ new Vue({
         selectedCustomerIdCheck: 0,
         companies: [0],
         customers: [0],
+        posEmpl: [0]
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -292,10 +293,11 @@ new Vue({
             }
         },
         closeAllAccordions() {
+            this.pageCount = Math.ceil(this.countFilteredSteps / this.itemsPerPage);
             const accordionItems = document.querySelectorAll(".accordion-collapse");
             accordionItems.forEach(item => {
                 item.classList.remove("show");
-            });
+            })
         },
     },
 });

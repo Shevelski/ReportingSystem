@@ -15,10 +15,7 @@
         id: '',
     },
     mounted() {
-        //setTimeout(() => {
-        //    this.delay = true;
-        //    document.getElementById('mask').classList.add('hidden'); // Приховуємо маску
-        //}, 500);
+        this.Mode(0);
     },
     methods: {
         async CheckEmail() {
@@ -34,6 +31,36 @@
                 this.status.type = this.data.authorizeStatusModel.authorizeStatusType;
                 this.status.name = this.data.authorizeStatusModel.authorizeStatusName;
                 this.Mode(this.status.type);
+            }
+        },
+        modeChange(newMode) {
+            console.log("New mode:", newMode);
+            this.mode = newMode;
+
+            // Перевірте, чи елемент форми є активним
+            if (this.mode == 0 || this.mode == 2) {
+                // Отримайте елемент форми та введення
+                const form = this.$refs.emailForm;
+                const input = this.$refs.emailInput;
+
+                // Перевірте, чи елементи існують, а потім встановіть фокус
+                if (form && input) {
+                    this.$nextTick(() => {
+                        input.focus();
+                    });
+                }
+            }
+
+            // Перевірте, чи елемент форми є активним
+            if (this.mode == 1 || this.mode == 4) {
+                // Отримайте елемент форми та введення
+                const form = this.$refs.passwordForm;
+                const input = this.$refs.passwordInput;
+
+                // Перевірте, чи елементи існують, а потім встановіть фокус
+                if (form && input) {
+                    input.focus();
+                }
             }
         },
         async CheckPassword() {
@@ -68,6 +95,7 @@
             if (type == 4) {
                 this.mode = 4;
             }
+            this.modeChange(this.mode);
         },
     }
 })

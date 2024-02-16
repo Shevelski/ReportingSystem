@@ -2,6 +2,7 @@
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Company;
+using ReportingSystem.Models.Employee;
 using ReportingSystem.Models.Project;
 using ReportingSystem.Models.Project.Step;
 using ReportingSystem.Models.User;
@@ -62,6 +63,7 @@ namespace ReportingSystem.Data.Generate
                 };
                 project.Positions.Add(managersP[m]);
                 project.Members = [managersE[m]];
+                
                 ProjectStatus[] values = [ProjectStatus.Project, ProjectStatus.InProcess, ProjectStatus.Support, ProjectStatus.InImprove, ProjectStatus.Archive];
                 project.Status = new ProjectStatusModel
                 {
@@ -80,20 +82,36 @@ namespace ReportingSystem.Data.Generate
                     };
                 }
 
+                project.EmpPositions = new List<EmployeesPositionsModel>();
                 for (int d = 0; d < numberPosOfDevelopers; d++)
                 {
                     project.Positions.Add(developersP[d]);
                     project.Members.Add(developersE[d]);
+                    EmployeesPositionsModel empo = new();
+                    empo.NamePosition = developersP[d].NamePosition;
+                    empo.Employees = new List<EmployeeModel>();
+                    empo.Employees.Add(developersE[d]);
+                    project.EmpPositions.Add(empo);
                 }
                 for (int de = 0; de < numberPosOfDesigners; de++)
                 {
                     project.Positions.Add(designersP[de]);
                     project.Members.Add(designersE[de]);
+                    EmployeesPositionsModel empo = new();
+                    empo.NamePosition = designersP[de].NamePosition;
+                    empo.Employees = new List<EmployeeModel>();
+                    empo.Employees.Add(designersE[de]);
+                    project.EmpPositions.Add(empo);
                 }
                 for (int t = 0; t < numberPosOfTesters; t++)
                 {
                     project.Positions.Add(testersP[t]);
                     project.Members.Add(testersE[t]);
+                    EmployeesPositionsModel empo = new();
+                    empo.NamePosition = testersP[t].NamePosition;
+                    empo.Employees = new List<EmployeeModel>();
+                    empo.Employees.Add(testersE[t]);
+                    project.EmpPositions.Add(empo);
                 }
 
                 project.Steps = [];
@@ -107,6 +125,7 @@ namespace ReportingSystem.Data.Generate
                     Description = "Description 1",
                     Positions = project.Positions,
                     Members = project.Members,
+                    EmpPositions = project.EmpPositions,
                     Status = project.Status,
                     StartDate = project.StartDate,
                     PlanDate = project.EndDate,
@@ -124,6 +143,7 @@ namespace ReportingSystem.Data.Generate
                     Description = "Description 1",
                     Positions = project.Positions,
                     Members = project.Members,
+                    EmpPositions = project.EmpPositions,
                     Status = project.Status,
                     StartDate = project.StartDate,
                     PlanDate = project.EndDate,
