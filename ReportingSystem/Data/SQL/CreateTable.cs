@@ -140,7 +140,7 @@ namespace ReportingSystem.Data.SQL
 
         public async Task StepMembers()
         {
-            await CreateAsync("StepMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER");
+            await CreateAsync("StepMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, StepId UNIQUEIDENTIFIER, ProjectId UNIQUEIDENTIFIER, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER, PositionId UNIQUEIDENTIFIER");
             await AlterTableAsync("StepMembers", "ADD FOREIGN KEY(StepId) REFERENCES Steps(Id)");
         }
 

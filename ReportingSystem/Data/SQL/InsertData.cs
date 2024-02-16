@@ -488,14 +488,16 @@ namespace ReportingSystem.Data.SQL
                        ,[ProjectId]
                        ,[CustomerId]
                        ,[CompanyId]
-                       ,[EmployeeId])
+                       ,[EmployeeId]
+                       ,[PositionId])
                  VALUES
                        (@Id
                        ,@StepId
                        ,@ProjectId
                        ,@CustomerId
                        ,@CompanyId
-                       ,@EmployeeId)";
+                       ,@EmployeeId
+                       ,@PositionId)";
                 var para = new
                 {
                     Id = Guid.NewGuid(),
@@ -503,7 +505,8 @@ namespace ReportingSystem.Data.SQL
                     ProjectId = step.ProjectId,
                     CustomerId = step.CustomerId,
                     CompanyId = step.CompanyId,
-                    EmployeeId = item.Id
+                    EmployeeId = item.Id,
+                    PositionId = await new SQLRead().GetPositionIdByName(item.Position.NamePosition, item.CustomerId, item.CompanyId)
                 };
                 await _database.ExecuteAsync(query, para);
             }

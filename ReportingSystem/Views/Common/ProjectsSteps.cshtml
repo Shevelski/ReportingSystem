@@ -133,6 +133,10 @@
                                 <td>{{step.name}}</td>
                             </tr>
                              <tr>
+                                <td><strong>Опис:</strong></td>
+                                <td>{{step.description}}</td>
+                            </tr>
+                             <tr>
                                 <td><strong>Дата початку:</strong></td>
                                 <td>{{ showFormatDate(step.startDate) }}</td>
                             </tr>
@@ -149,52 +153,26 @@
                                 <td>
                                     <table class="table table-black">
                                         <tbody>
-                                            <tr v-for="pos in step.positions">
+                                            <tr v-for="pos in step.empPositions">
                                                 <td>{{pos.namePosition}}</td>
-                                                <td>{{pos.namePosition}}1</td>
+                                                <td>
+                                                    <table class="table table-black">
+                                                        <tbody>
+                                                            <tr v-for="emp1 in pos.employees" v-if="emp1">
+                                                                <td>{{ emp1.firstName }} {{ emp1.secondName }} {{ emp1.thirdName }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </td>
-                                @* <td v-for="pos in step.positions">
-                                    <div>pos.namePosition</div>
-                                    <table class="table table-black">
-                                        <tbody>
-                                            <tr>
-                                                pos.namePosition
-                                                <td>1</td>
-                                                <td>2</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>4</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td> *@
-                                @* <td v-for="pos in step.positions">
-                                    <table class="table table-black">
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>2</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>4</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td> *@
-                            </tr>
-                             <tr>
-                                <td><strong>Учасники:</strong></td>
-                                <td>{{step.members}}</td>
                             </tr>
                              <tr>
                                 <td><strong>Статус:</strong></td>
                                 <td>
-                                    {{step.status}}
+                                    {{step.status.name}}
                                 </td>
                             </tr>
                         </tbody>
