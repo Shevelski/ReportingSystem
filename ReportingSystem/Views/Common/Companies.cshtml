@@ -87,13 +87,6 @@
             <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
             </select>
-
-            @*<div class="form-check mb-3" style="margin-left: 20px;">
-                <input class="form-check-input" type="checkbox" id="flexCheckIndeterminateCu" v-on:change="SavePermanentCustomer()" v-model="saveCustomer">
-                <label class="form-check-label" for="flexCheckIndeterminateCu">
-                    Запам'ятати замовника
-                </label>
-            </div>*@
         </div>
         
         <div class="row mb-3">
@@ -186,7 +179,7 @@
                                 <td colspan="2" class="text-left">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати компанію" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
                                     <button type="button" v-if="company.status.companyStatusType !== 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(3,index)">Архівувати</button>
-                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(4,index)">Видалити</button>
+                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити компанію" v-on:click="toggleModal(4,index)">Видалити</button>
                                 </td>
                             </tr>
                         </tbody>

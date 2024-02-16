@@ -175,6 +175,13 @@
                                     {{step.status.name}}
                                 </td>
                             </tr>
+                            <tr>
+                                <td colspan="2" class="text-left">
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати етап" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
+                                    <button type="button" v-if="company.status.companyStatusType !== 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати етап" v-on:click="toggleModal(3,index)">Архівувати</button>
+                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити етап" v-on:click="toggleModal(4,index)">Видалити</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

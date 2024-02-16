@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <PackageIcon>icon.jpg</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +35,13 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\img\UserCertificate\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\nakus\Downloads\icon.jpg">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
