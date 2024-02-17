@@ -117,10 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="CurrencyExchange" xml:space="preserve">
+    <value>Currency Exchange Rates</value>
+  </data>
+  <data name="Dollar" xml:space="preserve">
+    <value>US Dollar</value>
+  </data>
+  <data name="Euro" xml:space="preserve">
+    <value>Euro</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
   <data name="ReportingSystem" xml:space="preserve">
     <value>Reporting System</value>
   </data>
   <data name="StartPage" xml:space="preserve">
-    <value>Start Page</value>
+    <value>Portal</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Today</value>
   </data>
 </root>
