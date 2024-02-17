@@ -6,29 +6,309 @@
 @{
     var path = Context.Request.Path;
 }
-<p class="text-center textcolor customfont">
-    @Localizer["ReportingSystem"]
-</p>
 
-@* <p class="textcolor">Cookie Value: @ViewBag.CookieValue</p> *@
+<div class="container-fluid ">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.10/signalr.min.js"></script>
+    <div class="row">
+        <div class="col-8">
+            <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active button-carousel" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" class=" button-carousel" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" class=" button-carousel" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/img/financial-analysis.jpg" class="d-block custom-carousel-image" alt="...">
+                        </div>
+                        <div class="carousel-caption d-none d-md-block  ">
+                            <h5 class="text-black">First slide label</h5>
+                            <p class="text-black">Some representative placeholder content for the first slide.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center ">
+                            <img src="~/img/ipad-with-diagram.jpg" class="d-block custom-carousel-image" alt="...">
+                        </div>
+
+                        <div class="carousel-caption d-none d-md-block ">
+                            <h5 class="text-black">Second slide label</h5>
+                            <p class="text-black">Some representative placeholder content for the second slide.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/img/businesspeople-meeting.jpg" class="d-block custom-carousel-image" alt="...">
+                        </div>
+                        <div class="carousel-caption d-none d-md-block ">
+                            <h5 class="text-black">Third slide label</h5>
+                            <p class="text-black">Some representative placeholder content for the third slide.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg mb-2 mt-2">
+            <div id="calendar-container">
+                <div id="calendar" class="textcolor "></div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+        </div>
+        <div class="col-lg d-flex justify-content-center">
+            <div id="currency-app">
+                <p class="textcolor customfont" style=" text-align: center">@Localizer["CurrencyExchange"]</p>
+                <table class="table-bordered textcolor">
+                    <thead>
+                        <tr>
+                            <th style=" text-align: center">@Localizer["Currency"]</th>
+                            <th style=" text-align: center">@Localizer["Rate"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="rate in filteredExchangeRates" :key="rate.cc">
+                            <td style=" text-align: center">{{ localizedCurrencyLabels[rate.cc] }}</td>
+                            <td class="narrow-column" style=" text-align: center">{{ rate.rate }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
-<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
+<script>
 
+    function initializeCalendar() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: '@ViewBag.CookieValue',
+            height: 'auto',
+            buttonText: {
+                today: '@Localizer["Today"]',
+            },
+        });
+        calendar.render();
+    }
 
-@* <link rel="stylesheet" href="~/css/ReportTest.css" asp-append-version="true" /> *@
+    $(document).ready(function () {
+        initializeCalendar();
+    });
+</script>
+<script>
+    new Vue({
+        el: '#currency-app',
+        data: {
+            exchangeRates: [],
+            localizedCurrencyLabels: {
+                USD: "@Localizer["Dollar"]",
+                EUR: "@Localizer["Euro"]",
+                // Add more currencies as needed
+            },
+        },
+        computed: {
+            filteredExchangeRates() {
+                return this.exchangeRates.filter(rate => rate.cc === 'USD' || rate.cc === 'EUR');
+            }
+        },
+        mounted() {
+            this.fetchExchangeRates();
+        },
+        methods: {
+            async fetchExchangeRates() {
+                try {
+                    const response = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json');
+                    const data = await response.json();
+                    this.exchangeRates = data;
+                    // console.log(this.exchangeRates)
+                } catch (error) {
+                    console.error('Error fetching exchange rates:', error);
+                }
+            }
+        }
+    });
+</script>
 
 <style>
-    
+    .carousel-caption {
+        /* background-color: white; */
+        /* position: relative; */
+        z-index: 1;
+        color: white; /* Set text color to white for contrast */
+    }
+
+        .carousel-caption::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%; /* Adjust the horizontal position as needed */
+            transform: translateX(-50%); /* Center the background horizontally */
+            width: 60%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: -1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+
+    .carousel-inner {
+        margin-top: 5rem !important; /* or any value you desire */
+    }
+
+    .carousel-indicators button:not(.active) {
+        background-color: #b8b8b8;
+    }
+
+        .carousel-indicators button:not(.active):hover {
+            background-color: #696969; /* Change to whatever color you desire */
+        }
+
+    .button-carousel.active {
+        background-color: black; /* Change to whatever color you desire */
+    }
+
+    /*  .narrow-column {
+            width: 40%;
+        }  */
+    .carousel-item {
+        transition: opacity 2s ease-in-out;
+    }
+
+    .custom-carousel-image {
+        width: 1200px; /* Set your desired width */
+        height: 540px; /* Set your desired height */
+        object-fit: cover; /* Optional: ensure the image covers the entire space */
+    }
+
+    .container {
+        display: grid;
+        grid-template-rows: auto auto;
+        grid-row-gap: 20px;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border: 4px solid #ddd; /* Add border to cells */
+    }
+
     .textcolor {
         color: white
     }
-    .customfont{
+
+    .customfont {
         font-size: 24px;
     }
 
+    #calendar-container {
+        /* position: absolute; */
+        /* top: 100px;
+            right: 20px;
+            width: 60%;
+            height: 60%; */
+        /* max-width: 500px;  */
+        /* max-height: 100px; */
+        /* display: grid; */
+        place-items: right;
+    }
+
+    #calendar {
+        width: 100%;
+        height: 100%;
+    }
+
+    #currency-app {
+        width: 50%; /* Adjust the width here */
+        margin: 0 auto; /* Center the div horizontally */
+    }
+
+    .table-bordered {
+        width: 100%; /* Set table width to 100% */
+    }
+
+    .fc .fc-daygrid-day-top {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .fc-daygrid-day-number {
+        color: white;
+    }
+
+    .fc .fc-daygrid-day-number {
+        font-size: 20px;
+        text-decoration: initial;
+        /*  display: flex;
+            justify-content: center;
+            align-items: center; */
+    }
+
+    .fc-col-header-cell-cushion {
+        color: black; /* Change to any color you want */
+    }
+
+        .fc-col-header-cell-cushion:hover {
+            color: dimgrey;
+        }
+
+    .fc-daygrid-day:hover .fc-daygrid-day-number {
+        color: black; /* Color when hovered */
+        background-color: white;
+    }
+
+    .fc .fc-daygrid-day.fc-day-today {
+        background-color: grey;
+        opacity: 0.8;
+    }
+
+    .fc-day-today {
+        background-color: yellow; /* Change to any color you want */
+    }
+
+
+    .fc .fc-button-primary {
+        background-color: black;
+        border-color: white;
+        color: white;
+    }
+
+        .fc .fc-button-primary:hover {
+            background-color: #262626;
+            color: #eeff01;
+            transition: all 0.2s ease-in;
+        }
+
+        .fc .fc-button-primary:disabled {
+            background-color: black;
+            border-color: white;
+            opacity: 1;
+            color: white;
+            transition: all 0.3s ease-out;
+        }
+
+            .fc .fc-button-primary:disabled:hover {
+                background-color: #262626;
+                color: #eeff01;
+                transition: all 0.2s ease-in;
+            }
 </style>
