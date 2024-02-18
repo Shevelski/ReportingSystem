@@ -1,0 +1,223 @@
+﻿body {
+}
+.carousel-caption {
+    /* background-color: white; */
+    /* position: relative; */
+    z-index: 1;
+    color: white; /* Set text color to white for contrast */
+}
+
+    .carousel-caption::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%; /* Adjust the horizontal position as needed */
+        transform: translateX(-50%); /* Center the background horizontally */
+        width: 60%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(3px);
+        z-index: -1;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+
+.carousel-inner {
+    margin-top: 5rem !important; /* or any value you desire */
+}
+
+.carousel-indicators button:not(.active) {
+    background-color: #b8b8b8;
+}
+
+    .carousel-indicators button:not(.active):hover {
+        background-color: #696969; /* Change to whatever color you desire */
+    }
+
+.button-carousel.active {
+    background-color: black; /* Change to whatever color you desire */
+}
+
+/*  .narrow-column {
+            width: 40%;
+        }  */
+.carousel-item {
+    transition: opacity 2s ease-in-out;
+}
+
+.custom-carousel-image {
+    width: 1200px; /* Set your desired width */
+    height: 540px; /* Set your desired height */
+    object-fit: cover; /* Optional: ensure the image covers the entire space */
+}
+
+.container {
+    display: grid;
+    grid-template-rows: auto auto;
+    grid-row-gap: 20px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 4px solid #ddd; /* Add border to cells */
+}
+
+.textcolor {
+    color: white
+}
+
+.customfont {
+    font-size: 24px;
+}
+
+#calendar-container {
+    /* position: absolute; */
+    /* top: 100px;
+            right: 20px;
+            width: 60%;
+            height: 60%; */
+    /* max-width: 500px;  */
+    /* max-height: 100px; */
+    /* display: grid; */
+    place-items: right;
+}
+
+#calendar {
+    width: 100%;
+    height: 100%;
+}
+
+#currency-app {
+    width: 50%; /* Adjust the width here */
+    margin: 0 auto; /* Center the div horizontally */
+}
+
+.table-bordered {
+    width: 100%; /* Set table width to 100% */
+}
+
+.fc .fc-daygrid-day-top {
+    align-items: center;
+    justify-content: center;
+}
+
+.fc-daygrid-day-number {
+    color: white;
+}
+
+.fc .fc-daygrid-day-number {
+    font-size: 20px;
+    text-decoration: initial;
+    /*  display: flex;
+            justify-content: center;
+            align-items: center; */
+}
+
+.fc-col-header-cell-cushion {
+    color: black; /* Change to any color you want */
+}
+
+    .fc-col-header-cell-cushion:hover {
+        color: dimgrey;
+    }
+
+.fc-daygrid-day:hover .fc-daygrid-day-number {
+    color: black; /* Color when hovered */
+    background-color: white;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: grey;
+    opacity: 0.8;
+}
+
+.fc-day-today {
+    background-color: yellow; /* Change to any color you want */
+}
+
+
+.fc .fc-button-primary {
+    background-color: black;
+    border-color: white;
+    color: white;
+}
+
+    .fc .fc-button-primary:hover {
+        background-color: #262626;
+        color: #eeff01;
+        transition: all 0.2s ease-in;
+    }
+
+    .fc .fc-button-primary:disabled {
+        background-color: black;
+        border-color: white;
+        opacity: 1;
+        color: white;
+        transition: all 0.3s ease-out;
+    }
+
+        .fc .fc-button-primary:disabled:hover {
+            background-color: #262626;
+            color: #eeff01;
+            transition: all 0.2s ease-in;
+        }
+
+.column-custom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allow items to wrap onto the next line */
+}
+
+.column {
+    flex: 0 1 calc(30% - 20px); /* Adjust the width as needed (minus margin) */
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 20px; /* Adjust spacing between columns */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px; /* Round out the corners */
+    padding: 10px; /* Add padding to create space between content and border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+
+    .column img {
+        transition: transform 0.3s ease;
+        width: 50%; /* Make sure images fill their container */
+    }
+
+    .column:hover img {
+        transform: scale(1.2); /* Increase image size on hover */
+    }
+
+/* Additional text */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Ensures the overlay doesn't interfere with mouse events */
+    border-radius: 20px; /* Round out the corners */
+    padding: 10px; /* Add padding to create space between content and border */
+}
+
+.column:hover .overlay {
+    opacity: 1; /* Show overlay on hover */
+    pointer-events: auto; /* Allow overlay to receive mouse events */
+}

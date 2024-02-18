@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AnalyticsApplication" xml:space="preserve">
+    <value>Analytics application</value>
+  </data>
   <data name="ComprehensiveAnalysis" xml:space="preserve">
     <value>Comprehensive Analysis</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="Dollar" xml:space="preserve">
     <value>US Dollar</value>
+  </data>
+  <data name="EffectiveManagement" xml:space="preserve">
+    <value>Effective management</value>
   </data>
   <data name="Euro" xml:space="preserve">
     <value>Euro</value>
@@ -146,6 +152,9 @@
   </data>
   <data name="ReportingSystem" xml:space="preserve">
     <value>Reporting System</value>
+  </data>
+  <data name="ReportTime" xml:space="preserve">
+    <value>Report in time</value>
   </data>
   <data name="ResourceOptimization" xml:space="preserve">
     <value>Resource Optimization</value>
