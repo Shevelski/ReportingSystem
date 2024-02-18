@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace ReportingSystem.Middlewares
+namespace ReportingSystem.Middleware
 {
     public class CultureMiddleware
     {
