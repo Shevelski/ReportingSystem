@@ -3,23 +3,45 @@
     ViewData["Title"] = @Localizer["Contacts"];
 }
 
-<div class="container textcolor bg-transparent">
-    <div class="row mt-1 mb-1">
+<div class="container">
+    <div class="mt-5" id="map" style="height: 400px;"></div>
+    <div class="row mt-5 mb-1">
         <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-2">
-            <p class="font">@Localizer["Telephone"]</p>
+            <p class="font textcolor">@Localizer["Telephone"]</p>
         </div>
     </div>
-    <div class="row mt-1 mb-1">
-        <div class="col-3 col-xs-6 col-sm-5 col-md-4 col-lg-3">
-            <p class="font">@Localizer["Email"]</p>
+    <div class="row mb-1">
+        <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-3">
+            <p class="font textcolor">@Localizer["Email"]</p>
         </div>
     </div>
-    <div class="row mt-1 mb-1">
-        <div class="col-3 col-xs-6 col-sm-5 col-md-4 col-lg-3">
-            <p class="font">@Localizer["Address"]</p>
+    <div class="row mb-1">
+        <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-3">
+            <p class="font textcolor">@Localizer["Address"]</p>
         </div>
     </div>
 </div>
 
 
+@* <script>
+    async function initMap() {
+        let el = document.getElementById("map");
+        const center = { lat: 50.394262352081036, lng: 30.6135351930676 };
+        let map = new google.maps.Map(el, {
+            center: center,
+            disableDefaultUI: true,
+            zoom: 8,
+        });
+    }
+</script> *@
 <link rel="stylesheet" href="~/css/Contacts.css" asp-append-version="true" />
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly" async defer></script>
+<script src="~/js/contacts.js"></script>
+
+
+
+@* <style>
+    .textcolor {
+        color: white
+    }
+</style> *@
