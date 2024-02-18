@@ -2,6 +2,14 @@
 new Vue({
     el: '#ProjectsSteps',
     data: {
+        countPosition: 0,
+        countEmployee: 0,
+        positions: '',
+        employees: '',
+        addedEmployees: '',
+        editStepDescription: '',
+        editStepDateBegin: '',
+        editStepDateEnd:'',
         searchQueryStep:'',
         pageCount:1,
         pageCur:1,
@@ -13,25 +21,25 @@ new Vue({
         modalTitle: null,
         modalStepUsed:false,
         editStepName:'',
-        navigLevel0: -1,
-        navigLevel1: -1,
-        navigLevel2: -1,
-        navigLevel3: -1,
-        levelStep: 0,
         steps: [0],
         stepsLevel1: [0],
         customerId: '',
         companyId: '',
         employeeId: '',
         rol: '',
+        navigLevel:'',
         selectedCompanyId: 0,
         selectedCustomerId: 0,
         selectedProjectId: 0,
+        selectedPositionId: 0,
+        selectedEmployeeId: 0,
         selectedCompanyIdCheck: 0,
         selectedCustomerIdCheck: 0,
         companies: [0],
         customers: [0],
-        posEmpl: [0]
+        posEmpl: [0],
+        editMode: false,
+        indexStep:0
     },
     mounted() {
         this.customerId = document.getElementById('idCu').textContent;
@@ -95,10 +103,39 @@ new Vue({
                     idPr: this.selectedProjectId
                 }
             });
-            
+
+            let responsePositions = '';
+            responsePositions = await axios.get("/Positions/GetUniqPositions", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                }
+            });
+            this.positions = responsePositions.data;
+
             this.steps = response.data;
             console.log(this.steps);
             this.pageCount = Math.ceil(this.countFilteredSteps / this.itemsPerPage);
+        },
+        
+        async AddEmpl() {
+            let responseEmployees = '';
+            responseEmployees = await axios.get("/Employees/GetEmployeeByPositionFromProject", {
+                params: {
+                    idCu: this.selectedCustomerId,
+                    idCo: this.selectedCompanyId,
+                    idPr: this.selectedProjectId,
+                }
+            });
+            this.employees = responseEmployees.data;
+        },
+        getSelectedPosition(event) {
+            this.selectedPositionId = event.target.value;
+            const selectedEmployee = this.employees.find(employee => employee.id === this.selectedEmployeeId);
+            if (selectedEmployee) {
+                this.addedEmployees.push(selectedEmployee);
+            }
+            this.addedEmployees.push(this.employees.where);
         },
         setItemsPerPage(count) {
             this.itemsPerPage = count;
@@ -120,6 +157,9 @@ new Vue({
                 this.pageCur = 1;
             }
             this.closeAllAccordions();
+        },
+        AddPos() {
+            
         },
         showFormatDate(dateString) {
             const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
@@ -186,9 +226,12 @@ new Vue({
 
             this.Init();
         },
+        setFilteredIndex(index) {
+            this.indexStep = index;
+        },
         async confirmCreateStep() {
 
-            var navigLevel = this.navigLevel0 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
+            var navigLevel = this.navigLevel + this.itemsPerPage * this.pageCur - this.itemsPerPage;
 
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
@@ -196,17 +239,18 @@ new Vue({
 
 
 
-            var v3 = this.filteredSteps[this.steps].id;
+            var v3 = this.filteredSteps[this.steps].id;//this.navigLevel
             
             const v4 = this.editStepName;
             
             const ar = [v0, v1, v2, v3, v4];
 
-            try {
-                await axios.post('/ProjectsSteps/CreateStep', ar);
-            } catch (error) {
-                console.error('Помилка під час виклику методу CreateStep:', error);
-            }
+            console.log(ar);
+            //try {
+            //    await axios.post('/ProjectsSteps/CreateStep', ar);
+            //} catch (error) {
+            //    console.error('Помилка під час виклику методу CreateStep:', error);
+            //}
 
             this.Init();
 
@@ -214,12 +258,12 @@ new Vue({
         },
         async confirmEditStep() {
 
-            var navigLevel = this.navigLevel0 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
+            var navigLevel = this.navigLevel + this.itemsPerPage * this.pageCur - this.itemsPerPage;
 
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
             var v2 = this.selectedProjectId;
-            var v3 = this.filteredSteps[this.navigLevel0].id;
+            var v3 = this.filteredSteps[navigLevel].id;//this.navigLevel
             const v4 = this.editStepName;
             const ar = [v0, v1, v2, v3, v4];
 
@@ -234,11 +278,9 @@ new Vue({
             this.editStepName = '';
 
          },
-        setFilteredIndex(index) {
-        },
         async confirmDeleteStep() {
 
-            var navigLevel = this.navigLevel0 + this.itemsPerPage * this.pageCur - this.itemsPerPage;
+            var navigLevel = this.navigLevel + this.itemsPerPage * this.pageCur - this.itemsPerPage;
 
             const v0 = this.selectedCustomerId;
             const v1 = this.selectedCompanyId;
@@ -246,7 +288,7 @@ new Vue({
 
             if (!this.modalStepUsed) { 
                 
-                var v3 = this.filteredSteps[this.navigLevel0].id;
+                var v3 = this.filteredSteps[navigLevel].id;//navigLevel
                 const ar = [v0, v1, v2, v3];
 
                 try {
@@ -259,37 +301,43 @@ new Vue({
             }
         },
 
-        toggleModal(type, indexLevel0, indexLevel1, indexLevel2, indexLevel3) {
-
-            this.navigLevel0 = indexLevel0;
-            this.navigLevel1 = indexLevel1;
-            this.navigLevel2 = indexLevel2;
-            this.navigLevel3 = indexLevel3;
+        toggleModal(type, index) {
 
             this.modalType = type;
-
-            if (indexLevel0 != -1) {
-                this.modalName = this.filteredSteps[indexLevel0].name;
-            }
+            this.indexStep = index;
 
             if (type === 1) {
-                this.modalStepUsed = false;
-                this.modalOperation = 'Ви впевнені, що хочете додати етап до проекту? ' ;
-                this.modalTitle = 'Додавання етапу проекту';
+                this.modalCompanyActive = false;
+                this.modalOperation = 'Ви впевнені, що хочете створити етап проекту? ' + this.modalName;
+                this.modalTitle = 'Створення нового етапу проекту';
+                this.editCompanyName = this.modalName;
             }
             if (type === 2) {
-                this.modalStepUsed = false;
-                this.modalOperation = 'Ви впевнені, що хочете редагувати етап проекту - ' + this.modalName +  ' ? ';
+                this.editCompanyName = this.filteredCompanies[index].name;
+                this.editCompanyAddress = this.filteredCompanies[index].address;
+                this.editCompanyActions = this.filteredCompanies[index].actions;
+                this.editCompanyPhone = this.filteredCompanies[index].phone;
+                this.editCompanyEmail = this.filteredCompanies[index].email;
+
+                this.modalName = this.filteredCompanies[index].name;
+                this.modalCompanyActive = false;
+                this.modalOperation = 'Ви впевнені, що хочете редагувати етап? ' + this.modalName;
                 this.modalTitle = 'Редагування етапу проекту';
-                this.editStepName = this.modalName;
+                this.editCompanyName = this.modalName;
             }
             if (type === 3) {
-                if (!this.modalStepUsed) {
-                    this.modalOperation = 'Ви впевнені, що хочете видалити етап проекту - ' + this.modalName + ' ? ';
-                } else {
-                    this.modalOperation = 'Етап з назвою ' + this.modalName + ' використовується в проектах:\n' + this.projectsUsed.join('\n') + '. Видалення не буде виконане';;
+                this.modalName = this.filteredCompanies[index].name;
+                if (!this.modalCompanyActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете архівувати етап проекту? ' + this.modalName;
                 }
-                this.modalTitle = 'Видалення етапу';
+                this.modalTitle = 'Архівування компанії';
+            }
+            if (type === 4) {
+                this.modalName = this.filteredCompanies[index].name;
+                if (!this.modalCompanyActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете видалити етап проекту? ' + this.modalName;
+                }
+                this.modalTitle = 'Видалення етапу проекту';
             }
         },
         closeAllAccordions() {

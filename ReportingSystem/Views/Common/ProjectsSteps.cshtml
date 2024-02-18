@@ -31,18 +31,61 @@
                     </div>
                     <div class="modal-body">
 
-                        @*Для редагування категорії*@
-                        <div v-if="modalType === 2">
+                        <div v-if="modalType === 1">
                             <div class="form-group">
-                                <label class="form-label">{{modalName}}</label>
-                                <input class="form-control" placeholder="Введіть нову назву кроку" type="text" v-model="editStepyName" />
+                                <label>Назва:</label>
+                                <input class="form-control" placeholder="Введіть назву нового етапу" type="text" v-model="editStepName" />
+                            </div>
+                            <div class="form-group">
+                                <label>Опис:</label>
+                                <input class="form-control" placeholder="Введіть опис нового етапу" type="text" v-model="editStepDescription" />
+                            </div>
+                            <div class="form-group">
+                                <label>Дата початку:</label>
+                                <input type="date" class="form-control" data-date="" data-date-format="DD MMMM YYYY"
+                                       v-model="editStepDateBegin" v-on:change="handleRenewalCalendar(index)" />
+                            </div>
+                            <div class="form-group mt-3">
+                                <label>Дата закінчення:</label>
+                                <input type="date" class="form-control" data-date="" data-date-format="DD MMMM YYYY"
+                                       v-model="editStepDateEnd" v-on:change="handleRenewalCalendar(index)" />
+                            </div>
+                            <label>Конфігурування учасників</label>
+                            <div class="form-group" v-if="positions">
+                                
+                                <table class="table table-black" >
+                                    <tbody>
+                                        <tr>
+                                            <td v-for="cp in countPosition">
+                                                <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedPosition($event)" v-model="selectedPositionId">
+                                                    <option v-for="position in positions" :value="position.id">{{ position.name }}</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-secondary">Видалити</button>
+                                            </td>
+                                           @*  <td>
+                                                <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedEmployee($event)" v-model="selectedEmployeeId">
+                                                    <option v-for="employee in employees" :value="employee.id">{{ employee.secondName }} {{ employee.firstName }}</option>
+                                                </select>
+                                            </td> *@
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                               
+                            </div>
+
+                            <div class="form-group">
+                                
+                                <button type="button" class="btn btn-secondary" v-on:click="AddPos()">Додати посаду</button>
                             </div>
                         </div>
 
-                        @*Для додавання категорії*@
-                        <div v-if="modalType === 1">
+                        <div v-if="modalType === 2">
                             <div class="form-group">
-                                <input class="form-control" placeholder="Введіть назву нового кроку" type="text" v-model="editStepName" />
+                                <label class="form-label">{{modalName}}</label>
+                                <input class="form-control" placeholder="Введіть нову назву етапу" type="text" v-model="editStepyName" />
                             </div>
                         </div>
 
@@ -99,23 +142,6 @@
                 </div>
             </div>
         </div>
-
-        @*<div class="container">
-        <div class="row">
-        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mb-3 mt-3 d-flex justify-content-start">
-        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 10}" v-on:click="setItemsPerPage(10)">10</button>
-        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 15}" v-on:click="setItemsPerPage(15)">15</button>
-        <button type="button" class="btn btn-default" v-bind:class="{active: itemsPerPage == 20}" v-on:click="setItemsPerPage(20)">20</button>
-        </div>
-        <div class="btn-group mb-3 mt-3 d-flex justify-content-end">
-        <button type="button" class="btn btn-light" v-on:click="prevBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Попередні"><<</button>
-        <button type="button" class="btn btn-light" v-on:click="firstBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="На початок">{{pageCur}}</button>
-        <button type="button" class="btn btn-light" v-on:click="nextBatch()" data-bs-toggle="tooltip" data-bs-placement="top" title="Наступні">>></button>
-        </div>
-        </div>
-        </div>
-        </div>*@
 
         <div style="margin-top: 1em;"></div>
         <div v-for="(step, index) in filteredSteps" :key="index" class="accordion-item">
@@ -177,9 +203,11 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class="text-left">
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати етап" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
-                                    <button type="button" v-if="company.status.companyStatusType !== 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати етап" v-on:click="toggleModal(3,index)">Архівувати</button>
-                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити етап" v-on:click="toggleModal(4,index)">Видалити</button>
+                                    <button type="button" class="btn btn-outline-secondary" title="Редагувати етап" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
+                                    <button type="button" v-if="step.status.type !== 5" class="btn btn-outline-secondary" title="Архівувати етап" v-on:click="toggleModal(3,index)">Архівувати</button>
+                                    <button type="button" v-if="step.status.type === 5" class="btn btn-outline-secondary" title="Видалити етап" v-on:click="toggleModal(4,index)">Видалити</button>
+                                    <button type="button" v-if="editMode" class="btn btn-outline-secondary" title="Видалити етап" v-on:click="toggleModal(5,index)">Зберегти</button>
+                                    <button type="button" v-if="editMode" class="btn btn-outline-secondary" title="Відмінити" v-on:click="editMode = false">Відмінити</button>
                                 </td>
                             </tr>
                         </tbody>
