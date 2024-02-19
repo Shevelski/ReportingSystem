@@ -20,15 +20,15 @@
         historyCount: 0,
         historyArr: [],
         customers:[0],
-        //customers: [
-        //    {
-        //        firstName: "Loading",
-        //        statusLicence: {
-        //            licenceName: '',
-        //            licenceType: 0,
-        //        }
-        //    }
-        //],
+        customers: [
+            {
+                firstName: "Loading",
+                statusLicence: {
+                    licenceName: '',
+                    licenceType: 0,
+                }
+            }
+        ],
         bufferCost:
         {
             nextDate: new Date(),

@@ -16,8 +16,8 @@
 
         <form method="get" class="el1 bm-3" asp-action="CheckEmail" asp-controller="Home" v-on:submit.prevent="CheckEmail" v-if="mode == 0 || mode == 2" ref="emailForm">
         <div class="el1 bm-3 textcolor" v-if="mode == 0">
-            @* <label class="label">Email</label> *@
                 <input class="input mt-2" v-model="email" ref="emailInput" placeholder="Email" />
+                <div v-if="!isValidEmail" class="text-danger">@Localizer["Please enter a valid email address."]</div>
         </div>
 
             <div class="el1 bm-3 textcolor" v-if="mode == 2">
@@ -40,7 +40,6 @@
 
         <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" v-if="mode == 1 || mode == 4" ref="passwordForm">
             <div class="el1 bm-3 " v-if="mode == 1 || mode == 4">
-                @* <label class="label textcolor">@Localizer["Password"]</label> *@
                 <input class="input" type="password" name="password" v-model="password" ref="passwordInput" placeholder=@Localizer["Password"] />
             </div>
             <div class="row">

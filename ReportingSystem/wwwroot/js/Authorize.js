@@ -15,14 +15,19 @@
         load1: false,
         load2: false,
         id: '',
+        isValidEmail: true,
     },
     mounted() {
         this.Mode(0);
     },
     methods: {
         async CheckEmail() {
-            this.load1 = true;
-            if (this.email != "") {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            this.isValidEmail = emailRegex.test(this.email);
+            this.$refs.emailInput.classList.toggle('is-invalid', !this.isValidEmail);
+
+            if (this.email != "" && this.isValidEmail) {
+                this.load1 = true;
                 let response = await axios.get("/Home/CheckEmail", {
                     params: {
                         email: this.email
