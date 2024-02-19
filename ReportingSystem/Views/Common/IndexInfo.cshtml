@@ -2,7 +2,8 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 
 <div class="container" id="IndexInfo">
 
@@ -86,6 +87,8 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="container" id="Weather">
     <div style="display: flex; align-items: center;">
         <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCity($event)" v-model="selectedCity">
@@ -93,9 +96,11 @@
         </select>
     </div>
     <canvas id="myChart" height="90"></canvas>
+    
 </div>
-<script src="~/js/Weather.js" asp-append-version="true"></script>
+
 
 
 @*---------------------------------------------------------------------------------------------------------------------*@
 <script src="~/js/IndexInfo.js" asp-append-version="true"></script>
+<script src="~/js/Weather.js" asp-append-version="true"></script>

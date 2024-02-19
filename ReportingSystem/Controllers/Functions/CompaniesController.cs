@@ -58,6 +58,14 @@ namespace ReportingSystem.Controllers.Functions
 
 
         [HttpPost]
+        //відновлення компанії
+        public async Task RenewalCompany([FromBody] string[] ar)
+        {
+            await _companiesService.RenewalCompany(ar);
+        }
+
+
+        [HttpPost]
         //видалення компанії
         public async Task DeleteCompany([FromBody] string[] ar)
         {

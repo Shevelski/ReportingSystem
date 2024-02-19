@@ -520,16 +520,22 @@ namespace ReportingSystem.Data.SQL
                 var query = $@"INSERT INTO [{Context.dbName}].[dbo].[ProjectSteps]
                                    ([Id]
                                    ,[ProjectId]
-                                   ,[StepsId])
+                                   ,[StepsId]
+                                   ,[CustomerId]
+                                   ,[CompanyId])
                              VALUES
                                    (@Id
                                    ,@ProjectId
-                                   ,@StepsId)";
+                                   ,@StepsId
+                                   ,@CustomerId
+                                   ,@CompanyId)";
                 var para = new
                 {
                     Id = Guid.NewGuid(),
                     ProjectId = step.ProjectId,
-                    StepsId = step.Id
+                    StepsId = step.Id,
+                    CustomerId = step.CustomerId,
+                    CompanyId = step.CompanyId
                 };
                 await _database.ExecuteAsync(query, para);
             }
@@ -542,16 +548,22 @@ namespace ReportingSystem.Data.SQL
                 var query = @$"INSERT INTO [dbo].[ProjectMembers]
                                    ([Id]
                                    ,[ProjectId]
-                                   ,[EmployeeId])
+                                   ,[EmployeeId]
+                                   ,[CustomerId]
+                                   ,[CompanyId])
                              VALUES
                                    (@Id
                                    ,@ProjectId
-                                   ,@EmployeeId)";
+                                   ,@EmployeeId
+                                   ,@CustomerId
+                                   ,@CompanyId)";
                 var para = new
                 {
                     Id = Guid.NewGuid(),
                     ProjectId = project.Id,
                     EmployeeId = pr.Id,
+                    CustomerId = project.CustomerId,
+                    CompanyId = project.CompanyId
                 };
                 await _database.ExecuteAsync(query, para);
             }

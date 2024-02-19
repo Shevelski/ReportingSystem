@@ -157,11 +157,11 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task ProjectSteps()
         {
-            await CreateAsync("ProjectSteps", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, StepsId UNIQUEIDENTIFIER");
+            await CreateAsync("ProjectSteps", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, StepsId UNIQUEIDENTIFIER, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER,");
         }
         public async Task ProjectMembers()
         {
-            await CreateAsync("ProjectMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER");
+            await CreateAsync("ProjectMembers", "Id UNIQUEIDENTIFIER PRIMARY KEY, ProjectId UNIQUEIDENTIFIER, EmployeeId UNIQUEIDENTIFIER, CustomerId UNIQUEIDENTIFIER, CompanyId UNIQUEIDENTIFIER");
         }
         public async Task Reports()
         {

@@ -22,6 +22,7 @@
         customers:[0],
         //customers: [
         //    {
+        //        firstName: "Loading",
         //        statusLicence: {
         //            licenceName: '',
         //            licenceType: 0,
@@ -47,43 +48,48 @@
     },
     computed: {
         countFilteredCustomers() {
-            const currentDate = new Date();
-            const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
+            if (this.customers.length > 0) {
+                const currentDate = new Date();
+                const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.customers.filter((customer) => {
-                const isExpired = new Date(customer.endTimeLicense) < currentDate;
-                const nameMatches = !nameFilter || customer.firstName.toLowerCase().includes(nameFilter) || customer.secondName.toLowerCase().includes(nameFilter) || customer.thirdName.toLowerCase().includes(nameFilter) || customer.email.toLowerCase().includes(nameFilter);
-                const isInArchive = customer.statusLicence.licenceType === 4;
-               
-                if (this.showArchive) {
-                    return isInArchive && nameMatches;
-                } else {
-                    return !isInArchive && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
-                }
-            });
-            return filteredList.length;
+                let filteredList = this.customers.filter((customer) => {
+                    const isExpired = new Date(customer.endTimeLicense) < currentDate;
+                    const nameMatches = !nameFilter || customer.firstName.toLowerCase().includes(nameFilter) || customer.secondName.toLowerCase().includes(nameFilter) || customer.thirdName.toLowerCase().includes(nameFilter) || customer.email.toLowerCase().includes(nameFilter);
+                    const isInArchive = customer.statusLicence.licenceType === 4;
+
+                    if (this.showArchive) {
+                        return isInArchive && nameMatches;
+                    } else {
+                        return !isInArchive && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
+                    }
+                });
+                return filteredList.length;
+            }
+            
         },
         filteredCustomers() {
-            const currentDate = new Date();
-            const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
+            if (this.customers.length > 0) {
+                const currentDate = new Date();
+                const nameFilter = this.searchQuery ? this.searchQuery.toLowerCase() : '';
 
-            let filteredList = this.customers.filter((customer) => {
-                const isExpired = new Date(customer.endTimeLicense) < currentDate;
-                const nameMatches = !nameFilter || customer.firstName.toLowerCase().includes(nameFilter) || customer.secondName.toLowerCase().includes(nameFilter) || customer.thirdName.toLowerCase().includes(nameFilter) || customer.email.toLowerCase().includes(nameFilter);
-                 
-                const isInArchive = customer.statusLicence && customer.statusLicence.licenceType === 4;
+                let filteredList = this.customers.filter((customer) => {
+                    const isExpired = new Date(customer.endTimeLicense) < currentDate;
+                    const nameMatches = !nameFilter || customer.firstName.toLowerCase().includes(nameFilter) || customer.secondName.toLowerCase().includes(nameFilter) || customer.thirdName.toLowerCase().includes(nameFilter) || customer.email.toLowerCase().includes(nameFilter);
 
-                if (this.showArchive) {
-                    return isInArchive && nameMatches;
+                    const isInArchive = customer.statusLicence && customer.statusLicence.licenceType === 4;
+
+                    if (this.showArchive) {
+                        return isInArchive && nameMatches;
+                    } else {
+                        return !isInArchive && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
+                    }
+                });
+
+                if (this.pageCur === 1) {
+                    return filteredList.slice(0, this.pageCur * this.itemsPerPage);
                 } else {
-                    return !isInArchive && ((isExpired && this.showExpired && nameMatches) || (!this.showExpired && nameMatches));
+                    return filteredList.slice(this.pageCur * this.itemsPerPage - this.itemsPerPage, this.pageCur * this.itemsPerPage);
                 }
-            });
-
-            if (this.pageCur === 1) {
-                return filteredList.slice(0, this.pageCur * this.itemsPerPage);
-            } else {
-                return filteredList.slice(this.pageCur * this.itemsPerPage - this.itemsPerPage, this.pageCur * this.itemsPerPage);
             }
         },
     },
@@ -93,6 +99,7 @@
             let response = await axios.get("/Customers/GetCustomers");
             this.customers = response.data;
             this.pageCount = Math.ceil(this.countFilteredCustomers / this.itemsPerPage);
+            console.log(this.customers);
             this.defaultPeriod();
             
 

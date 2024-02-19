@@ -138,6 +138,26 @@ namespace ReportingSystem.Data.SQL
         }
         #endregion
         #region Positions
+        public async Task<List<Guid>> GetEmployeePositionId(Guid idCu)
+        {
+            using var database = Context.ConnectToSQL;
+            var query = $"SELECT [Id] FROM [{Context.dbName}].[dbo].[EmployeePosition] Where CustomerId = @CustomerId";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            var result = await database.QueryAsync<Guid>(query, para);
+            List<Guid> list = [];
+            if (result.Any())
+            {
+                foreach (var item in result)
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+
         public async Task<EmployeePositionModel> GetPositionEmployee(Guid idPos)
         {
             using var database = Context.ConnectToSQL;

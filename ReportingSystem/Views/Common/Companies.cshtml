@@ -74,6 +74,7 @@
 
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 2" v-on:click="confirmEditCompany()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 3" v-on:click="confirmArchiveCompany()">Підтвердити</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 5" v-on:click="confirmRenewalCompany()">Підтвердити</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-if="modalType === 4" v-on:click="confirmDeleteCompany()">Підтвердити</button>
 
 
@@ -179,6 +180,7 @@
                                 <td colspan="2" class="text-left">
                                     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Редагувати компанію" v-on:click="toggleModal(2,index)">Редагувати</button>&nbsp;
                                     <button type="button" v-if="company.status.companyStatusType !== 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Архівувати компанію" v-on:click="toggleModal(3,index)">Архівувати</button>
+                                    <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Відновити компанію" v-on:click="toggleModal(5,index)">Відновити</button>
                                     <button type="button" v-if="company.status.companyStatusType === 3" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" title="Видалити компанію" v-on:click="toggleModal(4,index)">Видалити</button>
                                 </td>
                             </tr>

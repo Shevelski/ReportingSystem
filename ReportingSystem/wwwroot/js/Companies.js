@@ -213,6 +213,7 @@
             this.Init();
             this.closeAllAccordions();
         },
+        
         async confirmArchiveCompany() {
             const v0 = this.filteredCompanies[this.indexCompany].id;
             const v1 = this.selectedCustomerId;
@@ -222,6 +223,20 @@
                 await axios.post('/Companies/ArchiveCompany', ar);
             } catch (error) {
                 console.error('Помилка під час виклику методу ArchiveCompany:', error);
+            }
+
+            this.Init();
+            this.closeAllAccordions();
+        },
+        async confirmRenewalCompany() {
+            const v0 = this.filteredCompanies[this.indexCompany].id;
+            const v1 = this.selectedCustomerId;
+            var ar = [v0, v1];
+
+            try {
+                await axios.post('/Companies/RenewalCompany', ar);
+            } catch (error) {
+                console.error('Помилка під час виклику методу RenewalCompany:', error);
             }
 
             this.Init();
@@ -295,6 +310,13 @@
                 }
                 this.modalTitle = 'Архівування компанії';
             }
+            if (type === 5) {
+                this.modalName = this.filteredCompanies[index].name;
+                if (!this.modalCompanyActive) {
+                    this.modalOperation = 'Ви впевнені, що хочете відновити компанію? ' + this.modalName;
+                }
+                this.modalTitle = 'Відновлення компанії';
+            }
             if (type === 4) {
                 this.modalName = this.filteredCompanies[index].name;
                 if (!this.modalCompanyActive) {
@@ -304,6 +326,7 @@
             }
         },
         closeAllAccordions() {
+            this.firstBatch();
             this.pageCount = Math.ceil(this.countFilteredCompanies / this.itemsPerPage);
             const accordionItems = document.querySelectorAll(".accordion-collapse");
             accordionItems.forEach(item => {

@@ -1,5 +1,6 @@
 ﻿using Bogus.DataSets;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Newtonsoft.Json;
 using ReportingSystem.Data.JSON;
@@ -198,10 +199,28 @@ namespace ReportingSystem.Data.SQL
         }
         public async Task DeleteEmployeePosition(Guid idCu)
         {
+            var positions = await new SQLRead().GetEmployeePositionId(idCu);
+
+            foreach (var idEmPos in positions)
+            {
+                await DeleteProjectPosition(idEmPos);
+            }
+
+
             var query = $"DELETE FROM [{Context.dbName}].[dbo].[EmployeePosition] WHERE CustomerId = @CustomerId ";
             var para = new
             {
                 CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteProjectPosition(Guid employeePositionId)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[ProjectPositions] WHERE EmployeePositionId = @EmployeePositionId ";
+            var para = new
+            {
+                EmployeePositionId = employeePositionId
             };
             using var database = Context.ConnectToSQL;
             await database.QueryAsync(query, para);
@@ -453,7 +472,6 @@ namespace ReportingSystem.Data.SQL
             };
             var result = await database.QueryAsync<Guid>(query, para);
             return result.FirstOrDefault();
-
         }
         public async Task<Guid> GetLicenceId(Guid idCu)
         {
@@ -865,6 +883,25 @@ namespace ReportingSystem.Data.SQL
             };
             await database.QueryAsync(query, para);
         }
+        public async Task RenewalCompany(string[] ar)
+        {
+            CompanyStatusModel companyStatusModel = new()
+            {
+                CompanyStatusType = CompanyStatus.Actual
+            };
+            companyStatusModel.CompanyStatusName = companyStatusModel.CompanyStatusType.GetDisplayName();
+            var companyStatusId = await new SQLRead().GetCompanyStatusId(companyStatusModel);
+
+            using var database = Context.ConnectToSQL;
+            var query = $"UPDATE [{Context.dbName}].[dbo].[Companies] SET [Status] = @Status WHERE Id = @Id AND CustomerId = @CustomerId";
+            var para = new
+            {
+                Id = ar[0],
+                CustomerId = ar[1],
+                Status = companyStatusId
+            };
+            await database.QueryAsync(query, para);
+        }
         public async Task DeleteCompany(string[] ar)
         {
 
@@ -873,8 +910,21 @@ namespace ReportingSystem.Data.SQL
                 return;
             }
 
-            await DeleteEmployeePosition(idCo, idCu);
-            await DeleteCompanyRolls(idCo, idCu);
+            await DeleteEmployeePosition(idCu, idCo);
+            await DeleteCompanyRolls(idCu,idCo);
+            await DeleteEmployees(idCu,idCo);
+            await DeleteStepPositions(idCu,idCo);
+            await DeleteStepMembers(idCu,idCo);
+            await DeleteProjectSteps(idCu, idCo);
+            
+            await DeleteProjectMembers(idCu, idCo);
+            
+            await DeleteProjects(idCu,idCo);
+            await DeleteSteps(idCu, idCo);
+            await DeleteCompanyCategory3(idCu,idCo);
+            await DeleteCompanyCategory2(idCu,idCo);
+            await DeleteCompanyCategory1(idCu,idCo);
+            await DeleteCompanyCategory0(idCu,idCo);
             await DeleteEmployees(idCo, idCu);
 
 
@@ -888,13 +938,239 @@ namespace ReportingSystem.Data.SQL
             await database.QueryAsync(query, para);
 
         }
+
+        public async Task DeleteProjects(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[Projects] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteProjects(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[Projects] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteSteps(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[Steps] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteSteps(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[Steps] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteStepPositions(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[StepPositions] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteStepPositions(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[StepPositions] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId ";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteStepMembers(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[StepMembers] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+
+        public async Task DeleteStepMembers(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[StepMembers] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteProjectMembers(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[ProjectMembers] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteProjectMembers(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[ProjectMembers] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteProjectSteps(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[ProjectSteps] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteProjectSteps(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[ProjectSteps] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory0(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory0] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory0(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory0] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId ";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory1(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory1] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory1(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory1] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId ";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory2(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory2] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory2(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory2] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId ";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory3(Guid idCu)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory3] WHERE CustomerId = @CustomerId ";
+            var para = new
+            {
+                CustomerId = idCu
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
+        public async Task DeleteCompanyCategory3(Guid idCu, Guid idCo)
+        {
+            var query = $"DELETE FROM [{Context.dbName}].[dbo].[CompanyCategory3] WHERE CustomerId = @CustomerId AND CompanyId = @CompanyId";
+            var para = new
+            {
+                CustomerId = idCu,
+                CompanyId = idCo
+            };
+            using var database = Context.ConnectToSQL;
+            await database.QueryAsync(query, para);
+        }
         public async Task DeleteCompanies(Guid idCu)
         {
             await DeleteEmployeePosition(idCu);
             await DeleteCompanyRolls(idCu);
             await DeleteEmployees(idCu);
-
-
+            await DeleteStepPositions(idCu);
+            await DeleteStepMembers(idCu);
+            await DeleteSteps(idCu);
+            await DeleteProjectMembers(idCu);
+            await DeleteProjectSteps(idCu);
+            await DeleteProjects(idCu);
+            await DeleteCompanyCategory3(idCu);
+            await DeleteCompanyCategory2(idCu);
+            await DeleteCompanyCategory1(idCu);
+            await DeleteCompanyCategory0(idCu);
+            
             var query = $"DELETE FROM [{Context.dbName}].[dbo].[Companies] WHERE CustomerId = @CustomerId ";
             var para = new
             {

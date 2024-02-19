@@ -44,6 +44,13 @@ namespace ReportingSystem.Services
             await (mode ? new JsonWrite().ArchiveCompany(ar) : new SQLWrite().ArchiveCompany(ar));
         }
 
+        //архівування компанії
+        public async Task RenewalCompany(string[] ar)
+        {
+            //await (mode ? new JsonWrite().ArchiveCompany(ar) : 
+                await new SQLWrite().RenewalCompany(ar);
+        }
+
         //видалення компанії
         public async Task DeleteCompany(string[] ar)
         {

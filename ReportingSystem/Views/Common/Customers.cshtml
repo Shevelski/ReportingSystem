@@ -89,7 +89,7 @@
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
         @* Головний акордеон *@
-        <div v-for="(customer, index) in filteredCustomers" :key="index" class="accordion-item" v-bind:class="{ 'highlighted': isLicenseExpired(customer) }">
+        <div v-if="customers.length > 0" v-for="(customer, index) in filteredCustomers" :key="index" class="accordion-item" v-bind:class="{ 'highlighted': isLicenseExpired(customer) }">
             <h2 class="accordion-header" :id="'heading' + index">
                 <button class="accordion-button" v-on:click="setFilteredIndex(index)" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
                     {{customer.firstName}} {{customer.secondName}} {{customer.thirdName}} ({{customer.email}})

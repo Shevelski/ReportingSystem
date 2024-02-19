@@ -26,6 +26,7 @@
         },
 
         renderChart() {
+
             console.log(this.dataCity);
             if (!this.dataCity || !this.dataCity.weather) {
                 console.error('Weather data is not available.');
@@ -49,22 +50,6 @@
                 day: '2-digit',
                 hour: 'numeric'
             }).replace(/,/, '');
-
-            // Add annotation for the current time
-            //this.chartData.annotations = [{
-            //    type: 'line',
-            //    mode: 'vertical',
-            //    scaleID: 'x',
-            //    value: currentTime,
-            //    borderColor: 'green',
-            //    borderWidth: 2,
-            //    label: {
-            //        enabled: true,
-            //        content: 'Current Time',
-            //        position: 'top'
-            //    }
-            //}];
-
 
             const temperatureData = this.dataCity.weather.temperature;
             const windSpeedData = this.dataCity.weather.windspeed;
