@@ -24,10 +24,17 @@
                 <button type="button" class="button yes-button" v-on:click="CheckEmail()">@Localizer["Yes"]</button>
                 <button type="button" class="button no-button" v-on:click="mode = 0">@Localizer["No"]</button>
             </div>
-
-            <div class="el1 bm-3 textcolor mt-4" v-if="mode == 0">
-                <button type="submit" class="button hover-color rounded" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
+            <div class="row">
+                <div class="el1 bm-3 col-6 textcolor mt-4" v-if="mode == 0">
+                    <button type="submit" class="button hover-color rounded" v-on:click="CheckEmail()">@Localizer["CheckEmail"]</button>
+                </div>
+                <div class="col-6 mt-4" v-if="load1">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
+            
         </form>
 
 
@@ -36,9 +43,17 @@
                 @* <label class="label textcolor">@Localizer["Password"]</label> *@
                 <input class="input" type="password" name="password" v-model="password" ref="passwordInput" placeholder=@Localizer["Password"] />
             </div>
-            <div class="el1 bm-3 textcolor mt-4" v-if="mode == 1 || mode == 4">
-                <button type="submit" class="button rounded">@Localizer["CheckPass"]</button>
-            </div>
+            <div class="row">
+                <div class="el1 col-6 bm-3 textcolor mt-4" v-if="mode == 1 || mode == 4">
+                    <button type="submit" class="button rounded">@Localizer["CheckPass"]</button>
+                </div>
+                <div class="col-6 mt-4" v-if="load2">
+                    <div class="spinner-border text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+             </div>
+            
             <input type="hidden" name="email" v-model="email"/>
         </form>
     </div>

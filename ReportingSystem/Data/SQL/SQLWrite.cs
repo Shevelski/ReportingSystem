@@ -1,20 +1,12 @@
-﻿using Bogus.DataSets;
-using Dapper;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
+﻿using Dapper;
 using Newtonsoft.Json;
-using ReportingSystem.Data.JSON;
 using ReportingSystem.Enums;
 using ReportingSystem.Enums.Extensions;
 using ReportingSystem.Models.Configuration;
 using ReportingSystem.Models.Customer;
-using ReportingSystem.Models.Project;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
-using System.ComponentModel.Design;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
 {

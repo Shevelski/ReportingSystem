@@ -12,6 +12,8 @@
             type: -1,
             name: '',
         },
+        load1: false,
+        load2: false,
         id: '',
     },
     mounted() {
@@ -19,6 +21,7 @@
     },
     methods: {
         async CheckEmail() {
+            this.load1 = true;
             if (this.email != "") {
                 let response = await axios.get("/Home/CheckEmail", {
                     params: {
@@ -29,7 +32,9 @@
                 this.status.type = this.data.authorizeStatusModel.authorizeStatusType;
                 this.status.name = this.data.authorizeStatusModel.authorizeStatusName;
                 this.Mode(this.status.type);
+                this.load1 = false;
             }
+            
         },
         modeChange(newMode) {
             if (this.mode == 0 || this.mode == 2) {
@@ -50,7 +55,9 @@
             }
         },
         async CheckPassword() {
+            
             if (this.password != "") {
+                this.load2 = true;
                 let response = await axios.get("/Home/CheckPassword", {
                     params: {
                         email: this.email,
@@ -62,7 +69,9 @@
                 this.status.type = this.data.authorizeStatusModel.authorizeStatusType;
                 this.status.name = this.data.authorizeStatusModel.authorizeStatusName;
                 this.Mode(this.status.type);
+                this.load2 = false;
             }
+            
         },
         Mode(type) {
 
