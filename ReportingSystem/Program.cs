@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ReportingSystem.Common;
 using ReportingSystem.Data;
 using ReportingSystem.Hubs;
-using ReportingSystem.Middlewares;
+using ReportingSystem.Middleware;
 using ReportingSystem.Models.Settings;
 using ReportingSystem.Services;
 using System.Configuration;
