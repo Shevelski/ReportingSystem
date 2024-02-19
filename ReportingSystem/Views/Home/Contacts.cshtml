@@ -1,12 +1,21 @@
-@inject IViewLocalizer Localizer
+﻿@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = @Localizer["Contacts"];
 }
 
+@if (ViewBag.CookieValue == "uk-UA" || ViewBag.CookieValue == "uk")
+{
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly&language=uk" async defer></script>
+}
+else
+{
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly&language=en" async defer></script>
+}
 
-<div class="container">
-    <div class="mt-5" id="map" style="height: 400px;"></div>
-    <div class="row mt-5 mb-1">
+
+<div class="container-fluid">
+    <div class="mt-5" id="map" style="height: 500px;"></div>
+    @* <div class="row mt-5 mb-1">
         <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-2">
             <p class="font textcolor">@Localizer["Telephone"]</p>
         </div>
@@ -19,6 +28,31 @@
     <div class="row mb-1">
         <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-3">
             <p class="font textcolor">@Localizer["Address"]</p>
+        </div>
+    </div> *@
+
+    <div class="row mt-5 mb-1">
+        <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-2">
+            <p class="font textcolor" style="white-space: nowrap;">
+                <span class="label">@Localizer["Telephone"]</span>
+                <span>+380 (44) 206-55‑23</span>
+            </p>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-3">
+            <p class="font textcolor" style="white-space: nowrap;">
+                <span class="label">@Localizer["Email"]</span>
+                <span>customercare@digitap.com.ua</span>
+            </p>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col-3 col-xs-6 col-sm-5 col-md-3 col-lg-3">
+            <p class="font textcolor" style="white-space: nowrap;">
+            <span class="label">@Localizer["Address"]</span>
+            <span>@Localizer["ActualAdd"]</span>
+            </p>
         </div>
     </div>
 </div>
@@ -35,14 +69,16 @@
         });
     }
 </script> *@
-<link rel="stylesheet" href="~/css/Contacts.css" asp-append-version="true" />
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly" async defer></script>
+@* <link rel="stylesheet" href="~/css/Contacts.css" asp-append-version="true" /> *@
+@* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly" async defer></script> *@
 <script src="~/js/contacts.js"></script>
 
 
-
-@* <style>
-    .textcolor {
-        color: white
-    }
-</style> *@
+<link href="~/css/contacts.css" rel="stylesheet" />
+<style>
+    .label {
+    font-weight: bold;
+    color: #c3c3c3; /* Adjust color as needed */
+    text-decoration: underline;
+}
+</style> 

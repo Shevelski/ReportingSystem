@@ -5,6 +5,7 @@
     /* position: relative; */
     z-index: 1;
     color: white; /* Set text color to white for contrast */
+    max-width: 100%;
 }
 
     .carousel-caption::before {
@@ -20,9 +21,10 @@
         z-index: -1;
         padding: 20px;
         border-radius: 10px;
+       
     }
 
-
+   
 .carousel-inner {
     margin-top: 5rem !important; /* or any value you desire */
 }
