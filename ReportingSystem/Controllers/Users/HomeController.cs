@@ -50,6 +50,9 @@ namespace ReportingSystem.Controllers.Users
                 Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
             }
         }
+
+
+
         [HttpGet]
         public async Task<IActionResult> CheckEmail(string email)
         {
