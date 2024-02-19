@@ -138,6 +138,9 @@
   <data name="Password" xml:space="preserve">
     <value>Пароль</value>
   </data>
+  <data name="Please enter a valid email address." xml:space="preserve">
+    <value>Увага, невірний формат e-mail.</value>
+  </data>
   <data name="WriteEmail" xml:space="preserve">
     <value>Введіть Email</value>
   </data>
