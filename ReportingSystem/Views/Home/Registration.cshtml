@@ -24,18 +24,21 @@
                         <div class="form-group">
                             <label class="control-label">@Localizer["FirstName"]</label>
                             <input type="text" class="form-control" v-model="firstName" />
+                            <div v-if="firstName.length == 0" class="text-danger">@Localizer["Please fill in the field"]</div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">@Localizer["LastName"]</label>
                             <input type="text" class="form-control" v-model="secondName" />
+                            <div v-if="secondName.length == 0" class="text-danger">@Localizer["Please fill in the field"]</div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">@Localizer["Surname"]</label>
                             <input type="text" class="form-control" v-model="thirdName" />
+                            <div v-if="thirdName.length == 0" class="text-danger">@Localizer["Please fill in the field"]</div>
                         </div>
                     </div>
                 </div>
@@ -43,19 +46,35 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">Email</label>
-                            <input type="email" class="form-control" v-model="email" />
+                            <input type="email" class="form-control" ref="emailInput" v-model="email" />
+                            <div v-if="!isValidEmail && email.length > 0" class="text-danger">@Localizer["Please enter a valid email address"]</div>
+                            <div v-if="email.length == 0" class="text-danger">@Localizer["Email not be null"]</div>
+                            <div v-if="!isUnique && email.length > 0" class="text-danger">@Localizer["Email is busy"]</div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">@Localizer["Phone"]</label>
-                            <input type="text" class="form-control" v-model="phone" />
+                            <input type="text" class="form-control" ref="phoneInput" v-model="phone" />
+                            <div v-if="!isValidPhone && phone.length > 0" class="text-danger">@Localizer["Please enter a valid phone number"]</div>
+                            <div v-if="phone.length == 0" class="text-danger">@Localizer["Please fill in the field"]</div>
                         </div>
                     </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label">@Localizer["Password"]</label>
                             <input type="password" class="form-control" v-model="password" />
+                            <div v-if="password.length == 0" class="text-danger">@Localizer["Please fill in the field"]</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label">@Localizer["RePassword"]</label>
+                            <input type="password" class="form-control" ref="repasswordInput" v-model="repassword" />
+                            <div v-if="!passwordEquals && repassword.length > 0" class="text-danger">@Localizer["Passwords do not match"]</div>
+                            <div v-if="password.length == 0 && repassword.length == 0" class="text-danger">@Localizer["Passwords not be null"]</div>
                         </div>
                     </div>
                 </div>

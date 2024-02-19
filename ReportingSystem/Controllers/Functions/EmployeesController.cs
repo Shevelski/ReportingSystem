@@ -116,9 +116,9 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         // Перевірка вільності email
-        public async Task IsBusyEmail(string email)
+        public async Task<bool> IsBusyEmail(string email)
         {
-            await _employeesService.IsBusyEmail(email);
+            return await _employeesService.IsBusyEmail(email);
         }
 
         [HttpPost]

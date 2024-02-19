@@ -11,6 +11,7 @@ using ReportingSystem.Models.Project.Step;
 using ReportingSystem.Models.Report;
 using ReportingSystem.Models.User;
 using ReportingSystem.Utils;
+using System.Diagnostics;
 using static ReportingSystem.Data.SQL.TableTypeSQL;
 
 namespace ReportingSystem.Data.SQL
@@ -604,13 +605,16 @@ namespace ReportingSystem.Data.SQL
         {
             using var database = Context.ConnectToSQL;
             var query1 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Customers] WHERE [Email] = @email";
-            var query2 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Employees] WHERE [Email] = @email";
-            var query3 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Administrators] WHERE [Email] = @email";
+            var query2 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Employees] WHERE [EmailWork] = @email";
+            var query3 = $"SELECT COUNT(*) FROM [{Context.dbName}].[dbo].[Administrators] WHERE [EmailWork] = @email";
             var para = new { email };
             var result1 = await database.QueryAsync<int>(query1, para);
             var result2 = await database.QueryAsync<int>(query2, para);
             var result3 = await database.QueryAsync<int>(query3, para);
 
+            Debug.WriteLine(result1.First());
+            Debug.WriteLine(result2.First());
+            Debug.WriteLine(result3.First());
             if ((result1.First() + result2.First() + result3.First()) > 0)
                 return true;
             else
