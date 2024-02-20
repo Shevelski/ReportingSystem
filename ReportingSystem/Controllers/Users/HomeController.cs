@@ -12,6 +12,7 @@ using ReportingSystem.Data.SQL;
 using Microsoft.AspNetCore.SignalR;
 using ReportingSystem.Hubs;
 using ReportingSystem.Data.JSON;
+using ReportingSystem.Enums.Extensions;
 
 namespace ReportingSystem.Controllers.Users
 {
@@ -84,18 +85,80 @@ namespace ReportingSystem.Controllers.Users
                     {
                         if (result.Employee != null)
                         {
-                            var custId = result.Employee.CustomerId;
-                            var compId = result.Employee.CompanyId;
-                            var emplId = result.Employee.Id;
                             var rol = "";
                             if (result.Employee.Rol != null && result.Employee.Rol.RolName != null)
                             {
                                 rol = result.Employee.Rol.RolType.ToString();
                             }
+
+                            Guid custId = result.Employee.CustomerId;
+                            Guid compId = result.Employee.CompanyId;
+                            Guid emplId = result.Employee.Id;
+
+                            if (result.Employee.Rol.RolType == EmployeeRolStatus.Customer)
+                            {
+                                custId = result.Employee.Id;
+                                compId = Guid.Empty;
+                                emplId = Guid.Empty;
+                            } else
+                            {
+                                custId = result.Employee.CustomerId;
+                                compId = result.Employee.CompanyId;
+                                emplId = result.Employee.Id;
+                            }
+
                             string[] ids = [custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()];
                             HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));
-                            //return RedirectToAction("Index", controller, new { ids });
-                            return RedirectToAction("StartPage", controller);//index
+                            return RedirectToAction("StartPage", controller);
+
+                        }
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("StartPage", "Home", new { result });
+                }
+            }
+            return Json(result);
+        }
+
+        public async Task<List<string>> CheckCustomer(string email, string password)
+        {
+
+            AuthorizeModel? result;
+
+            bool mode = Utils.Settings.Source().Equals("json");
+            result = mode ? _authorizeService.CheckPasswordJson(email, password) :
+                      await _authorizeService.CheckPasswordSQL(email, password);
+
+            if (result != null && result.AuthorizeStatusModel != null)
+            {
+                var check = result.AuthorizeStatusModel.AuthorizeStatusType;
+                if (check.Equals(AuthorizeStatus.PasswordOk))
+                {
+                    var controller = _authorizeService.GetRolController();
+
+                    if (!string.IsNullOrEmpty(controller))
+                    {
+                        if (result.Employee != null)
+                        {
+                            var rol = "";
+                            if (result.Employee.Rol != null && result.Employee.Rol.RolName != null)
+                            {
+                                rol = result.Employee.Rol.RolType.ToString();
+                            }
+
+                            Guid custId = result.Employee.CustomerId;
+                            Guid compId = result.Employee.CompanyId;
+                            Guid emplId = result.Employee.Id;
+
+                            custId = result.Employee.Id;
+                            compId = Guid.Empty;
+                            emplId = Guid.Empty;
+
+                            string[] ids = [custId.ToString(), compId.ToString(), emplId.ToString(), rol.ToString()];
+                            //HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));
+                            return [controller.ToString(), ids[0], ids[1],ids[2]];
 
                         }
                     }
@@ -103,11 +166,30 @@ namespace ReportingSystem.Controllers.Users
                 else
                 {
                     //return Json(result);
-                    return RedirectToAction("StartPage", "Home", new { result });
+                    return null;
                 }
             }
-            return Json(result);
+            return null;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EnterToSystem(string email, string password)
+        {
+            List<string> list = await CheckCustomer(email, password);
+            string[] ids = [list[1], list[2], list[3]];
+            if (!string.IsNullOrEmpty(list[0]))
+            {
+                HttpContext.Session.Set("ids", Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(ids)));
+                return RedirectToAction("StartPage", list[0]);
+            }
+            else
+            {
+                return RedirectToAction("StartPage", "Home");
+            }
+        }
+
+
+
         [HttpGet]
         public async Task<bool> ConfigEnter(string username, string password)
         {
