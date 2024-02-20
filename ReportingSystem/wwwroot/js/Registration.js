@@ -18,6 +18,7 @@ new Vue({
     },
     methods: {
         async createCustomer() {
+            console.log("start create");
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             this.isValidEmail = emailRegex.test(this.email) && this.email.length > 0;
             this.$refs.emailInput.classList.toggle('is-invalid', !this.isValidEmail);

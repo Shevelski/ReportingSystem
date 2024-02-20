@@ -92,9 +92,9 @@
             <div v-if="confirmEnter">
                 <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" v-if="confirmEnter" ref="myForm">
                     <div class="row">
-                        <div class="col-md-12">
-                            <button type="button" class="button mt-4" v-on:click="createCustomer()">@Localizer["Register"]</button>
-                            <button type="submit" class="button mt-4" v-show="false" ref="hiddenButton">@Localizer["Register"]</button>
+                        <div class="col-md-12 custom-align">
+                            <button type="button" class="button mt-4 rounded hover-color" v-on:click="createCustomer()">@Localizer["Register"]</button>
+                            <button type="submit" class="button mt-4 rounded hover-color" v-show="false" ref="hiddenButton">@Localizer["Register"]</button>
                         </div>
                     </div>
                     <input type="hidden" name="email" v-model="email" />
@@ -164,5 +164,4 @@
         font-size: 24px;
     }
 </style>
-<script src="~/js/Registration.js" asp-append-version="true"></script>
 <script src="~/js/Registration.js" asp-append-version="true"></script>
