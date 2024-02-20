@@ -52,8 +52,6 @@ namespace ReportingSystem.Controllers.Users
             }
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> CheckEmail(string email)
         {

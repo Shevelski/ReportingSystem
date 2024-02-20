@@ -14,7 +14,7 @@ new Vue({
         passwordEquals: true,
         isUnique: true,
         mess: false,
-        confirmEnter: true,
+        confirmEnter: false,
     },
     methods: {
         async createCustomer() {
@@ -56,8 +56,10 @@ new Vue({
                     this.result = "Реєстрація успішна, можете перейти до авторизації";
                     if (this.confirmEnter) {
                         this.result = "Реєстрація успішна, перехід в систему автоматично";
-                        //await this.EnterToSystem(this.email, this.password);
-                        //return;
+                        this.$refs.hiddenButton.click();
+                        //    
+                    //    await this.EnterToSystem(this.email, this.password);
+                    //    return;
                     };
                 } else {
                     this.result = "Реєстрація невдала, можете звернутися до менеджера";
@@ -85,7 +87,7 @@ new Vue({
             return !response.data;
         },
         async EnterToSystem(email, password) {
-            var response = await axios.get("/Home/CheckPassword", {
+            await axios.get("/Home/CheckPassword", {
                 params: {
                     email: email,
                     password: password
