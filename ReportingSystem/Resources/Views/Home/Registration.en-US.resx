@@ -123,6 +123,12 @@
   <data name="Email not be null" xml:space="preserve">
     <value>Email not be null</value>
   </data>
+  <data name="Enter in system after registration" xml:space="preserve">
+    <value>Enter in system after registration</value>
+  </data>
+  <data name="Fill" xml:space="preserve">
+    <value>Fill</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>

@@ -13,6 +13,8 @@ new Vue({
         isValidPhone: true,
         passwordEquals: true,
         isUnique: true,
+        mess: false,
+        confirmEnter: true,
     },
     methods: {
         async createCustomer() {
@@ -24,10 +26,15 @@ new Vue({
             this.isValidPhone = phoneRegex.test(this.phone) && this.phone.length > 0;
             this.$refs.phoneInput.classList.toggle('is-invalid', !this.isValidPhone);
 
-            this.isUnique = await this.IsEmailUnique(this.email);
+            if (this.isValidEmail) {
+                this.isUnique = await this.IsEmailUnique(this.email);
+            }
+            
 
             this.passwordEquals = this.password === this.repassword && this.password.length > 0 && this.repassword.length > 0 && this.isUnique;
             this.$refs.repasswordInput.classList.toggle('is-invalid', !this.passwordEquals);
+
+            this.mess = true;
 
             if (this.isValidEmail && this.isValidPhone && this.passwordEquals && this.isUnique) {
                 const v0 = this.email;
@@ -36,13 +43,26 @@ new Vue({
                 const v3 = this.thirdName;
                 const v4 = this.phone;
                 const v5 = this.password;
-                const ar = [v0, v1, v2, v3, v4, v5];
+                let v6 = '';
+                if (this.confirmEnter) {
+                    v6 = "True"
+                } else {
+                    v6 = "False"
+                }
+
+                const ar = [v0, v1, v2, v3, v4, v5, v6];
                 var x = await axios.post('/Customers/RegistrationCustomer', ar);
                 if (x) {
                     this.result = "Реєстрація успішна, можете перейти до авторизації";
+                    if (this.confirmEnter) {
+                        this.result = "Реєстрація успішна, перехід в систему автоматично";
+                        //await this.EnterToSystem(this.email, this.password);
+                        //return;
+                    };
                 } else {
                     this.result = "Реєстрація невдала, можете звернутися до менеджера";
                 };
+                
                 this.email = '';
                 this.firstName = '';
                 this.secondName = '';
@@ -51,19 +71,26 @@ new Vue({
                 this.repassword = '';
                 this.phone = '';
                 this.mess = false;
+
+                
             }
             
         },
         async IsEmailUnique(email) {
-            console.log("start");
             var response = await axios.get("/Employees/IsBusyEmail", {
                 params: {
                     email: email,
                 }
             });
-            console.log(response.data);
-            console.log("end");
             return !response.data;
-        }
+        },
+        async EnterToSystem(email, password) {
+            var response = await axios.get("/Home/CheckPassword", {
+                params: {
+                    email: email,
+                    password: password
+                }
+            });
+        },
     }
 })

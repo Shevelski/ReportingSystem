@@ -2,6 +2,7 @@
 using ReportingSystem.Models.Customer;
 using ReportingSystem.Models.Company;
 using ReportingSystem.Services;
+using ReportingSystem.Controllers.Users;
 
 namespace ReportingSystem.Controllers.Functions
 {
@@ -24,21 +25,30 @@ namespace ReportingSystem.Controllers.Functions
 
         [HttpGet]
         //отримати замовника
-        public async Task<IActionResult> GetCustomer(string idCu)
+        public async Task<CustomerModel?> GetCustomer(string idCu)
         {
-            //using (_customersService as IDisposable)
-            //{
-                await Task.Delay(10);
-                var result = _customersService.GetCustomer(idCu);
-                return Json(result);
-            //}
+            return await _customersService.GetCustomer(idCu);
         }
+
+        //[HttpPost]
+        ////створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
+        //public Task<bool> RegistrationCustomer([FromBody] string[] ar)
+        //{
+        //    return _customersService.RegistrationCustomer(ar);
+        //}
 
         [HttpPost]
         //створити замовника - використовується з лендінга для створення, треба прикріпити до кнопки
         public Task<bool> RegistrationCustomer([FromBody] string[] ar)
         {
-            return _customersService.RegistrationCustomer(ar);
+            var result = _customersService.RegistrationCustomer(ar);
+            if (ar[6].Equals("True"))
+            {
+                string[] cr = [ar[0], ar[5]];
+                //RedirectToAction("CheckPassword", "Home", cr);
+            }
+            return result;
+            
         }
 
         [HttpPost]

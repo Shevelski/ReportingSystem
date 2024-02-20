@@ -525,7 +525,7 @@ namespace ReportingSystem.Data.SQL
                         SecondName = customerSQL.SecondName,
                         ThirdName = customerSQL.ThirdName
                     };
-                    customer.StatusLicence = await new SQLRead().GetLicenceStatus(customer.Id);
+                    customer.StatusLicence = await new SQLRead().GetLicenceStatus(customerSQL.StatusLicenceId);
                     customer.Phone = customerSQL.Phone;
                     customer.Email = customerSQL.Email;
                     customer.Password = customerSQL.Password;
