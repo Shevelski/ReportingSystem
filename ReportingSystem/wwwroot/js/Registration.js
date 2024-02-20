@@ -22,7 +22,7 @@ new Vue({
             this.isValidEmail = emailRegex.test(this.email) && this.email.length > 0;
             this.$refs.emailInput.classList.toggle('is-invalid', !this.isValidEmail);
 
-            const phoneRegex = /^\+[0-9]+$/;
+            const phoneRegex = /^\d+$/ /*/^\+[0-9]+$/*/;
             this.isValidPhone = phoneRegex.test(this.phone) && this.phone.length > 0;
             this.$refs.phoneInput.classList.toggle('is-invalid', !this.isValidPhone);
 

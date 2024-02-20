@@ -10,7 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 
-<div mt-1 class="text-center">
+<div mt-5 class="text-center">
     <h2 class="display-4 textcolor">@Localizer["Registration"]</h2>
 </div>
 
@@ -102,8 +102,8 @@
                 </form>
             </div>
             <div v-else>
-                <div class="col-md-12">
-                    <button type="button" class="button mt-4" v-on:click="createCustomer()">@Localizer["Register"]</button>
+                <div class="col-md-12 custom-align">
+                    <button type="button" class="button mt-4 rounded hover-color" v-on:click="createCustomer()">@Localizer["Register"]</button>
                 </div>
             </div>
         </div>
@@ -115,6 +115,22 @@
  
 
 <style>
+    .container {
+        width: 1000px;
+        /* margin: 0 auto;  */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 1px solid white;
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .rounded {
+        border-radius: 10px !important; /* Adjust the value as needed to achieve the desired roundness */
+    }
+
     .button {
         /* Стилі для кнопок */
         padding: 5px 10px;
@@ -123,13 +139,30 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        transition: all 0.3s ease-out;
     }
+
+        .button:hover, .hover-color:hover {
+            color: black;
+            transition: all 0.3s ease-in;
+            background-color: #3797ff;
+        }
+
+
+    .custom-align {
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+    }
+
     .textcolor {
         color: white
-
     }
-    .fontcustom{
+
+    .fontcustom {
         font-size: 24px;
     }
 </style>
+<script src="~/js/Registration.js" asp-append-version="true"></script>
 <script src="~/js/Registration.js" asp-append-version="true"></script>
