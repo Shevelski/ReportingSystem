@@ -15,86 +15,100 @@
 </div>
 
 
-<div id="Registration" class="container bg-transparent textcolor">
+<div id="Registration" class="container bg-transparent textcolor mt-5">
+    <div class="text-center">
+        <h1 class="display-8 textcolor">@Localizer["FillForm"]</h1>
+    </div>
     <div class="panel panel-default" v-if="result == ''">
         <div class="panel-heading"></div>
-        <div class="panel-body">
-                
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["Fill"] @Localizer["FirstName"]</label>
-                            <input type="text" class="form-control" v-model="firstName" placeholder=@Localizer["FirstName"] />
-                            <div v-if="firstName.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["Fill"] @Localizer["LastName"]</label>
-                            <input type="text" class="form-control" v-model="secondName" placeholder=@Localizer["LastName"] />
-                            <div v-if="secondName.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["Fill"] @Localizer["Surname"]</label>
-                            <input type="text" class="form-control" v-model="thirdName" placeholder=@Localizer["Surname"] />
-                            <div v-if="thirdName.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
-                        </div>
+        <div class="panel-body ">
+
+            <div class="row mb-3 mt-4 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["Fill"] @Localizer["FirstName"]</label> *@
+                        <input type="text" class="form-control" v-model="firstName" placeholder=@Localizer["FirstName"] />
+                        <div v-if="firstName.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["Fill"] Email</label>
-                            <input type="email" class="form-control" ref="emailInput" v-model="email" placeholder="Email" />
-                            <div v-if="!isValidEmail && email.length > 0 && mess" class="text-danger">@Localizer["Please enter a valid email address"]</div>
-                            <div v-if="email.length == 0 && mess" class="text-danger">@Localizer["Email not be null"]</div>
-                            <div v-if="!isUnique && email.length > 0 && mess" class="text-danger">@Localizer["Email is busy"]</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["Fill"] @Localizer["Phone"]</label>
-                            <input type="text" class="form-control" ref="phoneInput" v-model="phone" placeholder=@Localizer["Phone"]>
-                            <div v-if="!isValidPhone && phone.length > 0 && mess" class="text-danger">@Localizer["Please enter a valid phone number"]</div>
-                            <div v-if="phone.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
-                        </div>
+            </div>
+            <div class="row mb-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["Fill"] @Localizer["LastName"]</label> *@
+                        <input type="text" class="form-control" v-model="secondName" placeholder=@Localizer["LastName"] />
+                        <div v-if="secondName.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["Fill"] @Localizer["Password"]</label>
-                            <input type="password" class="form-control" v-model="password" placeholder=@Localizer["Password"] />
-                            <div v-if="password.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label class="control-label">@Localizer["RePassword"]</label>
-                            <input type="password" class="form-control" ref="repasswordInput" v-model="repassword" placeholder=@Localizer["RePassword"] />
-                            <div v-if="!passwordEquals && repassword.length > 0 && mess" class="text-danger">@Localizer["Passwords do not match"]</div>
-                            <div v-if="password.length == 0 && repassword.length == 0 && mess" class="text-danger">@Localizer["Passwords not be null"]</div>
-                        </div>
+             </div>
+            <div class="row mb-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["Fill"] @Localizer["Surname"]</label> *@
+                        <input type="text" class="form-control" v-model="thirdName" placeholder=@Localizer["Surname"] />
+                        <div v-if="thirdName.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" v-model="confirmEnter" id="flexCheckChecked" checked>
-                            <label class="form-check-label" for="flexCheckChecked">
-                                @Localizer["Enter in system after registration"]
-                            </label>
-                        </div>
+            </div>
+            <div class="row mb-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["Fill"] Email</label> *@
+                        <input type="email" class="form-control" ref="emailInput" v-model="email" placeholder="Email" />
+                        <div v-if="!isValidEmail && email.length > 0 && mess" class="text-danger">@Localizer["Please enter a valid email address"]</div>
+                        <div v-if="email.length == 0 && mess" class="text-danger">@Localizer["Email not be null"]</div>
+                        <div v-if="!isUnique && email.length > 0 && mess" class="text-danger">@Localizer["Email is busy"]</div>
                     </div>
                 </div>
+            </div>
+            <div class="row mb-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["Fill"] @Localizer["Phone"]</label> *@
+                        <input type="text" class="form-control" ref="phoneInput" v-model="phone" placeholder=@Localizer["Phone"]>
+                        <div v-if="!isValidPhone && phone.length > 0 && mess" class="text-danger">@Localizer["Please enter a valid phone number"]</div>
+                        <div v-if="phone.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["Fill"] @Localizer["Password"]</label> *@
+                        <input type="password" class="form-control" v-model="password" placeholder=@Localizer["Password"] />
+                        <div v-if="password.length == 0 && mess" class="text-danger">@Localizer["Please fill in the field"]</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @* <label class="control-label">@Localizer["RePassword"]</label> *@
+                        <input type="password" class="form-control" ref="repasswordInput" v-model="repassword" placeholder=@Localizer["RePassword"] />
+                        <div v-if="!passwordEquals && repassword.length > 0 && mess" class="text-danger">@Localizer["Passwords do not match"]</div>
+                        <div v-if="password.length == 0 && repassword.length == 0 && mess" class="text-danger">@Localizer["Passwords not be null"]</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row  mt-3 justify-content-center">
+                <div class="col-md-12">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" v-model="confirmEnter" id="flexCheckChecked" checked>
+                        <label class="form-check-label" for="flexCheckChecked">
+                            @Localizer["Enter in system after registration"]
+                        </label>
+                    </div>
+                </div>
+             </div>
             <div v-if="confirmEnter">
                 <form method="get" class="el1 bm-3" asp-action="CheckPassword" asp-controller="Home" v-if="confirmEnter" ref="myForm">
                     <div class="row">
                         <div class="col-md-12 custom-align">
-                            <button type="button" class="button mt-4 rounded hover-color" v-on:click="createCustomer()">@Localizer["Register"]</button>
-                            <button type="submit" class="button mt-4 rounded hover-color" v-show="false" ref="hiddenButton">@Localizer["Register"]</button>
+                            <button type="button" class="button mt-4 rounded hover-color btn-lg" v-on:click="createCustomer()">@Localizer["Register"]</button>
+                            <button type="submit" class="button mt-4 rounded hover-color btn-lg" v-show="false" ref="hiddenButton">@Localizer["Register"]</button>
                         </div>
                     </div>
                     <input type="hidden" name="email" v-model="email" />
@@ -103,9 +117,10 @@
             </div>
             <div v-else>
                 <div class="col-md-12 custom-align">
-                    <button type="button" class="button mt-4 rounded hover-color" v-on:click="createCustomer()">@Localizer["Register"]</button>
+                    <button type="button" class="button mt-4 rounded hover-color btn-lg" v-on:click="createCustomer()">@Localizer["Register"]</button>
                 </div>
             </div>
+    
         </div>
     </div>
     <h1 class="display-4 textcolor">{{result}}</h1>
@@ -115,13 +130,14 @@
  
 
 <style>
+   
+    
     .container {
-        width: 1000px;
-        /* margin: 0 auto;  */
-        position: absolute;
+        width: 600px;
+       /*  position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%); */
         border: 1px solid white;
         padding: 20px;
         border-radius: 20px;

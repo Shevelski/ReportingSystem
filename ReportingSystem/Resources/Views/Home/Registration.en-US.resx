@@ -129,6 +129,9 @@
   <data name="Fill" xml:space="preserve">
     <value>Fill</value>
   </data>
+  <data name="FillForm" xml:space="preserve">
+    <value>Fill the form</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
