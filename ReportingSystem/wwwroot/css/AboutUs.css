@@ -1,0 +1,15 @@
+﻿body {
+}
+.big-font {
+    font-size: 20px;
+}
+
+.display-6 {
+    text-align: center;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.textcolor {
+    color: white
+}

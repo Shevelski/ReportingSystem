@@ -8,7 +8,7 @@
 <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-
+<link href="~/css/registration.css" rel="stylesheet" />
 
 <div class="text-center mt-5 ">
     <h2 class="display-4 textcolor">@Localizer["Registration"]</h2>
@@ -127,57 +127,5 @@
 </div>
 
 
- 
 
-<style>
-   
-    
-    .container {
-        width: 600px;
-       /*  position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); */
-        border: 1px solid white;
-        padding: 20px;
-        border-radius: 20px;
-    }
-
-    .rounded {
-        border-radius: 10px !important; /* Adjust the value as needed to achieve the desired roundness */
-    }
-
-    .button {
-        /* Стилі для кнопок */
-        padding: 5px 10px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease-out;
-    }
-
-        .button:hover, .hover-color:hover {
-            color: black;
-            transition: all 0.3s ease-in;
-            background-color: #3797ff;
-        }
-
-
-    .custom-align {
-        display: flex;
-        flex-direction: column;
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-    }
-
-    .textcolor {
-        color: white
-    }
-
-    .fontcustom {
-        font-size: 24px;
-    }
-</style>
 <script src="~/js/Registration.js" asp-append-version="true"></script>

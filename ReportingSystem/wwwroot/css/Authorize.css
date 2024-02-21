@@ -1,0 +1,78 @@
+﻿.rounded {
+    border-radius: 10px !important; /* Adjust the value as needed to achieve the desired roundness */
+}
+
+.container {
+    width: 600px;
+    /* margin: 0 auto;  */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid white;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+#mask {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease-in-out; /* Додаємо анімацію затемнення */
+}
+
+    #mask.hidden {
+        opacity: 0; /* Приховуємо маску затемнення */
+        pointer-events: none; /* Вимикаємо події для маски */
+    }
+
+
+.label {
+    /* Стилі для лейблів */
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input {
+    /* Стилі для вводу */
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button {
+    /* Стилі для кнопок */
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+}
+
+    .button:hover, .hover-color:hover {
+        color: black;
+        transition: all 0.3s ease-in;
+        background-color: #3797ff;
+    }
+
+.yes-button {
+    /* Стилі для кнопки "Так" */
+    background-color: #28a745;
+    margin-right: 5px;
+}
+
+.no-button {
+    /* Стилі для кнопки "Ні" */
+    background-color: #dc3545;
+}
+
+.textcolor {
+    color: white
+}
+
+.fontcustom {
+    font-size: 24px;
+}
