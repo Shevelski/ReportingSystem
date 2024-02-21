@@ -24,31 +24,19 @@ namespace ReportingSystem.Controllers.Users
             
 
         public IActionResult Authorize()
-        {
-            //string cookieValue = Request.Cookies["culture"];
-            //if ( cookieValue == null)
-            //{
-            //    CultureInfo currentCulture = HttpContext.Features.Get<IRequestCultureFeature>().RequestCulture.Culture;
-            //    string languageCode = currentCulture.TwoLetterISOLanguageName;
-            //    ViewBag.CookieValue = languageCode;
-            //}
-            //else
-            //{
-            //    ViewBag.CookieValue = cookieValue;
-            //}            
-            
-            
+        {            
             return PartialView();
         }
-        public void GenerateData()
+        public async Task<bool> GenerateData()
         {
             try
             {
-                var a = new GenerateMain(_hubContext).Data();
+                return await new GenerateMain(_hubContext).Data();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+                return false;
             }
         }
 
@@ -237,66 +225,41 @@ namespace ReportingSystem.Controllers.Users
             return PartialView();
          }
        
-
-
-
         [HttpGet]
         public async Task<bool> HasDatabase()
         {
             await Task.Delay(10);
-            bool result = Database.IsExist(Context.serverName, Context.dbName);
+            bool result = Database.IsExist(Context.serverName, Context.dbName, Context.isUseDatabaseCredential,Context.login,Context.password);
             return result;
         }
         
         [HttpGet]
-        public async Task<bool> IsDatabaseAvailable1(string serverName, string databaseName)
+        public async Task<bool> IsDatabaseAvailable(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
             await Task.Delay(10);
-            bool result = Database.IsDatabaseAvailable(serverName, databaseName);
+            bool result = Database.IsDatabaseAvailable(serverName, databaseName, isUseDatabaseCredential, login, password);
             return result;
         }
         
         [HttpGet]
-        public async Task<bool> IsDatabaseAvailable2(string serverName, string databaseName, string login, string password)
+        public async Task<bool> IsTablesAvailable(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
-            await Task.Delay(10);
-            bool result = Database.IsDatabaseAvailable(serverName, databaseName, login, password);
-            return result;
-        }
-        
-        [HttpGet]
-        public async Task<bool> IsTablesAvailable1(string serverName, string databaseName)
-        {
-            bool result = await new Database().IsTablesAvailable(serverName, databaseName);
-            return result;
-        }
-        
-        [HttpGet]
-        public async Task<bool> IsTablesAvailable2(string serverName, string databaseName, string login, string password)
-        {
-            return await new Database().IsTablesAvailable(serverName, databaseName, login, password);
-        }
-
-        [HttpGet]
-        public async Task<bool> IsServerAvailable1(string serverName)
-        {
-            await Task.Delay(10);
-            var result = Database.IsServerAvailable(serverName);
+            bool result = await new Database().IsTablesAvailable(serverName, databaseName, isUseDatabaseCredential, login, password);
             return result;
         }
 
         [HttpGet]
-        public async Task<bool> IsServerAvailable2(string serverName, string login, string password)
+        public async Task<bool> IsServerAvailable(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
             await Task.Delay(10);
-            return Database.IsServerAvailable(serverName, login, password);
+            return Database.IsServerAvailable(serverName, databaseName, isUseDatabaseCredential, login, password);
         }
 
         [HttpGet]
         public async Task<string[]> GetConnectionString()
         {
             await Task.Delay(10);
-            string[] result = [Context.serverName.Replace("\\\\", "\\"), Context.dbName];
+            string[] result = [Context.serverName.Replace("\\\\", "\\"), Context.dbName, Context.isUseDatabaseCredential, Context.login, Context.password];
             return result;
         }
 

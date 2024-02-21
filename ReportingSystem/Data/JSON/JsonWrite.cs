@@ -1518,8 +1518,9 @@ namespace ReportingSystem.Data.JSON
             {
                 root.ConnectionSettings.Server = ar[0];
                 root.ConnectionSettings.DB = ar[1];
-                root.ConnectionSettings.Login = ar[2];
-                root.ConnectionSettings.Password = ar[3];
+                root.ConnectionSettings.IsUseDatabaseCredential = ar[2];
+                root.ConnectionSettings.Login = ar[3];
+                root.ConnectionSettings.Password = ar[4];
                 string newJson = JsonConvert.SerializeObject(root, Formatting.Indented);
                 File.WriteAllText("appsettings.json", newJson);
             }

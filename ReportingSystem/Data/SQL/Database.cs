@@ -1,20 +1,22 @@
-﻿using System.Data.SqlClient;
+﻿using ReportingSystem.Models.Settings;
+using System.Data.SqlClient;
 
 namespace ReportingSystem.Data.SQL
 {
     public class Database
     {
-        public static void Create(string serverName, string databaseName)
+        public static void Create(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
-            //if (!IsServerAvailable(serverName))
-            //{
-            //    serverName = Context.serverNameDefault;
-            //}
-            //if (!IsDatabaseAvailable(serverName, databaseName))
-            //{
-            //    serverName = Context.dbNameDefault;
-            //}
-            using SqlConnection connection = new($"Server={serverName};Trusted_Connection=True;");
+
+            SqlConnection connection = new();
+            if (isUseDatabaseCredential.Equals("True"))
+            {
+                connection = new SqlConnection($"Server={serverName};User Id={login};Password={password}");
+            }
+            else
+            {
+                connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;");
+            }
             connection.Open();
 
 
@@ -25,9 +27,18 @@ namespace ReportingSystem.Data.SQL
             using SqlCommand command = new(createDatabaseQuery, connection);
             command.ExecuteNonQuery();
         }
-        public static void Drop(string serverName, string databaseName)
+        public static void Drop(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
-            using SqlConnection connection = new($"Server={serverName};Trusted_Connection=True;");
+            SqlConnection connection = new();
+            if (isUseDatabaseCredential.Equals("True"))
+            {
+                connection = new SqlConnection($"Server={serverName};User Id={login};Password={password}");
+            }
+            else
+            {
+                connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;");
+            }
+
             connection.Open();
 
             // Перевірка наявності бази даних
@@ -62,9 +73,19 @@ namespace ReportingSystem.Data.SQL
         }
 
 
-        public static bool IsExist(string serverName, string databaseName)
+        public static bool IsExist(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
-            using SqlConnection connection = new($"Server={serverName};Trusted_Connection=True;");
+            string con = "";
+            if (isUseDatabaseCredential.Equals("False"))
+            {
+                con = $"Server={serverName};Trusted_Connection=True;Database = {databaseName}";
+            }
+            else
+            {
+                con = $"Server={serverName};Database={databaseName};User Id={login};Password={password}";
+            }
+
+            SqlConnection connection = new SqlConnection(con);
             connection.Open();
             string checkDatabaseQuery = $"SELECT COUNT(*) FROM sys.databases WHERE name = '{databaseName}'";
             using SqlCommand checkCommand = new(checkDatabaseQuery, connection);
@@ -77,29 +98,24 @@ namespace ReportingSystem.Data.SQL
             return false;
         }
 
-        public static bool IsExist(string serverName, string databaseName, string login, string password)
-        {
-
-            using SqlConnection connection = new SqlConnection($"Server={serverName};User Id={login};Password={password};");
-            connection.Open();
-            string checkDatabaseQuery = $"SELECT COUNT(*) FROM sys.databases WHERE name = '{databaseName}'";
-            using SqlCommand checkCommand = new(checkDatabaseQuery, connection);
-            int existingDatabaseCount = (int)checkCommand.ExecuteScalar();
-            if (existingDatabaseCount > 0)
-            {
-                Console.WriteLine($"База даних '{databaseName}' вже існує.");
-                return true;
-            }
-            return false;
-        }
-
-        public static bool IsServerAvailable(string serverName)
+        public static bool IsServerAvailable(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
             try
             {
-                using SqlConnection connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;");
-                connection.Open();
-                return true;
+                SqlConnection connection = new();
+                if (isUseDatabaseCredential.Equals("True"))
+                {
+                    connection = new SqlConnection($"Server={serverName};User Id={login};Password={password}");
+                }
+                else
+                {
+                    connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;");
+                }
+                using (connection)
+                {
+                    connection.Open();
+                    return true;
+                }
             }
             catch (SqlException)
             {
@@ -107,25 +123,20 @@ namespace ReportingSystem.Data.SQL
             }
         }
 
-        public static bool IsServerAvailable(string serverName, string login, string password)
+        public static bool IsDatabaseAvailable(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
             try
             {
-                using SqlConnection connection = new SqlConnection($"Server={serverName};User Id={login};Password={password};");
-                connection.Open();
-                return true;
-            }
-            catch (SqlException)
-            {
-                return false;
-            }
-        }
+                SqlConnection connection = new();
+                if (isUseDatabaseCredential.Equals("True"))
+                {
+                    connection = new SqlConnection($"Server={serverName};Database={databaseName};User Id={login};Password={password}");
+                }
+                else
+                {
+                    connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;Database = {databaseName}");
+                }
 
-        public static bool IsDatabaseAvailable(string serverName, string databaseName)
-        {
-            try
-            {
-                using SqlConnection connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;");
                 connection.Open();
 
                 // Перевірка на існування бази даних на конкретному сервері
@@ -144,35 +155,20 @@ namespace ReportingSystem.Data.SQL
                 return false;
             }
         }
-
-        public static bool IsDatabaseAvailable(string serverName, string databaseName, string login, string password)
+        public async Task<bool> IsTablesAvailable(string serverName, string databaseName, string isUseDatabaseCredential, string login, string password)
         {
             try
             {
-                using SqlConnection connection = new SqlConnection($"Server={serverName};User Id={login};Password={password};");
-                connection.Open();
-
-                // Перевірка на існування бази даних на конкретному сервері
-                string checkDatabaseQuery = $"SELECT COUNT(*) FROM [{serverName}].master.sys.databases WHERE name = '{databaseName}'";
-                using SqlCommand checkCommand = new SqlCommand(checkDatabaseQuery, connection);
-                int existingDatabaseCount = (int)checkCommand.ExecuteScalar();
-
-                if (existingDatabaseCount > 0)
+                SqlConnection connection = new();
+                if (isUseDatabaseCredential.Equals("True"))
                 {
-                    return true;
+                    connection = new SqlConnection($"Server={serverName};Database={databaseName};User Id={login};Password={password}");
                 }
-                return false;
-            }
-            catch (SqlException)
-            {
-                return false;
-            }
-        }
-        public async Task<bool> IsTablesAvailable(string serverName, string databaseName)
-        {
-            try
-            {
-                using SqlConnection connection = new SqlConnection($"Server={serverName};Database={databaseName};Trusted_Connection=True;");
+                else
+                {
+                    connection = new SqlConnection($"Server={serverName};Trusted_Connection=True;Database = {databaseName}");
+                }
+
                 connection.Open();
 
                 TablesIsExist tablesChecker = new TablesIsExist();
@@ -263,15 +259,5 @@ namespace ReportingSystem.Data.SQL
                 return false;
             }
         }
-
-        //public async Task SetConnectionString(string serverName, string databaseName)
-        //{
-
-        //}
-
-        //public async Task SetConnectionString(string serverName, string databaseName, string login, string password)
-        //{
-        //}
-
     }
 }

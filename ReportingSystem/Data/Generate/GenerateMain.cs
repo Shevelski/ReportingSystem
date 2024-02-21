@@ -25,7 +25,7 @@ namespace ReportingSystem.Data.Generate
         public static CompanyModel? Configuration { get; set; }
         public static List<EmployeeModel>? Administrators { get; set; }
 
-        public async Task Data()
+        public async Task<bool> Data()
         {
             await UpdateStatusOnClient("Початок операції", 10);
 
@@ -58,8 +58,8 @@ namespace ReportingSystem.Data.Generate
                 await UpdateStatusOnClient("Запис в SQL", 20);
                 //write SQL
                 Debug.WriteLine($"SQL write Start " + DateTime.Now);
-                Database.Drop(Context.serverName, Context.dbName);
-                Database.Create(Context.serverName, Context.dbName);
+                Database.Drop(Context.serverName, Context.dbName, Context.isUseDatabaseCredential, Context.login, Context.password);
+                Database.Create(Context.serverName, Context.dbName, Context.isUseDatabaseCredential, Context.login, Context.password);
                 await UpdateStatusOnClient("База даних створена", 25);
                 Debug.WriteLine($"База даних створена " + DateTime.Now);
                 string[] ar = [Context.serverName, Context.dbName];
@@ -150,10 +150,12 @@ namespace ReportingSystem.Data.Generate
                 File.WriteAllText(Context.Json, jsonData);
                 Debug.WriteLine($"Json write End " + DateTime.Now);
                 await UpdateStatusOnClient("Операція завершена, перейдіть до авторизації", 100);
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Помилка під час роботи з базою даних: " + ex.Message);
+                return false;
             }
            
         }

@@ -22,6 +22,10 @@ namespace ReportingSystem.Controllers.Functions
             {
                 value = Context.dbName;
             }
+            if (key.Equals("IsUseDatabaseCredential"))
+            {
+                value = Context.isUseDatabaseCredential;
+            }
             if (key.Equals("Login"))
             {
                 value = Context.login;

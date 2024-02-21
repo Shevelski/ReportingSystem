@@ -536,7 +536,7 @@ namespace ReportingSystem.Data.SQL
                 await InsertCustomerHistory(para.Id, para.DateRegistration, para.EndTimeLicense,
                 await GetLicenceIdByType(0), await GetLicenceIdByType(1),
                 0.0, "30d", "Реєстрація замовника");
-                new Email().AfterRegistration(ar[0], ar[5], ar[1]);
+                //new Email().AfterRegistration(ar[0], ar[5], ar[1]);
                 return true;
             }
             catch (Exception)

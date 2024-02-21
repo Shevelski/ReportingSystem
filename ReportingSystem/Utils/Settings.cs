@@ -47,5 +47,10 @@
         {
             return GetValue("ConnectionSettings:Password");
         }
+        public static string UseDatabaseCredential()
+        {
+            return GetValue("ConnectionSettings:IsUseDatabaseCredential");
+        }
+        
     }
 }

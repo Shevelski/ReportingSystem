@@ -39,9 +39,9 @@ namespace ReportingSystem.Services
             AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
 
             using var database = Context.ConnectToSQL;
-            var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
-            var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
-            var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
+            var adminTableQuery = @$"SELECT [Id] FROM [{Context.dbName}].[dbo].[Administrators] Where EmailWork = @email";
+            var customerTableQuery = @$"SELECT [Id] FROM [{Context.dbName}].[dbo].[Customers] Where email = @email";
+            var employeeTableQuery = @$"SELECT [Id] FROM [{Context.dbName}].[dbo].[Employees] Where EmailWork = @email";
 
             var para = new { email };
             var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);
@@ -179,9 +179,9 @@ namespace ReportingSystem.Services
             AuthorizeStatusModel authorizeStatusModel = authorize.AuthorizeStatusModel;
 
             using var database = Context.ConnectToSQL;
-            var adminTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Administrators] Where EmailWork = @email";
-            var customerTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Customers] Where email = @email";
-            var employeeTableQuery = "SELECT [Id] FROM [ReportingSystem].[dbo].[Employees] Where EmailWork = @email";
+            var adminTableQuery = @$"SELECT [Id] FROM [{Context.dbName}].[dbo].[Administrators] Where EmailWork = @email";
+            var customerTableQuery = @$"SELECT [Id] FROM [{Context.dbName}].[dbo].[Customers] Where email = @email";
+            var employeeTableQuery = @$"SELECT [Id] FROM [{Context.dbName}].[dbo].[Employees] Where EmailWork = @email";
 
             var para = new { email };
             var resultAdmin = await database.QueryAsync<Guid>(adminTableQuery, para);

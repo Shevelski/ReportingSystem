@@ -18,6 +18,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
+
 <link rel="stylesheet" href="~/css/Configuration.css" asp-append-version="true" />
 
 
@@ -25,22 +26,15 @@
     <div class="container">
         <div id="Configuration" v-if="isPageLoaded">
 
-            <!-- Button trigger modal -->
-            @* <button type="button" v-if="!pagePasswordOk" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Отримати доступ
-            </button> *@
-
-            
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Доступ</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-
                             <form v-on:submit.prevent="loginUser" class="col-md-4 offset-md-4">
                                 <div class="mb-3">
                                     <label for="username" class="form-label">Username:</label>
@@ -56,134 +50,214 @@
                                     <button type="submit" class="btn btn-primary">Login</button>
                                 </div>
                             </form>
-
                             <div v-if="isLoggedIn" class="col-md-4 offset-md-4">
                                 <p class="alert alert-success mt-3">Save our {{ username }}!</p>
-                                @* <button v-on:click="logoutUser" class="btn btn-danger">Logout</button> *@
                             </div>
                             <div v-if="pagePasswordFailed">
                                 <p class="alert alert-danger mt-3">Error</p>
                             </div>
-
                         </div>
                         <div class="modal-footer">
-                            @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> *@
-                            @* <button type="button" class="btn btn-primary">Save changes</button> *@
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div v-if="pagePasswordOk">
+            <div v-if="true">
+                @* pagePasswordOk*@
                 <div v-if="!hasDatabase">
                     <div class="row">
-                        <div class="col">
-                            <h2 class="text-center">Налаштування підключення до БД</h2>
-                        </div>
+                        <h2 class="text-center">Налаштування підключення до БД</h2>
                     </div>
 
-                    <div v-if="status == 0">
-                        <p style="text-align: center; font-weight: bold;">Поточні дані для підключення</p>
-                        <p style="text-align: left;">Сервер: {{ serverName }}</p>
-                        <p style="text-align: left;">База даних: {{ databaseName }}</p>
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button"
+                                    class="btn mt-3 w-100"
+                                    :class="{ 'btn-secondary': mode === 1, 'btn-light': mode !== 1 }"
+                                    v-on:click="mode = 1">
+                                Записані дані
+                            </button>
+                        </div>
 
-                        <p style="text-align: center; font-weight: bold;">Хочете використати наявні дані?</p>
-                        <button type="button" class="btn btn-secondary" v-on:click="SetStatus(1)">Так</button>
-                        <button type="button" class="btn btn-secondary" v-on:click="SetStatus(2)">Ні</button>
-                    </div>
+                        <div class="col-6">
+                            <button type="button"
+                                    class="btn mt-3 w-100"
+                                    :class="{ 'btn-secondary': mode === 2, 'btn-light': mode !== 2 }"
+                                    v-on:click="mode = 2">
+                                Нові дані
+                            </button>
+                        </div>
 
-                    <div v-if="status == 1 || status == 2 || status == 3" class="text-center mt-4">
-                        <label>Cервер:</label>
-                        <input type="text" class="form-control" v-model="newServer">
-                        <button type="button" class="btn btn-primary mt-2" v-on:click="IsServerAvailable()">Перевірити</button>
-                        <div v-if="status == 3">
-                            <label style="color: red;">Сервер недоступний або не перевірявся:</label>
-                        </div>
-                    </div>
+                        <div v-if="mode == 1">
+                            <div style="display: flex; align-items: center;" class="mt-3">
+                                <strong style="width: 150px; text-align: left;">Сервер:</strong>
+                                <input type="text" class="form-control" placeholder="Сервер" v-model="serverName" aria-describedby="basic-addon1" readonly>
+                            </div>
+                            <div style="display: flex; align-items: center;" class="mt-3">
+                                <strong style="width: 150px; text-align: left;">База даних:</strong>
+                                <input type="text" class="form-control" placeholder="База даних" v-model="databaseName" aria-describedby="basic-addon1" readonly>
+                            </div>
+                            <div style="text-align: left;" class="mt-3">
+                                <strong>Використовувати параметри для входу:</strong>
+                                <input class="form-check-input" type="checkbox" v-model="isUseDatabaseCredential" id="flexCheckDefault" disabled>
+                            </div>
 
-                    <div v-if="status == 4 || status == 5" class="text-center mt-4">
-                        <div>
-                            <label style="color: green;">Сервер доступний:</label>
-                        </div>
-                        <label>База даних:</label>
-                        <input type="text" class="form-control" v-model="newDatabase">
-                        <button type="button" class="btn btn-primary mt-2" v-on:click="IsDatabaseAvailable()">Перевірити</button>
-                        <div v-if="status == 5">
-                            <label style="color: red;">База даних недоступна:</label>
-                            <p style="text-align: center; font-weight: bold;">Хочете згенерувати базу даних і таблиці?</p>
-                            <button type="button" class="btn btn-secondary" v-on:click="createDatabase">Так</button>
-                            <button type="button" class="btn btn-secondary" v-on:click="cancelCreation">Ні</button>
-                        </div>
-                    </div>
+                            <div v-if="isUseDatabaseCredential == 'True'">
+                                <div style="display: flex; align-items: center;" class="mt-3">
+                                    <strong style="width: 150px; text-align: left;">Логін:</strong>
+                                    <input type="text" class="form-control" placeholder="Логін" v-model="databaseLogin" aria-describedby="basic-addon1" readonly>
+                                </div>
 
-                    <div v-if="status == 6" class="text-center mt-4">
-                        <div v-if="status == 6">
-                            <label style="color: green;">База даних доступна.</label>
-                        </div>
-                        <div>
-                            <label>Таблиці:</label>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-primary mt-2" v-on:click="IsTablesAvailable()">Перевірити</button>
-                        </div>
-                    </div>
-
-                    <div v-if="status == 7">
-                        <label style="color: red;">Таблиці недоступні</label>
-                        <p style="text-align: center; font-weight: bold;">Хочете згенерувати таблиці?</p>
-                        <button type="button" class="btn btn-secondary" v-on:click="createTable">Так</button>
-                        <button type="button" class="btn btn-secondary" v-on:click="cancelCreation">Ні</button>
-                    </div>
-                    <div v-if="status == 8">
-                        <div>
-                            <label style="color: green;">Таблиці доступні. Можете переходити до системи</label>
-                            <label style="color: orange;">Можете також повторно згенерувати БД</label>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-secondary" v-on:click="createDatabase">Так</button>
-                            <button type="button" class="btn btn-secondary" v-on:click="cancelCreation">Ні</button>
-                        </div>
-                    </div>
-
-                    <div v-if="status == 9">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                 role="progressbar"
-                                 v-bind:aria-valuenow="percentOperation.toString()"
-                                 aria-valuemin="0"
-                                 aria-valuemax="100"
-                                 :style="{ width: percentOperation + '%' }">
+                                <div style="display: flex; align-items: center;" class="mt-3">
+                                    <strong style="width: 150px; text-align: left;">Пароль:</strong>
+                                    <input type="text" class="form-control" placeholder="Пароль" v-model="databasePassword" aria-describedby="basic-addon1" readonly>
+                                </div>
                             </div>
                         </div>
+                        <div v-if="mode == 2">
+                            <div style="display: flex; align-items: center;" class="mt-3">
+                                <strong style="width: 150px; text-align: left;">Сервер:</strong>
+                                <input type="text" class="form-control" placeholder="Сервер" v-model="newServerName" v-on:input="resetConnection()" aria-describedby="basic-addon1">
+                            </div>
+                            <div style="display: flex; align-items: center;" class="mt-3">
+                                <strong style="width: 150px; text-align: left;">База даних:</strong>
+                                <input type="text" class="form-control" placeholder="База даних" v-model="newDatabaseName" v-on:input="resetConnection()" aria-describedby="basic-addon1">
+                            </div>
+                            <div style="text-align: left;" class="mt-3">
+                                <strong>Використовувати параметри для входу:</strong>
+                                <input class="form-check-input" type="checkbox" v-model="newIsUseDatabaseCredential" v-on:input="resetConnection()" id="flexCheckDefault">
+                            </div>
 
-                        <p>{{databaseStatus}}</p>
-                        <p>{{cust}}</p>
-                        <p v-if="status != 10">Залишайте сторінку відкритою на час виконання операції, за для успішної її завершення</p>
+                            <div v-if="newIsUseDatabaseCredential">
+                                <div style="display: flex; align-items: center;" class="mt-3">
+                                    <strong style="width: 150px; text-align: left;">Логін:</strong>
+                                    <input type="text" class="form-control" placeholder="Логін" v-model="newDatabaseLogin" v-on:input="resetConnection()" aria-describedby="basic-addon1">
+                                </div>
+
+                                <div style="display: flex; align-items: center;" class="mt-3">
+                                    <strong style="width: 150px; text-align: left;">Пароль:</strong>
+                                    <input type="text" class="form-control" placeholder="Пароль" v-model="newDatabasePassword" v-on:input="resetConnection()" aria-describedby="basic-addon1">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div v-if="status == 10">
-                        <h2 class="text-center">Налаштування завершено</h2>
+                    <div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col" v-if="!isServerOk || !isDatabaseOk || !isTablesOk">
+                                    <div class="row justify-content-center">
+                                        <div>
+                                            <p class="mt-3"><strong>Перевірити підключення до:</strong></p>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-secondary" v-on:click="IsServerAvailable()">Сервер</button>
+                                            <div>
+                                                <span class="bi bi-check text-success bi-lg" v-if="isServerOk && !isServerLoad"></span>
+                                                <span class="bi bi-x text-danger bi-lg" v-if="!isServerOk && !isServerLoad"></span>
+                                                <div class="spinner-border spinner-border-sm text-black" v-if="isServerLoad" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-secondary" v-on:click="IsDatabaseAvailable()">База Даних</button>
+                                            <div>
+                                                <span class="bi bi-check text-success bi-lg" v-if="isDatabaseOk && !isDatabaseLoad"></span>
+                                                <span class="bi bi-x text-danger bi-lg" v-if="!isDatabaseOk && !isDatabaseLoad"></span>
+                                                <div class="spinner-border spinner-border-sm text-black" v-if="isDatabaseLoad" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-secondary" v-on:click="IsTablesAvailable()">Таблиці</button>
+                                            <div>
+                                                <span class="bi bi-check text-success bi-lg" v-if="isTablesOk && !isTablesLoad"></span>
+                                                <span class="bi bi-x text-danger bi-lg" v-if="!isTablesOk && !isTablesLoad"></span>
+                                                <div class="spinner-border spinner-border-sm text-black" v-if="isTablesLoad" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6" v-if="isServerOk && isDatabaseOk && isTablesOk">
+                                    <div class="row justify-content-center">
+                                        <div>
+                                            <p class="mt-3"><strong>Перевірити підключення до:</strong></p>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-secondary" v-on:click="IsServerAvailable()">Сервер</button>
+                                            <div>
+                                                <span class="bi bi-check text-success bi-lg" v-if="isServerOk && !isServerLoad"></span>
+                                                <span class="bi bi-x text-danger bi-lg" v-if="!isServerOk && !isServerLoad"></span>
+                                                <div class="spinner-border spinner-border-sm text-black" v-if="isServerLoad" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-secondary" v-on:click="IsDatabaseAvailable()">База Даних</button>
+                                            <div>
+                                                <span class="bi bi-check text-success bi-lg" v-if="isDatabaseOk && !isDatabaseLoad"></span>
+                                                <span class="bi bi-x text-danger bi-lg" v-if="!isDatabaseOk && !isDatabaseLoad"></span>
+                                                <div class="spinner-border spinner-border-sm text-black" v-if="isDatabaseLoad" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-outline-secondary" v-on:click="IsTablesAvailable()">Таблиці</button>
+                                            <div>
+                                                <span class="bi bi-check text-success bi-lg" v-if="isTablesOk && !isTablesLoad"></span>
+                                                <span class="bi bi-x text-danger bi-lg" v-if="!isTablesOk && !isTablesLoad"></span>
+                                                <div class="spinner-border spinner-border-sm text-black" v-if="isTablesLoad" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6" v-if="isServerOk">
+                                    <div class="row" v-if="!databaseCreateLoad && !databaseCreated">
+                                        <div>
+                                            <p class="mt-3"><strong>Згенерувати БД і таблиці:</strong></p>
+                                            <button type="button" class="btn btn-outline-secondary mt-3" v-on:click="createDatabase()">База Даних</button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div v-if="databaseCreateLoad">
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                     role="progressbar"
+                                                     v-bind:aria-valuenow="percentOperation.toString()"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100"
+                                                     :style="{ width: percentOperation + '%' }">
+                                                </div>
+                                            </div>
+                                            <p>{{databaseStatus}}</p>
+                                            <p>{{cust}}</p>
+                                            <p>Залишайте сторінку відкритою на час виконання операції, за для успішної її завершення</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div v-if="databaseCreated">
+                                            <h2 class="text-center">Налаштування завершено</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
-                    <p>База даних існує. Перехід на сторінку авторизації</p>
-                    <a class="nav-link @(path == "/Home/StartPage" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">Вхід</a>
-                </div>
-             </div>
-        </div>
-
-        <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
+          </div>
     </div>
 </div>
 
