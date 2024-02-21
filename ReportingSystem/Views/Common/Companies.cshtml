@@ -85,7 +85,7 @@
         @*---------------------------------------------------------------------------------------------------------------------*@
         
         <div style="display: flex; align-items: center;" v-if="(rol === 'Developer' || rol === 'DevAdministrator') && customers.length > 1">
-            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId">
+            <select class="form-select mb-3" aria-label="Default select example" v-on:change="getSelectedCustomer($event)" v-model="selectedCustomerId" v-if="customers[0].firstName">
                 <option v-for="customer in customers" :value="customer.id">{{ customer.firstName }} {{ customer.secondName }} {{ customer.thirdName }} {{ customer.email }}</option>
             </select>
         </div>
@@ -126,7 +126,7 @@
         </div>
         @*---------------------------------------------------------------------------------------------------------------------*@
         <div style="margin-top: 1em;"></div>
-        <div v-if="companies.length > 0"  v-for="(company, index) in filteredCompanies" :key="index" class="accordion-item">
+        <div v-if="companies[0].name" v-for="(company, index) in filteredCompanies" :key="index" class="accordion-item">
             <h2 class="accordion-header" :id="'heading' + index">
                 <button class="accordion-button" type="button" :data-bs-toggle="'collapse'" :data-bs-target="'#collapse' + index" :aria-controls="'collapse' + index">
                     {{ company.name }}
