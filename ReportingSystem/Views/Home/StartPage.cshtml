@@ -3,10 +3,6 @@
 @{
     ViewData["Title"] = @Localizer["StartPage"];
 }
-@* <p class="text-center textcolor customfont">
-    @Localizer["ReportingSystem"]
-</p> *@
-
 
 <div class="container-fluid ">
 
@@ -96,30 +92,14 @@
 </div>
 
 
-
+<link href="~/css/startindex.css" rel="stylesheet" />
 <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
 <link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
-<link href="~/css/startindex.css" rel="stylesheet" />
+
+
 <script>
-    //$(document).ready(function () {
-    //});
-    //loadInfoPage();
-
-    // function loadInfoPage() {
-    //     $.ajax({
-    //         url: '/Home/Index', // Змініть шлях відповідно до вашого проекту
-    //         type: 'GET',
-    //         success: function (data) {
-    //             $('#content-container').html(data);
-    //         },
-    //         error: function () {
-    //             alert('Помилка при завантаженні сторінки.');
-    //         }
-    //     });
-    // },
-
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -157,7 +137,6 @@
             localizedCurrencyLabels: {
                 USD: "@Localizer["Dollar"]",
                 EUR: "@Localizer["Euro"]",
-                // Add more currencies as needed
             },
         },
         computed: {
@@ -174,7 +153,6 @@
                     const response = await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json');
                     const data = await response.json();
                     this.exchangeRates = data;
-                    // console.log(this.exchangeRates)
                 } catch (error) {
                     console.error('Error fetching exchange rates:', error);
                 }
@@ -182,3 +160,4 @@
         }
     });
 </script>
+ 

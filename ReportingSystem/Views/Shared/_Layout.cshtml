@@ -5,11 +5,6 @@
 @{
     var path = Context.Request.Path;
 
-    // string cultureHeader = Context.Request.Cookies["culture"] ?? "uk-UA"; // Default to uk-UA if culture cookie is not set
-    // CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(cultureHeader);
-    // CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(cultureHeader);
-
-    
     CultureInfo culture = CultureInfo.GetCultureInfo(ViewBag.CookieValue);
 
     DateTime currentDate = DateTime.Now;
@@ -45,9 +40,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] -  @Localizer["ReportingSystem"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="icon" type="image/jpg" href="~/img/icon.jpg">
-    @* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly" async defer></script> *@
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    @* <link rel="icon" type="image/jpg" href="~/img/icon.jpg"> *@
 </head>
 
 
@@ -67,19 +61,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/Home/Registration" data-target="#content-container">@Localizer["Registration"]</a>
                         </li>
-                        @* <li class="nav-item">
-                        <a class="nav-link @(path == "/Home/Authorize" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Authorize">@Localizer["Authorize"]</a>
-                        </li>
-                        <li class="nav-item">
-                        <a class="nav-link @(path == "/Home/Registration" ? "active": "")" asp-area="" asp-controller="Home" asp-action="Registration">@Localizer["Registration"]</a>
-                        </li> *@
                         <li class="nav-item">
                             <a class="nav-link" href="/Home/AboutUs" data-target="#content-container">@Localizer["AboutUs"]</a>
                         </li>
-
-                        @* <li class="nav-item">
-                        <a class="nav-link @(path == "/Home/AboutUs" ? "active": "")" asp-area="" asp-controller="Home" asp-action="AboutUs">@Localizer["AboutUs"]</a>
-                        </li> *@
                         <li class="nav-item">
                             <a class="nav-link" href="Home/Contacts" data-target="#content-container">@Localizer["Contacts"]</a>
                         </li>
@@ -101,28 +85,11 @@
                                 </li>
                             </ul>
                         </li>
-
-
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-
-   @*  @if (IsSectionDefined("StartPageContent"))
-    {
-        <div class="container transparent-container start-page-content">
-            <main role="main" class="pb-3">
-                @RenderSection("StartPageContent", required: false)
-            </main>
-        </div>
-    } *@
-
-    @* <div class="container transparent-container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div> *@
 
     <div id="content-container">
          @RenderBody()
@@ -130,108 +97,31 @@
 
     <footer class="border-top footercustom" id="Footer">
         @formattedDate &copy @Localizer["ReportingSystem"] <a href="/Home/Index" class="link-custom-color linkfooter" data-target="#content-container">DIGITAP</a>
-        @*  <div class="container">
-
-        </div> *@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.8/dist/vue.js"></script>
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            // Function to load content dynamically
-            function loadContent(url, target) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (data) {
-                      
-                        $(target).empty();
-
-                        // Load new content
-                        $(target).html(data);
-                    },
-                    error: function () {
-                        alert('Error loading content');
-                    }
-                });
-            }
-
-            // Handle navigation clicks
-            $('.nav-link').on('click', function (e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                var target = $(this).data('target');
-                loadContent(url, target);
-            });
-
-            
-            $('.navbar-brand').on('click', function (e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                var target = $(this).data('target');
-                loadContent(url, target);
-            });
-
-            $('.linkfooter').on('click', function (e) {
-                e.preventDefault();
-                var url = $(this).attr('href');
-                var target = $(this).data('target');
-                loadContent(url, target);
-                if ($('.navbar-brand').hasClass('active')) {
-                    $('.navbar-brand').removeClass('active');
-                }
-                if ($('.nav-link').hasClass('active')) {
-                    $('.nav-link').removeClass('active');
-                }
-            });
-           
-
-            //Set active element in header
-            $(document).ready(function () {
-                $('.nav-link').click(function () {
-                    if ($('.navbar-brand').hasClass('active')) {
-                        $('.navbar-brand').removeClass('active');} 
-                    $('.nav-link').removeClass('active'); 
-                    $(this).closest('.nav-link').addClass('active');
-                });
-            });
-
-            $(document).ready(function () {
-                $('.navbar-brand').click(function () {
-                    if ($('.nav-link').hasClass('active')) {
-                        $('.nav-link').removeClass('active');}
-                    $(this).closest('.navbar-brand').addClass('active'); 
-                });
-            });
-        });
-        
-    </script>
-    
+    <script src="~/js/layout.js"></script>
+   
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 
 <style>
     body {
-        font-family: Arial, sans-serif; /* Задаємо шрифт для всієї сторінки */
-        background-color: #f8f8f8; /* Задаємо колір фону сторінки */
-        background-image: url('/img/back.jpg'); /* Specify the path to your image */
-        background-size: cover; /* Adjust the size to cover the entire background */
-        background-repeat: no-repeat; /* Prevent the background image from repeating */
-        background-position: center center; /* Center the background image */
-        width: 100vw; /* Set the width to 100% of the viewport width */
-        height: 100vh; /* Set the height to 100% of the viewport height */
-        margin: 0; /* Remove default body margin */
-        padding: 0; /* Remove default body padding */
+        font-family: Arial, sans-serif;
+        background-image: url('/img/back.jpg'); 
+        background-size: cover; 
+        background-repeat: no-repeat; 
+        background-position: center center; 
+        width: 100vw; 
+        height: 100vh; 
+        margin: 0; 
+        padding: 0;
         background-attachment: fixed;
-        /* opacity: 0.5; /* 50% transparency */
     }
-
-
 
     .navbar-brand {
         font-weight: bold; /* Задаємо жирний стиль для тексту логотипу */
@@ -244,15 +134,8 @@
         transition: all 0.3s ease-out;
     }
 
-    /* .container {
-        margin-top: 20px; 
-        background-color: #fff; 
-        padding: 20px; 
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
-    } */
-
     main {
-        padding: 20px; /* Внутрішні відступи для основного вмісту */
+        padding: 20px; 
     }
 
     .active {
@@ -308,8 +191,4 @@
             transition: all 0.3s ease-out;
         }
 
-    /* .transparent-container {
-        background-color: rgba(0, 0, 0, 0);
-        padding: 20px;
-    } */
 </style>

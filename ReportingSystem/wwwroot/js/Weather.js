@@ -61,7 +61,7 @@
                         label: 'Температура, °C',
                         data: temperatureData,
                         type: 'line',
-                        backgroundColor: 'red',
+                        backgroundColor: 'palevioletred',
                         borderColor: 'red',
                         borderWidth: 1,
                         yAxidID: 'y1'
@@ -79,7 +79,7 @@
                         label: 'Рівень опадів, мм',
                         data: rainData,
                         type: 'bar',
-                        backgroundColor: 'blue',
+                        backgroundColor: 'aqua',
                         borderColor: 'blue',
                         borderWidth: 1,
                         yAxisID: 'y2',
@@ -102,7 +102,7 @@
                             type: 'linear',
                             position: 'left',
                             ticks: {
-                                color: 'red',
+                                color: 'palevioletred',
                             },
                         },
                         ////y2: {
@@ -118,7 +118,7 @@
                             type: 'linear',
                             position: 'left',
                             ticks: {
-                                color: 'blue',
+                                color: 'aqua',
                             },
                         },
                         x: {

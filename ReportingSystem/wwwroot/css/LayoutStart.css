@@ -1,0 +1,90 @@
+﻿body {
+    font-family: Arial, sans-serif; /* Задаємо шрифт для всієї сторінки */
+    background-image: url('/img/back.jpg'); /* Specify the path to your image */
+    background-size: cover; /* Adjust the size to cover the entire background */
+    background-repeat: no-repeat; /* Prevent the background image from repeating */
+    background-position: center center; /* Center the background image */
+    width: 100vw; /* Set the width to 100% of the viewport width */
+    height: 100vh; /* Set the height to 100% of the viewport height */
+    margin: 0; /* Remove default body margin */
+    padding: 0; /* Remove default body padding */
+    background-attachment: fixed;
+    /* opacity: 0.5; /* 50% transparency */
+}
+
+
+
+.navbar-brand {
+    font-weight: bold; /* Задаємо жирний стиль для тексту логотипу */
+    color: #fff; /* Задаємо колір тексту логотипу */
+    transition: all 0.3s ease-out;
+}
+
+.navbar-nav .nav-link {
+    color: #fff; /* Задаємо колір тексту посилань у навігаційному меню */
+    transition: all 0.3s ease-out;
+}
+
+/* .container {
+        margin-top: 20px; 
+        background-color: #fff; 
+        padding: 20px; 
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    } */
+
+main {
+    padding: 20px; /* Внутрішні відступи для основного вмісту */
+}
+
+.active {
+    text-decoration: underline;
+}
+
+.navbar {
+    background-color: #000;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: #eeff01;
+    transition: all 0.2s ease-in;
+    background-color: #262626
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: rgb(161, 161, 161);
+    transition: all 0.3s ease-out;
+    background-color: #000;
+}
+
+.navbar .navbar-brand:hover {
+    color: #eeff01;
+    transition: all 0.3s ease-in;
+}
+
+.footercustom {
+    background-color: #000;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.link-custom-color {
+    color: rgb(161, 161, 161);
+}
+
+.dropdowncustom {
+    background-color: #000;
+}
+
+    .dropdowncustom .dropdown-item:hover {
+        color: #eeff01;
+        transition: all 0.2s ease-in;
+    }
+
+    .dropdowncustom .dropdown-item {
+        color: rgb(161, 161, 161);
+        transition: all 0.3s ease-out;
+    }
