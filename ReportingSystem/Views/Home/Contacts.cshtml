@@ -5,11 +5,11 @@
 
 @if (ViewBag.CookieValue == "uk-UA" || ViewBag.CookieValue == "uk")
 {
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly&language=uk" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<API_TOKEN>&callback=initMap&libraries=places&v=weekly&language=uk" async defer></script>
 }
 else
 {
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWnOEl93IPhXojX1oyGXBY4nr_hoILjFA&callback=initMap&libraries=places&v=weekly&language=en" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<API_TOKEN>&callback=initMap&libraries=places&v=weekly&language=en" async defer></script>
 }
 
 <div class="container-fluid justify-content-center align-items-center">
